@@ -1,25 +1,58 @@
+function hashToIndex(input: string, modulo: number) {
+  let hash = 0
+  for (let i = 0; i < input.length; i++) {
+    hash = (hash * 31 + input.charCodeAt(i)) | 0
+  }
+  const positive = Math.abs(hash)
+  return positive % Math.max(1, modulo)
+}
+
+const pastelBadgePalettes = [
+  "bg-emerald-50 text-emerald-800 border-emerald-200",
+  "bg-sky-50 text-sky-800 border-sky-200",
+  "bg-violet-50 text-violet-800 border-violet-200",
+  "bg-rose-50 text-rose-800 border-rose-200",
+  "bg-amber-50 text-amber-800 border-amber-200",
+  "bg-teal-50 text-teal-800 border-teal-200",
+] as const
+
 export const categoryColor = (category?: string | null) => {
-  const c = (category ?? "").toLowerCase()
-  if (c.includes("it")) return "bg-indigo-50 text-indigo-700 border-indigo-200"
-  if (c.includes("software")) return "bg-indigo-50 text-indigo-700 border-indigo-200"
-  if (c.includes("marketing")) return "bg-cyan-50 text-cyan-700 border-cyan-200"
-  if (c.includes("admin")) return "bg-slate-100 text-slate-700 border-slate-200"
-  if (c.includes("finance")) return "bg-emerald-50 text-emerald-700 border-emerald-200"
-  if (c.includes("design")) return "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200"
-  if (c.includes("sales")) return "bg-amber-50 text-amber-800 border-amber-200"
-  if (c.includes("customer")) return "bg-violet-50 text-violet-700 border-violet-200"
-  if (c.includes("intern")) return "bg-rose-50 text-rose-700 border-rose-200"
-  return "bg-blue-50 text-blue-700 border-blue-200"
+  if (!category)
+    return "bg-[hsl(var(--muted))] text-[hsl(var(--foreground))] border-border"
+
+  const c = category.toLowerCase()
+
+  if (c.includes("design") || c.includes("ui") || c.includes("ux") || c.includes("product"))
+    return "bg-violet-50 text-violet-800 border-violet-200"
+
+  if (c.includes("engineering") || c.includes("developer") || c.includes("frontend") || c.includes("backend") || c.includes("fullstack"))
+    return "bg-sky-50 text-sky-800 border-sky-200"
+
+  if (c.includes("data") || c.includes("analyst") || c.includes("ml") || c.includes("ai"))
+    return "bg-emerald-50 text-emerald-800 border-emerald-200"
+
+  if (c.includes("marketing") || c.includes("sales") || c.includes("business"))
+    return "bg-amber-50 text-amber-800 border-amber-200"
+
+  if (c.includes("hr") || c.includes("people") || c.includes("recruit"))
+    return "bg-rose-50 text-rose-800 border-rose-200"
+
+  const idx = hashToIndex(c, pastelBadgePalettes.length)
+  return pastelBadgePalettes[idx]
 }
 
 export const jobTypeColor = (jobType?: string | null) => {
-  const t = (jobType ?? "").toLowerCase()
-  if (!t) return "bg-slate-100 text-slate-700 border-slate-200"
-  if (t.includes("full")) return "bg-blue-50 text-blue-700 border-blue-200"
-  if (t.includes("part")) return "bg-amber-50 text-amber-800 border-amber-200"
-  if (t.includes("contract")) return "bg-violet-50 text-violet-700 border-violet-200"
-  if (t.includes("freelance")) return "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200"
-  if (t.includes("intern")) return "bg-rose-50 text-rose-700 border-rose-200"
-  return "bg-slate-100 text-slate-700 border-slate-200"
-}
+  if (!jobType)
+    return "bg-[hsl(var(--muted))] text-[hsl(var(--foreground))] border-border"
 
+  const t = jobType.toLowerCase()
+
+  if (t.includes("full")) return "bg-emerald-50 text-emerald-800 border-emerald-200"
+  if (t.includes("part")) return "bg-sky-50 text-sky-800 border-sky-200"
+  if (t.includes("contract")) return "bg-amber-50 text-amber-800 border-amber-200"
+  if (t.includes("freelance")) return "bg-violet-50 text-violet-800 border-violet-200"
+  if (t.includes("intern")) return "bg-rose-50 text-rose-800 border-rose-200"
+
+  const idx = hashToIndex(t, pastelBadgePalettes.length)
+  return pastelBadgePalettes[idx]
+}

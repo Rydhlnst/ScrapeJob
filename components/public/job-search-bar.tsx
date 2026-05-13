@@ -41,44 +41,47 @@ export function JobSearchBar({
   }
 
   return (
-    <div className="grid gap-3 md:grid-cols-[1fr_1fr_200px_140px]">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <Input
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Posisi / perusahaan / keyword"
-            className="pl-9"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") submit()
-            }}
-          />
-        </div>
-        <div className="relative">
-          <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <Input
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="Lokasi (kota/provinsi)"
-            className="pl-9"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") submit()
-            }}
-          />
-        </div>
-        <Select value={sort} onValueChange={setSort}>
-          <SelectTrigger>
-            <SelectValue placeholder="Sort" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="newest">Terbaru</SelectItem>
-            <SelectItem value="relevance">Relevansi</SelectItem>
-            <SelectItem value="company">Nama perusahaan</SelectItem>
-          </SelectContent>
-        </Select>
-        <Button className="bg-blue-600 hover:bg-blue-700" onClick={submit}>
-          Cari
-        </Button>
+    <div className="grid gap-3 md:grid-cols-[1fr_1fr_220px_160px]">
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          placeholder="Posisi / perusahaan / keyword"
+          className="h-12 rounded-2xl pl-11"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") submit()
+          }}
+        />
+      </div>
+      <div className="relative">
+        <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder="Lokasi (kota/provinsi)"
+          className="h-12 rounded-2xl pl-11"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") submit()
+          }}
+        />
+      </div>
+      <Select value={sort} onValueChange={setSort}>
+        <SelectTrigger className="h-12 rounded-2xl">
+          <SelectValue placeholder="Sort" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="newest">Terbaru</SelectItem>
+          <SelectItem value="relevance">Relevansi</SelectItem>
+          <SelectItem value="company">Nama perusahaan</SelectItem>
+        </SelectContent>
+      </Select>
+      <Button
+        className="h-12 rounded-2xl bg-[hsl(var(--dark))] text-white hover:bg-[hsl(var(--dark-soft))]"
+        onClick={submit}
+      >
+        Cari
+      </Button>
     </div>
   )
 }

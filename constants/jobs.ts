@@ -26,6 +26,9 @@ export type JobListing = {
   description: string
   salary: string
   postedAt: string
+  dateLabel: string
+  tags: string[]
+  cardTone?: "peach" | "mint" | "lavender" | "sky" | "rose" | "slate"
   companyBrandColor?: string
 }
 
@@ -38,13 +41,16 @@ const baseJobs = [
     verified: true,
     title: "Product Designer",
     type: "Full-time",
-    location: "New York, USA",
+    location: "Jakarta, Indonesia",
     workType: "Hybrid",
     experience: "Senior Level",
     description:
       "Design engaging experiences for Spotify’s mobile and web platforms with a strong systems mindset.",
-    salary: "USD 6k - 7.5k",
+    salary: "Rp 25 jt/bulan",
     postedAt: "7d ago",
+    dateLabel: "20 May, 2023",
+    tags: ["Full-time", "Senior", "Hybrid", "Produk"],
+    cardTone: "peach",
   },
   {
     id: "2",
@@ -52,13 +58,16 @@ const baseJobs = [
     verified: true,
     title: "Senior UX Designer",
     type: "Full-time",
-    location: "San Francisco, USA",
+    location: "Bandung, Indonesia",
     workType: "Hybrid",
     experience: "Senior Level",
     description:
       "Lead end-to-end UX for hosting tools—research, flows, and polished UI across web and mobile.",
-    salary: "USD 8k - 9.5k",
+    salary: "Rp 30 jt/bulan",
     postedAt: "12d ago",
+    dateLabel: "2 Apr, 2023",
+    tags: ["Part-time", "Senior", "Hybrid"],
+    cardTone: "rose",
   },
   {
     id: "3",
@@ -66,13 +75,16 @@ const baseJobs = [
     verified: true,
     title: "UI/UX Designer",
     type: "Full-time",
-    location: "Sydney, Australia",
+    location: "Surabaya, Indonesia",
     workType: "Remote",
     experience: "Mid Level",
     description:
       "Craft delightful interfaces and components that scale for millions of creators worldwide.",
-    salary: "USD 5.5k - 6.5k",
+    salary: "Rp 18 jt/bulan",
     postedAt: "20d ago",
+    dateLabel: "29 Jan, 2023",
+    tags: ["Full-time", "Mid", "Remote", "Shift"],
+    cardTone: "lavender",
   },
   {
     id: "4",
@@ -80,13 +92,16 @@ const baseJobs = [
     verified: true,
     title: "Junior Product Designer",
     type: "Full-time",
-    location: "San Francisco, USA",
+    location: "Yogyakarta, Indonesia",
     workType: "Hybrid",
     experience: "Entry Level",
     description:
       "Assist in designing productivity features with clean components, thoughtful hierarchy, and crisp motion.",
-    salary: "USD 4k - 5k",
+    salary: "Rp 9 jt/bulan",
     postedAt: "22d ago",
+    dateLabel: "11 Apr, 2023",
+    tags: ["Full-time", "Junior", "Hybrid", "Produk"],
+    cardTone: "sky",
   },
   {
     id: "5",
@@ -94,13 +109,16 @@ const baseJobs = [
     verified: true,
     title: "UX Researcher",
     type: "Full-time",
-    location: "Mountain View, USA",
+    location: "Bali, Indonesia",
     workType: "On-site",
     experience: "Lead / Manager",
     description:
       "Conduct mixed-method research to uncover user behavior and guide product strategy with clear insights.",
-    salary: "USD 9k - 11k",
+    salary: "Rp 35 jt/bulan",
     postedAt: "25d ago",
+    dateLabel: "4 Feb, 2023",
+    tags: ["Full-time", "Lead", "On-site", "Flexible"],
+    cardTone: "mint",
   },
   {
     id: "6",
@@ -108,13 +126,16 @@ const baseJobs = [
     verified: true,
     title: "Product Designer (Platform)",
     type: "Full-time",
-    location: "Remote (US)",
+    location: "Remote (Indonesia)",
     workType: "Remote",
     experience: "Senior Level",
     description:
       "Design intuitive interfaces for new product features—clarity, safety, and speed at scale.",
-    salary: "USD 7k - 8.5k",
+    salary: "Rp 28 jt/bulan",
     postedAt: "26d ago",
+    dateLabel: "18 Jan, 2023",
+    tags: ["Full-time", "Senior", "Remote"],
+    cardTone: "slate",
   },
   // extra variety for filters
   {
@@ -123,13 +144,16 @@ const baseJobs = [
     verified: true,
     title: "Frontend Engineer (Design Systems)",
     type: "Full-time",
-    location: "Dublin, Ireland",
+    location: "Tangerang, Indonesia",
     workType: "Hybrid",
     experience: "Mid Level",
     description:
       "Build accessible components and tokens powering Stripe’s product UI across teams and surfaces.",
-    salary: "USD 7k - 9k",
+    salary: "Rp 22 jt/bulan",
     postedAt: "3d ago",
+    dateLabel: "10 Jun, 2023",
+    tags: ["Full-time", "Mid", "Hybrid"],
+    cardTone: "mint",
   },
   {
     id: "8",
@@ -137,13 +161,16 @@ const baseJobs = [
     verified: true,
     title: "Design Ops Specialist",
     type: "Contract",
-    location: "London, UK",
+    location: "Malang, Indonesia",
     workType: "Hybrid",
     experience: "Mid Level",
     description:
       "Improve design workflows, templates, and QA to keep product design shipping with quality and speed.",
-    salary: "USD 5k - 6.2k",
+    salary: "Rp 16 jt/bulan",
     postedAt: "9d ago",
+    dateLabel: "6 Mar, 2023",
+    tags: ["Kontrak", "Mid", "Hybrid"],
+    cardTone: "peach",
   },
   {
     id: "9",
@@ -156,8 +183,11 @@ const baseJobs = [
     experience: "Mid Level",
     description:
       "Write clear, human microcopy for listening journeys and settings—reduce friction, boost confidence.",
-    salary: "USD 3.2k - 4.5k",
+    salary: "Rp 12 jt/bulan",
     postedAt: "5d ago",
+    dateLabel: "15 May, 2023",
+    tags: ["Freelance", "Mid", "Remote"],
+    cardTone: "sky",
   },
   {
     id: "10",
@@ -165,13 +195,16 @@ const baseJobs = [
     verified: true,
     title: "Data Engineer (Recommenders)",
     type: "Full-time",
-    location: "Melbourne, Australia",
+    location: "Depok, Indonesia",
     workType: "Hybrid",
     experience: "Senior Level",
     description:
       "Build ranking and recommendation systems—relevance, fairness, and strong evaluation.",
-    salary: "USD 10k - 13k",
+    salary: "Rp 40 jt/bulan",
     postedAt: "2d ago",
+    dateLabel: "8 Jun, 2023",
+    tags: ["Full-time", "Senior", "Hybrid"],
+    cardTone: "lavender",
   },
   {
     id: "11",
@@ -179,13 +212,16 @@ const baseJobs = [
     verified: true,
     title: "Backend Developer",
     type: "Full-time",
-    location: "Tokyo, Japan",
+    location: "Semarang, Indonesia",
     workType: "On-site",
     experience: "Senior Level",
     description:
       "Own APIs for collaboration features with strong performance, reliability, and clean architecture.",
-    salary: "USD 9k - 12k",
+    salary: "Rp 27 jt/bulan",
     postedAt: "14d ago",
+    dateLabel: "1 Mar, 2023",
+    tags: ["Full-time", "Senior", "On-site"],
+    cardTone: "slate",
   },
   {
     id: "12",
@@ -198,8 +234,11 @@ const baseJobs = [
     experience: "Mid Level",
     description:
       "Build premium SaaS job board UI + APIs with Next.js—filters, bookmarks, and great UX.",
-    salary: "USD 3k - 5k",
+    salary: "Rp 20 jt/bulan",
     postedAt: "1d ago",
+    dateLabel: "12 Jun, 2023",
+    tags: ["Full-time", "Mid", "Hybrid"],
+    cardTone: "peach",
   },
 ] satisfies JobListing[]
 

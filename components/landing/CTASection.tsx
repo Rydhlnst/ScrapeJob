@@ -9,34 +9,35 @@ export function CTASection() {
     <section className="py-14 md:py-20">
       <Container>
         <Card
-          className="relative overflow-hidden rounded-3xl border-border bg-primary p-10 text-primary-foreground shadow-sm md:p-12"
+          className="relative overflow-hidden rounded-3xl border-border bg-[hsl(var(--primary))] p-10 text-primary-foreground shadow-sm md:p-12"
           id="employers"
         >
           <div className="relative z-10 max-w-2xl">
             <h3 className="text-3xl font-semibold tracking-tight md:text-4xl">
-              Ready to find your next opportunity?
+              Siap dapat peluang karier berikutnya?
             </h3>
             <p className="mt-3 text-sm text-primary-foreground/80 md:text-base">
-              Start browsing curated jobs from trusted companies and discover
-              roles that fit your goals.
+              Mulai cari lowongan dari perusahaan terpercaya dan temukan posisi
+              yang cocok dengan target kariermu.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Button asChild className="rounded-xl bg-white text-primary hover:bg-white/90">
-                <Link href="/jobs">Browse Jobs</Link>
+                <Link href="/jobs">Cari lowongan</Link>
               </Button>
               <Button
                 asChild
                 variant="secondary"
                 className="rounded-xl bg-white/10 text-white hover:bg-white/15"
               >
-                <Link href="/#insights">Create Profile</Link>
+                <Link href="/#how">Buat profil</Link>
               </Button>
             </div>
           </div>
 
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute -right-24 -top-24 size-72 rounded-full bg-white/10 blur-2xl" />
-            <div className="absolute -bottom-24 -left-24 size-72 rounded-full bg-white/10 blur-2xl" />
+          {/* clean, plain background (no blobs / extra colors) */}
+          <div className="pointer-events-none absolute inset-0 opacity-40">
+            <div className="absolute -right-16 -top-16 size-72 rounded-full border border-white/10" />
+            <div className="absolute -left-20 -bottom-20 size-80 rounded-full border border-white/10" />
           </div>
         </Card>
       </Container>

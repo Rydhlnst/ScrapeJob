@@ -25,15 +25,15 @@ export function PaginationControls({
 
   return (
     <div className="flex items-center justify-between gap-3">
-      <Button asChild variant="outline" disabled={!canPrev}>
+      <Button asChild variant="outline" className="rounded-2xl" disabled={!canPrev}>
         <Link aria-disabled={!canPrev} href={buildHref(current, Math.max(1, page - 1))}>
           Prev
         </Link>
       </Button>
-      <div className="text-sm text-slate-600">
-        Page <span className="font-medium text-slate-900">{page}</span> / {totalPages}
+      <div className="text-sm text-muted-foreground">
+        Page <span className="font-medium text-foreground">{page}</span> / {totalPages}
       </div>
-      <Button asChild variant="outline" disabled={!canNext}>
+      <Button asChild variant="outline" className="rounded-2xl" disabled={!canNext}>
         <Link aria-disabled={!canNext} href={buildHref(current, Math.min(totalPages, page + 1))}>
           Next
         </Link>

@@ -68,11 +68,12 @@ function FiltersForm({
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        <div className="text-sm font-semibold text-slate-900">Kategori</div>
+        <div className="text-sm font-semibold text-foreground">Category</div>
         <Input
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          placeholder="Misal: IT & Software"
+          placeholder="e.g. IT & Software"
+          className="h-11 rounded-2xl"
         />
         <div className="flex flex-wrap gap-2">
           {categories.slice(0, 8).map((c) => (
@@ -80,7 +81,7 @@ function FiltersForm({
               key={c.id}
               type="button"
               onClick={() => setCategory(c.name)}
-              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-700 hover:border-blue-200 hover:bg-blue-50"
+              className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-[hsl(var(--accent-soft))] hover:text-[hsl(var(--dark))]"
             >
               {c.name}
             </button>
@@ -91,10 +92,10 @@ function FiltersForm({
       <Separator />
 
       <div className="space-y-2">
-        <div className="text-sm font-semibold text-slate-900">Tipe kerja</div>
+        <div className="text-sm font-semibold text-foreground">Job type</div>
         <div className="space-y-2">
           {jobTypes.map((t) => (
-            <label key={t} className="flex items-center gap-2 text-sm text-slate-700">
+            <label key={t} className="flex items-center gap-2 text-sm text-muted-foreground">
               <input
                 type="radio"
                 name="jobType"
@@ -104,14 +105,14 @@ function FiltersForm({
               {t}
             </label>
           ))}
-          <label className="flex items-center gap-2 text-sm text-slate-700">
+          <label className="flex items-center gap-2 text-sm text-muted-foreground">
             <input
               type="radio"
               name="jobType"
               checked={jobType === ""}
               onChange={() => setJobType("")}
             />
-            Semua
+            All
           </label>
         </div>
       </div>
@@ -119,10 +120,10 @@ function FiltersForm({
       <Separator />
 
       <div className="space-y-2">
-        <div className="text-sm font-semibold text-slate-900">Sumber</div>
+        <div className="text-sm font-semibold text-foreground">Source</div>
         <div className="space-y-2">
           {sources.map((s) => (
-            <label key={s} className="flex items-center gap-2 text-sm text-slate-700">
+            <label key={s} className="flex items-center gap-2 text-sm text-muted-foreground">
               <input
                 type="radio"
                 name="source"
@@ -132,23 +133,26 @@ function FiltersForm({
               {s}
             </label>
           ))}
-          <label className="flex items-center gap-2 text-sm text-slate-700">
+          <label className="flex items-center gap-2 text-sm text-muted-foreground">
             <input
               type="radio"
               name="source"
               checked={source === ""}
               onChange={() => setSource("")}
             />
-            Semua
+            All
           </label>
         </div>
       </div>
 
       <div className="flex gap-2 pt-2">
-        <Button className="flex-1 bg-blue-600 hover:bg-blue-700" onClick={apply}>
+        <Button
+          className="flex-1 rounded-2xl bg-[hsl(var(--dark))] text-white hover:bg-[hsl(var(--dark-soft))]"
+          onClick={apply}
+        >
           Apply
         </Button>
-        <Button className="flex-1" variant="outline" onClick={reset}>
+        <Button className="flex-1 rounded-2xl" variant="outline" onClick={reset}>
           Reset
         </Button>
       </div>
@@ -172,22 +176,31 @@ export function JobFilterSidebar({
   return (
     <>
       <div className="hidden md:block">
-        <Card>
+        <Card className="rounded-[28px] border-border bg-card shadow-sm">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Filter</CardTitle>
+            <CardTitle className="text-sm">Filters</CardTitle>
             <div className="flex flex-wrap gap-2 pt-1">
               {category ? (
-                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                <Badge
+                  variant="outline"
+                  className="border-border bg-[hsl(var(--muted))] text-[hsl(var(--primary))]"
+                >
                   {category}
                 </Badge>
               ) : null}
               {jobType ? (
-                <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200">
+                <Badge
+                  variant="outline"
+                  className="border-border bg-[hsl(var(--accent-soft))] text-[hsl(var(--dark))]"
+                >
                   {jobType}
                 </Badge>
               ) : null}
               {source ? (
-                <Badge variant="outline" className="bg-slate-100 text-slate-700 border-slate-200">
+                <Badge
+                  variant="outline"
+                  className="border-border bg-[hsl(var(--muted))] text-muted-foreground"
+                >
                   {source}
                 </Badge>
               ) : null}
@@ -207,13 +220,13 @@ export function JobFilterSidebar({
       <div className="md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" className="w-full">
-              Filter
+            <Button variant="outline" className="w-full rounded-2xl">
+              Filters
             </Button>
           </SheetTrigger>
           <SheetContent side="bottom" className="max-h-[85vh] overflow-auto">
             <SheetHeader>
-              <SheetTitle>Filter</SheetTitle>
+              <SheetTitle>Filters</SheetTitle>
             </SheetHeader>
             <div className="mt-4">
               <FiltersForm

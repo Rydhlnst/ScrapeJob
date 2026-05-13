@@ -5,14 +5,14 @@ import { Separator } from "@/components/ui/separator"
 
 export function JobSummaryCard({ job }: { job: Job }) {
   return (
-    <Card className="sticky top-6">
+    <Card className="sticky top-24 rounded-[28px] border-border bg-card shadow-sm">
       <CardHeader>
         <CardTitle className="text-base">Ringkasan</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="space-y-2 text-sm text-slate-700">
+        <div className="space-y-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-slate-900">{job.companyName}</span>
+            <span className="font-medium text-foreground">{job.companyName}</span>
           </div>
           <div className="flex items-center gap-2">
             <span>{job.location}</span>
@@ -27,18 +27,23 @@ export function JobSummaryCard({ job }: { job: Job }) {
               <span>Posted: {job.scrapedAt}</span>
             </div>
           ) : null}
-          <div className="text-xs text-slate-500">Source: {job.sourceName}</div>
+          <div className="text-xs text-muted-foreground">
+            Sumber: {job.sourceName}
+          </div>
         </div>
 
         <Separator />
 
-        <Button asChild className="w-full bg-blue-600 hover:bg-blue-700">
+        <Button
+          asChild
+          className="w-full rounded-2xl bg-[hsl(var(--dark))] text-white hover:bg-[hsl(var(--dark-soft))]"
+        >
           <a href={job.sourceUrl} target="_blank" rel="noreferrer">
             Lihat Sumber Lowongan
           </a>
         </Button>
 
-        <div className="rounded-md bg-slate-50 p-3 text-xs text-slate-600">
+        <div className="rounded-2xl border border-border bg-[hsl(var(--muted))] p-3 text-xs text-muted-foreground">
           Pastikan membaca informasi dari sumber resmi sebelum melamar.
         </div>
       </CardContent>

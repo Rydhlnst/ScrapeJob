@@ -8,33 +8,33 @@ const steps = [
   {
     step: "01",
     icon: UserRound,
-    title: "Create your profile",
+    title: "Buat profil",
     description:
-      "Add your skills, role preferences, and salary target so your search feels relevant from day one.",
+      "Tambahkan skill, preferensi posisi, dan target gaji agar pencarian lebih relevan sejak awal.",
   },
   {
     step: "02",
     icon: Search,
-    title: "Discover curated jobs",
+    title: "Cari lowongan terkurasi",
     description:
-      "Use clean filters and smart sorting to find the right roles faster without scrolling endlessly.",
+      "Gunakan filter yang jelas untuk menemukan lowongan yang tepat tanpa scroll berlebihan.",
   },
   {
     step: "03",
     icon: FileText,
-    title: "Apply faster",
+    title: "Apply lebih cepat",
     description:
-      "Save roles, track what you like, and apply with confidence using clean job summaries.",
+      "Simpan lowongan favorit, bandingkan pilihan, dan apply dengan percaya diri.",
   },
 ]
 
 export function HowItWorks() {
   return (
-    <section className="py-14 md:py-20" id="insights">
+    <section className="py-14 md:py-20" id="how">
       <Container>
         <SectionHeader
-          title="How it works"
-          description="A premium flow that helps you go from search to shortlist in minutes."
+          title="Cara kerja"
+          description="Alur sederhana yang bantu kamu dari cari sampai shortlist dalam hitungan menit."
           align="center"
         />
 
