@@ -1,0 +1,18 @@
+{
+  "source": "glints",
+  "scraped_at": "2026-05-26T18:12:49+07:00",
+  "total": 0,
+  "jobs": [],
+  "meta": {
+    "roles": [
+      "Data Analyst",
+      "Data Engineer"
+    ],
+    "filter": {
+      "type": "pages",
+      "max_pages": 1,
+      "max_days_ago": 30,
+      "start_date": null
+    }
+  }
+}

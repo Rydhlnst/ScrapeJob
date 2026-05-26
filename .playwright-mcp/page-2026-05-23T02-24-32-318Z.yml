@@ -1,0 +1,1478 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - link "Chat on WhatsApp" [ref=e4] [cursor=pointer]:
+      - /url: https://wa.me/6289510171504?text=Halo%2C%20saat%20ini%20saya%20sedang%20mengakses%20website%20Glints%20dan%20saya%20butuh%20bantuan
+      - img "Chat on WhatsApp" [ref=e5]
+    - generic [ref=e6]:
+      - region "Notifications Alt+T"
+      - generic [ref=e7]:
+        - navigation [ref=e11]:
+          - link "Glints home page" [ref=e12] [cursor=pointer]:
+            - /url: /id
+            - img "Glints Taploker Logo" [ref=e14]
+          - link "Jobs page" [ref=e16] [cursor=pointer]:
+            - /url: /id/lowongan-kerja
+            - text: Lowongan Kerja
+          - link "Companies page" [ref=e18] [cursor=pointer]:
+            - /url: /id/companies?countries=ID
+            - text: PERUSAHAAN
+          - link "Blog page" [ref=e20] [cursor=pointer]:
+            - /url: /id/lowongan/
+            - text: Blog
+          - generic [ref=e21]:
+            - button "Unduh App Glints" [ref=e24] [cursor=pointer]
+            - menu "Language switcher" [ref=e26]:
+              - menuitem "Indonesian" [ref=e27]:
+                - generic [ref=e29] [cursor=pointer]:
+                  - img [ref=e30]
+                  - generic [ref=e32]: Indonesian
+                  - img [ref=e34]
+            - button "Daftar" [ref=e37] [cursor=pointer]
+            - button "Masuk" [ref=e39] [cursor=pointer]
+            - link "untuk perusahaan" [ref=e41] [cursor=pointer]:
+              - /url: https://employers.glints.id/?utm_source=marketplace
+              - text: untuk perusahaan
+              - img [ref=e43]
+        - generic [ref=e46]:
+          - generic [ref=e49]:
+            - generic [ref=e51]:
+              - textbox "Cari Nama Pekerjaan, Skill, dan Perusahaan" [ref=e52]: software engineer
+              - img [ref=e54]
+              - button "Clear input" [ref=e56] [cursor=pointer]:
+                - img [ref=e57]
+            - generic [ref=e60]:
+              - textbox "Semua Kota/Provinsi" [ref=e61]
+              - img [ref=e63]
+            - button "Search button" [ref=e66] [cursor=pointer]: Cari
+          - heading "software engineer Jobs in" [level=1] [ref=e67]
+          - generic [ref=e68]:
+            - generic [ref=e69]:
+              - generic [ref=e70]:
+                - img [ref=e72]
+                - generic [ref=e75]:
+                  - generic [ref=e76]: Dapatkan notifikasi lokermu secara langsung di Aplikasi Glints
+                  - paragraph [ref=e77]: Scan kode QR untuk download
+              - region "Filter your search" [ref=e79]:
+                - generic [ref=e80]:
+                  - region [ref=e82] [cursor=pointer]:
+                    - button "Prioritaskan" [expanded] [ref=e83]:
+                      - text: Prioritaskan
+                      - img [ref=e84]
+                    - radiogroup "sortBy filter options" [ref=e87]:
+                      - radio "Paling Relevan" [checked] [ref=e88]:
+                        - generic [ref=e90]: Paling Relevan
+                      - radio "Baru Ditambahkan" [ref=e91]:
+                        - generic [ref=e93]: Baru Ditambahkan
+                  - region [ref=e95] [cursor=pointer]:
+                    - button "Tipe Pekerjaan" [expanded] [ref=e96]:
+                      - text: Tipe Pekerjaan
+                      - img [ref=e97]
+                    - generic [ref=e100]:
+                      - checkbox "Penuh Waktu" [ref=e101]:
+                        - generic [ref=e102]: Penuh Waktu
+                      - checkbox "Kontrak" [ref=e103]:
+                        - generic [ref=e104]: Kontrak
+                      - checkbox "Magang" [ref=e105]:
+                        - generic [ref=e106]: Magang
+                      - checkbox "Freelance" [ref=e107]:
+                        - generic [ref=e108]: Freelance
+                      - checkbox "Paruh Waktu" [ref=e109]:
+                        - generic [ref=e110]: Paruh Waktu
+                  - region [ref=e112] [cursor=pointer]:
+                    - button "Kebijakan Kerja" [expanded] [ref=e113]:
+                      - text: Kebijakan Kerja
+                      - img [ref=e114]
+                    - generic [ref=e117]:
+                      - checkbox "Kerja di lokasi" [ref=e118]:
+                        - generic [ref=e119]: Kerja di lokasi
+                      - checkbox "Kerja di lokasi / rumah" [ref=e120]:
+                        - generic [ref=e121]: Kerja di lokasi / rumah
+                      - checkbox "Kerja Remote/dari rumah" [ref=e122]:
+                        - generic [ref=e123]: Kerja Remote/dari rumah
+                  - region [ref=e125] [cursor=pointer]:
+                    - button "Kecamatan" [expanded] [ref=e126]:
+                      - text: Kecamatan
+                      - img [ref=e127]
+                    - generic [ref=e130]:
+                      - checkbox "Ang Mo Kio" [ref=e131]:
+                        - generic [ref=e132]: Ang Mo Kio
+                      - checkbox "Bedok" [ref=e133]:
+                        - generic [ref=e134]: Bedok
+                      - checkbox "Cengkareng" [ref=e135]:
+                        - generic [ref=e136]: Cengkareng
+                      - checkbox "Changi" [ref=e137]:
+                        - generic [ref=e138]: Changi
+                      - checkbox "Downtown Core" [ref=e139]:
+                        - generic [ref=e140]: Downtown Core
+                      - checkbox "Gambir" [ref=e141]:
+                        - generic [ref=e142]: Gambir
+                      - checkbox "Geylang" [ref=e143]:
+                        - generic [ref=e144]: Geylang
+                      - checkbox "Grogol Petamburan" [ref=e145]:
+                        - generic [ref=e146]: Grogol Petamburan
+                      - checkbox "Jurong East" [ref=e147]:
+                        - generic [ref=e148]: Jurong East
+                      - checkbox "Kebayoran Baru" [ref=e149]:
+                        - generic [ref=e150]: Kebayoran Baru
+                      - checkbox "Kebon Jeruk" [ref=e151]:
+                        - generic [ref=e152]: Kebon Jeruk
+                      - checkbox "Paya Lebar" [ref=e153]:
+                        - generic [ref=e154]: Paya Lebar
+                      - checkbox "Penjaringan" [ref=e155]:
+                        - generic [ref=e156]: Penjaringan
+                      - checkbox "Queenstown" [ref=e157]:
+                        - generic [ref=e158]: Queenstown
+                      - checkbox "Setiabudi" [ref=e159]:
+                        - generic [ref=e160]: Setiabudi
+                      - checkbox "Singapore River" [ref=e161]:
+                        - generic [ref=e162]: Singapore River
+                      - checkbox "Tampines" [ref=e163]:
+                        - generic [ref=e164]: Tampines
+                      - checkbox "Tanah Abang" [ref=e165]:
+                        - generic [ref=e166]: Tanah Abang
+                      - checkbox "Tuas" [ref=e167]:
+                        - generic [ref=e168]: Tuas
+                      - checkbox "Woodlands" [ref=e169]:
+                        - generic [ref=e170]: Woodlands
+                  - region [ref=e172] [cursor=pointer]:
+                    - button "Pengalaman" [expanded] [ref=e173]:
+                      - text: Pengalaman
+                      - img [ref=e174]
+                    - generic [ref=e177]:
+                      - checkbox "Tidak berpengalaman" [ref=e178]:
+                        - generic [ref=e179]: Tidak berpengalaman
+                      - checkbox "Fresh Graduate" [ref=e180]:
+                        - generic [ref=e181]: Fresh Graduate
+                      - checkbox "Kurang dari setahun" [ref=e182]:
+                        - generic [ref=e183]: Kurang dari setahun
+                      - checkbox "1–3 tahun" [ref=e184]:
+                        - generic [ref=e185]: 1–3 tahun
+                      - checkbox "3–5 tahun" [ref=e186]:
+                        - generic [ref=e187]: 3–5 tahun
+                      - checkbox "5–10 tahun" [ref=e188]:
+                        - generic [ref=e189]: 5–10 tahun
+                  - region [ref=e191] [cursor=pointer]:
+                    - button "Tingkat Pendidikan" [ref=e192]:
+                      - text: Tingkat Pendidikan
+                      - img [ref=e193]
+                  - region [ref=e196] [cursor=pointer]:
+                    - button "Terakhir Diperbarui" [ref=e197]:
+                      - text: Terakhir Diperbarui
+                      - img [ref=e198]
+            - generic [ref=e200]:
+              - generic [ref=e201]:
+                - 'article "Job: Software Engineer, Company: GLOW FX Beauty, Location: Ciputat" [ref=e203]':
+                  - article "Job card 0" [ref=e204]:
+                    - generic [ref=e205]:
+                      - generic [ref=e206]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/97acfa9b-ca8a-48a2-ada8-f23d1a448473?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e207]: Rp 6,5 jt-7,5 jt
+                      - generic [ref=e208]:
+                        - generic [ref=e210]: Perusahaan Premium
+                        - generic [ref=e213]: Penuh Waktu
+                        - generic [ref=e216]: 1–3 tahun
+                        - generic [ref=e219]: Minimal Sarjana (S1)
+                        - generic [ref=e222]: React Native
+                        - generic [ref=e225]: "+11"
+                      - generic [ref=e226]:
+                        - img "GLOW FX Beauty" [ref=e229]
+                        - generic [ref=e230]:
+                          - generic [ref=e231]:
+                            - button "VIP Verified company badge" [ref=e233] [cursor=pointer]:
+                              - img [ref=e234]
+                            - 'link "Job card company name: GLOW FX Beauty" [ref=e236] [cursor=pointer]':
+                              - /url: /id/companies/glow-fx-beauty/3bf1d294-44a2-44ce-8b25-39ad2c9a25b6
+                              - text: GLOW FX Beauty
+                          - generic [ref=e238]:
+                            - img [ref=e239]
+                            - generic [ref=e241]:
+                              - generic "Tangerang Selatan" [ref=e242]:
+                                - link "Tangerang Selatan" [ref=e243]:
+                                  - /url: /id/job-location/indonesia/banten/tangerang-selatan
+                                - text: ","
+                              - generic "Banten" [ref=e244]:
+                                - link "Banten" [ref=e245]:
+                                  - /url: /id/job-location/indonesia/banten
+                    - generic [ref=e248]:
+                      - paragraph [ref=e252]: Kemarin
+                      - button "Bookmark Job Button" [ref=e254] [cursor=pointer]:
+                        - img [ref=e255]
+                - 'article "Job: Software Engineer, Company: PT Top Intera Jaya, Location: Cilodong" [ref=e258]':
+                  - article "Job card 1" [ref=e259]:
+                    - generic [ref=e260]:
+                      - generic [ref=e261]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/d106d7fc-d01d-49c8-8604-b3db9ba0c75f?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e262]: Rp 5 jt-7 jt
+                      - generic [ref=e263]:
+                        - generic [ref=e265]: Perusahaan Premium
+                        - generic [ref=e268]: Penuh Waktu
+                        - generic [ref=e271]: 1–3 tahun
+                        - generic [ref=e274]: Minimal Sarjana (S1)
+                        - generic [ref=e277]: Programming Language
+                        - generic [ref=e280]: "+4"
+                      - generic [ref=e281]:
+                        - img "PT Top Intera Jaya" [ref=e284]
+                        - generic [ref=e285]:
+                          - generic [ref=e286]:
+                            - button "VIP Verified company badge" [ref=e288] [cursor=pointer]:
+                              - img [ref=e289]
+                            - 'link "Job card company name: PT Top Intera Jaya" [ref=e291] [cursor=pointer]':
+                              - /url: /id/companies/pt-top-intera-jaya/5f26e641-4baf-4f51-b034-69613abcbb83
+                              - text: PT Top Intera Jaya
+                          - generic [ref=e293]:
+                            - img [ref=e294]
+                            - generic [ref=e296]:
+                              - generic "Depok" [ref=e297]:
+                                - link "Depok" [ref=e298]:
+                                  - /url: /id/job-location/indonesia/jawa-barat/depok
+                                - text: ","
+                              - generic "Jawa Barat" [ref=e299]:
+                                - link "Jawa Barat" [ref=e300]:
+                                  - /url: /id/job-location/indonesia/jawa-barat
+                    - generic [ref=e303]:
+                      - paragraph [ref=e307]: 2 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e309] [cursor=pointer]:
+                        - img [ref=e310]
+                - 'article "Job: Software Engineer, Company: Majoo Indonesia, Location: Blimbing" [ref=e313]':
+                  - article "Job card 2" [ref=e314]:
+                    - generic [ref=e315]:
+                      - generic [ref=e316]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/c10c8bd6-fa89-4148-95a4-1807e270f3f9?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e317]: Gaji Tidak Ditampilkan
+                      - generic [ref=e318]:
+                        - generic [ref=e320]: Perusahaan Premium
+                        - generic [ref=e323]: Penuh Waktu
+                        - generic [ref=e326]: 1–3 tahun
+                        - generic [ref=e329]: Minimal Sarjana (S1)
+                        - generic [ref=e332]: Software Architecture
+                        - generic [ref=e335]: "+2"
+                      - generic [ref=e336]:
+                        - img "Majoo Indonesia" [ref=e339]
+                        - generic [ref=e340]:
+                          - generic [ref=e341]:
+                            - button "VIP Verified company badge" [ref=e343] [cursor=pointer]:
+                              - img [ref=e344]
+                            - 'link "Job card company name: Majoo Indonesia" [ref=e346] [cursor=pointer]':
+                              - /url: /id/companies/majoo-indonesia/7a8b934e-358d-4482-b7a8-801dab8c7d85
+                              - text: Majoo Indonesia
+                          - generic [ref=e348]:
+                            - img [ref=e349]
+                            - generic [ref=e351]:
+                              - generic "Malang" [ref=e352]:
+                                - link "Malang" [ref=e353]:
+                                  - /url: /id/job-location/indonesia/jawa-timur/malang
+                                - text: ","
+                              - generic "Jawa Timur" [ref=e354]:
+                                - link "Jawa Timur" [ref=e355]:
+                                  - /url: /id/job-location/indonesia/jawa-timur
+                    - generic [ref=e358]:
+                      - paragraph [ref=e362]: 3 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e364] [cursor=pointer]:
+                        - img [ref=e365]
+                - 'article "Job: Software Engineer, Company: PT. MUAT LOGISTIK INDONESIA, Location: Taman Sari" [ref=e368]':
+                  - article "Job card 3" [ref=e369]:
+                    - generic [ref=e370]:
+                      - generic [ref=e371]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/d80ee21c-6ba3-4218-8d54-1121e1302d76?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e372]: Rp 5 jt-6 jt
+                      - generic [ref=e373]:
+                        - generic [ref=e375]: Perusahaan Premium
+                        - generic [ref=e378]: Penuh Waktu
+                        - generic [ref=e381]: 1–3 tahun
+                        - generic [ref=e384]: Minimal Sarjana (S1)
+                        - generic [ref=e387]: Software Development
+                        - generic [ref=e390]: "+4"
+                      - generic [ref=e391]:
+                        - img "PT. MUAT LOGISTIK INDONESIA" [ref=e394]
+                        - generic [ref=e395]:
+                          - generic [ref=e396]:
+                            - button "VIP Verified company badge" [ref=e398] [cursor=pointer]:
+                              - img [ref=e399]
+                            - 'link "Job card company name: PT. MUAT LOGISTIK INDONESIA" [ref=e401] [cursor=pointer]':
+                              - /url: /id/companies/pt-muat-logistik-indonesia/a5905d82-50c5-4cd4-9bfd-c5f8b69c20b9
+                              - text: PT. MUAT LOGISTIK INDONESIA
+                          - generic [ref=e403]:
+                            - img [ref=e404]
+                            - generic [ref=e406]:
+                              - generic "Jakarta Barat" [ref=e407]:
+                                - link "Jakarta Barat" [ref=e408]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-barat
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e409]:
+                                - link "DKI Jakarta" [ref=e410]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e413]:
+                      - paragraph [ref=e417]: 12 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e419] [cursor=pointer]:
+                        - img [ref=e420]
+                - 'article "Job: Software Engineer, Company: Pt Ada Ide Langsung Jalan, Location: Lowokwaru" [ref=e423]':
+                  - article "Job card 4" [ref=e424]:
+                    - generic [ref=e425]:
+                      - generic [ref=e426]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/be954e00-1384-4ec0-9687-18276f91d49f?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e427]: Rp 4 jt-7 jt
+                      - generic [ref=e428]:
+                        - generic [ref=e430]: Perusahaan Premium
+                        - generic [ref=e433]: Hybrid
+                        - generic [ref=e436]: Penuh Waktu
+                        - generic [ref=e439]: 1–3 tahun
+                        - generic [ref=e442]: Minimal SMA/SMK
+                        - generic [ref=e445]: "+5"
+                      - generic [ref=e446]:
+                        - img "Pt Ada Ide Langsung Jalan" [ref=e449]
+                        - generic [ref=e450]:
+                          - generic [ref=e451]:
+                            - button "VIP Verified company badge" [ref=e453] [cursor=pointer]:
+                              - img [ref=e454]
+                            - 'link "Job card company name: Pt Ada Ide Langsung Jalan" [ref=e456] [cursor=pointer]':
+                              - /url: /id/companies/pt-ada-ide-langsung-jalan/765d8894-8168-4aa0-b217-1f2a48f56829
+                              - text: Pt Ada Ide Langsung Jalan
+                          - generic [ref=e458]:
+                            - img [ref=e459]
+                            - generic [ref=e461]:
+                              - generic "Malang" [ref=e462]:
+                                - link "Malang" [ref=e463]:
+                                  - /url: /id/job-location/indonesia/jawa-timur/malang
+                                - text: ","
+                              - generic "Jawa Timur" [ref=e464]:
+                                - link "Jawa Timur" [ref=e465]:
+                                  - /url: /id/job-location/indonesia/jawa-timur
+                    - generic [ref=e468]:
+                      - paragraph [ref=e472]: Kemarin
+                      - button "Bookmark Job Button" [ref=e474] [cursor=pointer]:
+                        - img [ref=e475]
+                - 'article "Job: Software Engineer, Company: PT Prima Vista Solusi, Location: Setiabudi" [ref=e478]':
+                  - article "Job card 5" [ref=e479]:
+                    - generic [ref=e480]:
+                      - generic [ref=e481]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/10f46bd9-90ee-462b-88ab-2da2b810c801?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e482]: Gaji Tidak Ditampilkan
+                      - generic [ref=e483]:
+                        - generic [ref=e485]: Perusahaan Premium
+                        - generic [ref=e488]: Penuh Waktu
+                        - generic [ref=e491]: Minimal Sarjana (S1)
+                        - generic [ref=e494]: Problem Solving
+                        - generic [ref=e497]: Teamwork
+                        - generic [ref=e500]: "+1"
+                      - generic [ref=e501]:
+                        - img "PT Prima Vista Solusi" [ref=e504]
+                        - generic [ref=e505]:
+                          - generic [ref=e506]:
+                            - button "VIP Verified company badge" [ref=e508] [cursor=pointer]:
+                              - img [ref=e509]
+                            - 'link "Job card company name: PT Prima Vista Solusi" [ref=e511] [cursor=pointer]':
+                              - /url: /id/companies/pt-prima-vista-solusi/d75bdb3f-a5df-4d79-9b15-3bcb224b5103
+                              - text: PT Prima Vista Solusi
+                          - generic [ref=e513]:
+                            - img [ref=e514]
+                            - generic [ref=e516]:
+                              - generic "Jakarta Selatan" [ref=e517]:
+                                - link "Jakarta Selatan" [ref=e518]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-selatan
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e519]:
+                                - link "DKI Jakarta" [ref=e520]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e523]:
+                      - paragraph [ref=e527]: 23 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e529] [cursor=pointer]:
+                        - img [ref=e530]
+                - 'article "Job: Software engineer, Company: Dikshatek Indonesia, Location: Kemantren Gondokusuman" [ref=e533]':
+                  - article "Job card 6" [ref=e534]:
+                    - generic [ref=e535]:
+                      - generic [ref=e536]:
+                        - 'heading "Job card title: Software engineer" [level=2]':
+                          - 'link "Job card title: Software engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/52a63128-7eb5-45e6-96cc-f49eefcef138?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software engineer
+                        - generic [ref=e537]: Rp 7 jt-11 jt
+                      - generic [ref=e538]:
+                        - generic [ref=e541]: Kontrak
+                        - generic [ref=e544]: 3–5 tahun
+                        - generic [ref=e547]: Minimal Sarjana (S1)
+                        - generic [ref=e550]: C#
+                        - generic [ref=e553]: "+5"
+                      - generic [ref=e554]:
+                        - img "Dikshatek Indonesia" [ref=e557]
+                        - generic [ref=e558]:
+                          - generic [ref=e559]:
+                            - button "Verified company badge" [ref=e561] [cursor=pointer]:
+                              - img [ref=e562]
+                            - 'link "Job card company name: Dikshatek Indonesia" [ref=e564] [cursor=pointer]':
+                              - /url: /id/companies/dikshatek-indonesia/2b234407-069a-442b-ba0a-0717f6280c0c
+                              - text: Dikshatek Indonesia
+                          - generic [ref=e566]:
+                            - img [ref=e567]
+                            - generic [ref=e569]:
+                              - generic "Yogyakarta" [ref=e570]:
+                                - link "Yogyakarta" [ref=e571]:
+                                  - /url: /id/job-location/indonesia/di-yogyakarta-jogja/yogyakarta-jogja
+                                - text: ","
+                              - generic "DI Yogyakarta" [ref=e572]:
+                                - link "DI Yogyakarta" [ref=e573]:
+                                  - /url: /id/job-location/indonesia/di-yogyakarta-jogja
+                    - generic [ref=e576]:
+                      - paragraph [ref=e580]: 12 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e582] [cursor=pointer]:
+                        - img [ref=e583]
+                - 'article "Job: Software Engineer, Company: PT Hikari Indo Sarana, Location: Tambora" [ref=e586]':
+                  - article "Job card 7" [ref=e587]:
+                    - generic [ref=e588]:
+                      - generic [ref=e589]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/18c30d44-9593-4fa4-8c52-e6ff1dcf296b?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e590]: Rp 8 jt-10 jt
+                      - generic [ref=e591]:
+                        - generic [ref=e594]: Penuh Waktu
+                        - generic [ref=e597]: 3–5 tahun
+                        - generic [ref=e600]: Minimal Sarjana (S1)
+                        - generic [ref=e603]: Computer Vision
+                        - generic [ref=e606]: "+9"
+                      - generic [ref=e607]:
+                        - img "PT Hikari Indo Sarana" [ref=e610]
+                        - generic [ref=e611]:
+                          - generic [ref=e612]:
+                            - button "Verified company badge" [ref=e614] [cursor=pointer]:
+                              - img [ref=e615]
+                            - 'link "Job card company name: PT Hikari Indo Sarana" [ref=e617] [cursor=pointer]':
+                              - /url: /id/companies/pt-hikari-indo-sarana/1cdb163d-c31c-4516-b013-28373a1f9cd6
+                              - text: PT Hikari Indo Sarana
+                          - generic [ref=e619]:
+                            - img [ref=e620]
+                            - generic [ref=e622]:
+                              - generic "Jakarta Barat" [ref=e623]:
+                                - link "Jakarta Barat" [ref=e624]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-barat
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e625]:
+                                - link "DKI Jakarta" [ref=e626]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e629]:
+                      - paragraph [ref=e633]: 18 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e635] [cursor=pointer]:
+                        - img [ref=e636]
+                - 'article "Job: Software Engineer, Company: Ghina Multi Prima, Location: Bekasi Barat" [ref=e639]':
+                  - article "Job card 8" [ref=e640]:
+                    - generic [ref=e641]:
+                      - generic [ref=e642]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/9592b876-0436-45f3-8a29-1c431187304a?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e643]: Rp 5 jt-6 jt
+                      - generic [ref=e644]:
+                        - generic [ref=e647]: Kontrak
+                        - generic [ref=e650]: 1–3 tahun
+                        - generic [ref=e653]: Minimal Sarjana (S1)
+                        - generic [ref=e656]: JavaScript
+                        - generic [ref=e659]: "+2"
+                      - generic [ref=e660]:
+                        - img "Ghina Multi Prima" [ref=e663]
+                        - generic [ref=e664]:
+                          - generic [ref=e665]:
+                            - button "Verified company badge" [ref=e667] [cursor=pointer]:
+                              - img [ref=e668]
+                            - 'link "Job card company name: Ghina Multi Prima" [ref=e670] [cursor=pointer]':
+                              - /url: /id/companies/ghina-multi-prima/b6e6421f-6e13-4108-8adb-b628996288eb
+                              - text: Ghina Multi Prima
+                          - generic [ref=e672]:
+                            - img [ref=e673]
+                            - generic [ref=e675]:
+                              - generic "Bekasi" [ref=e676]:
+                                - link "Bekasi" [ref=e677]:
+                                  - /url: /id/job-location/indonesia/jawa-barat/bekasi
+                                - text: ","
+                              - generic "Jawa Barat" [ref=e678]:
+                                - link "Jawa Barat" [ref=e679]:
+                                  - /url: /id/job-location/indonesia/jawa-barat
+                    - generic [ref=e682]:
+                      - paragraph [ref=e686]: 19 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e688] [cursor=pointer]:
+                        - img [ref=e689]
+                - 'article "Job: Software Engineer, Company: PT Teknologi Govirtual Indonesia, Location: Tebet" [ref=e692]':
+                  - article "Job card 9" [ref=e693]:
+                    - generic [ref=e694]:
+                      - generic [ref=e695]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/0af26b5f-8a0b-4413-8f62-151facc32b4a?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e696]: Rp 6,8 jt-10 jt
+                      - generic [ref=e697]:
+                        - generic [ref=e700]: Penuh Waktu
+                        - generic [ref=e703]: 1–3 tahun
+                        - generic [ref=e706]: Minimal Sarjana (S1)
+                        - generic [ref=e709]: Node.js
+                        - generic [ref=e712]: "+6"
+                      - generic [ref=e713]:
+                        - img "PT Teknologi Govirtual Indonesia" [ref=e716]
+                        - generic [ref=e717]:
+                          - generic [ref=e718]:
+                            - button "Verified company badge" [ref=e720] [cursor=pointer]:
+                              - img [ref=e721]
+                            - 'link "Job card company name: PT Teknologi Govirtual Indonesia" [ref=e723] [cursor=pointer]':
+                              - /url: /id/companies/pt-teknologi-govirtual-indonesia/50efcaeb-0df0-41b8-8b59-d21899765257
+                              - text: PT Teknologi Govirtual Indonesia
+                          - generic [ref=e725]:
+                            - img [ref=e726]
+                            - generic [ref=e728]:
+                              - generic "Jakarta Selatan" [ref=e729]:
+                                - link "Jakarta Selatan" [ref=e730]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-selatan
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e731]:
+                                - link "DKI Jakarta" [ref=e732]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e735]:
+                      - paragraph [ref=e739]: Kemarin
+                      - button "Bookmark Job Button" [ref=e741] [cursor=pointer]:
+                        - img [ref=e742]
+                - 'article "Job: Software Engineer, Company: Duluin Group, Location: Buahbatu" [ref=e745]':
+                  - article "Job card 10" [ref=e746]:
+                    - generic [ref=e747]:
+                      - generic [ref=e748]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/8f33ca75-a5d5-47e5-a2cd-75fbfef4c395?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e749]: Rp 4 jt-6 jt
+                      - generic [ref=e750]:
+                        - generic [ref=e753]: Penuh Waktu
+                        - generic [ref=e756]: 1–3 tahun
+                        - generic [ref=e759]: Minimal Sarjana (S1)
+                        - generic [ref=e762]: JavaScript
+                        - generic [ref=e765]: "+6"
+                      - generic [ref=e766]:
+                        - img "Duluin Group" [ref=e769]
+                        - generic [ref=e770]:
+                          - generic [ref=e771]:
+                            - img [ref=e773] [cursor=pointer]
+                            - 'link "Job card company name: Duluin Group" [ref=e775] [cursor=pointer]':
+                              - /url: /id/companies/duluin-group/e9e4d152-66ca-49c9-a8d4-1dfaa14bf782
+                              - text: Duluin Group
+                          - generic [ref=e777]:
+                            - img [ref=e778]
+                            - generic [ref=e780]:
+                              - generic "Bandung" [ref=e781]:
+                                - link "Bandung" [ref=e782]:
+                                  - /url: /id/job-location/indonesia/jawa-barat/bandung
+                                - text: ","
+                              - generic "Jawa Barat" [ref=e783]:
+                                - link "Jawa Barat" [ref=e784]:
+                                  - /url: /id/job-location/indonesia/jawa-barat
+                    - generic [ref=e787]:
+                      - paragraph [ref=e791]: 2 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e793] [cursor=pointer]:
+                        - img [ref=e794]
+                - 'article "Job: Software Engineer, Company: PT Inter Sistem Asia, Location: Pasar Minggu" [ref=e797]':
+                  - article "Job card 11" [ref=e798]:
+                    - generic [ref=e799]:
+                      - generic [ref=e800]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/a8b758c5-0e36-4ff8-9853-e042b1dd7f33?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e801]: Gaji Tidak Ditampilkan
+                      - generic [ref=e802]:
+                        - generic [ref=e805]: Penuh Waktu
+                        - generic [ref=e808]: 1–3 tahun
+                        - generic [ref=e811]: Minimal Sarjana (S1)
+                        - generic [ref=e814]: Laravel
+                        - generic [ref=e817]: "+3"
+                      - generic [ref=e818]:
+                        - img "PT Inter Sistem Asia" [ref=e821]
+                        - generic [ref=e822]:
+                          - generic [ref=e823]:
+                            - button "Verified company badge" [ref=e825] [cursor=pointer]:
+                              - img [ref=e826]
+                            - 'link "Job card company name: PT Inter Sistem Asia" [ref=e828] [cursor=pointer]':
+                              - /url: /id/companies/pt-inter-sistem-asia/04ba1bf5-4be0-49fb-8c7f-bf4852da0836
+                              - text: PT Inter Sistem Asia
+                          - generic [ref=e830]:
+                            - img [ref=e831]
+                            - generic [ref=e833]:
+                              - generic "Jakarta Selatan" [ref=e834]:
+                                - link "Jakarta Selatan" [ref=e835]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-selatan
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e836]:
+                                - link "DKI Jakarta" [ref=e837]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e840]:
+                      - paragraph [ref=e844]: 1 bulan yang lalu
+                      - button "Bookmark Job Button" [ref=e846] [cursor=pointer]:
+                        - img [ref=e847]
+                - 'article "Job: Software Engineer, Company: Simplifa.ai, Location: Pasar Minggu" [ref=e850]':
+                  - article "Job card 12" [ref=e851]:
+                    - generic [ref=e852]:
+                      - generic [ref=e853]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/4b09f11e-d4d5-43a6-8338-20d24be770e1?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e854]: Rp 17 jt-20 jt
+                      - generic [ref=e855]:
+                        - generic [ref=e858]: Remote/Dari rumah
+                        - generic [ref=e861]: Penuh Waktu
+                        - generic [ref=e864]: 3–5 tahun
+                        - generic [ref=e867]: Minimal Sarjana (S1)
+                        - generic [ref=e870]: "+3"
+                      - generic [ref=e871]:
+                        - img "PT Simplifa Cerdas Menyala" [ref=e874]
+                        - generic [ref=e875]:
+                          - generic [ref=e876]:
+                            - button "Verified company badge" [ref=e878] [cursor=pointer]:
+                              - img [ref=e879]
+                            - 'link "Job card company name: Simplifa.ai" [ref=e881] [cursor=pointer]':
+                              - /url: /id/companies/simplifaai/66af6b37-650d-4378-8418-a13fed1ca43d
+                              - text: Simplifa.ai
+                          - generic [ref=e883]:
+                            - img [ref=e884]
+                            - generic [ref=e886]:
+                              - generic "Jakarta Selatan" [ref=e887]:
+                                - link "Jakarta Selatan" [ref=e888]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-selatan
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e889]:
+                                - link "DKI Jakarta" [ref=e890]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e893]:
+                      - paragraph [ref=e897]: 5 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e899] [cursor=pointer]:
+                        - img [ref=e900]
+                - 'article "Job: Software Engineer, Company: Selaras Asia Mandiri, Location: Kemantren Jetis" [ref=e903]':
+                  - article "Job card 13" [ref=e904]:
+                    - generic [ref=e905]:
+                      - generic [ref=e906]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/70cc5b68-975f-46c6-b31b-ac1ecac54e4d?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e907]: Rp 5 jt-10 jt
+                      - generic [ref=e908]:
+                        - generic [ref=e911]: Penuh Waktu
+                        - generic [ref=e914]: 3–5 tahun
+                        - generic [ref=e917]: Minimal Sarjana (S1)
+                        - generic [ref=e920]: SQL
+                        - generic [ref=e923]: "+2"
+                      - generic [ref=e924]:
+                        - img "Selaras Asia Mandiri" [ref=e927]
+                        - generic [ref=e928]:
+                          - generic [ref=e929]:
+                            - button "Verified company badge" [ref=e931] [cursor=pointer]:
+                              - img [ref=e932]
+                            - 'link "Job card company name: Selaras Asia Mandiri" [ref=e934] [cursor=pointer]':
+                              - /url: /id/companies/selaras-asia-mandiri/26be88bb-fa7a-4b1a-a873-4d137a989ee4
+                              - text: Selaras Asia Mandiri
+                          - generic [ref=e936]:
+                            - img [ref=e937]
+                            - generic [ref=e939]:
+                              - generic "Yogyakarta" [ref=e940]:
+                                - link "Yogyakarta" [ref=e941]:
+                                  - /url: /id/job-location/indonesia/di-yogyakarta-jogja/yogyakarta-jogja
+                                - text: ","
+                              - generic "DI Yogyakarta" [ref=e942]:
+                                - link "DI Yogyakarta" [ref=e943]:
+                                  - /url: /id/job-location/indonesia/di-yogyakarta-jogja
+                    - generic [ref=e946]:
+                      - paragraph [ref=e950]: 8 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e952] [cursor=pointer]:
+                        - img [ref=e953]
+                - 'article "Job: Software Engineer, Company: Thamrin Meyer Corporation, Location: Bogor Barat" [ref=e956]':
+                  - article "Job card 14" [ref=e957]:
+                    - generic [ref=e958]:
+                      - generic [ref=e959]:
+                        - 'heading "Job card title: Software Engineer" [level=2]':
+                          - 'link "Job card title: Software Engineer"':
+                            - /url: /id/opportunities/jobs/software-engineer/21f840c6-c1e7-4711-addf-646aa96ddc54?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer
+                        - generic [ref=e960]: Rp 2,5 jt-3 jt
+                      - generic [ref=e961]:
+                        - generic [ref=e964]: Penuh Waktu
+                        - generic [ref=e967]: 1–3 tahun
+                        - generic [ref=e970]: Minimal SMA/SMK
+                        - generic [ref=e973]: JavaScript
+                        - generic [ref=e976]: "+6"
+                      - generic [ref=e977]:
+                        - img "PT Putra Thamrin Meyer" [ref=e980]
+                        - generic [ref=e981]:
+                          - generic [ref=e982]:
+                            - button "Verified company badge" [ref=e984] [cursor=pointer]:
+                              - img [ref=e985]
+                            - 'link "Job card company name: Thamrin Meyer Corporation" [ref=e987] [cursor=pointer]':
+                              - /url: /id/companies/thamrin-meyer-corporation/6feacf7a-2c9f-4284-9c9a-ba327488a5a5
+                              - text: Thamrin Meyer Corporation
+                          - generic [ref=e989]:
+                            - img [ref=e990]
+                            - generic [ref=e992]:
+                              - generic "Bogor" [ref=e993]:
+                                - link "Bogor" [ref=e994]:
+                                  - /url: /id/job-location/indonesia/jawa-barat/bogor
+                                - text: ","
+                              - generic "Jawa Barat" [ref=e995]:
+                                - link "Jawa Barat" [ref=e996]:
+                                  - /url: /id/job-location/indonesia/jawa-barat
+                    - generic [ref=e999]:
+                      - paragraph [ref=e1003]: 16 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1005] [cursor=pointer]:
+                        - img [ref=e1006]
+                - 'article "Job: Software Engineer (Golang Engineer), Company: Pt. Solusi Pembayaran Elektronik, Location: Cipondoh" [ref=e1009]':
+                  - article "Job card 15" [ref=e1010]:
+                    - generic [ref=e1011]:
+                      - generic [ref=e1012]:
+                        - 'heading "Job card title: Software Engineer (Golang Engineer)" [level=2]':
+                          - 'link "Job card title: Software Engineer (Golang Engineer)"':
+                            - /url: /id/opportunities/jobs/software-engineer-golang-engineer/d3d3f3bc-b7c9-486e-9145-82d89c4ff75a?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer (Golang Engineer)
+                        - generic [ref=e1013]: Rp 10 jt-12 jt
+                      - generic [ref=e1014]:
+                        - generic [ref=e1016]: Perusahaan Premium
+                        - generic [ref=e1019]: Hybrid
+                        - generic [ref=e1022]: Penuh Waktu
+                        - generic [ref=e1025]: 3–5 tahun
+                        - generic [ref=e1028]: Minimal Diploma (D1 - D4)
+                        - generic [ref=e1031]: "+9"
+                      - generic [ref=e1032]:
+                        - img "Pt. Solusi Pembayaran Elektronik" [ref=e1035]
+                        - generic [ref=e1036]:
+                          - generic [ref=e1037]:
+                            - button "VIP Verified company badge" [ref=e1039] [cursor=pointer]:
+                              - img [ref=e1040]
+                            - 'link "Job card company name: Pt. Solusi Pembayaran Elektronik" [ref=e1042] [cursor=pointer]':
+                              - /url: /id/companies/pt-solusi-pembayaran-elektronik/185c85fe-75ce-4371-8a5c-b399b0dcfc7d
+                              - text: Pt. Solusi Pembayaran Elektronik
+                          - generic [ref=e1044]:
+                            - img [ref=e1045]
+                            - generic [ref=e1047]:
+                              - generic "Tangerang" [ref=e1048]:
+                                - link "Tangerang" [ref=e1049]:
+                                  - /url: /id/job-location/indonesia/banten/tangerang
+                                - text: ","
+                              - generic "Banten" [ref=e1050]:
+                                - link "Banten" [ref=e1051]:
+                                  - /url: /id/job-location/indonesia/banten
+                    - generic [ref=e1054]:
+                      - paragraph [ref=e1058]: 18 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1060] [cursor=pointer]:
+                        - img [ref=e1061]
+                - 'article "Job: C++ Software Engineer, Company: Surya Narayana Indonesia, Location: Buleleng" [ref=e1064]':
+                  - article "Job card 16" [ref=e1065]:
+                    - generic [ref=e1066]:
+                      - generic [ref=e1067]:
+                        - 'heading "Job card title: C++ Software Engineer" [level=2]':
+                          - 'link "Job card title: C++ Software Engineer"':
+                            - /url: /id/opportunities/jobs/c-software-engineer/61e3cb70-2d0e-4c26-a1ec-ac4dde432147?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: C++ Software Engineer
+                        - generic [ref=e1068]: Gaji Tidak Ditampilkan
+                      - generic [ref=e1069]:
+                        - generic [ref=e1071]: Perusahaan Premium
+                        - generic [ref=e1074]: Penuh Waktu
+                        - generic [ref=e1077]: 1–3 tahun
+                        - generic [ref=e1080]: Minimal Sarjana (S1)
+                        - generic [ref=e1083]: C++
+                        - generic [ref=e1086]: "+2"
+                      - generic [ref=e1087]:
+                        - img "Surya Narayana Indonesi" [ref=e1090]
+                        - generic [ref=e1091]:
+                          - generic [ref=e1092]:
+                            - button "VIP Verified company badge" [ref=e1094] [cursor=pointer]:
+                              - img [ref=e1095]
+                            - 'link "Job card company name: Surya Narayana Indonesia" [ref=e1097] [cursor=pointer]':
+                              - /url: /id/companies/surya-narayana-indonesia/c4420301-8e47-46db-9bf0-63a662f90834
+                              - text: Surya Narayana Indonesia
+                          - generic [ref=e1099]:
+                            - img [ref=e1100]
+                            - generic [ref=e1102]:
+                              - generic "Kab. Buleleng" [ref=e1103]:
+                                - link "Kab. Buleleng" [ref=e1104]:
+                                  - /url: /id/job-location/indonesia/bali/kab-buleleng
+                                - text: ","
+                              - generic "Bali" [ref=e1105]:
+                                - link "Bali" [ref=e1106]:
+                                  - /url: /id/job-location/indonesia/bali
+                    - generic [ref=e1109]:
+                      - paragraph [ref=e1113]: 2 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1115] [cursor=pointer]:
+                        - img [ref=e1116]
+                - 'article "Job: Software Engineer (Fullstack), Company: PT Reka Multi Aptika, Location: Senen" [ref=e1119]':
+                  - article "Job card 17" [ref=e1120]:
+                    - generic [ref=e1121]:
+                      - generic [ref=e1122]:
+                        - 'heading "Job card title: Software Engineer (Fullstack)" [level=2]':
+                          - 'link "Job card title: Software Engineer (Fullstack)"':
+                            - /url: /id/opportunities/jobs/software-engineer-fullstack/1802fb52-adfc-4fb5-afa0-97bda732f5a1?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer (Fullstack)
+                        - generic [ref=e1123]: Rp 6 jt-12 jt
+                      - generic [ref=e1124]:
+                        - generic [ref=e1126]: Perusahaan Premium
+                        - generic [ref=e1129]: Penuh Waktu
+                        - generic [ref=e1132]: 1–3 tahun
+                        - generic [ref=e1135]: Minimal Sarjana (S1)
+                        - generic [ref=e1138]: SQL
+                        - generic [ref=e1141]: "+16"
+                      - generic [ref=e1142]:
+                        - img "PT Reka Multi Aptika" [ref=e1145]
+                        - generic [ref=e1146]:
+                          - generic [ref=e1147]:
+                            - button "VIP Verified company badge" [ref=e1149] [cursor=pointer]:
+                              - img [ref=e1150]
+                            - 'link "Job card company name: PT Reka Multi Aptika" [ref=e1152] [cursor=pointer]':
+                              - /url: /id/companies/pt-reka-multi-aptika/ce48837b-afe4-4a11-82db-ff70544904fc
+                              - text: PT Reka Multi Aptika
+                          - generic [ref=e1154]:
+                            - img [ref=e1155]
+                            - generic [ref=e1157]:
+                              - generic "Jakarta Pusat" [ref=e1158]:
+                                - link "Jakarta Pusat" [ref=e1159]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-pusat
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e1160]:
+                                - link "DKI Jakarta" [ref=e1161]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e1164]:
+                      - paragraph [ref=e1168]: 18 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1170] [cursor=pointer]:
+                        - img [ref=e1171]
+                - 'article "Job: Senior Software Engineer, Company: Vostra Internasional, Location: Jatisampurna" [ref=e1174]':
+                  - article "Job card 18" [ref=e1175]:
+                    - generic [ref=e1176]:
+                      - generic [ref=e1177]:
+                        - 'heading "Job card title: Senior Software Engineer" [level=2]':
+                          - 'link "Job card title: Senior Software Engineer"':
+                            - /url: /id/opportunities/jobs/senior-software-engineer/f3d56b53-3d2a-4369-bb9e-ea5120d879a4?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Senior Software Engineer
+                        - generic [ref=e1178]: Gaji Tidak Ditampilkan
+                      - generic [ref=e1179]:
+                        - generic [ref=e1181]: Perusahaan Premium
+                        - generic [ref=e1184]: Remote/Dari rumah
+                        - generic [ref=e1187]: Penuh Waktu
+                        - generic [ref=e1190]: 5–10 tahun
+                        - generic [ref=e1193]: Minimal Diploma (D1 - D4)
+                        - generic [ref=e1196]: "+9"
+                      - generic [ref=e1197]:
+                        - img "Vostra Internasional" [ref=e1200]
+                        - generic [ref=e1201]:
+                          - generic [ref=e1202]:
+                            - button "VIP Verified company badge" [ref=e1204] [cursor=pointer]:
+                              - img [ref=e1205]
+                            - 'link "Job card company name: Vostra Internasional" [ref=e1207] [cursor=pointer]':
+                              - /url: /id/companies/vostra-internasional/434ecbbd-3579-48a3-81a6-727fa310b683
+                              - text: Vostra Internasional
+                          - generic [ref=e1209]:
+                            - img [ref=e1210]
+                            - generic [ref=e1212]:
+                              - generic "Bekasi" [ref=e1213]:
+                                - link "Bekasi" [ref=e1214]:
+                                  - /url: /id/job-location/indonesia/jawa-barat/bekasi
+                                - text: ","
+                              - generic "Jawa Barat" [ref=e1215]:
+                                - link "Jawa Barat" [ref=e1216]:
+                                  - /url: /id/job-location/indonesia/jawa-barat
+                    - generic [ref=e1219]:
+                      - paragraph [ref=e1223]: 26 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1225] [cursor=pointer]:
+                        - img [ref=e1226]
+                - 'article "Job: Software Engineer (Bootcamp), Company: PT Formulatrix Indonesia, Location: Argomulyo" [ref=e1229]':
+                  - article "Job card 19" [ref=e1230]:
+                    - generic [ref=e1231]:
+                      - generic [ref=e1232]:
+                        - 'heading "Job card title: Software Engineer (Bootcamp)" [level=2]':
+                          - 'link "Job card title: Software Engineer (Bootcamp)"':
+                            - /url: /id/opportunities/jobs/software-engineer-bootcamp/79dcb996-4dbb-408c-8576-3716b164e15c?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer (Bootcamp)
+                        - generic [ref=e1233]: Rp 600 rb-1 jt
+                      - generic [ref=e1234]:
+                        - generic [ref=e1237]: Magang
+                        - generic [ref=e1240]: Minimal Diploma (D1 - D4)
+                        - generic [ref=e1244]: Python
+                        - generic [ref=e1248]: Java
+                        - generic [ref=e1252]: C#
+                      - generic [ref=e1253]:
+                        - img "PT Formulatrix Indonesia" [ref=e1256]
+                        - generic [ref=e1257]:
+                          - generic [ref=e1258]:
+                            - button "Verified company badge" [ref=e1260] [cursor=pointer]:
+                              - img [ref=e1261]
+                            - 'link "Job card company name: PT Formulatrix Indonesia" [ref=e1263] [cursor=pointer]':
+                              - /url: /id/companies/pt-formulatrix-indonesia/ca55bd43-2a3d-432d-ad8d-fc7276687363
+                              - text: PT Formulatrix Indonesia
+                          - generic [ref=e1265]:
+                            - img [ref=e1266]
+                            - generic [ref=e1268]:
+                              - generic "Salatiga" [ref=e1269]:
+                                - link "Salatiga" [ref=e1270]:
+                                  - /url: /id/job-location/indonesia/jawa-tengah/salatiga
+                                - text: ","
+                              - generic "Jawa Tengah" [ref=e1271]:
+                                - link "Jawa Tengah" [ref=e1272]:
+                                  - /url: /id/job-location/indonesia/jawa-tengah
+                    - generic [ref=e1275]:
+                      - paragraph [ref=e1279]: 2 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1281] [cursor=pointer]:
+                        - img [ref=e1282]
+                - 'article "Job: Software Engineer Intern, Company: Imperial Healthtech, Location: Gajah Mungkur" [ref=e1285]':
+                  - article "Job card 20" [ref=e1286]:
+                    - generic [ref=e1287]:
+                      - generic [ref=e1288]:
+                        - 'heading "Job card title: Software Engineer Intern" [level=2]':
+                          - 'link "Job card title: Software Engineer Intern"':
+                            - /url: /id/opportunities/jobs/software-engineer-intern/dd376589-e122-47f7-bb36-aef97c41ba8c?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer Intern
+                        - generic [ref=e1289]: Gaji Tidak Ditampilkan
+                      - generic [ref=e1290]:
+                        - generic [ref=e1293]: Magang
+                        - generic [ref=e1296]: Minimal SMA/SMK
+                        - generic [ref=e1299]: React.js
+                        - generic [ref=e1302]: PostgreSQL
+                        - generic [ref=e1305]: "+2"
+                      - generic [ref=e1306]:
+                        - img "PT IMPERIAL TEKNOLOGI INDONESIA" [ref=e1309]
+                        - generic [ref=e1310]:
+                          - generic [ref=e1311]:
+                            - button "Verified company badge" [ref=e1313] [cursor=pointer]:
+                              - img [ref=e1314]
+                            - 'link "Job card company name: Imperial Healthtech" [ref=e1316] [cursor=pointer]':
+                              - /url: /id/companies/imperial-healthtech/3cba29ba-3724-40a2-b618-8de84d2ae7e4
+                              - text: Imperial Healthtech
+                          - generic [ref=e1318]:
+                            - img [ref=e1319]
+                            - generic [ref=e1321]:
+                              - generic "Semarang" [ref=e1322]:
+                                - link "Semarang" [ref=e1323]:
+                                  - /url: /id/job-location/indonesia/jawa-tengah/semarang
+                                - text: ","
+                              - generic "Jawa Tengah" [ref=e1324]:
+                                - link "Jawa Tengah" [ref=e1325]:
+                                  - /url: /id/job-location/indonesia/jawa-tengah
+                    - generic [ref=e1328]:
+                      - paragraph [ref=e1332]: 2 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1334] [cursor=pointer]:
+                        - img [ref=e1335]
+                - 'article "Job: Software Engineer Instructor, Company: Haltev It Learning Center, Location: Bekasi Selatan" [ref=e1338]':
+                  - article "Job card 21" [ref=e1339]:
+                    - generic [ref=e1340]:
+                      - generic [ref=e1341]:
+                        - 'heading "Job card title: Software Engineer Instructor" [level=2]':
+                          - 'link "Job card title: Software Engineer Instructor"':
+                            - /url: /id/opportunities/jobs/software-engineer-instructor/eadc9b20-fb7a-4d43-8d98-3d68aac49970?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer Instructor
+                        - generic [ref=e1342]: Rp 3,2 jt-5,5 jt
+                      - generic [ref=e1343]:
+                        - generic [ref=e1346]: Penuh Waktu
+                        - generic [ref=e1349]: 1–3 tahun
+                        - generic [ref=e1352]: Minimal Diploma (D1 - D4)
+                        - generic [ref=e1355]: Frontend Development
+                        - generic [ref=e1358]: "+13"
+                      - generic [ref=e1359]:
+                        - img "Haltev It Learning Center" [ref=e1362]
+                        - generic [ref=e1363]:
+                          - generic [ref=e1364]:
+                            - button "Verified company badge" [ref=e1366] [cursor=pointer]:
+                              - img [ref=e1367]
+                            - 'link "Job card company name: Haltev It Learning Center" [ref=e1369] [cursor=pointer]':
+                              - /url: /id/companies/haltev-it-learning-center/a0eadcf8-ee6a-472f-9d3d-d598e6a95ed0
+                              - text: Haltev It Learning Center
+                          - generic [ref=e1371]:
+                            - img [ref=e1372]
+                            - generic [ref=e1374]:
+                              - generic "Bekasi" [ref=e1375]:
+                                - link "Bekasi" [ref=e1376]:
+                                  - /url: /id/job-location/indonesia/jawa-barat/bekasi
+                                - text: ","
+                              - generic "Jawa Barat" [ref=e1377]:
+                                - link "Jawa Barat" [ref=e1378]:
+                                  - /url: /id/job-location/indonesia/jawa-barat
+                    - generic [ref=e1381]:
+                      - paragraph [ref=e1385]: 3 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1387] [cursor=pointer]:
+                        - img [ref=e1388]
+                - 'article "Job: Software Engineer Intern, Company: Studia Academy Ltd, Location: Kebon Jeruk" [ref=e1391]':
+                  - article "Job card 22" [ref=e1392]:
+                    - generic [ref=e1393]:
+                      - generic [ref=e1394]:
+                        - 'heading "Job card title: Software Engineer Intern" [level=2]':
+                          - 'link "Job card title: Software Engineer Intern"':
+                            - /url: /id/opportunities/jobs/software-engineer-intern/6cdaba26-b0f6-434a-973f-ed0d7a36dd2d?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer Intern
+                        - generic [ref=e1395]: Rp 2,5 jt-3,5 jt
+                      - generic [ref=e1396]:
+                        - generic [ref=e1399]: Hybrid
+                        - generic [ref=e1402]: Magang
+                        - generic [ref=e1405]: Minimal Sarjana (S1)
+                        - generic [ref=e1408]: TypeScript
+                        - generic [ref=e1411]: "+5"
+                      - generic [ref=e1412]:
+                        - img "Studia Academy Ltd" [ref=e1415]
+                        - generic [ref=e1416]:
+                          - generic [ref=e1417]:
+                            - button "Verified company badge" [ref=e1419] [cursor=pointer]:
+                              - img [ref=e1420]
+                            - 'link "Job card company name: Studia Academy Ltd" [ref=e1422] [cursor=pointer]':
+                              - /url: /id/companies/studia-academy-ltd/47cdc767-6232-46db-b640-94677542d643
+                              - text: Studia Academy Ltd
+                          - generic [ref=e1424]:
+                            - img [ref=e1425]
+                            - generic [ref=e1427]:
+                              - generic "Jakarta Barat" [ref=e1428]:
+                                - link "Jakarta Barat" [ref=e1429]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-barat
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e1430]:
+                                - link "DKI Jakarta" [ref=e1431]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e1434]:
+                      - paragraph [ref=e1438]: 5 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1440] [cursor=pointer]:
+                        - img [ref=e1441]
+                - 'article "Job: Junior Software Engineer, Company: iQuartz Pte Ltd, Location: Gambir" [ref=e1444]':
+                  - article "Job card 23" [ref=e1445]:
+                    - generic [ref=e1446]:
+                      - generic [ref=e1447]:
+                        - 'heading "Job card title: Junior Software Engineer" [level=2]':
+                          - 'link "Job card title: Junior Software Engineer"':
+                            - /url: /id/opportunities/jobs/junior-software-engineer/d205fb30-bcd8-4251-989c-bcb4828d24d1?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Junior Software Engineer
+                        - generic [ref=e1448]: Rp 6 jt-7 jt
+                      - generic [ref=e1449]:
+                        - generic [ref=e1452]: Penuh Waktu
+                        - generic [ref=e1455]: Minimal Sarjana (S1)
+                        - generic [ref=e1459]: React.js
+                        - generic [ref=e1463]: PostgreSQL
+                        - generic [ref=e1467]: Go / Golang
+                      - generic [ref=e1468]:
+                        - img "iQuartz Pte Ltd" [ref=e1471]
+                        - generic [ref=e1472]:
+                          - generic [ref=e1473]:
+                            - button "Verified company badge" [ref=e1475] [cursor=pointer]:
+                              - img [ref=e1476]
+                            - 'link "Job card company name: iQuartz Pte Ltd" [ref=e1478] [cursor=pointer]':
+                              - /url: /id/companies/iquartz-pte-ltd/b42b7886-46cf-4799-8775-d29483f6fe78
+                              - text: iQuartz Pte Ltd
+                          - generic [ref=e1480]:
+                            - img [ref=e1481]
+                            - generic [ref=e1483]:
+                              - generic "Jakarta Pusat" [ref=e1484]:
+                                - link "Jakarta Pusat" [ref=e1485]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-pusat
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e1486]:
+                                - link "DKI Jakarta" [ref=e1487]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e1490]:
+                      - paragraph [ref=e1494]: 9 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1496] [cursor=pointer]:
+                        - img [ref=e1497]
+                - 'article "Job: Senior Software Engineer, Company: PT Nusatalenta Indonesia, Location: Setiabudi" [ref=e1500]':
+                  - article "Job card 24" [ref=e1501]:
+                    - generic [ref=e1502]:
+                      - generic [ref=e1503]:
+                        - 'heading "Job card title: Senior Software Engineer" [level=2]':
+                          - 'link "Job card title: Senior Software Engineer"':
+                            - /url: /id/opportunities/jobs/senior-software-engineer/a5d642e7-c953-49f0-befd-38279b918c34?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Senior Software Engineer
+                        - generic [ref=e1504]: Rp 10 jt-11 jt
+                      - generic [ref=e1505]:
+                        - generic [ref=e1508]: Penuh Waktu
+                        - generic [ref=e1511]: 5–10 tahun
+                        - generic [ref=e1514]: Minimal Sarjana (S1)
+                        - generic [ref=e1517]: Go / Golang
+                        - generic [ref=e1520]: "+3"
+                      - generic [ref=e1521]:
+                        - img "PT Nusa talenta Indonesia" [ref=e1524]
+                        - generic [ref=e1525]:
+                          - generic [ref=e1526]:
+                            - button "Verified company badge" [ref=e1528] [cursor=pointer]:
+                              - img [ref=e1529]
+                            - 'link "Job card company name: PT Nusatalenta Indonesia" [ref=e1531] [cursor=pointer]':
+                              - /url: /id/companies/pt-nusatalenta-indonesia/a6dba1ee-2cb7-4faa-89eb-1356d806ee48
+                              - text: PT Nusatalenta Indonesia
+                          - generic [ref=e1533]:
+                            - img [ref=e1534]
+                            - generic [ref=e1536]:
+                              - generic "Jakarta Selatan" [ref=e1537]:
+                                - link "Jakarta Selatan" [ref=e1538]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-selatan
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e1539]:
+                                - link "DKI Jakarta" [ref=e1540]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e1543]:
+                      - paragraph [ref=e1547]: 16 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1549] [cursor=pointer]:
+                        - img [ref=e1550]
+                - 'article "Job: Software Engineer (Senior), Company: CÔNG TY TNHH GIFTEE TECH VIETNAM, Location: Quận Bình Thạnh" [ref=e1553]':
+                  - article "Job card 25" [ref=e1554]:
+                    - generic [ref=e1555]:
+                      - generic [ref=e1556]:
+                        - 'heading "Job card title: Software Engineer (Senior)" [level=2]':
+                          - 'link "Job card title: Software Engineer (Senior)"':
+                            - /url: /id/opportunities/jobs/software-engineer-senior/48eaa2d6-bc36-4722-838a-a26f0ec439ad?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer (Senior)
+                        - generic [ref=e1557]: Gaji Tidak Ditampilkan
+                      - generic [ref=e1558]:
+                        - generic [ref=e1561]: Penuh Waktu
+                        - generic [ref=e1564]: 3–5 tahun
+                        - generic [ref=e1567]: Minimal Sarjana (S1)
+                        - generic [ref=e1570]: Ruby on Rails
+                        - generic [ref=e1573]: "+9"
+                      - generic [ref=e1574]:
+                        - img "CÔNG TY TNHH GIFTEE TECH VIETNAM" [ref=e1577]
+                        - generic [ref=e1578]:
+                          - generic [ref=e1579]:
+                            - button "Verified company badge" [ref=e1581] [cursor=pointer]:
+                              - img [ref=e1582]
+                            - 'link "Job card company name: CÔNG TY TNHH GIFTEE TECH VIETNAM" [ref=e1584] [cursor=pointer]':
+                              - /url: /id/companies/cong-ty-tnhh-giftee-tech-vietnam/fc6d3846-b1c6-4e3f-be78-9af2b2d7be03
+                              - text: CÔNG TY TNHH GIFTEE TECH VIETNAM
+                          - generic [ref=e1586]:
+                            - img [ref=e1587]
+                            - generic [ref=e1589]:
+                              - generic "Quận Bình Thạnh" [ref=e1590]:
+                                - link "Quận Bình Thạnh" [ref=e1591]:
+                                  - /url: /id/job-location/vietnam/thanh-pho-ho-chi-minh/quan-binh-thanh
+                                - text: ","
+                              - generic "Vietnam" [ref=e1592]:
+                                - link "Vietnam" [ref=e1593]:
+                                  - /url: /id/job-location/vietnam
+                    - generic [ref=e1596]:
+                      - paragraph [ref=e1600]: 17 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1602] [cursor=pointer]:
+                        - img [ref=e1603]
+                - 'article "Job: Senior Software Engineer, Company: iQuartz Pte Ltd, Location: Gambir" [ref=e1606]':
+                  - article "Job card 26" [ref=e1607]:
+                    - generic [ref=e1608]:
+                      - generic [ref=e1609]:
+                        - 'heading "Job card title: Senior Software Engineer" [level=2]':
+                          - 'link "Job card title: Senior Software Engineer"':
+                            - /url: /id/opportunities/jobs/senior-software-engineer/7bba1aa1-2c5b-4599-8e08-1c9f3f1f816d?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Senior Software Engineer
+                        - generic [ref=e1610]: Rp 10 jt-12 jt
+                      - generic [ref=e1611]:
+                        - generic [ref=e1614]: Penuh Waktu
+                        - generic [ref=e1617]: 3–5 tahun
+                        - generic [ref=e1620]: Minimal Sarjana (S1)
+                        - generic [ref=e1623]: React.js
+                        - generic [ref=e1626]: "+2"
+                      - generic [ref=e1627]:
+                        - img "iQuartz Pte Ltd" [ref=e1630]
+                        - generic [ref=e1631]:
+                          - generic [ref=e1632]:
+                            - button "Verified company badge" [ref=e1634] [cursor=pointer]:
+                              - img [ref=e1635]
+                            - 'link "Job card company name: iQuartz Pte Ltd" [ref=e1637] [cursor=pointer]':
+                              - /url: /id/companies/iquartz-pte-ltd/b42b7886-46cf-4799-8775-d29483f6fe78
+                              - text: iQuartz Pte Ltd
+                          - generic [ref=e1639]:
+                            - img [ref=e1640]
+                            - generic [ref=e1642]:
+                              - generic "Jakarta Pusat" [ref=e1643]:
+                                - link "Jakarta Pusat" [ref=e1644]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-pusat
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e1645]:
+                                - link "DKI Jakarta" [ref=e1646]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e1649]:
+                      - paragraph [ref=e1653]: 15 menit yang lalu
+                      - button "Bookmark Job Button" [ref=e1655] [cursor=pointer]:
+                        - img [ref=e1656]
+                - 'article "Job: Software Engineer .NET, Company: PT Hermes Solusi Integrasi, Location: Kelapa Dua" [ref=e1659]':
+                  - article "Job card 27" [ref=e1660]:
+                    - generic [ref=e1661]:
+                      - generic [ref=e1662]:
+                        - 'heading "Job card title: Software Engineer .NET" [level=2]':
+                          - 'link "Job card title: Software Engineer .NET"':
+                            - /url: /id/opportunities/jobs/software-engineer-net/41b94d38-a2ea-4d43-8877-ad576b9bbf70?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer .NET
+                        - generic [ref=e1663]: Rp 8 jt-9 jt
+                      - generic [ref=e1664]:
+                        - generic [ref=e1667]: Kontrak
+                        - generic [ref=e1670]: 1–3 tahun
+                        - generic [ref=e1673]: Minimal Diploma (D1 - D4)
+                        - generic [ref=e1676]: PostgreSQL
+                        - generic [ref=e1679]: "+7"
+                      - generic [ref=e1680]:
+                        - img "PT Hermes Solusi Integrasi" [ref=e1683]
+                        - generic [ref=e1684]:
+                          - generic [ref=e1685]:
+                            - button "Verified company badge" [ref=e1687] [cursor=pointer]:
+                              - img [ref=e1688]
+                            - 'link "Job card company name: PT Hermes Solusi Integrasi" [ref=e1690] [cursor=pointer]':
+                              - /url: /id/companies/pt-hermes-solusi-integrasi/ef11e3bc-9ed1-49f6-8acc-148a9415bddc
+                              - text: PT Hermes Solusi Integrasi
+                          - generic [ref=e1692]:
+                            - img [ref=e1693]
+                            - generic [ref=e1695]:
+                              - generic "Kab. Tangerang" [ref=e1696]:
+                                - link "Kab. Tangerang" [ref=e1697]:
+                                  - /url: /id/job-location/indonesia/banten/kab-tangerang
+                                - text: ","
+                              - generic "Banten" [ref=e1698]:
+                                - link "Banten" [ref=e1699]:
+                                  - /url: /id/job-location/indonesia/banten
+                    - generic [ref=e1702]:
+                      - paragraph [ref=e1706]: 2 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1708] [cursor=pointer]:
+                        - img [ref=e1709]
+                - 'article "Job: Software Engineer Intern, Company: Công ty Cổ phần Thương mại Điện tử Aloha, Location: Quận Thủ Đức" [ref=e1712]':
+                  - article "Job card 28" [ref=e1713]:
+                    - generic [ref=e1714]:
+                      - generic [ref=e1715]:
+                        - 'heading "Job card title: Software Engineer Intern" [level=2]':
+                          - 'link "Job card title: Software Engineer Intern"':
+                            - /url: /id/opportunities/jobs/software-engineer-intern/d362a983-0971-402b-b62d-e7a4bdfc4ced?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer Intern
+                        - generic [ref=e1716]: ₫ 1-3 jt
+                      - generic [ref=e1717]:
+                        - generic [ref=e1720]: Magang
+                        - generic [ref=e1723]: Minimal Diploma (D1 - D4)
+                        - generic [ref=e1727]: Vue.js
+                        - generic [ref=e1731]: Laravel
+                        - generic [ref=e1735]: PHP
+                      - generic [ref=e1736]:
+                        - img "Công ty Cổ phần Thương mại Điện tử Aloha" [ref=e1739]
+                        - generic [ref=e1740]:
+                          - generic [ref=e1741]:
+                            - button "Verified company badge" [ref=e1743] [cursor=pointer]:
+                              - img [ref=e1744]
+                            - 'link "Job card company name: Công ty Cổ phần Thương mại Điện tử Aloha" [ref=e1746] [cursor=pointer]':
+                              - /url: /id/companies/cong-ty-co-phan-thuong-mai-dien-tu-aloha/88c0fbbf-1b26-4778-a932-3619e16d828b
+                              - text: Công ty Cổ phần Thương mại Điện tử Aloha
+                          - generic [ref=e1748]:
+                            - img [ref=e1749]
+                            - generic [ref=e1751]:
+                              - generic "Quận Thủ Đức" [ref=e1752]:
+                                - link "Quận Thủ Đức" [ref=e1753]:
+                                  - /url: /id/job-location/vietnam/thanh-pho-ho-chi-minh/quan-thu-duc
+                                - text: ","
+                              - generic "Vietnam" [ref=e1754]:
+                                - link "Vietnam" [ref=e1755]:
+                                  - /url: /id/job-location/vietnam
+                    - generic [ref=e1758]:
+                      - paragraph [ref=e1762]: 25 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1764] [cursor=pointer]:
+                        - img [ref=e1765]
+                - 'article "Job: Software Engineer Internship, Company: Algobash, Location: Kebayoran Baru" [ref=e1768]':
+                  - article "Job card 29" [ref=e1769]:
+                    - generic [ref=e1770]:
+                      - generic [ref=e1771]:
+                        - 'heading "Job card title: Software Engineer Internship" [level=2]':
+                          - 'link "Job card title: Software Engineer Internship"':
+                            - /url: /id/opportunities/jobs/software-engineer-internship/247a2904-d5ee-49ea-b6f1-c9d4c6a40151?utm_referrer=explore&traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                            - text: Software Engineer Internship
+                        - generic [ref=e1772]: Rp 3 jt-6 jt
+                      - generic [ref=e1773]:
+                        - generic [ref=e1776]: Remote/Dari rumah
+                        - generic [ref=e1779]: Magang
+                        - generic [ref=e1782]: Minimal Sarjana (S1)
+                        - generic [ref=e1785]: TypeScript
+                        - generic [ref=e1788]: "+4"
+                      - generic [ref=e1789]:
+                        - img "Algobash" [ref=e1792]
+                        - generic [ref=e1793]:
+                          - generic [ref=e1794]:
+                            - button "Verified company badge" [ref=e1796] [cursor=pointer]:
+                              - img [ref=e1797]
+                            - 'link "Job card company name: Algobash" [ref=e1799] [cursor=pointer]':
+                              - /url: /id/companies/algobash/9cfc56cf-fcb0-4f74-8943-98e70057867d
+                              - text: Algobash
+                          - generic [ref=e1801]:
+                            - img [ref=e1802]
+                            - generic [ref=e1804]:
+                              - generic "Jakarta Selatan" [ref=e1805]:
+                                - link "Jakarta Selatan" [ref=e1806]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta/jakarta-selatan
+                                - text: ","
+                              - generic "DKI Jakarta" [ref=e1807]:
+                                - link "DKI Jakarta" [ref=e1808]:
+                                  - /url: /id/job-location/indonesia/dki-jakarta
+                    - generic [ref=e1811]:
+                      - paragraph [ref=e1815]: 4 hari yang lalu
+                      - button "Bookmark Job Button" [ref=e1817] [cursor=pointer]:
+                        - img [ref=e1818]
+              - generic [ref=e1820]:
+                - generic [ref=e1821]:
+                  - img "Magnifying glass icon" [ref=e1822]
+                  - paragraph [ref=e1823]: Login untuk lihat loker lebih banyak dan dapatkan rekomendasi loker yang sesuai
+                  - generic [ref=e1824]:
+                    - button "Daftar" [ref=e1825]
+                    - button "Login Sekarang" [ref=e1826]
+                - generic [ref=e1829]:
+                  - 'article "Job: Software Engineer, Company: GLOW FX Beauty, Location: Ciputat" [ref=e1831]':
+                    - article "Job card 0" [ref=e1832]:
+                      - generic [ref=e1833]:
+                        - generic [ref=e1834]:
+                          - 'heading "Job card title: Software Engineer" [level=2]':
+                            - 'link "Job card title: Software Engineer"':
+                              - /url: /id/opportunities/jobs/software-engineer/97acfa9b-ca8a-48a2-ada8-f23d1a448473?traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                              - text: Software Engineer
+                          - generic [ref=e1835]: Rp 6,5 jt-7,5 jt
+                        - generic [ref=e1836]:
+                          - generic [ref=e1838]: Perusahaan Premium
+                          - generic [ref=e1841]: Penuh Waktu
+                          - generic [ref=e1844]: 1–3 tahun
+                          - generic [ref=e1847]: Minimal Sarjana (S1)
+                          - generic [ref=e1850]: React Native
+                          - generic [ref=e1853]: "+11"
+                        - generic [ref=e1854]:
+                          - img "GLOW FX Beauty" [ref=e1857]
+                          - generic [ref=e1858]:
+                            - generic [ref=e1859]:
+                              - button "VIP Verified company badge" [ref=e1861] [cursor=pointer]:
+                                - img [ref=e1862]
+                              - 'link "Job card company name: GLOW FX Beauty" [ref=e1864] [cursor=pointer]':
+                                - /url: /id/companies/glow-fx-beauty/3bf1d294-44a2-44ce-8b25-39ad2c9a25b6
+                                - text: GLOW FX Beauty
+                            - generic [ref=e1866]:
+                              - img [ref=e1867]
+                              - generic [ref=e1869]:
+                                - generic "Tangerang Selatan" [ref=e1870]:
+                                  - link "Tangerang Selatan" [ref=e1871]:
+                                    - /url: /id/job-location/indonesia/banten/tangerang-selatan
+                                  - text: ","
+                                - generic "Banten" [ref=e1872]:
+                                  - link "Banten" [ref=e1873]:
+                                    - /url: /id/job-location/indonesia/banten
+                      - generic [ref=e1876]:
+                        - paragraph [ref=e1880]: Kemarin
+                        - button "Bookmark Job Button" [ref=e1882] [cursor=pointer]:
+                          - img [ref=e1883]
+                  - 'article "Job: Software Engineer, Company: PT Top Intera Jaya, Location: Cilodong" [ref=e1886]':
+                    - article "Job card 1" [ref=e1887]:
+                      - generic [ref=e1888]:
+                        - generic [ref=e1889]:
+                          - 'heading "Job card title: Software Engineer" [level=2]':
+                            - 'link "Job card title: Software Engineer"':
+                              - /url: /id/opportunities/jobs/software-engineer/d106d7fc-d01d-49c8-8604-b3db9ba0c75f?traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                              - text: Software Engineer
+                          - generic [ref=e1890]: Rp 5 jt-7 jt
+                        - generic [ref=e1891]:
+                          - generic [ref=e1893]: Perusahaan Premium
+                          - generic [ref=e1896]: Penuh Waktu
+                          - generic [ref=e1899]: 1–3 tahun
+                          - generic [ref=e1902]: Minimal Sarjana (S1)
+                          - generic [ref=e1905]: Programming Language
+                          - generic [ref=e1908]: "+4"
+                        - generic [ref=e1909]:
+                          - img "PT Top Intera Jaya" [ref=e1912]
+                          - generic [ref=e1913]:
+                            - generic [ref=e1914]:
+                              - button "VIP Verified company badge" [ref=e1916] [cursor=pointer]:
+                                - img [ref=e1917]
+                              - 'link "Job card company name: PT Top Intera Jaya" [ref=e1919] [cursor=pointer]':
+                                - /url: /id/companies/pt-top-intera-jaya/5f26e641-4baf-4f51-b034-69613abcbb83
+                                - text: PT Top Intera Jaya
+                            - generic [ref=e1921]:
+                              - img [ref=e1922]
+                              - generic [ref=e1924]:
+                                - generic "Depok" [ref=e1925]:
+                                  - link "Depok" [ref=e1926]:
+                                    - /url: /id/job-location/indonesia/jawa-barat/depok
+                                  - text: ","
+                                - generic "Jawa Barat" [ref=e1927]:
+                                  - link "Jawa Barat" [ref=e1928]:
+                                    - /url: /id/job-location/indonesia/jawa-barat
+                      - generic [ref=e1931]:
+                        - paragraph [ref=e1935]: 2 hari yang lalu
+                        - button "Bookmark Job Button" [ref=e1937] [cursor=pointer]:
+                          - img [ref=e1938]
+                  - 'article "Job: Software Engineer, Company: Majoo Indonesia, Location: Blimbing" [ref=e1941]':
+                    - article "Job card 2" [ref=e1942]:
+                      - generic [ref=e1943]:
+                        - generic [ref=e1944]:
+                          - 'heading "Job card title: Software Engineer" [level=2]':
+                            - 'link "Job card title: Software Engineer"':
+                              - /url: /id/opportunities/jobs/software-engineer/c10c8bd6-fa89-4148-95a4-1807e270f3f9?traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                              - text: Software Engineer
+                          - generic [ref=e1945]: Gaji Tidak Ditampilkan
+                        - generic [ref=e1946]:
+                          - generic [ref=e1948]: Perusahaan Premium
+                          - generic [ref=e1951]: Penuh Waktu
+                          - generic [ref=e1954]: 1–3 tahun
+                          - generic [ref=e1957]: Minimal Sarjana (S1)
+                          - generic [ref=e1960]: Software Architecture
+                          - generic [ref=e1963]: "+2"
+                        - generic [ref=e1964]:
+                          - img "Majoo Indonesia" [ref=e1967]
+                          - generic [ref=e1968]:
+                            - generic [ref=e1969]:
+                              - button "VIP Verified company badge" [ref=e1971] [cursor=pointer]:
+                                - img [ref=e1972]
+                              - 'link "Job card company name: Majoo Indonesia" [ref=e1974] [cursor=pointer]':
+                                - /url: /id/companies/majoo-indonesia/7a8b934e-358d-4482-b7a8-801dab8c7d85
+                                - text: Majoo Indonesia
+                            - generic [ref=e1976]:
+                              - img [ref=e1977]
+                              - generic [ref=e1979]:
+                                - generic "Malang" [ref=e1980]:
+                                  - link "Malang" [ref=e1981]:
+                                    - /url: /id/job-location/indonesia/jawa-timur/malang
+                                  - text: ","
+                                - generic "Jawa Timur" [ref=e1982]:
+                                  - link "Jawa Timur" [ref=e1983]:
+                                    - /url: /id/job-location/indonesia/jawa-timur
+                      - generic [ref=e1986]:
+                        - paragraph [ref=e1990]: 3 hari yang lalu
+                        - button "Bookmark Job Button" [ref=e1992] [cursor=pointer]:
+                          - img [ref=e1993]
+                  - 'article "Job: Software Engineer, Company: PT. MUAT LOGISTIK INDONESIA, Location: Taman Sari" [ref=e1996]':
+                    - article "Job card 3" [ref=e1997]:
+                      - generic [ref=e1998]:
+                        - generic [ref=e1999]:
+                          - 'heading "Job card title: Software Engineer" [level=2]':
+                            - 'link "Job card title: Software Engineer"':
+                              - /url: /id/opportunities/jobs/software-engineer/d80ee21c-6ba3-4218-8d54-1121e1302d76?traceInfo=0d0e7887-7b6e-43d9-a736-efd4c7a11524
+                              - text: Software Engineer
+                          - generic [ref=e2000]: Rp 5 jt-6 jt
+                        - generic [ref=e2001]:
+                          - generic [ref=e2003]: Perusahaan Premium
+                          - generic [ref=e2006]: Penuh Waktu
+                          - generic [ref=e2009]: 1–3 tahun
+                          - generic [ref=e2012]: Minimal Sarjana (S1)
+                          - generic [ref=e2015]: Software Development
+                          - generic [ref=e2018]: "+4"
+                        - generic [ref=e2019]:
+                          - img "PT. MUAT LOGISTIK INDONESIA" [ref=e2022]
+                          - generic [ref=e2023]:
+                            - generic [ref=e2024]:
+                              - button "VIP Verified company badge" [ref=e2026] [cursor=pointer]:
+                                - img [ref=e2027]
+                              - 'link "Job card company name: PT. MUAT LOGISTIK INDONESIA" [ref=e2029] [cursor=pointer]':
+                                - /url: /id/companies/pt-muat-logistik-indonesia/a5905d82-50c5-4cd4-9bfd-c5f8b69c20b9
+                                - text: PT. MUAT LOGISTIK INDONESIA
+                            - generic [ref=e2031]:
+                              - img [ref=e2032]
+                              - generic [ref=e2034]:
+                                - generic "Jakarta Barat" [ref=e2035]:
+                                  - link "Jakarta Barat" [ref=e2036]:
+                                    - /url: /id/job-location/indonesia/dki-jakarta/jakarta-barat
+                                  - text: ","
+                                - generic "DKI Jakarta" [ref=e2037]:
+                                  - link "DKI Jakarta" [ref=e2038]:
+                                    - /url: /id/job-location/indonesia/dki-jakarta
+                      - generic [ref=e2041]:
+                        - paragraph [ref=e2045]: 12 hari yang lalu
+                        - button "Bookmark Job Button" [ref=e2047] [cursor=pointer]:
+                          - img [ref=e2048]
+        - alert [ref=e2052]
+  - alert [ref=e2054]

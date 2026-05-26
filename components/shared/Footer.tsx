@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-import { Github, Linkedin, Twitter } from "lucide-react"
+import { Blocks, BriefcaseBusiness, Globe } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -96,25 +96,25 @@ export function Footer() {
                 size="icon"
                 variant="ghost"
                 className="rounded-xl text-white/80 hover:bg-white/10 hover:text-white"
-                aria-label="Twitter"
+                aria-label="Website"
               >
-                <Twitter className="size-4" />
+                <Globe className="size-4" />
               </Button>
               <Button
                 size="icon"
                 variant="ghost"
                 className="rounded-xl text-white/80 hover:bg-white/10 hover:text-white"
-                aria-label="LinkedIn"
+                aria-label="Career"
               >
-                <Linkedin className="size-4" />
+                <BriefcaseBusiness className="size-4" />
               </Button>
               <Button
                 size="icon"
                 variant="ghost"
                 className="rounded-xl text-white/80 hover:bg-white/10 hover:text-white"
-                aria-label="GitHub"
+                aria-label="Community"
               >
-                <Github className="size-4" />
+                <Blocks className="size-4" />
               </Button>
             </div>
           </div>

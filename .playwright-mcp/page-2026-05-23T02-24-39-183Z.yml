@@ -1,0 +1,483 @@
+- generic [ref=e3]:
+  - heading "Lowongan kerja di Indonesia - Cari Lowongan Kerja - Karir | Jobstreet" [level=1] [ref=e5]
+  - button "Lewati ke konten" [ref=e6] [cursor=pointer]
+  - generic [ref=e7]:
+    - status
+  - banner [ref=e9]:
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - link "Jobstreet" [ref=e16] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e17]: Jobstreet
+          - img [ref=e19]
+        - generic [ref=e23]:
+          - button "Bahasa" [ref=e26] [cursor=pointer]:
+            - generic [ref=e28]:
+              - img [ref=e31]
+              - generic [ref=e34]: Bahasa
+              - img [ref=e37]
+          - link "Masuk" [ref=e47] [cursor=pointer]:
+            - /url: /id/oauth/login?returnUrl=%2F
+            - generic [ref=e48]:
+              - generic:
+                - generic: Masuk
+          - link "Untuk perusahaan" [ref=e50] [cursor=pointer]:
+            - /url: https://id.employer.seek.com/id
+            - generic [ref=e51]: Untuk perusahaan
+      - generic [ref=e53]:
+        - link "Cari lowongan" [ref=e55] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e57]: Cari lowongan
+        - link "Cari profil" [ref=e60] [cursor=pointer]:
+          - /url: /id/profiles/search?tracking=ILC-profile-search-header
+          - generic [ref=e62]: Cari profil
+        - link "Sumber daya karir" [ref=e65] [cursor=pointer]:
+          - /url: /id/career-advice
+          - generic [ref=e67]: Sumber daya karir
+        - link "Perusahaan" [ref=e70] [cursor=pointer]:
+          - /url: /id/companies
+          - generic [ref=e72]: Perusahaan
+        - link "Komunitas" [ref=e75] [cursor=pointer]:
+          - /url: /id/community
+          - generic [ref=e77]: Komunitas
+  - main [ref=e79]:
+    - generic [ref=e80]:
+      - search "Lakukan pencarian lowongan" [ref=e82]:
+        - heading "Lakukan pencarian lowongan" [level=1] [ref=e84]
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - region "Masukkan kata kunci" [ref=e96]:
+              - generic [ref=e97]:
+                - generic [ref=e102]:
+                  - combobox "Perawat ners paruh waktu dengan jam kerja fleksibel" [ref=e103]
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img
+                  - generic [ref=e104]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - button "Clear":
+                            - generic:
+                              - generic:
+                                - img
+                - generic [ref=e105]: Suggestions will appear below the field as you type
+            - region "Masukkan lokasi" [ref=e109]:
+              - generic [ref=e110]:
+                - generic [ref=e115]:
+                  - combobox "Masukkan kota atau wilayah" [ref=e116]
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img
+                  - generic [ref=e117]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - button "Clear":
+                            - generic:
+                              - generic:
+                                - img
+                - generic [ref=e118]: Suggestions will appear below the field as you type
+            - button "Kirim pencarian" [ref=e122] [cursor=pointer]:
+              - generic [ref=e123]:
+                - generic:
+                  - generic: Cari
+          - button "Opsi lainnya" [ref=e132] [cursor=pointer]:
+            - generic [ref=e133]:
+              - generic:
+                - generic:
+                  - text: Opsi lainnya
+                  - generic:
+                    - text: ⁠
+                    - generic:
+                      - img
+      - generic [ref=e136]:
+        - generic [ref=e140]:
+          - heading "Pencarian cepat" [level=1] [ref=e141]
+          - generic [ref=e142]:
+            - heading "Klasifikasi" [level=2] [ref=e144]
+            - list [ref=e146]:
+              - listitem [ref=e147]:
+                - link "Lowongan di Akuntansi" [ref=e148] [cursor=pointer]:
+                  - /url: /id/jobs-in-accounting
+                  - text: Akuntansi
+              - listitem [ref=e149]:
+                - link "Lowongan di Pendidikan & Pelatihan" [ref=e150] [cursor=pointer]:
+                  - /url: /id/jobs-in-education-training
+                  - text: Pendidikan & Pelatihan
+              - listitem [ref=e151]:
+                - link "Lowongan di Pemerintahan & Pertahanan" [ref=e152] [cursor=pointer]:
+                  - /url: /id/jobs-in-government-defence
+                  - text: Pemerintahan & Pertahanan
+              - listitem [ref=e153]:
+                - link "Lowongan di Kesehatan & Medis" [ref=e154] [cursor=pointer]:
+                  - /url: /id/jobs-in-healthcare-medical
+                  - text: Kesehatan & Medis
+              - listitem [ref=e155]:
+                - link "Lowongan di Penjualan" [ref=e156] [cursor=pointer]:
+                  - /url: /id/jobs-in-sales
+                  - text: Penjualan
+              - listitem [ref=e157]:
+                - button "Lihat semua" [ref=e158] [cursor=pointer]:
+                  - text: Lihat semua
+                  - generic [ref=e159]:
+                    - text: ⁠
+                    - img [ref=e161]
+          - generic [ref=e163]:
+            - heading "Kota besar" [level=2] [ref=e165]
+            - list [ref=e166]:
+              - listitem [ref=e167]:
+                - link "Lowongan di Surabaya" [ref=e168] [cursor=pointer]:
+                  - /url: /id/jobs/in-Surabaya-Jawa-Timur
+                  - text: Surabaya
+              - listitem [ref=e169]:
+                - link "Lowongan di Bandung" [ref=e170] [cursor=pointer]:
+                  - /url: /id/jobs/in-Bandung-Jawa-Barat
+                  - text: Bandung
+              - listitem [ref=e171]:
+                - link "Lowongan di Medan" [ref=e172] [cursor=pointer]:
+                  - /url: /id/jobs/in-Medan-Sumatera-Utara
+                  - text: Medan
+              - listitem [ref=e173]:
+                - link "Lowongan di Jakarta" [ref=e174] [cursor=pointer]:
+                  - /url: /id/jobs/in-Jakarta-Raya
+                  - text: Jakarta
+              - listitem [ref=e175]:
+                - link "Lowongan di Semarang" [ref=e176] [cursor=pointer]:
+                  - /url: /id/jobs/in-Semarang-Jawa-Tengah
+                  - text: Semarang
+              - listitem [ref=e177]:
+                - link "Lowongan di Tangerang" [ref=e178] [cursor=pointer]:
+                  - /url: /id/jobs/in-Tangerang-Banten
+                  - text: Tangerang
+              - listitem [ref=e179]:
+                - link "Lowongan di Malang" [ref=e180] [cursor=pointer]:
+                  - /url: /id/jobs/in-Malang-Jawa-Timur
+                  - text: Malang
+              - listitem [ref=e181]:
+                - link "Lowongan di Bekasi" [ref=e182] [cursor=pointer]:
+                  - /url: /id/jobs/in-Bekasi-Jawa-Barat
+                  - text: Bekasi
+          - generic [ref=e183]:
+            - heading "Lainnya" [level=2] [ref=e185]
+            - list [ref=e187]:
+              - listitem [ref=e188]:
+                - link "Semua Lowongan Kerja" [ref=e189] [cursor=pointer]:
+                  - /url: /id/jobs
+              - listitem [ref=e190]:
+                - link "Kerja Online" [ref=e191] [cursor=pointer]:
+                  - /url: /id/online-jobs
+              - listitem [ref=e192]:
+                - link "Kerja Freelance" [ref=e193] [cursor=pointer]:
+                  - /url: /id/Freelance-jobs
+              - listitem [ref=e194]:
+                - link "Kerja Tambang" [ref=e195] [cursor=pointer]:
+                  - /url: /id/lambang-jobs
+              - listitem [ref=e196]:
+                - link "Lowongan Lulusan Sma" [ref=e197] [cursor=pointer]:
+                  - /url: /id/lulusan-sma-jobs
+        - generic [ref=e198]:
+          - generic:
+            - generic:
+              - heading "Dasbor" [level=1] [ref=e200]
+              - generic [ref=e203]:
+                - generic [ref=e205]:
+                  - heading "Masuk untuk temukan lowongan yang cocok" [level=3] [ref=e207]
+                  - generic [ref=e208]:
+                    - generic "Continue with Google" [ref=e209]:
+                      - iframe [ref=e211]:
+                        - button "Lanjutkan dengan Google. Dibuka di tab baru" [ref=f2e3] [cursor=pointer]:
+                          - generic [ref=f2e5]:
+                            - img [ref=f2e8]
+                            - generic [ref=f2e15]: Lanjutkan dengan Google
+                    - link "Lanjutkan dengan Email" [ref=e213] [cursor=pointer]:
+                      - /url: /id/oauth/login/?returnUrl=%2F
+                      - generic [ref=e214]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - img
+                              - generic: Lanjutkan dengan Email
+                  - generic [ref=e215]:
+                    - text: Belum punya akun?
+                    - link "Daftar" [ref=e216] [cursor=pointer]:
+                      - /url: /id/oauth/register/?returnUrl=%2F
+                  - link "Mengapa harus masuk?" [ref=e218] [cursor=pointer]:
+                    - /url: https://help.id.jobstreet.com/id/s/article/Why-am-I-being-asked-to-sign-in-when-I-visit-Jobstreet-ID?language=in
+                - img [ref=e220]
+        - generic [ref=e229]:
+          - generic [ref=e230]:
+            - generic [ref=e231]:
+              - heading "Temukan perusahaan Anda berikutnya" [level=2] [ref=e232]
+              - generic [ref=e233]: Jelajahi profil perusahaan untuk menemukan tempat kerja yang tepat bagi Anda. Pelajari tentang pekerjaan, ulasan, budaya perusahaan, keuntungan, dan tunjangan.
+            - 'region "Tayangan Slide: Pemberi Kerja dengan Lowongan Tersedia" [ref=e234]':
+              - generic [ref=e235]:
+                - generic [ref=e236]:
+                  - generic [ref=e237]:
+                    - generic [ref=e238]:
+                      - article [ref=e240] [cursor=pointer]:
+                        - generic [ref=e241]:
+                          - generic [ref=e246]: KB Finansia Multi Finance
+                          - generic "184 Pekerjaan" [ref=e249]:
+                            - generic [ref=e251]: 184 Pekerjaan
+                        - link "KB Finansia Multi Finance 184 Pekerjaan" [ref=e252]:
+                          - /url: /id/companies/kb-finansia-multi-finance-168556520897621?cid=sk-home-carousel
+                      - article [ref=e254] [cursor=pointer]:
+                        - generic [ref=e255]:
+                          - generic [ref=e260]: Bank Danamon
+                          - generic "30 Pekerjaan" [ref=e263]:
+                            - generic [ref=e265]: 30 Pekerjaan
+                        - link "Bank Danamon 30 Pekerjaan" [ref=e266]:
+                          - /url: /id/companies/bank-danamon-168553756614755?cid=sk-home-carousel
+                      - article [ref=e268] [cursor=pointer]:
+                        - generic [ref=e269]:
+                          - generic [ref=e274]: Rusli Vinilon Sakti
+                          - generic "5 Pekerjaan" [ref=e277]:
+                            - generic [ref=e279]: 5 Pekerjaan
+                        - link "Rusli Vinilon Sakti 5 Pekerjaan" [ref=e280]:
+                          - /url: /id/companies/rusli-vinilon-sakti-168551170925885?cid=sk-home-carousel
+                      - article [ref=e282] [cursor=pointer]:
+                        - generic [ref=e283]:
+                          - generic [ref=e288]: Yakult
+                          - generic "59 Pekerjaan" [ref=e291]:
+                            - generic [ref=e293]: 59 Pekerjaan
+                        - link "Yakult 59 Pekerjaan" [ref=e294]:
+                          - /url: /id/companies/yakult-168551078827254?cid=sk-home-carousel
+                      - article [ref=e296] [cursor=pointer]:
+                        - generic [ref=e297]:
+                          - generic [ref=e302]: Sheraton
+                          - generic "5 Pekerjaan" [ref=e305]:
+                            - generic [ref=e307]: 5 Pekerjaan
+                        - link "Sheraton 5 Pekerjaan" [ref=e308]:
+                          - /url: /id/companies/sheraton-168552153080913?cid=sk-home-carousel
+                    - generic [ref=e309]:
+                      - article [ref=e311] [cursor=pointer]:
+                        - generic [ref=e312]:
+                          - generic [ref=e317]: Panin Dai-Ichi Life
+                          - generic "11 Pekerjaan" [ref=e320]:
+                            - generic [ref=e322]: 11 Pekerjaan
+                        - link "Panin Dai-Ichi Life 11 Pekerjaan" [ref=e323]:
+                          - /url: /id/companies/panin-dai-ichi-life-168556093085024?cid=sk-home-carousel
+                      - article [ref=e325] [cursor=pointer]:
+                        - generic [ref=e326]:
+                          - generic [ref=e331]: BTPN Syariah
+                          - generic "15 Pekerjaan" [ref=e334]:
+                            - generic [ref=e336]: 15 Pekerjaan
+                        - link "BTPN Syariah 15 Pekerjaan" [ref=e337]:
+                          - /url: /id/companies/btpn-syariah-168558457912263?cid=sk-home-carousel
+                      - article [ref=e339] [cursor=pointer]:
+                        - generic [ref=e340]:
+                          - generic [ref=e345]: Abbott
+                          - generic "8 Pekerjaan" [ref=e348]:
+                            - generic [ref=e350]: 8 Pekerjaan
+                        - link "Abbott 8 Pekerjaan" [ref=e351]:
+                          - /url: /id/companies/abbott-168555345874609?cid=sk-home-carousel
+                      - article [ref=e353] [cursor=pointer]:
+                        - generic [ref=e354]:
+                          - generic [ref=e359]: ASRI
+                          - generic "49 Pekerjaan" [ref=e362]:
+                            - generic [ref=e364]: 49 Pekerjaan
+                        - link "ASRI 49 Pekerjaan" [ref=e365]:
+                          - /url: /id/companies/asri-168557249174112?cid=sk-home-carousel
+                      - article [ref=e367] [cursor=pointer]:
+                        - generic [ref=e368]:
+                          - generic [ref=e373]: PwC
+                          - generic "5 Pekerjaan" [ref=e376]:
+                            - generic [ref=e378]: 5 Pekerjaan
+                        - link "PwC 5 Pekerjaan" [ref=e379]:
+                          - /url: /id/companies/pwc-168557340198204?cid=sk-home-carousel
+                    - article [ref=e382] [cursor=pointer]:
+                      - generic [ref=e383]:
+                        - generic [ref=e388]: Metrodata
+                        - generic "28 Pekerjaan" [ref=e391]:
+                          - generic [ref=e393]: 28 Pekerjaan
+                      - link "Metrodata 28 Pekerjaan" [ref=e394]:
+                        - /url: /id/companies/metrodata-168552067538783?cid=sk-home-carousel
+                  - button "Selanjutnya" [ref=e396] [cursor=pointer]:
+                    - img [ref=e399]
+                - generic [ref=e402]:
+                  - button "Halaman 1 dari 3" [ref=e403]
+                  - button "Halaman 2 dari 3" [ref=e404] [cursor=pointer]
+                  - button "Halaman 3 dari 3" [ref=e405] [cursor=pointer]
+          - link "Lihat selengkapnya" [ref=e408] [cursor=pointer]:
+            - /url: /id/companies?cid=sk-home-carousel
+            - generic [ref=e409]:
+              - generic:
+                - generic:
+                  - text: Lihat selengkapnya
+                  - generic:
+                    - text: ⁠
+                    - generic:
+                      - img
+        - generic [ref=e413]:
+          - generic [ref=e418]:
+            - heading "Update seputar informasi gaji di industri kamu" [level=3] [ref=e419]:
+              - generic [ref=e420]: Update seputar informasi gaji di industri kamu
+            - link "Gabung sekarang" [ref=e423] [cursor=pointer]:
+              - /url: /id/community?tracking=CTA-WEB-HomepageMarketingBanner-asia-4&utm_campaign=id&utm_content=homepage_banner_1&utm_medium=desktop&utm_source=seek
+              - generic [ref=e424]:
+                - generic:
+                  - generic: Gabung sekarang
+          - generic [ref=e431]:
+            - heading "Buat profil Jobstreet kamu lebih menarik di mata rekruter" [level=3] [ref=e432]:
+              - generic [ref=e433]: Buat profil Jobstreet kamu lebih menarik di mata rekruter
+            - link "Lihat caranya di SEEK Pass" [ref=e436] [cursor=pointer]:
+              - /url: /id/page/seek-pass?tracking=CTA-seekpasslanding-anz-1-profile
+              - generic [ref=e437]:
+                - generic:
+                  - generic: Lihat caranya di SEEK Pass
+  - contentinfo [ref=e441]:
+    - generic [ref=e443]:
+      - generic [ref=e446]:
+        - generic [ref=e448]:
+          - generic [ref=e450]:
+            - generic [ref=e451]: Pencari kerja
+            - list [ref=e452]:
+              - listitem [ref=e453]:
+                - link "Cari lowongan" [ref=e454] [cursor=pointer]:
+                  - /url: /
+                  - generic [ref=e456]: Cari lowongan
+              - listitem [ref=e457]:
+                - link "Lihat profil" [ref=e458] [cursor=pointer]:
+                  - /url: /id/profile
+                  - generic [ref=e460]: Lihat profil
+              - listitem [ref=e461]:
+                - link "Cari profil" [ref=e462] [cursor=pointer]:
+                  - /url: /id/profiles/search?tracking=ILC-profile-search-footer
+                  - generic [ref=e464]: Cari profil
+              - listitem [ref=e465]:
+                - link "Pencarian tersimpan" [ref=e466] [cursor=pointer]:
+                  - /url: /id/oauth/login?returnUrl=%2Fid%2Fmy-activity%2Fsaved-searches
+                  - generic [ref=e468]: Pencarian tersimpan
+              - listitem [ref=e469]:
+                - link "Lowongan tersimpan" [ref=e470] [cursor=pointer]:
+                  - /url: /id/oauth/login?returnUrl=%2Fid%2Fmy-activity%2Fsaved-jobs
+                  - generic [ref=e472]: Lowongan tersimpan
+              - listitem [ref=e473]:
+                - link "Lamaran kerja" [ref=e474] [cursor=pointer]:
+                  - /url: /id/oauth/login?returnUrl=%2Fid%2Fmy-activity%2Fapplied-jobs
+                  - generic [ref=e476]: Lamaran kerja
+              - listitem [ref=e477]:
+                - link "Sumber daya karir" [ref=e478] [cursor=pointer]:
+                  - /url: /id/career-advice
+                  - generic [ref=e480]: Sumber daya karir
+              - listitem [ref=e481]:
+                - link "Jelajahi karier" [ref=e482] [cursor=pointer]:
+                  - /url: /id/career-advice/explore-careers
+                  - generic [ref=e484]: Jelajahi karier
+              - listitem [ref=e485]:
+                - link "Jelajahi gaji" [ref=e486] [cursor=pointer]:
+                  - /url: /id/career-advice/explore-salaries
+                  - generic [ref=e488]: Jelajahi gaji
+              - listitem [ref=e489]:
+                - link "Perusahaan" [ref=e490] [cursor=pointer]:
+                  - /url: /id/companies
+                  - generic [ref=e492]: Perusahaan
+              - listitem [ref=e493]:
+                - link "Komunitas" [ref=e494] [cursor=pointer]:
+                  - /url: /id/community
+                  - generic [ref=e496]: Komunitas
+              - listitem [ref=e497]:
+                - generic [ref=e499] [cursor=pointer]:
+                  - button "Unduh aplikasi" [ref=e502]
+                  - img [ref=e508]
+          - generic [ref=e511]:
+            - generic [ref=e512]: Perusahaan
+            - list [ref=e513]:
+              - listitem [ref=e514]:
+                - link "Daftar gratis" [ref=e515] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id
+                  - generic [ref=e517]: Daftar gratis
+              - listitem [ref=e518]:
+                - link "Pasang iklan lowongan kerja" [ref=e519] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id
+                  - generic [ref=e521]: Pasang iklan lowongan kerja
+              - listitem [ref=e522]:
+                - link "Produk & harga" [ref=e523] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id/products/jobads
+                  - generic [ref=e525]: Produk & harga
+              - listitem [ref=e526]:
+                - link "Layanan pelanggan" [ref=e527] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id/contactus
+                  - generic [ref=e529]: Layanan pelanggan
+              - listitem [ref=e530]:
+                - link "Saran perekrutan" [ref=e531] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id/hiring-advice
+                  - generic [ref=e533]: Saran perekrutan
+              - listitem [ref=e534]:
+                - link "Wawasan pasar" [ref=e535] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id/market-insights
+                  - generic [ref=e537]: Wawasan pasar
+              - listitem [ref=e538]:
+                - link "Mitra perangkat lunak perekrutan" [ref=e539] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id/partners/connect-with-seek
+                  - generic [ref=e541]: Mitra perangkat lunak perekrutan
+        - generic [ref=e544]:
+          - generic [ref=e546]:
+            - generic [ref=e547]: Tentang kami
+            - list [ref=e548]:
+              - listitem [ref=e549]:
+                - link "Tentang kami" [ref=e550] [cursor=pointer]:
+                  - /url: /id/about
+                  - generic [ref=e552]: Tentang kami
+              - listitem [ref=e553]:
+                - link "Ruang berita" [ref=e554] [cursor=pointer]:
+                  - /url: /id/about/news
+                  - generic [ref=e556]: Ruang berita
+              - listitem [ref=e557]:
+                - link "Investor" [ref=e558] [cursor=pointer]:
+                  - /url: https://au.seek.com/about/investors
+                  - generic [ref=e560]: Investor
+              - listitem [ref=e561]:
+                - link "Karir" [ref=e562] [cursor=pointer]:
+                  - /url: /id/careers
+                  - generic [ref=e564]: Karir
+              - listitem [ref=e565]:
+                - generic [ref=e567] [cursor=pointer]:
+                  - button "Mitra internasional" [ref=e570]
+                  - img [ref=e576]
+              - listitem [ref=e578]:
+                - generic [ref=e580] [cursor=pointer]:
+                  - button "Layanan mitra" [ref=e583]
+                  - img [ref=e589]
+          - generic [ref=e592]:
+            - generic [ref=e593]: Kontak
+            - list [ref=e594]:
+              - listitem [ref=e595]:
+                - link "Pusat bantuan" [ref=e596] [cursor=pointer]:
+                  - /url: https://help.id.jobstreet.com/id/s/?language=in
+                  - generic [ref=e598]: Pusat bantuan
+              - listitem [ref=e599]:
+                - link "Hubungi kami" [ref=e600] [cursor=pointer]:
+                  - /url: /id/contact-us
+                  - generic [ref=e602]: Hubungi kami
+              - listitem [ref=e603]:
+                - link "Blog produk & teknologi" [ref=e604] [cursor=pointer]:
+                  - /url: https://medium.com/seek-blog
+                  - generic [ref=e606]: Blog produk & teknologi
+              - listitem [ref=e607]:
+                - generic [ref=e609] [cursor=pointer]:
+                  - button "Media sosial" [ref=e612]
+                  - img [ref=e618]
+      - generic [ref=e622]:
+        - button "Lokasi" [ref=e626] [cursor=pointer]:
+          - generic [ref=e628]:
+            - img [ref=e631]
+            - generic [ref=e635]: Indonesia
+            - img [ref=e638]
+        - generic [ref=e640]:
+          - generic [ref=e641]:
+            - link "Persyaratan & ketentuan" [ref=e643] [cursor=pointer]:
+              - /url: /id/terms
+              - generic [ref=e645]: Persyaratan & ketentuan
+            - link "Keamanan" [ref=e647] [cursor=pointer]:
+              - /url: /id/security-hub
+              - generic [ref=e649]: Keamanan
+            - link "Privasi" [ref=e651] [cursor=pointer]:
+              - /url: /id/my-privacy
+              - generic [ref=e653]: Privasi
+          - generic [ref=e654]: Hak cipta © 2026 Jobstreet

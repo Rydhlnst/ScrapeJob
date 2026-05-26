@@ -81,7 +81,7 @@ function FiltersForm({
               key={c.id}
               type="button"
               onClick={() => setCategory(c.name)}
-              className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-[hsl(var(--accent-soft))] hover:text-[hsl(var(--dark))]"
+              className="rounded-full bg-card px-3 py-1 text-xs font-medium text-muted-foreground hover:bg-[hsl(var(--accent-soft))] hover:text-[hsl(var(--dark))]"
             >
               {c.name}
             </button>
@@ -176,14 +176,14 @@ export function JobFilterSidebar({
   return (
     <>
       <div className="hidden md:block">
-        <Card className="rounded-[28px] border-border bg-card shadow-sm">
+        <Card className="rounded-[28px] bg-card shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm">Filters</CardTitle>
             <div className="flex flex-wrap gap-2 pt-1">
               {category ? (
                 <Badge
                   variant="outline"
-                  className="border-border bg-[hsl(var(--muted))] text-[hsl(var(--primary))]"
+                  className="border-0 bg-[hsl(var(--muted))] text-[hsl(var(--primary))]"
                 >
                   {category}
                 </Badge>
@@ -191,7 +191,7 @@ export function JobFilterSidebar({
               {jobType ? (
                 <Badge
                   variant="outline"
-                  className="border-border bg-[hsl(var(--accent-soft))] text-[hsl(var(--dark))]"
+                  className="border-0 bg-[hsl(var(--accent-soft))] text-[hsl(var(--dark))]"
                 >
                   {jobType}
                 </Badge>
@@ -199,7 +199,7 @@ export function JobFilterSidebar({
               {source ? (
                 <Badge
                   variant="outline"
-                  className="border-border bg-[hsl(var(--muted))] text-muted-foreground"
+                  className="border-0 bg-[hsl(var(--muted))] text-muted-foreground"
                 >
                   {source}
                 </Badge>

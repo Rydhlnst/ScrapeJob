@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "source": "jobstreet",
+    "scraped_at": null,
+    "total": 0,
+    "roles": [],
+    "filter": {
+      "type": "pages",
+      "max_pages": 1,
+      "max_days_ago": null,
+      "start_date": null
+    }
+  },
+  "data": []
+}

@@ -15,26 +15,38 @@ import { Badge } from "@/components/ui/badge"
 export default async function JobsPage({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined>
+  searchParams?: Promise<Record<string, string | string[] | undefined>>
 }) {
+  const resolvedSearchParams = (await searchParams) ?? {}
+
   const keyword =
-    typeof searchParams?.keyword === "string" ? searchParams.keyword : undefined
+    typeof resolvedSearchParams.keyword === "string"
+      ? resolvedSearchParams.keyword
+      : undefined
   const location =
-    typeof searchParams?.location === "string"
-      ? searchParams.location
+    typeof resolvedSearchParams.location === "string"
+      ? resolvedSearchParams.location
       : undefined
   const category =
-    typeof searchParams?.category === "string"
-      ? searchParams.category
+    typeof resolvedSearchParams.category === "string"
+      ? resolvedSearchParams.category
       : undefined
   const jobType =
-    typeof searchParams?.jobType === "string" ? searchParams.jobType : undefined
+    typeof resolvedSearchParams.jobType === "string"
+      ? resolvedSearchParams.jobType
+      : undefined
   const source =
-    typeof searchParams?.source === "string" ? searchParams.source : undefined
+    typeof resolvedSearchParams.source === "string"
+      ? resolvedSearchParams.source
+      : undefined
   const sort =
-    typeof searchParams?.sort === "string" ? searchParams.sort : undefined
+    typeof resolvedSearchParams.sort === "string"
+      ? resolvedSearchParams.sort
+      : undefined
   const page =
-    typeof searchParams?.page === "string" ? Number(searchParams.page) : 1
+    typeof resolvedSearchParams.page === "string"
+      ? Number(resolvedSearchParams.page)
+      : 1
 
   const [jobs, categories] = await Promise.all([
     listJobs({
@@ -56,7 +68,7 @@ export default async function JobsPage({
 
       <main className="mx-auto max-w-7xl px-4 py-10">
         <div className="space-y-6">
-          <div className="rounded-[28px] border border-border bg-card p-4 shadow-sm md:p-5">
+          <div className="rounded-[28px] bg-card p-4 shadow-sm md:p-5">
             <Suspense fallback={<div className="h-12 w-full" />}>
               <JobSearchBar
                 defaultKeyword={keyword}
@@ -67,7 +79,7 @@ export default async function JobsPage({
           </div>
 
           <div className="grid gap-6 lg:grid-cols-[320px_1fr] lg:items-start">
-            <Suspense fallback={<div className="h-96 w-full rounded-[28px] border border-border bg-card" />}>
+            <Suspense fallback={<div className="h-96 w-full rounded-[28px] bg-card" />}>
               <JobFilterSidebar
                 categories={categories}
                 category={category}
@@ -77,7 +89,7 @@ export default async function JobsPage({
             </Suspense>
 
             <div className="space-y-4">
-              <div className="rounded-[28px] border border-border bg-card p-5 shadow-sm">
+              <div className="rounded-[28px] bg-card p-5 shadow-sm">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="text-sm text-muted-foreground">
                     Menampilkan{" "}
@@ -90,7 +102,7 @@ export default async function JobsPage({
                     {keyword ? (
                       <Badge
                         variant="outline"
-                        className="rounded-full border-border bg-[hsl(var(--muted))] text-[hsl(var(--primary))]"
+                        className="rounded-full bg-[hsl(var(--muted))] text-[hsl(var(--primary))]"
                       >
                         keyword: {keyword}
                       </Badge>
@@ -98,7 +110,7 @@ export default async function JobsPage({
                     {location ? (
                       <Badge
                         variant="outline"
-                        className="rounded-full border-border bg-[hsl(var(--muted))] text-muted-foreground"
+                        className="rounded-full bg-[hsl(var(--muted))] text-muted-foreground"
                       >
                         lokasi: {location}
                       </Badge>

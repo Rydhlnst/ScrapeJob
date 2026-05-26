@@ -4,7 +4,6 @@ import {
   Blocks,
   BriefcaseBusiness,
   Code2,
-  Figma,
   Layers3,
   Smartphone,
   ServerCog,
@@ -18,7 +17,7 @@ export type JobCategory = {
 }
 
 export const categories: JobCategory[] = [
-  { id: "uiux", title: "UI/UX Design", jobsCount: 842, icon: Figma },
+  { id: "uiux", title: "UI/UX Design", jobsCount: 842, icon: Layers3 },
   { id: "frontend", title: "Frontend Developer", jobsCount: 1240, icon: Code2 },
   { id: "backend", title: "Backend Developer", jobsCount: 980, icon: ServerCog },
   { id: "fullstack", title: "Fullstack Developer", jobsCount: 760, icon: Blocks },

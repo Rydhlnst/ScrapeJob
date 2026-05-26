@@ -1,0 +1,20 @@
+2026-05-26 18:08:10,617 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:09:02,437 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:10:55,431 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:11:20,655 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:11:27,538 | INFO | scraper_main | Start scrape source=glints roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:11:27,539 | INFO | scraper_main | JSON saved path=D:\Projects\Freelance\ScrapeJob\output\jobs.json total=0
+2026-05-26 18:11:27,541 | INFO | scraper_main | Done scrape source=glints total=0
+2026-05-26 18:12:38,251 | INFO | scraper_main | Start scrape source=kalibrr roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:12:49,169 | INFO | scraper_main | Start scrape source=glints roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:12:49,171 | INFO | scraper_main | JSON saved path=D:\Projects\Freelance\ScrapeJob\output\jobs.json total=0
+2026-05-26 18:12:49,171 | INFO | scraper_main | Done scrape source=glints total=0
+2026-05-26 18:13:07,622 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:19:13,986 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:30:00,872 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:30:09,493 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:32:06,530 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:33:54,019 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:39:00,536 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:43:48,179 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1
+2026-05-26 18:45:15,444 | INFO | scraper_main | Start scrape source=jobstreet roles=['Data Analyst', 'Data Engineer'] max_pages=1

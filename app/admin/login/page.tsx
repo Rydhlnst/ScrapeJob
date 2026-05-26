@@ -2,6 +2,9 @@
 
 import * as React from "react"
 import { z } from "zod"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
 
 import { adminLogin } from "@/lib/api/auth"
 import { Button } from "@/components/ui/button"
@@ -15,25 +18,26 @@ const schema = z.object({
 })
 
 export default function AdminLoginPage() {
+  const router = useRouter()
   const [email, setEmail] = React.useState("admin@example.com")
-  const [password, setPassword] = React.useState("admin")
+  const [password, setPassword] = React.useState("password")
   const [loading, setLoading] = React.useState(false)
-  const [error, setError] = React.useState<string | null>(null)
 
   async function submit() {
     setLoading(true)
-    setError(null)
     const parsed = schema.safeParse({ email, password })
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? "Invalid input")
+      toast.error(parsed.error.issues[0]?.message ?? "Invalid input")
       setLoading(false)
       return
     }
     try {
       const res = await adminLogin(parsed.data)
-      console.log("login", res)
+      localStorage.setItem("admin_access_token", res.accessToken)
+      toast.success("Login berhasil. Mengarahkan ke dashboard...")
+      router.push("/admin/dashboard")
     } catch (e) {
-      setError((e as Error).message)
+      toast.error((e as Error).message || "Login gagal.")
     } finally {
       setLoading(false)
     }
@@ -55,13 +59,18 @@ export default function AdminLoginPage() {
             <Label>Password</Label>
             <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
           </div>
-          {error ? <div className="rounded-md border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">{error}</div> : null}
           <Button className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading} onClick={submit}>
-            {loading ? "Loading..." : "Login"}
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              "Login"
+            )}
           </Button>
         </CardContent>
       </Card>
     </div>
   )
 }
-

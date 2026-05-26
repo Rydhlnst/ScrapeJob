@@ -52,7 +52,7 @@ export function JobCard({
   return (
     <Card
       className={cn(
-        "group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg",
+        "group flex h-full flex-col overflow-hidden rounded-2xl bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg",
         className,
       )}
     >
@@ -63,7 +63,7 @@ export function JobCard({
               {job.jobType ? (
                 <Badge
                   variant="outline"
-                  className={cn("font-medium", jobTypeColor(job.jobType))}
+                  className={cn("font-medium border-0", jobTypeColor(job.jobType))}
                 >
                   {job.jobType}
                 </Badge>
@@ -71,7 +71,7 @@ export function JobCard({
               {job.category ? (
                 <Badge
                   variant="outline"
-                  className={cn("font-medium", categoryColor(job.category))}
+                  className={cn("font-medium border-0", categoryColor(job.category))}
                 >
                   {job.category}
                 </Badge>
@@ -89,7 +89,7 @@ export function JobCard({
             <div className="mt-2 flex items-center gap-3">
               <div
                 className={cn(
-                  "grid size-9 place-items-center rounded-full shadow-sm ring-1 ring-black/5",
+                  "grid size-9 place-items-center rounded-full shadow-sm",
                   companyAvatarClass(job.companyName),
                 )}
               >
@@ -117,11 +117,11 @@ export function JobCard({
         </p>
 
         <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <span className="rounded-full border border-border bg-[hsl(var(--muted))] px-2.5 py-1">
+          <span className="rounded-full bg-[hsl(var(--muted))] px-2.5 py-1">
             {job.sourceName}
           </span>
           {job.scrapedAt ? (
-            <span className="rounded-full border border-border bg-[hsl(var(--muted))] px-2.5 py-1">
+            <span className="rounded-full bg-[hsl(var(--muted))] px-2.5 py-1">
               {job.scrapedAt}
             </span>
           ) : null}
@@ -148,7 +148,7 @@ export function JobCard({
           <Button
             asChild
             variant="outline"
-            className="w-full rounded-full border-border bg-card hover:bg-muted"
+            className="w-full rounded-full bg-card hover:bg-muted"
           >
             <a href={job.sourceUrl} target="_blank" rel="noreferrer">
               Lihat sumber

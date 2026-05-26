@@ -1,0 +1,1975 @@
+- generic [ref=e3]:
+  - heading "808 lowongan kerja software engineer di Indonesia" [level=1] [ref=e5]
+  - button "Lewati ke konten" [ref=e6] [cursor=pointer]
+  - generic [ref=e7]:
+    - status
+  - banner [ref=e9]:
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - link "Jobstreet" [ref=e16] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e17]: Jobstreet
+          - img [ref=e19]
+        - generic [ref=e23]:
+          - button "Bahasa" [ref=e26] [cursor=pointer]:
+            - generic [ref=e28]:
+              - img [ref=e31]
+              - generic [ref=e34]: Bahasa
+              - img [ref=e37]
+          - link "Masuk" [ref=e47] [cursor=pointer]:
+            - /url: /id/oauth/login?returnUrl=%2Fid%2Fsoftware-engineer-jobs%2Fin-Indonesia
+            - generic [ref=e48]:
+              - generic:
+                - generic: Masuk
+          - link "Untuk perusahaan" [ref=e50] [cursor=pointer]:
+            - /url: https://id.employer.seek.com/id
+            - generic [ref=e51]: Untuk perusahaan
+      - generic [ref=e53]:
+        - link "Cari lowongan" [ref=e55] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e57]: Cari lowongan
+        - link "Cari profil" [ref=e60] [cursor=pointer]:
+          - /url: /id/profiles/search?tracking=ILC-profile-search-header
+          - generic [ref=e62]: Cari profil
+        - link "Sumber daya karir" [ref=e65] [cursor=pointer]:
+          - /url: /id/career-advice
+          - generic [ref=e67]: Sumber daya karir
+        - link "Perusahaan" [ref=e70] [cursor=pointer]:
+          - /url: /id/companies
+          - generic [ref=e72]: Perusahaan
+        - link "Komunitas" [ref=e75] [cursor=pointer]:
+          - /url: /id/community
+          - generic [ref=e77]: Komunitas
+  - main [ref=e79]:
+    - generic [ref=e80]:
+      - search "Lakukan pencarian lowongan" [ref=e82]:
+        - heading "Lakukan pencarian lowongan" [level=1] [ref=e84]
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - region "Masukkan kata kunci" [ref=e96]:
+              - generic [ref=e97]:
+                - generic [ref=e102]:
+                  - combobox "Jelaskan posisi yang kamu cari (jabatan, industri, skill…)" [ref=e103]: software engineer
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img
+                  - button "Clear" [ref=e108] [cursor=pointer]:
+                    - img [ref=e111]
+                - generic [ref=e113]: Suggestions will appear below the field as you type
+            - region "Masukkan lokasi" [ref=e117]:
+              - generic [ref=e118]:
+                - generic [ref=e123]:
+                  - combobox "Masukkan kota atau wilayah" [ref=e124]: Indonesia
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img
+                  - button "Clear" [ref=e129] [cursor=pointer]:
+                    - img [ref=e132]
+                - generic [ref=e134]: Suggestions will appear below the field as you type
+            - button "Kirim pencarian" [ref=e138] [cursor=pointer]:
+              - generic [ref=e139]:
+                - generic:
+                  - generic: Cari
+          - navigation "Filter pencarian kamu" [ref=e144]:
+            - heading "Filter pencarian kamu" [level=1] [ref=e146]
+            - generic [ref=e147]:
+              - generic [ref=e148]:
+                - button "filter berdasarkan salary range" [expanded] [ref=e149] [cursor=pointer]
+                - generic [ref=e150] [cursor=pointer]:
+                  - generic [ref=e151]: Tampilkan filter salary range.
+                  - generic [ref=e152]:
+                    - generic [ref=e154]: Gaji
+                    - img [ref=e160]
+              - generic [ref=e162]:
+                - button "filter berdasarkan jenis pekerjaan" [expanded] [ref=e163] [cursor=pointer]
+                - generic [ref=e164] [cursor=pointer]:
+                  - generic [ref=e165]: Tampilkan filter jenis pekerjaan.
+                  - generic [ref=e166]:
+                    - generic [ref=e168]: Jenis
+                    - img [ref=e174]
+              - generic [ref=e176]:
+                - button "filter berdasarkan work arrangement" [expanded] [ref=e177] [cursor=pointer]
+                - generic [ref=e178] [cursor=pointer]:
+                  - generic [ref=e179]: Tampilkan filter work arrangement.
+                  - generic [ref=e180]:
+                    - generic [ref=e182]: Tempat kerja
+                    - img [ref=e188]
+              - generic [ref=e190]:
+                - button "filter berdasarkan Klasifikasi" [expanded] [ref=e191] [cursor=pointer]
+                - generic [ref=e192] [cursor=pointer]:
+                  - generic [ref=e193]: Tampilkan filter Klasifikasi.
+                  - link [ref=e195]:
+                    - /url: /id/software-engineer-jobs/in-Indonesia
+                    - text: Clear classifications
+                  - generic [ref=e196]:
+                    - generic [ref=e198]: Bidang
+                    - img [ref=e204]
+              - generic [ref=e206]:
+                - button "filter berdasarkan tanggal terdaftar" [expanded] [ref=e207] [cursor=pointer]
+                - generic [ref=e208] [cursor=pointer]:
+                  - generic [ref=e209]: Tampilkan filter tanggal terdaftar.
+                  - generic [ref=e210]:
+                    - generic [ref=e212]: Diposting
+                    - img [ref=e218]
+            - radio
+      - region "Hasil Pencarian" [ref=e221]:
+        - generic [ref=e226]:
+          - generic [ref=e227]:
+            - generic [ref=e229]: Filter berdasarkan lokasi
+            - list [ref=e231]:
+              - listitem [ref=e232]:
+                - link "Lowongan di Jakarta Raya" [ref=e233] [cursor=pointer]:
+                  - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                  - text: Jakarta Raya
+              - listitem [ref=e234]:
+                - link "Lowongan di Bogor Jawa Barat" [ref=e235] [cursor=pointer]:
+                  - /url: /id/software-engineer-jobs/in-Bogor-Jawa-Barat
+                  - text: Bogor Jawa Barat
+              - listitem [ref=e236]:
+                - link "Lowongan di Tangerang Banten" [ref=e237] [cursor=pointer]:
+                  - /url: /id/software-engineer-jobs/in-Tangerang-Banten
+                  - text: Tangerang Banten
+              - listitem [ref=e238]:
+                - link "Lowongan di Jakarta Barat Jakarta Raya" [ref=e239] [cursor=pointer]:
+                  - /url: /id/software-engineer-jobs/in-Jakarta-Barat-Jakarta-Raya
+                  - text: Jakarta Barat Jakarta Raya
+              - listitem [ref=e240]:
+                - link "Lowongan di Batam Kepulauan Riau" [ref=e241] [cursor=pointer]:
+                  - /url: /id/software-engineer-jobs/in-Batam-Kepulauan-Riau
+                  - text: Batam Kepulauan Riau
+              - listitem [ref=e242]:
+                - link "Lowongan di Bali" [ref=e243] [cursor=pointer]:
+                  - /url: /id/software-engineer-jobs/in-Bali
+                  - text: Bali
+          - button "Baca Selengkapnya" [ref=e247] [cursor=pointer]:
+            - text: Baca Selengkapnya
+            - generic [ref=e248]:
+              - text: ⁠
+              - img [ref=e250]
+        - generic [ref=e259]:
+          - generic [ref=e261]:
+            - generic [ref=e263]:
+              - heading "Pencarian terkait" [level=4] [ref=e264]
+              - list [ref=e265]:
+                - listitem [ref=e266]:
+                  - link "programmer pekerjaan" [ref=e267] [cursor=pointer]:
+                    - /url: /id/programmer-jobs/in-Indonesia
+                    - generic [ref=e268]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: programmer pekerjaan
+                - listitem [ref=e269]:
+                  - link "web developer pekerjaan" [ref=e270] [cursor=pointer]:
+                    - /url: /id/web-developer-jobs/in-Indonesia
+                    - generic [ref=e271]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: web developer pekerjaan
+                - listitem [ref=e272]:
+                  - link "junior software engineer pekerjaan" [ref=e273] [cursor=pointer]:
+                    - /url: /id/junior-software-engineer-jobs/in-Indonesia
+                    - generic [ref=e274]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: junior software engineer pekerjaan
+                - listitem [ref=e275]:
+                  - link "backend pekerjaan" [ref=e276] [cursor=pointer]:
+                    - /url: /id/backend-jobs/in-Indonesia
+                    - generic [ref=e277]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: backend pekerjaan
+                - listitem [ref=e278]:
+                  - link "php developer pekerjaan" [ref=e279] [cursor=pointer]:
+                    - /url: /id/php-developer-jobs/in-Indonesia
+                    - generic [ref=e280]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: php developer pekerjaan
+                - listitem [ref=e281]:
+                  - link "software pekerjaan" [ref=e282] [cursor=pointer]:
+                    - /url: /id/software-jobs/in-Indonesia
+                    - generic [ref=e283]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: software pekerjaan
+                - listitem [ref=e284]:
+                  - link "front end pekerjaan" [ref=e285] [cursor=pointer]:
+                    - /url: /id/front-end-jobs/in-Indonesia
+                    - generic [ref=e286]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: front end pekerjaan
+                - listitem [ref=e287]:
+                  - link "developer pekerjaan" [ref=e288] [cursor=pointer]:
+                    - /url: /id/developer-jobs/in-Indonesia
+                    - generic [ref=e289]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: developer pekerjaan
+                - listitem [ref=e290]:
+                  - link "it support pekerjaan" [ref=e291] [cursor=pointer]:
+                    - /url: /id/it-support-jobs/in-Indonesia
+                    - generic [ref=e292]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: it support pekerjaan
+                - listitem [ref=e293]:
+                  - link "software developer pekerjaan" [ref=e294] [cursor=pointer]:
+                    - /url: /id/software-developer-jobs/in-Indonesia
+                    - generic [ref=e295]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: software developer pekerjaan
+                - listitem [ref=e296]:
+                  - link "it pekerjaan" [ref=e297] [cursor=pointer]:
+                    - /url: /id/it-jobs/in-Indonesia
+                    - generic [ref=e298]:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - img
+                            - text: ⁠
+                          - text: it pekerjaan
+            - generic [ref=e299]:
+              - contentinfo [ref=e303]:
+                - generic [ref=e305]:
+                  - generic [ref=e307]: 808 pekerjaan
+                  - generic [ref=e312] [cursor=pointer]: Baru untuk kamu
+                - contentinfo [ref=e314]:
+                  - button "Urut bedasarkan" [ref=e319] [cursor=pointer]:
+                    - button "Urut bedasarkan" [ref=e320]:
+                      - img [ref=e323]
+              - generic [ref=e326]:
+                - button "Ubah pencarian saya" [ref=e329] [cursor=pointer]
+                - generic [ref=e330]:
+                  - article "Senior/Lead Full-stack Software Engineer (React, Node.js) | EdTech | Dayshift" [ref=e332] [cursor=pointer]:
+                    - link [ref=e333]:
+                      - /url: /id/job/92253683?type=standard&ref=search-standalone&origin=jobCard#sol=1d5d408fb6ed920a186a5fbadae0dda1476bce27
+                    - generic [ref=e334]: Listed more than one day ago
+                    - generic [ref=e335]:
+                      - generic [ref=e336]:
+                        - img [ref=e340]
+                        - generic [ref=e344]:
+                          - heading "Senior/Lead Full-stack Software Engineer (React, Node.js) | EdTech | Dayshift" [level=3] [ref=e345]:
+                            - link "Senior/Lead Full-stack Software Engineer (React, Node.js) | EdTech | Dayshift" [ref=e347]:
+                              - /url: /id/job/92253683?type=standard&ref=search-standalone&origin=cardTitle#sol=1d5d408fb6ed920a186a5fbadae0dda1476bce27
+                          - generic [ref=e350]:
+                            - generic [ref=e351]: di
+                            - link "Lowongan di The Pique Lab Learning Centre" [ref=e352]:
+                              - /url: /id/The-Pique-Lab-Learning-Centre-jobs
+                              - text: The Pique Lab Learning Centre
+                          - generic [ref=e353]:
+                            - paragraph [ref=e355]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e356]:
+                              - generic [ref=e358]:
+                                - generic [ref=e359]:
+                                  - link "Limit results to Jakarta Raya":
+                                    - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                    - text: Jakarta Raya
+                                - generic [ref=e360]: (Jarak jauh)
+                              - 'generic "Salary: Rp 30,000,000 – Rp 40,000,000 per month" [ref=e361]':
+                                - generic [ref=e363]: Rp 30,000,000 – Rp 40,000,000 per month
+                      - list [ref=e365]:
+                        - listitem [ref=e366]:
+                          - generic [ref=e371]: Learn, grow, and build alongside supportive, high-calibre teammates!
+                        - listitem [ref=e372]:
+                          - generic [ref=e377]: Modern stack + AI-first workflows to ship better code, faster!
+                        - listitem [ref=e378]:
+                          - generic [ref=e383]: Strong mentorship, clear growth paths, and a team that values craft
+                      - generic [ref=e385]: Build elegant, scalable edtech systems with a modern stack in a growth-focused team!
+                      - generic [ref=e386]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e387]:
+                          - generic [ref=e392]: 1 hari yang lalu
+                          - generic [ref=e394]:
+                            - button "Lebih banyak" [ref=e397]:
+                              - img [ref=e400]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e405]:
+                              - img [ref=e408]
+                  - article "Junior Software Engineer" [ref=e411] [cursor=pointer]:
+                    - link [ref=e412]:
+                      - /url: /id/job/92276199?type=standard&ref=search-standalone&origin=jobCard#sol=e112f8ce41a2f608a7797325c5cecc8d95f15c65
+                    - generic [ref=e413]: Listed more than twenty one days ago
+                    - generic [ref=e414]:
+                      - generic [ref=e415]:
+                        - img [ref=e419]
+                        - generic [ref=e423]:
+                          - heading "Junior Software Engineer" [level=3] [ref=e424]:
+                            - link "Junior Software Engineer" [ref=e426]:
+                              - /url: /id/job/92276199?type=standard&ref=search-standalone&origin=cardTitle#sol=e112f8ce41a2f608a7797325c5cecc8d95f15c65
+                          - generic [ref=e429]:
+                            - generic [ref=e430]: di
+                            - link "Lowongan di Quantum Technology Solutions" [ref=e431]:
+                              - /url: /id/Quantum-Technology-Solutions-jobs
+                              - text: PT Kuantum Solusi Teknologi
+                          - generic [ref=e432]:
+                            - paragraph [ref=e434]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e435]:
+                              - generic [ref=e437]:
+                                - generic [ref=e438]:
+                                  - link "Limit results to Bogor":
+                                    - /url: /id/software-engineer-jobs/in-Bogor-Jawa-Barat
+                                    - text: Bogor
+                                - generic [ref=e439]:
+                                  - text: ","
+                                  - link "Limit results to Jawa Barat":
+                                    - /url: /id/software-engineer-jobs/in-Jawa-Barat
+                                    - text: Jawa Barat
+                              - 'generic "Salary: Rp 6.000.000 – Rp 8.000.000 per month" [ref=e440]':
+                                - generic [ref=e442]: Rp 6.000.000 – Rp 8.000.000 per month
+                      - generic [ref=e444]: Bachelor’s degree in Computer Science or Information Systems with at least 3 years of experience in software development.
+                      - generic [ref=e445]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e446]:
+                          - generic [ref=e451]: 21 jam yang lalu
+                          - generic [ref=e453]:
+                            - button "Lebih banyak" [ref=e456]:
+                              - img [ref=e459]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e464]:
+                              - img [ref=e467]
+                  - article "Software Engineer Internship" [ref=e470] [cursor=pointer]:
+                    - link [ref=e471]:
+                      - /url: /id/job/91761487?type=standard&ref=search-standalone&origin=jobCard#sol=480fc514d8c2cd0f3f3056c1b0fa05503a469a2d
+                    - generic [ref=e472]: Listed more than twenty five days ago
+                    - generic [ref=e473]:
+                      - generic [ref=e474]:
+                        - img [ref=e478]
+                        - generic [ref=e482]:
+                          - heading "Software Engineer Internship" [level=3] [ref=e483]:
+                            - link "Software Engineer Internship" [ref=e485]:
+                              - /url: /id/job/91761487?type=standard&ref=search-standalone&origin=cardTitle#sol=480fc514d8c2cd0f3f3056c1b0fa05503a469a2d
+                          - generic [ref=e488]:
+                            - generic [ref=e489]: di
+                            - link "Lowongan di OPPO" [ref=e490]:
+                              - /url: /id/OPPO-jobs
+                              - text: OPPO Indonesia
+                          - generic [ref=e492]:
+                            - generic:
+                              - generic "Akan segera berakhir":
+                                - generic:
+                                  - generic: Akan segera berakhir
+                          - generic [ref=e493]:
+                            - paragraph [ref=e495]: Ini adalah lowongan kerja Kontrak/Temporer
+                            - generic [ref=e496]:
+                              - generic [ref=e498]:
+                                - generic [ref=e499]:
+                                  - link "Limit results to Tangerang":
+                                    - /url: /id/software-engineer-jobs/in-Tangerang-Banten
+                                    - text: Tangerang
+                                - generic [ref=e500]:
+                                  - text: ","
+                                  - link "Limit results to Banten":
+                                    - /url: /id/software-engineer-jobs/in-Banten
+                                    - text: Banten
+                              - 'generic "Salary: Rp 3.000.000 per month" [ref=e501]':
+                                - generic [ref=e503]: Rp 3.000.000 per month
+                      - list [ref=e505]:
+                        - listitem [ref=e506]:
+                          - generic [ref=e511]: Paid Internship
+                        - listitem [ref=e512]:
+                          - generic [ref=e517]: Covered BPJS TK (KK & KM)
+                        - listitem [ref=e518]:
+                          - generic [ref=e523]: Full Attendance Reward
+                      - generic [ref=e525]: Be part of future technology with us!
+                      - generic [ref=e526]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e527]:
+                          - generic [ref=e532]: 25 hari yang lalu
+                          - generic [ref=e534]:
+                            - button "Lebih banyak" [ref=e537]:
+                              - img [ref=e540]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e545]:
+                              - img [ref=e548]
+                  - article "SOFTWARE ENGINEER" [ref=e552] [cursor=pointer]:
+                    - link [ref=e553]:
+                      - /url: /id/job/92220719?type=standard&ref=search-standalone&origin=jobCard#sol=595111f802c49df6b8d0d42c6efd5c2e4b213000
+                    - generic [ref=e554]: Listed more than two days ago
+                    - generic [ref=e555]:
+                      - generic [ref=e556]:
+                        - img [ref=e560]
+                        - generic [ref=e564]:
+                          - heading "SOFTWARE ENGINEER" [level=3] [ref=e565]:
+                            - link "SOFTWARE ENGINEER" [ref=e567]:
+                              - /url: /id/job/92220719?type=standard&ref=search-standalone&origin=cardTitle#sol=595111f802c49df6b8d0d42c6efd5c2e4b213000
+                          - generic [ref=e570]:
+                            - generic [ref=e571]: di
+                            - link "Lowongan di KAKIKU Family Health and Beauty" [ref=e572]:
+                              - /url: /id/KAKIKU-Family-Health-and-Beauty-jobs
+                              - text: Kakiku Family Health & Beauty (Tangerang)
+                          - generic [ref=e573]:
+                            - paragraph [ref=e575]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e576]:
+                              - generic [ref=e578]:
+                                - generic [ref=e579]:
+                                  - link "Limit results to Tangerang":
+                                    - /url: /id/software-engineer-jobs/in-Tangerang-Banten
+                                    - text: Tangerang
+                                - generic [ref=e580]:
+                                  - text: ","
+                                  - link "Limit results to Banten":
+                                    - /url: /id/software-engineer-jobs/in-Banten
+                                    - text: Banten
+                              - 'generic "Salary: Rp 7.000.000 – Rp 10.000.000 per month" [ref=e581]':
+                                - generic [ref=e583]: Rp 7.000.000 – Rp 10.000.000 per month
+                      - generic [ref=e585]: Mengembangkan dan memelihara aplikasi internal, dashboard, atau tools berbasis web/mobile untuk meningkatkan efisiensi kerja.
+                      - generic [ref=e586]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e587]:
+                          - generic [ref=e592]: 2 hari yang lalu
+                          - generic [ref=e594]:
+                            - button "Lebih banyak" [ref=e597]:
+                              - img [ref=e600]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e605]:
+                              - img [ref=e608]
+                  - article "Senior Software Engineer (FE, React/React Native)" [ref=e611] [cursor=pointer]:
+                    - link [ref=e612]:
+                      - /url: /id/job/92080433?type=standard&ref=search-standalone&origin=jobCard#sol=0c6ab85f74d2000f24f62cb51356f48ca6552550
+                    - generic [ref=e613]: Listed more than nine days ago
+                    - generic [ref=e614]:
+                      - generic [ref=e615]:
+                        - img [ref=e619]
+                        - generic [ref=e623]:
+                          - heading "Senior Software Engineer (FE, React/React Native)" [level=3] [ref=e624]:
+                            - link "Senior Software Engineer (FE, React/React Native)" [ref=e626]:
+                              - /url: /id/job/92080433?type=standard&ref=search-standalone&origin=cardTitle#sol=0c6ab85f74d2000f24f62cb51356f48ca6552550
+                          - generic [ref=e629]:
+                            - generic [ref=e630]: di
+                            - link "Lowongan di Luce Maintenance Group" [ref=e631]:
+                              - /url: /id/Luce-Maintenance-Group-jobs
+                              - text: Luce Maintenance Group
+                          - generic [ref=e632]:
+                            - paragraph [ref=e634]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e635]:
+                              - generic [ref=e637]:
+                                - generic [ref=e638]:
+                                  - link "Limit results to Jakarta Barat":
+                                    - /url: /id/software-engineer-jobs/in-Jakarta-Barat-Jakarta-Raya
+                                    - text: Jakarta Barat
+                                - generic [ref=e639]:
+                                  - text: ","
+                                  - link "Limit results to Jakarta Raya":
+                                    - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                    - text: Jakarta Raya
+                                - generic [ref=e640]: (Hibrid)
+                              - 'generic "Salary: Rp 28,500,000 – Rp 36,500,000 per year" [ref=e641]':
+                                - generic [ref=e643]: Rp 28,500,000 – Rp 36,500,000 per year
+                      - generic [ref=e645]: Luce is a tech-enabled services platform that provides a full range of services from home cleaning to babysitting.
+                      - generic [ref=e646]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e647]:
+                          - generic [ref=e652]: 9 hari yang lalu
+                          - generic [ref=e654]:
+                            - button "Lebih banyak" [ref=e657]:
+                              - img [ref=e660]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e665]:
+                              - img [ref=e668]
+                  - article "Senior Software Engineer / Technical Lead - CMMS Platform" [ref=e671] [cursor=pointer]:
+                    - link [ref=e672]:
+                      - /url: /id/job/91810237?type=standard&ref=search-standalone&origin=jobCard#sol=8fb830cb3a5ab4b93eff93842762b239bd943e10
+                    - generic [ref=e673]: Listed more than twenty three days ago
+                    - generic [ref=e674]:
+                      - generic [ref=e675]:
+                        - generic [ref=e678]:
+                          - img
+                        - generic [ref=e682]:
+                          - heading "Senior Software Engineer / Technical Lead - CMMS Platform" [level=3] [ref=e683]:
+                            - link "Senior Software Engineer / Technical Lead - CMMS Platform" [ref=e685]:
+                              - /url: /id/job/91810237?type=standard&ref=search-standalone&origin=cardTitle#sol=8fb830cb3a5ab4b93eff93842762b239bd943e10
+                          - generic [ref=e688]:
+                            - generic [ref=e689]: di
+                            - link "Lowongan di KraanWerks" [ref=e690]:
+                              - /url: /id/KraanWerks-jobs
+                              - text: Kraanwerks Pte. Ltd.
+                          - generic [ref=e692]:
+                            - generic:
+                              - generic "Akan segera berakhir":
+                                - generic:
+                                  - generic: Akan segera berakhir
+                          - generic [ref=e693]:
+                            - paragraph [ref=e695]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e698]:
+                              - generic [ref=e699]:
+                                - link "Limit results to Batam":
+                                  - /url: /id/software-engineer-jobs/in-Batam-Kepulauan-Riau
+                                  - text: Batam
+                              - generic [ref=e700]:
+                                - text: ","
+                                - link "Limit results to Kepulauan Riau":
+                                  - /url: /id/software-engineer-jobs/in-Kepulauan-Riau
+                                  - text: Kepulauan Riau
+                      - generic [ref=e702]: Lead system architecture. Drive CMMS platform development. Build scalable web and mobile solutions.
+                      - generic [ref=e703]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e704]:
+                          - generic [ref=e709]: 23 hari yang lalu
+                          - generic [ref=e711]:
+                            - button "Lebih banyak" [ref=e714]:
+                              - img [ref=e717]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e722]:
+                              - img [ref=e725]
+                  - article "Software Engineer" [ref=e728] [cursor=pointer]:
+                    - link [ref=e729]:
+                      - /url: /id/job/91697051?type=standard&ref=search-standalone&origin=jobCard#sol=8613ca871d164201c2cf68ce91ba6d8b81620571
+                    - generic [ref=e730]: Listed more than twenty nine days ago
+                    - generic [ref=e731]:
+                      - generic [ref=e732]:
+                        - generic [ref=e735]:
+                          - img
+                        - generic [ref=e739]:
+                          - heading "Software Engineer" [level=3] [ref=e740]:
+                            - link "Software Engineer" [ref=e742]:
+                              - /url: /id/job/91697051?type=standard&ref=search-standalone&origin=cardTitle#sol=8613ca871d164201c2cf68ce91ba6d8b81620571
+                          - generic [ref=e745]:
+                            - generic [ref=e746]: di
+                            - link "Lowongan di Geonet Property & Finance Group" [ref=e747]:
+                              - /url: /id/Geonet-Property-&-Finance-Group-jobs
+                              - text: Geonet Property & Finance Group
+                          - generic [ref=e749]:
+                            - generic:
+                              - generic "Akan segera berakhir":
+                                - generic:
+                                  - generic: Akan segera berakhir
+                          - generic [ref=e750]:
+                            - paragraph [ref=e752]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e756]:
+                              - link "Limit results to Bali":
+                                - /url: /id/software-engineer-jobs/in-Bali
+                                - text: Bali
+                      - generic [ref=e758]: You will build and maintain scalable apps, integrate systems, and support business operations in a fast-growing, tech-driven real estate company.
+                      - generic [ref=e759]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e760]:
+                          - generic [ref=e765]: 29 hari yang lalu
+                          - generic [ref=e767]:
+                            - button "Lebih banyak" [ref=e770]:
+                              - img [ref=e773]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e778]:
+                              - img [ref=e781]
+                  - article "Software Engineer (Backend Java)" [ref=e784] [cursor=pointer]:
+                    - link [ref=e785]:
+                      - /url: /id/job/92233595?type=standard&ref=search-standalone&origin=jobCard#sol=c9b3755b9144d585a7c93b7430a126ea56d37369
+                    - generic [ref=e786]: Listed more than two days ago
+                    - generic [ref=e787]:
+                      - generic [ref=e788]:
+                        - generic [ref=e791]:
+                          - img
+                        - generic [ref=e795]:
+                          - heading "Software Engineer (Backend Java)" [level=3] [ref=e796]:
+                            - link "Software Engineer (Backend Java)" [ref=e798]:
+                              - /url: /id/job/92233595?type=standard&ref=search-standalone&origin=cardTitle#sol=c9b3755b9144d585a7c93b7430a126ea56d37369
+                          - generic [ref=e801]:
+                            - generic [ref=e802]: di
+                            - link "Lowongan di Rsystems Ibizcs International" [ref=e803]:
+                              - /url: /id/Rsystems-Ibizcs-International-jobs
+                              - text: PT Rsystems Ibizcs International
+                          - generic [ref=e805]:
+                            - generic:
+                              - generic "Dibutuhkan segera":
+                                - generic:
+                                  - generic: Dibutuhkan segera
+                          - generic [ref=e806]:
+                            - paragraph [ref=e808]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e809]:
+                              - generic [ref=e811]:
+                                - generic [ref=e812]:
+                                  - link "Limit results to Tangerang":
+                                    - /url: /id/software-engineer-jobs/in-Tangerang-Banten
+                                    - text: Tangerang
+                                - generic [ref=e813]:
+                                  - text: ","
+                                  - link "Limit results to Banten":
+                                    - /url: /id/software-engineer-jobs/in-Banten
+                                    - text: Banten
+                              - 'generic "Salary: Rp 14.000.000 – Rp 21.000.000 per month" [ref=e814]':
+                                - generic [ref=e816]: Rp 14.000.000 – Rp 21.000.000 per month
+                      - generic [ref=e818]: Looking for candidate who can join immediately
+                      - generic [ref=e819]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e820]:
+                          - generic [ref=e825]: 2 hari yang lalu
+                          - generic [ref=e827]:
+                            - button "Lebih banyak" [ref=e830]:
+                              - img [ref=e833]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e838]:
+                              - img [ref=e841]
+                  - article "Software Engineer" [ref=e844] [cursor=pointer]:
+                    - link [ref=e845]:
+                      - /url: /id/job/91889473?type=standard&ref=search-standalone&origin=jobCard#sol=c72737570c8523bd56423c7c2d4f86e810c3991f
+                    - generic [ref=e846]: Listed more than eighteen days ago
+                    - generic [ref=e847]:
+                      - generic [ref=e848]:
+                        - generic [ref=e851]:
+                          - img
+                        - generic [ref=e855]:
+                          - heading "Software Engineer" [level=3] [ref=e856]:
+                            - link "Software Engineer" [ref=e858]:
+                              - /url: /id/job/91889473?type=standard&ref=search-standalone&origin=cardTitle#sol=c72737570c8523bd56423c7c2d4f86e810c3991f
+                          - generic [ref=e861]:
+                            - generic [ref=e862]: di
+                            - link "Lowongan di Inti Everspring Indonesia" [ref=e863]:
+                              - /url: /id/Inti-Everspring-Indonesia-jobs
+                              - text: PT Inti Everspring Indonesia (Jakarta branch)
+                          - generic [ref=e864]:
+                            - paragraph [ref=e866]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e869]:
+                              - generic [ref=e870]:
+                                - link "Limit results to Serang":
+                                  - /url: /id/software-engineer-jobs/in-Serang-Banten
+                                  - text: Serang
+                              - generic [ref=e871]:
+                                - text: ","
+                                - link "Limit results to Banten":
+                                  - /url: /id/software-engineer-jobs/in-Banten
+                                  - text: Banten
+                      - list [ref=e873]:
+                        - listitem [ref=e874]:
+                          - generic [ref=e879]: The most integrated Agrochemical company.
+                        - listitem [ref=e880]:
+                          - generic [ref=e885]: Produces high quality products that have been registered.
+                        - listitem [ref=e886]:
+                          - generic [ref=e891]: "Had certified ISO 9001: 2015, ISO 14001:2015, SMK3 & Blue Proper"
+                      - generic [ref=e893]: "Job Description: Mengembangkan program software di perusahaan. Melakukan pengelolaan life cycle software yang digunakan di perusahaan."
+                      - generic [ref=e894]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e895]:
+                          - generic [ref=e900]: 18 hari yang lalu
+                          - generic [ref=e902]:
+                            - button "Lebih banyak" [ref=e905]:
+                              - img [ref=e908]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e913]:
+                              - img [ref=e916]
+                  - article "Software Engineer" [ref=e919] [cursor=pointer]:
+                    - link [ref=e920]:
+                      - /url: /id/job/92179879?type=standard&ref=search-standalone&origin=jobCard#sol=0f73bc5cb5a9c6930c05f48222a0b6c63c12722b
+                    - generic [ref=e921]: Listed more than four days ago
+                    - generic [ref=e922]:
+                      - generic [ref=e923]:
+                        - generic [ref=e926]:
+                          - img
+                        - generic [ref=e930]:
+                          - heading "Software Engineer" [level=3] [ref=e931]:
+                            - link "Software Engineer" [ref=e933]:
+                              - /url: /id/job/92179879?type=standard&ref=search-standalone&origin=cardTitle#sol=0f73bc5cb5a9c6930c05f48222a0b6c63c12722b
+                          - generic [ref=e936]:
+                            - generic [ref=e937]: di
+                            - link "Lowongan di Sentra Vidya Utama" [ref=e938]:
+                              - /url: /id/Sentra-Vidya-Utama-jobs
+                              - text: PT Sentra Vidya Utama
+                          - generic [ref=e939]:
+                            - paragraph [ref=e941]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e942]:
+                              - generic [ref=e944]:
+                                - generic [ref=e945]:
+                                  - link "Limit results to Surabaya":
+                                    - /url: /id/software-engineer-jobs/in-Surabaya-Jawa-Timur
+                                    - text: Surabaya
+                                - generic [ref=e946]:
+                                  - text: ","
+                                  - link "Limit results to Jawa Timur":
+                                    - /url: /id/software-engineer-jobs/in-Jawa-Timur
+                                    - text: Jawa Timur
+                              - 'generic "Salary: Rp 7.000.000 – Rp 9.000.000 per month" [ref=e947]':
+                                - generic [ref=e949]: Rp 7.000.000 – Rp 9.000.000 per month
+                      - generic [ref=e951]: "#RevolutionizeEducation"
+                      - generic [ref=e952]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e953]:
+                          - generic [ref=e958]: 4 hari yang lalu
+                          - generic [ref=e960]:
+                            - button "Lebih banyak" [ref=e963]:
+                              - img [ref=e966]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e971]:
+                              - img [ref=e974]
+                  - article "Senior Software Engineer, Backend" [ref=e977] [cursor=pointer]:
+                    - link [ref=e978]:
+                      - /url: /id/job/92266200?type=standard&ref=search-standalone&origin=jobCard#sol=4161f7b9a8cf773e0b1c9358f69c3f59b45d10a5
+                    - generic [ref=e979]: Listed more than one day ago
+                    - generic [ref=e980]:
+                      - generic [ref=e985]:
+                        - heading "Senior Software Engineer, Backend" [level=3] [ref=e986]:
+                          - link "Senior Software Engineer, Backend" [ref=e988]:
+                            - /url: /id/job/92266200?type=standard&ref=search-standalone&origin=cardTitle#sol=4161f7b9a8cf773e0b1c9358f69c3f59b45d10a5
+                        - generic [ref=e991]:
+                          - generic [ref=e992]: di
+                          - link "Lowongan di Transportation Solutions Indonesia" [ref=e993]:
+                            - /url: /id/Transportation-Solutions-Indonesia-jobs
+                            - text: PT Solusi Transportasi Indonesia
+                        - generic [ref=e994]:
+                          - paragraph [ref=e996]: Ini adalah lowongan kerja Full time
+                          - generic [ref=e999]:
+                            - generic [ref=e1000]:
+                              - link "Limit results to Kebayoran Lama":
+                                - /url: /id/software-engineer-jobs/in-Kebayoran-Lama-Jakarta-Raya
+                                - text: Kebayoran Lama
+                            - generic [ref=e1001]:
+                              - text: ","
+                              - link "Limit results to Jakarta Raya":
+                                - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                - text: Jakarta Raya
+                            - generic [ref=e1002]: (Hibrid)
+                      - generic [ref=e1004]: You will work closely with product managers, designers, data and Ops teams to deliver high‑quality features, drive operational excellence, and...
+                      - generic [ref=e1005]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1006]:
+                          - generic [ref=e1011]: 1 hari yang lalu
+                          - generic [ref=e1013]:
+                            - button "Lebih banyak" [ref=e1016]:
+                              - img [ref=e1019]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1024]:
+                              - img [ref=e1027]
+                  - article "Software Engineer" [ref=e1030] [cursor=pointer]:
+                    - link [ref=e1031]:
+                      - /url: /id/job/91959563?type=standard&ref=search-standalone&origin=jobCard#sol=99a37522495e62bf476f81dbebc85e78f32d1a01
+                    - generic [ref=e1032]: Listed more than sixteen days ago
+                    - generic [ref=e1033]:
+                      - generic [ref=e1034]:
+                        - generic [ref=e1037]:
+                          - img
+                        - generic [ref=e1041]:
+                          - heading "Software Engineer" [level=3] [ref=e1042]:
+                            - link "Software Engineer" [ref=e1044]:
+                              - /url: /id/job/91959563?type=standard&ref=search-standalone&origin=cardTitle#sol=99a37522495e62bf476f81dbebc85e78f32d1a01
+                          - generic [ref=e1047]:
+                            - generic [ref=e1048]: di
+                            - link "Lowongan di Infolog Pte Ltd" [ref=e1049]:
+                              - /url: /id/Infolog-Pte-Ltd-jobs
+                              - text: PT Infolog Solutions Indonesia
+                          - generic [ref=e1050]:
+                            - paragraph [ref=e1052]: Ini adalah lowongan kerja Kontrak/Temporer
+                            - generic [ref=e1053]:
+                              - generic [ref=e1056]:
+                                - link "Limit results to Jakarta Raya":
+                                  - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                  - text: Jakarta Raya
+                              - 'generic "Salary: Rp 8.000.000 – Rp 12.000.000 per month" [ref=e1057]':
+                                - generic [ref=e1059]: Rp 8.000.000 – Rp 12.000.000 per month
+                      - generic [ref=e1061]: Cutting-edge software solutions, competitive package, and opportunities for growth. Join our dynamic team in Jakarta.
+                      - generic [ref=e1062]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1063]:
+                          - generic [ref=e1068]: 16 hari yang lalu
+                          - generic [ref=e1070]:
+                            - button "Lebih banyak" [ref=e1073]:
+                              - img [ref=e1076]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1081]:
+                              - img [ref=e1084]
+                  - article "Software Engineer - Backend" [ref=e1087] [cursor=pointer]:
+                    - link [ref=e1088]:
+                      - /url: /id/job/92040266?type=standard&ref=search-standalone&origin=jobCard#sol=187d0c7d57fde34c94c60f256a668b218e4860aa
+                    - generic [ref=e1089]: Listed more than eleven days ago
+                    - generic [ref=e1090]:
+                      - generic [ref=e1091]:
+                        - generic [ref=e1094]:
+                          - img
+                        - generic [ref=e1098]:
+                          - heading "Software Engineer - Backend" [level=3] [ref=e1099]:
+                            - link "Software Engineer - Backend" [ref=e1101]:
+                              - /url: /id/job/92040266?type=standard&ref=search-standalone&origin=cardTitle#sol=187d0c7d57fde34c94c60f256a668b218e4860aa
+                          - generic [ref=e1104]:
+                            - generic [ref=e1105]: di
+                            - link "Lowongan di Formulatrix" [ref=e1106]:
+                              - /url: /id/Formulatrix-jobs
+                              - text: PT Formulatrix Indonesia
+                          - generic [ref=e1107]:
+                            - paragraph [ref=e1109]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e1113]:
+                              - link "Limit results to Jawa Tengah":
+                                - /url: /id/software-engineer-jobs/in-Jawa-Tengah
+                                - text: Jawa Tengah
+                      - list [ref=e1115]:
+                        - listitem [ref=e1116]:
+                          - generic [ref=e1121]: Ultimate stress relief, a compact mini gym, billiards, table tennis, and more.
+                        - listitem [ref=e1122]:
+                          - generic [ref=e1127]: Work-life balance by flexible hours and a relaxed atmosphere
+                        - listitem [ref=e1128]:
+                          - generic [ref=e1133]: Performance Bonuses
+                      - generic [ref=e1135]: Design, develop and maintain high-quality, scalable software applications and systems.
+                      - generic [ref=e1136]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1137]:
+                          - generic [ref=e1142]: 11 hari yang lalu
+                          - generic [ref=e1144]:
+                            - button "Lebih banyak" [ref=e1147]:
+                              - img [ref=e1150]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1155]:
+                              - img [ref=e1158]
+                  - article "IT Developer" [ref=e1161] [cursor=pointer]:
+                    - link [ref=e1162]:
+                      - /url: /id/job/92056729?type=standard&ref=search-standalone&origin=jobCard#sol=1ef8610e97d0aa3ec952554cfdcebfeb53e2b1a4
+                    - generic [ref=e1163]: Listed more than ten days ago
+                    - generic [ref=e1164]:
+                      - generic [ref=e1165]:
+                        - generic [ref=e1168]:
+                          - img
+                        - generic [ref=e1172]:
+                          - heading "IT Developer" [level=3] [ref=e1173]:
+                            - link "IT Developer" [ref=e1175]:
+                              - /url: /id/job/92056729?type=standard&ref=search-standalone&origin=cardTitle#sol=1ef8610e97d0aa3ec952554cfdcebfeb53e2b1a4
+                          - generic [ref=e1178]:
+                            - generic [ref=e1179]: di
+                            - link "Lowongan di Warranty Smart" [ref=e1180]:
+                              - /url: /id/Warranty-Smart-jobs
+                              - text: PT Wahana Sejahtera Indonesia
+                          - generic [ref=e1181]:
+                            - paragraph [ref=e1183]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e1186]:
+                              - generic [ref=e1187]:
+                                - link "Limit results to Jakarta Selatan":
+                                  - /url: /id/software-engineer-jobs/in-Jakarta-Selatan-Jakarta-Raya
+                                  - text: Jakarta Selatan
+                              - generic [ref=e1188]:
+                                - text: ","
+                                - link "Limit results to Jakarta Raya":
+                                  - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                  - text: Jakarta Raya
+                      - generic [ref=e1190]: Mengerjakan project platform B2B Suku Cadang Otomatif. Bertanggung jawab penuh atas arsitektur teknis dan pengembangan sistem platform.
+                      - generic [ref=e1191]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1192]:
+                          - generic [ref=e1197]: 10 hari yang lalu
+                          - generic [ref=e1199]:
+                            - button "Lebih banyak" [ref=e1202]:
+                              - img [ref=e1205]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1210]:
+                              - img [ref=e1213]
+                  - article "Executive, Software Engineer , AI" [ref=e1216] [cursor=pointer]:
+                    - link [ref=e1217]:
+                      - /url: /id/job/92290277?type=standard&ref=search-standalone&origin=jobCard#sol=555e2a1b3537dcdb89aa3c047842e7b472020c14
+                    - generic [ref=e1218]: Listed more than ten days ago
+                    - generic [ref=e1219]:
+                      - generic [ref=e1224]:
+                        - heading "Executive, Software Engineer , AI" [level=3] [ref=e1225]:
+                          - link "Executive, Software Engineer , AI" [ref=e1227]:
+                            - /url: /id/job/92290277?type=standard&ref=search-standalone&origin=cardTitle#sol=555e2a1b3537dcdb89aa3c047842e7b472020c14
+                        - generic [ref=e1230]:
+                          - generic [ref=e1231]: di
+                          - link "Lowongan di Macquarie Group" [ref=e1232]:
+                            - /url: /id/Macquarie-Group-jobs
+                            - text: Macquarie Group
+                        - generic [ref=e1234]:
+                          - generic:
+                            - generic "Jadilah pelamar pertama":
+                              - generic:
+                                - generic: Jadilah pelamar pertama
+                        - generic [ref=e1235]:
+                          - paragraph [ref=e1237]: Ini adalah lowongan kerja Full time
+                          - generic [ref=e1240]:
+                            - generic [ref=e1241]:
+                              - link "Limit results to Indonesia":
+                                - /url: /id/software-engineer-jobs/in-Indonesia
+                                - text: Indonesia
+                            - generic [ref=e1242]: (Hibrid)
+                      - generic [ref=e1244]: At Macquarie, you’re empowered to shape a career that’s rewarding in all the ways that matter most to you. Macquarie employees can access a wide...
+                      - generic [ref=e1245]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Fisioterapi, Terapi Okupasi & Rehabilitasi"
+                                - generic: Fisioterapi, Terapi Okupasi & Rehabilitasi
+                                - generic: "classification: Kesehatan & Medis"
+                                - generic: (Kesehatan & Medis)
+                        - generic [ref=e1246]:
+                          - generic [ref=e1251]: 10 jam yang lalu
+                          - generic [ref=e1253]:
+                            - button "Lebih banyak" [ref=e1256]:
+                              - img [ref=e1259]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1264]:
+                              - img [ref=e1267]
+                  - article "Senior Software Engineer, Backend" [ref=e1270] [cursor=pointer]:
+                    - link [ref=e1271]:
+                      - /url: /id/job/92266197?type=standard&ref=search-standalone&origin=jobCard#sol=9bfc4cc9e4beee1822eb83a68606ecb276d9609d
+                    - generic [ref=e1272]: Listed more than one day ago
+                    - generic [ref=e1273]:
+                      - generic [ref=e1278]:
+                        - heading "Senior Software Engineer, Backend" [level=3] [ref=e1279]:
+                          - link "Senior Software Engineer, Backend" [ref=e1281]:
+                            - /url: /id/job/92266197?type=standard&ref=search-standalone&origin=cardTitle#sol=9bfc4cc9e4beee1822eb83a68606ecb276d9609d
+                        - generic [ref=e1284]:
+                          - generic [ref=e1285]: di
+                          - link "Lowongan di Transportation Solutions Indonesia" [ref=e1286]:
+                            - /url: /id/Transportation-Solutions-Indonesia-jobs
+                            - text: PT Solusi Transportasi Indonesia
+                        - generic [ref=e1287]:
+                          - paragraph [ref=e1289]: Ini adalah lowongan kerja Full time
+                          - generic [ref=e1292]:
+                            - generic [ref=e1293]:
+                              - link "Limit results to Kebayoran Lama":
+                                - /url: /id/software-engineer-jobs/in-Kebayoran-Lama-Jakarta-Raya
+                                - text: Kebayoran Lama
+                            - generic [ref=e1294]:
+                              - text: ","
+                              - link "Limit results to Jakarta Raya":
+                                - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                - text: Jakarta Raya
+                      - generic [ref=e1296]: You will report to the Engineering Manager, Insurance, based in Indonesia and will develop the complex backend systems powering the many end-to-end...
+                      - generic [ref=e1297]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1298]:
+                          - generic [ref=e1303]: 1 hari yang lalu
+                          - generic [ref=e1305]:
+                            - button "Lebih banyak" [ref=e1308]:
+                              - img [ref=e1311]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1316]:
+                              - img [ref=e1319]
+                  - article "Senior Software Engineer" [ref=e1322] [cursor=pointer]:
+                    - link [ref=e1323]:
+                      - /url: /id/job/92211954?type=standard&ref=search-standalone&origin=jobCard#sol=666e0b2638321e4ab4b2913410f508db96771987
+                    - generic [ref=e1324]: Listed more than three days ago
+                    - generic [ref=e1325]:
+                      - generic [ref=e1330]:
+                        - heading "Senior Software Engineer" [level=3] [ref=e1331]:
+                          - link "Senior Software Engineer" [ref=e1333]:
+                            - /url: /id/job/92211954?type=standard&ref=search-standalone&origin=cardTitle#sol=666e0b2638321e4ab4b2913410f508db96771987
+                        - generic [ref=e1336]:
+                          - generic [ref=e1337]: di
+                          - link "Lowongan di Kawan Lama" [ref=e1338]:
+                            - /url: /id/Kawan-Lama-jobs
+                            - text: Kawan Lama Group
+                        - generic [ref=e1339]:
+                          - paragraph [ref=e1341]: Ini adalah lowongan kerja Full time
+                          - generic [ref=e1345]:
+                            - link "Limit results to Jakarta Raya":
+                              - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                              - text: Jakarta Raya
+                      - generic [ref=e1347]: Bachelor’s degree in Computer Science, Software Engineering, or related field (or equivalent experience) 5+ years of professional software...
+                      - generic [ref=e1348]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1349]:
+                          - generic [ref=e1354]: 3 hari yang lalu
+                          - generic [ref=e1356]:
+                            - button "Lebih banyak" [ref=e1359]:
+                              - img [ref=e1362]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1367]:
+                              - img [ref=e1370]
+                  - article "Senior Software Engineer, Backend (Pricing)" [ref=e1373] [cursor=pointer]:
+                    - link [ref=e1374]:
+                      - /url: /id/job/92274829?type=standard&ref=search-standalone&origin=jobCard#sol=63ac079306132578f845c36a8f9664f8f5c85697
+                    - generic [ref=e1375]: Listed more than twenty two days ago
+                    - generic [ref=e1376]:
+                      - generic [ref=e1381]:
+                        - heading "Senior Software Engineer, Backend (Pricing)" [level=3] [ref=e1382]:
+                          - link "Senior Software Engineer, Backend (Pricing)" [ref=e1384]:
+                            - /url: /id/job/92274829?type=standard&ref=search-standalone&origin=cardTitle#sol=63ac079306132578f845c36a8f9664f8f5c85697
+                        - generic [ref=e1387]:
+                          - generic [ref=e1388]: di
+                          - link "Lowongan di Global Ticket Network" [ref=e1389]:
+                            - /url: /id/Global-Ticket-Network-jobs
+                            - text: PT Global Tiket Network
+                        - generic [ref=e1390]:
+                          - paragraph [ref=e1392]: Ini adalah lowongan kerja Full time
+                          - generic [ref=e1396]:
+                            - link "Limit results to Jakarta Raya":
+                              - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                              - text: Jakarta Raya
+                      - generic [ref=e1398]: Min. 5 years of working experience as Software Engineer Backend or equivalent Knows how to analyze log Experience working with System...
+                      - generic [ref=e1399]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1400]:
+                          - generic [ref=e1405]: 22 jam yang lalu
+                          - generic [ref=e1407]:
+                            - button "Lebih banyak" [ref=e1410]:
+                              - img [ref=e1413]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1418]:
+                              - img [ref=e1421]
+                  - article "Manager Produksi Packaging Kertas bahasa Mandarin" [ref=e1424] [cursor=pointer]:
+                    - link [ref=e1425]:
+                      - /url: /id/job/92243765?type=standard&ref=search-standalone&origin=jobCard#sol=2e4a8c09312b82cc543aaa9bb32889f8713375dc
+                    - generic [ref=e1426]: Listed more than two days ago
+                    - generic [ref=e1427]:
+                      - generic [ref=e1428]:
+                        - generic [ref=e1431]:
+                          - img
+                        - generic [ref=e1435]:
+                          - heading "Manager Produksi Packaging Kertas bahasa Mandarin" [level=3] [ref=e1436]:
+                            - link "Manager Produksi Packaging Kertas bahasa Mandarin" [ref=e1438]:
+                              - /url: /id/job/92243765?type=standard&ref=search-standalone&origin=cardTitle#sol=2e4a8c09312b82cc543aaa9bb32889f8713375dc
+                          - generic [ref=e1441]:
+                            - generic [ref=e1442]: di
+                            - link "Lowongan di Yuto Packaging Technology Indonesia" [ref=e1443]:
+                              - /url: /id/Yuto-Packaging-Technology-Indonesia-jobs
+                              - text: PT. Yuto Packaging Technology Indonesia
+                          - generic [ref=e1444]:
+                            - paragraph [ref=e1446]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e1447]:
+                              - generic [ref=e1449]:
+                                - generic [ref=e1450]:
+                                  - link "Limit results to Cikarang Selatan":
+                                    - /url: /id/software-engineer-jobs/in-Cikarang-Selatan-Jawa-Barat
+                                    - text: Cikarang Selatan
+                                - generic [ref=e1451]:
+                                  - text: ","
+                                  - link "Limit results to Jawa Barat":
+                                    - /url: /id/software-engineer-jobs/in-Jawa-Barat
+                                    - text: Jawa Barat
+                              - 'generic "Salary: Rp 20.000.000 – Rp 30.000.000 per month" [ref=e1452]':
+                                - generic [ref=e1454]: Rp 20.000.000 – Rp 30.000.000 per month
+                      - list [ref=e1456]:
+                        - listitem [ref=e1457]:
+                          - generic [ref=e1462]: jenjang karier
+                        - listitem [ref=e1463]:
+                          - generic [ref=e1468]: tranning ke luar negeri
+                        - listitem [ref=e1469]:
+                          - generic [ref=e1474]: naik gaji
+                      - generic [ref=e1476]: Perencanaan Produksi Pengawasan Operasional Produksi Pengendalian Kualitas Manajemen Tim
+                      - generic [ref=e1477]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Manajemen"
+                                - generic: Manajemen
+                                - generic: "classification: Manufaktur, Transportasi & Logistik"
+                                - generic: (Manufaktur, Transportasi & Logistik)
+                        - generic [ref=e1478]:
+                          - generic [ref=e1483]: 2 hari yang lalu
+                          - generic [ref=e1485]:
+                            - button "Lebih banyak" [ref=e1488]:
+                              - img [ref=e1491]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1496]:
+                              - img [ref=e1499]
+                  - article "Back End Engineer" [ref=e1502] [cursor=pointer]:
+                    - link [ref=e1503]:
+                      - /url: /id/job/92087073?type=standard&ref=search-standalone&origin=jobCard#sol=757fff8716d54552f0b4682e95fc054ecf1228b4
+                    - generic [ref=e1504]: Listed more than nine days ago
+                    - generic [ref=e1505]:
+                      - generic [ref=e1506]:
+                        - generic [ref=e1509]:
+                          - img
+                        - generic [ref=e1513]:
+                          - heading "Back End Engineer" [level=3] [ref=e1514]:
+                            - link "Back End Engineer" [ref=e1516]:
+                              - /url: /id/job/92087073?type=standard&ref=search-standalone&origin=cardTitle#sol=757fff8716d54552f0b4682e95fc054ecf1228b4
+                          - generic [ref=e1519]:
+                            - generic [ref=e1520]: di
+                            - link "Lowongan di Falah Technology Innovation" [ref=e1521]:
+                              - /url: /id/Falah-Technology-Innovation-jobs
+                              - text: PT Falah Inovasi Teknologi
+                          - generic [ref=e1522]:
+                            - paragraph [ref=e1524]: Ini adalah lowongan kerja Kontrak/Temporer
+                            - generic [ref=e1525]:
+                              - generic [ref=e1527]:
+                                - generic [ref=e1528]:
+                                  - link "Limit results to Jakarta Selatan":
+                                    - /url: /id/software-engineer-jobs/in-Jakarta-Selatan-Jakarta-Raya
+                                    - text: Jakarta Selatan
+                                - generic [ref=e1529]:
+                                  - text: ","
+                                  - link "Limit results to Jakarta Raya":
+                                    - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                    - text: Jakarta Raya
+                              - 'generic "Salary: Rp 8.500.000 – Rp 9.650.000 per month" [ref=e1530]':
+                                - generic [ref=e1532]: Rp 8.500.000 – Rp 9.650.000 per month
+                      - list [ref=e1534]:
+                        - listitem [ref=e1535]:
+                          - generic [ref=e1540]: Lingkungan kerja yang supportive
+                        - listitem [ref=e1541]:
+                          - generic [ref=e1546]: Bekerja dengan tim engineering yang solid dan berpengalaman
+                        - listitem [ref=e1547]:
+                          - generic [ref=e1552]: Exposure ke multiple project dengan kompleksitas tinggi
+                      - generic [ref=e1554]: Back End Engineer bertanggung jawab merancang dan mengembangkan sistem backend yang skalabel, efisien, dan andal.
+                      - generic [ref=e1555]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1556]:
+                          - generic [ref=e1561]: 9 hari yang lalu
+                          - generic [ref=e1563]:
+                            - button "Lebih banyak" [ref=e1566]:
+                              - img [ref=e1569]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1574]:
+                              - img [ref=e1577]
+                  - article "Software Engineer (C++)" [ref=e1580] [cursor=pointer]:
+                    - link [ref=e1581]:
+                      - /url: /id/job/91711582?type=standard&ref=search-standalone&origin=jobCard#sol=09644fcddef3f143d2347f44f624c2a4362502ee
+                    - generic [ref=e1582]: Listed more than twenty nine days ago
+                    - generic [ref=e1583]:
+                      - generic [ref=e1584]:
+                        - generic [ref=e1587]:
+                          - img
+                        - generic [ref=e1591]:
+                          - heading "Software Engineer (C++)" [level=3] [ref=e1592]:
+                            - link "Software Engineer (C++)" [ref=e1594]:
+                              - /url: /id/job/91711582?type=standard&ref=search-standalone&origin=cardTitle#sol=09644fcddef3f143d2347f44f624c2a4362502ee
+                          - generic [ref=e1597]:
+                            - generic [ref=e1598]: di
+                            - link "Lowongan di Formulatrix" [ref=e1599]:
+                              - /url: /id/Formulatrix-jobs
+                              - text: PT Formulatrix Indonesia
+                          - generic [ref=e1601]:
+                            - generic:
+                              - generic "Akan segera berakhir":
+                                - generic:
+                                  - generic: Akan segera berakhir
+                          - generic [ref=e1602]:
+                            - paragraph [ref=e1604]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e1608]:
+                              - link "Limit results to Jawa Tengah":
+                                - /url: /id/software-engineer-jobs/in-Jawa-Tengah
+                                - text: Jawa Tengah
+                      - list [ref=e1610]:
+                        - listitem [ref=e1611]:
+                          - generic [ref=e1616]: Sports Facility (Gym, Billiard, Ping-pong, Volley Ball, etc)
+                        - listitem [ref=e1617]:
+                          - generic [ref=e1622]: Bonus, Insurance, THR, and Free English course
+                        - listitem [ref=e1623]:
+                          - generic [ref=e1628]: Work-life balance by flexible hours and a relaxed atmosphere.
+                      - generic [ref=e1630]: Design, develop, and maintain scalable, high-quality software solutions that support innovative products.
+                      - generic [ref=e1631]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1632]:
+                          - generic [ref=e1637]: 29 hari yang lalu
+                          - generic [ref=e1639]:
+                            - button "Lebih banyak" [ref=e1642]:
+                              - img [ref=e1645]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1650]:
+                              - img [ref=e1653]
+                  - article "Full Stack Engineer" [ref=e1656] [cursor=pointer]:
+                    - link [ref=e1657]:
+                      - /url: /id/job/91756596?type=standard&ref=search-standalone&origin=jobCard#sol=e3612d9e9aea8292780c828b2ff2a8d4e375d336
+                    - generic [ref=e1658]: Listed more than twenty five days ago
+                    - generic [ref=e1659]:
+                      - generic [ref=e1660]:
+                        - generic [ref=e1663]:
+                          - img
+                        - generic [ref=e1667]:
+                          - heading "Full Stack Engineer" [level=3] [ref=e1668]:
+                            - link "Full Stack Engineer" [ref=e1670]:
+                              - /url: /id/job/91756596?type=standard&ref=search-standalone&origin=cardTitle#sol=e3612d9e9aea8292780c828b2ff2a8d4e375d336
+                          - generic [ref=e1673]:
+                            - generic [ref=e1674]: di
+                            - link "Lowongan di PT DIGITAL XCELERATION NUSANTARA" [ref=e1675]:
+                              - /url: /id/PT-DIGITAL-XCELERATION-NUSANTARA-jobs
+                              - text: PT DIGITAL XCELERATION NUSANTARA
+                          - generic [ref=e1677]:
+                            - generic:
+                              - generic "Akan segera berakhir":
+                                - generic:
+                                  - generic: Akan segera berakhir
+                          - generic [ref=e1678]:
+                            - paragraph [ref=e1680]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e1683]:
+                              - generic [ref=e1684]:
+                                - link "Limit results to Jakarta Selatan":
+                                  - /url: /id/software-engineer-jobs/in-Jakarta-Selatan-Jakarta-Raya
+                                  - text: Jakarta Selatan
+                              - generic [ref=e1685]:
+                                - text: ","
+                                - link "Limit results to Jakarta Raya":
+                                  - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                  - text: Jakarta Raya
+                      - list [ref=e1687]:
+                        - listitem [ref=e1688]:
+                          - generic [ref=e1693]: 1. Build real products end-to-end with real business impact;
+                        - listitem [ref=e1694]:
+                          - generic [ref=e1699]: "2. Work with modern stack: Java Springboot, NodeJS, React, Flutter;"
+                        - listitem [ref=e1700]:
+                          - generic [ref=e1705]: 3. Grow fast, solve complex problems, and shape scalable systems.
+                      - generic [ref=e1707]: You will be responsible for designing, developing, and maintaining both front-end and back-end components of the software applications.
+                      - generic [ref=e1708]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1709]:
+                          - generic [ref=e1714]: 25 hari yang lalu
+                          - generic [ref=e1716]:
+                            - button "Lebih banyak" [ref=e1719]:
+                              - img [ref=e1722]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1727]:
+                              - img [ref=e1730]
+                  - article "Junior Software Developer" [ref=e1733] [cursor=pointer]:
+                    - link [ref=e1734]:
+                      - /url: /id/job/92233497?type=standard&ref=search-standalone&origin=jobCard#sol=f3c85985e1afa10558b0b358216a202cb981ba74
+                    - generic [ref=e1735]: Listed more than two days ago
+                    - generic [ref=e1736]:
+                      - generic [ref=e1737]:
+                        - generic [ref=e1740]:
+                          - img
+                        - generic [ref=e1744]:
+                          - heading "Junior Software Developer" [level=3] [ref=e1745]:
+                            - link "Junior Software Developer" [ref=e1747]:
+                              - /url: /id/job/92233497?type=standard&ref=search-standalone&origin=cardTitle#sol=f3c85985e1afa10558b0b358216a202cb981ba74
+                          - generic [ref=e1750]:
+                            - generic [ref=e1751]: di
+                            - link "Lowongan di Intramega Global" [ref=e1752]:
+                              - /url: /id/Intramega-Global-jobs
+                              - text: PT Intramega Global
+                          - generic [ref=e1753]:
+                            - paragraph [ref=e1755]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e1756]:
+                              - generic [ref=e1758]:
+                                - generic [ref=e1759]:
+                                  - link "Limit results to Tangerang":
+                                    - /url: /id/software-engineer-jobs/in-Tangerang-Banten
+                                    - text: Tangerang
+                                - generic [ref=e1760]:
+                                  - text: ","
+                                  - link "Limit results to Banten":
+                                    - /url: /id/software-engineer-jobs/in-Banten
+                                    - text: Banten
+                                - generic [ref=e1761]: (Hibrid)
+                              - 'generic "Salary: Rp 5.000.000 – Rp 7.100.000 per month" [ref=e1762]':
+                                - generic [ref=e1764]: Rp 5.000.000 – Rp 7.100.000 per month
+                      - generic [ref=e1766]: Develop real warehouse tech systems — WMS, RFID, and app integrations — with a solutions team that builds for live operations.
+                      - generic [ref=e1767]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1768]:
+                          - generic [ref=e1773]: 2 hari yang lalu
+                          - generic [ref=e1775]:
+                            - button "Lebih banyak" [ref=e1778]:
+                              - img [ref=e1781]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1786]:
+                              - img [ref=e1789]
+                  - article "APPLICATION DEVELOPER" [ref=e1792] [cursor=pointer]:
+                    - link [ref=e1793]:
+                      - /url: /id/job/92222521?type=standard&ref=search-standalone&origin=jobCard#sol=d5ea205e89f69c7374f903a97b851da0a45e81da
+                    - generic [ref=e1794]: Listed more than two days ago
+                    - generic [ref=e1795]:
+                      - generic [ref=e1796]:
+                        - generic [ref=e1799]:
+                          - img
+                        - generic [ref=e1803]:
+                          - heading "APPLICATION DEVELOPER" [level=3] [ref=e1804]:
+                            - link "APPLICATION DEVELOPER" [ref=e1806]:
+                              - /url: /id/job/92222521?type=standard&ref=search-standalone&origin=cardTitle#sol=d5ea205e89f69c7374f903a97b851da0a45e81da
+                          - generic [ref=e1809]:
+                            - generic [ref=e1810]: di
+                            - link "Lowongan di Raditya Mulia Lestari" [ref=e1811]:
+                              - /url: /id/Raditya-Mulia-Lestari-jobs
+                              - text: Raditya Mulia Lestari (RML)
+                          - generic [ref=e1812]:
+                            - paragraph [ref=e1814]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e1817]:
+                              - generic [ref=e1818]:
+                                - link "Limit results to Jakarta Utara":
+                                  - /url: /id/software-engineer-jobs/in-Jakarta-Utara-Jakarta-Raya
+                                  - text: Jakarta Utara
+                              - generic [ref=e1819]:
+                                - text: ","
+                                - link "Limit results to Jakarta Raya":
+                                  - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                  - text: Jakarta Raya
+                      - list [ref=e1821]:
+                        - listitem [ref=e1822]:
+                          - generic [ref=e1827]: Pertumbuhan karier
+                        - listitem [ref=e1828]:
+                          - generic [ref=e1833]: Pengalaman di bidang Cyber Security
+                      - generic [ref=e1835]: • Membantu troubleshooting dan technical support • Membantu integrasi SDK/API pada aplikasi customer maupun internal. • Melakukan demo dan testing
+                      - generic [ref=e1836]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1837]:
+                          - generic [ref=e1842]: 2 hari yang lalu
+                          - generic [ref=e1844]:
+                            - button "Lebih banyak" [ref=e1847]:
+                              - img [ref=e1850]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1855]:
+                              - img [ref=e1858]
+                  - article "Backend Programmer" [ref=e1861] [cursor=pointer]:
+                    - link [ref=e1862]:
+                      - /url: /id/job/92000167?type=standard&ref=search-standalone&origin=jobCard#sol=7789c34d2b3fdc60222fc3e8d420aaa02849ba5e
+                    - generic [ref=e1863]: Listed more than fourteen days ago
+                    - generic [ref=e1864]:
+                      - generic [ref=e1865]:
+                        - generic [ref=e1868]:
+                          - img
+                        - generic [ref=e1872]:
+                          - heading "Backend Programmer" [level=3] [ref=e1873]:
+                            - link "Backend Programmer" [ref=e1875]:
+                              - /url: /id/job/92000167?type=standard&ref=search-standalone&origin=cardTitle#sol=7789c34d2b3fdc60222fc3e8d420aaa02849ba5e
+                          - generic [ref=e1878]:
+                            - generic [ref=e1879]: di
+                            - link "Lowongan di Nutech Integrasi" [ref=e1880]:
+                              - /url: /id/Nutech-Integrasi-jobs
+                              - text: PT Nutech Integrasi
+                          - generic [ref=e1881]:
+                            - paragraph [ref=e1883]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e1887]:
+                              - link "Limit results to Jakarta Raya":
+                                - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                - text: Jakarta Raya
+                      - list [ref=e1889]:
+                        - listitem [ref=e1890]:
+                          - generic [ref=e1895]: Work in ICT systems integration on large scale strategic projects.
+                        - listitem [ref=e1896]:
+                          - generic [ref=e1901]: Contribute to Indonesia’s digital transformation initiatives.
+                        - listitem [ref=e1902]:
+                          - generic [ref=e1907]: Build your backend skills in a secure, high performance corporate environment.
+                      - generic [ref=e1909]: Develop, maintain & optimise the web backend/API system in a reliable, secure, and efficient manner to support web, desktop, and mobile applications.
+                      - generic [ref=e1910]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1911]:
+                          - generic [ref=e1916]: 14 hari yang lalu
+                          - generic [ref=e1918]:
+                            - button "Lebih banyak" [ref=e1921]:
+                              - img [ref=e1924]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1929]:
+                              - img [ref=e1932]
+                  - article "Software Engineer, Backend" [ref=e1935] [cursor=pointer]:
+                    - link [ref=e1936]:
+                      - /url: /id/job/92088570?type=standard&ref=search-standalone&origin=jobCard#sol=8cc2adee612a8ee77776628e798a9787e9f490f1
+                    - generic [ref=e1937]: Listed more than nine days ago
+                    - generic [ref=e1938]:
+                      - generic [ref=e1943]:
+                        - heading "Software Engineer, Backend" [level=3] [ref=e1944]:
+                          - link "Software Engineer, Backend" [ref=e1946]:
+                            - /url: /id/job/92088570?type=standard&ref=search-standalone&origin=cardTitle#sol=8cc2adee612a8ee77776628e798a9787e9f490f1
+                        - generic [ref=e1949]:
+                          - generic [ref=e1950]: di
+                          - link "Lowongan di Transportation Solutions Indonesia" [ref=e1951]:
+                            - /url: /id/Transportation-Solutions-Indonesia-jobs
+                            - text: PT Solusi Transportasi Indonesia
+                        - generic [ref=e1952]:
+                          - paragraph [ref=e1954]: Ini adalah lowongan kerja Full time
+                          - generic [ref=e1957]:
+                            - generic [ref=e1958]:
+                              - link "Limit results to Kebayoran Lama":
+                                - /url: /id/software-engineer-jobs/in-Kebayoran-Lama-Jakarta-Raya
+                                - text: Kebayoran Lama
+                            - generic [ref=e1959]:
+                              - text: ","
+                              - link "Limit results to Jakarta Raya":
+                                - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                - text: Jakarta Raya
+                      - generic [ref=e1961]: You will report to the Engineering Manager, Insurance, based in Indonesia and will develop the complex backend systems powering the many end-to-end...
+                      - generic [ref=e1962]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e1963]:
+                          - generic [ref=e1968]: 9 hari yang lalu
+                          - generic [ref=e1970]:
+                            - button "Lebih banyak" [ref=e1973]:
+                              - img [ref=e1976]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e1981]:
+                              - img [ref=e1984]
+                  - article "Software Engineer PM (JAPANESE or MANDARIN Speaker)" [ref=e1987] [cursor=pointer]:
+                    - link [ref=e1988]:
+                      - /url: /id/job/91693019?type=standard&ref=search-standalone&origin=jobCard#sol=6188e0a99ea703a395cc97009713d4787dfb7474
+                    - generic [ref=e1989]: Listed more than twenty nine days ago
+                    - generic [ref=e1990]:
+                      - generic [ref=e1991]:
+                        - generic [ref=e1994]:
+                          - img
+                        - generic [ref=e1998]:
+                          - heading "Software Engineer PM (JAPANESE or MANDARIN Speaker)" [level=3] [ref=e1999]:
+                            - link "Software Engineer PM (JAPANESE or MANDARIN Speaker)" [ref=e2001]:
+                              - /url: /id/job/91693019?type=standard&ref=search-standalone&origin=cardTitle#sol=6188e0a99ea703a395cc97009713d4787dfb7474
+                          - generic [ref=e2004]:
+                            - generic [ref=e2005]: di
+                            - link "Lowongan di HiThink Technology Indonesia" [ref=e2006]:
+                              - /url: /id/HiThink-Technology-Indonesia-jobs
+                              - text: HITHINK TECHNOLOGY INDONESIA
+                          - generic [ref=e2008]:
+                            - generic:
+                              - generic "Akan segera berakhir":
+                                - generic:
+                                  - generic: Akan segera berakhir
+                          - generic [ref=e2009]:
+                            - paragraph [ref=e2011]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e2012]:
+                              - generic [ref=e2014]:
+                                - generic [ref=e2015]:
+                                  - link "Limit results to Jakarta Selatan":
+                                    - /url: /id/software-engineer-jobs/in-Jakarta-Selatan-Jakarta-Raya
+                                    - text: Jakarta Selatan
+                                - generic [ref=e2016]:
+                                  - text: ","
+                                  - link "Limit results to Jakarta Raya":
+                                    - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                    - text: Jakarta Raya
+                              - 'generic "Salary: Rp 14.000.000 – Rp 20.000.000 per month" [ref=e2017]':
+                                - generic [ref=e2019]: Rp 14.000.000 – Rp 20.000.000 per month
+                      - list [ref=e2021]:
+                        - listitem [ref=e2022]:
+                          - generic [ref=e2027]: New opportunities in Indonesia market with potential career path goal.
+                        - listitem [ref=e2028]:
+                          - generic [ref=e2033]: South Jakarta CBD area
+                        - listitem [ref=e2034]:
+                          - generic [ref=e2039]: Multinational Company (PMA)
+                      - generic [ref=e2041]: Software Engineer in dynamic tech firm - gain valuable experience, collaborate with cross-functional teams.
+                      - generic [ref=e2042]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e2043]:
+                          - generic [ref=e2048]: 29 hari yang lalu
+                          - generic [ref=e2050]:
+                            - button "Lebih banyak" [ref=e2053]:
+                              - img [ref=e2056]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e2061]:
+                              - img [ref=e2064]
+                  - article "Production Engineer" [ref=e2067] [cursor=pointer]:
+                    - link [ref=e2068]:
+                      - /url: /id/job/92273712?type=standard&ref=search-standalone&origin=jobCard#sol=e9eec949ef87c52a0ac140556a61afc32d6bc40e
+                    - generic [ref=e2069]: Listed more than twenty two days ago
+                    - generic [ref=e2070]:
+                      - generic [ref=e2071]:
+                        - generic [ref=e2074]:
+                          - img
+                        - generic [ref=e2078]:
+                          - heading "Production Engineer" [level=3] [ref=e2079]:
+                            - link "Production Engineer" [ref=e2081]:
+                              - /url: /id/job/92273712?type=standard&ref=search-standalone&origin=cardTitle#sol=e9eec949ef87c52a0ac140556a61afc32d6bc40e
+                          - generic [ref=e2084]:
+                            - generic [ref=e2085]: di
+                            - link "Lowongan di WIK Group" [ref=e2086]:
+                              - /url: /id/WIK-Group-jobs
+                              - text: PT WIK Far East Batam
+                          - generic [ref=e2087]:
+                            - paragraph [ref=e2089]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e2092]:
+                              - generic [ref=e2093]:
+                                - link "Limit results to Batam Kota":
+                                  - /url: /id/software-engineer-jobs/in-Batam-Kota-Kepulauan-Riau
+                                  - text: Batam Kota
+                              - generic [ref=e2094]:
+                                - text: ","
+                                - link "Limit results to Kepulauan Riau":
+                                  - /url: /id/software-engineer-jobs/in-Kepulauan-Riau
+                                  - text: Kepulauan Riau
+                      - list [ref=e2096]:
+                        - listitem [ref=e2097]:
+                          - generic [ref=e2102]: Performance based bonus
+                        - listitem [ref=e2103]:
+                          - generic [ref=e2108]: Canteen
+                      - generic [ref=e2110]: Familiar with BOM management. Ability to manage multiple projects simultaneously in a fast-paced environment.
+                      - generic [ref=e2111]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Rekayasa Proses"
+                                - generic: Rekayasa Proses
+                                - generic: "classification: Teknik"
+                                - generic: (Teknik)
+                        - generic [ref=e2112]:
+                          - generic [ref=e2117]: 22 jam yang lalu
+                          - generic [ref=e2119]:
+                            - button "Lebih banyak" [ref=e2122]:
+                              - img [ref=e2125]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e2130]:
+                              - img [ref=e2133]
+                  - article "Software Engineer (Backend)" [ref=e2136] [cursor=pointer]:
+                    - link [ref=e2137]:
+                      - /url: /id/job/91921930?type=standard&ref=search-standalone&origin=jobCard#sol=d335c4dd083c86ae6fabda01e7c3e85a14e9a4f6
+                    - generic [ref=e2138]: Listed more than seventeen days ago
+                    - generic [ref=e2139]:
+                      - generic [ref=e2140]:
+                        - generic [ref=e2143]:
+                          - img
+                        - generic [ref=e2147]:
+                          - heading "Software Engineer (Backend)" [level=3] [ref=e2148]:
+                            - link "Software Engineer (Backend)" [ref=e2150]:
+                              - /url: /id/job/91921930?type=standard&ref=search-standalone&origin=cardTitle#sol=d335c4dd083c86ae6fabda01e7c3e85a14e9a4f6
+                          - generic [ref=e2153]:
+                            - generic [ref=e2154]: di
+                            - link "Lowongan di Electronic Payment Solutions" [ref=e2155]:
+                              - /url: /id/Electronic-Payment-Solutions-jobs
+                              - text: PT Solusi Pembayaran Elektronik
+                          - generic [ref=e2156]:
+                            - paragraph [ref=e2158]: Ini adalah lowongan kerja Full time
+                            - generic [ref=e2159]:
+                              - generic [ref=e2161]:
+                                - generic [ref=e2162]:
+                                  - link "Limit results to Cipondoh":
+                                    - /url: /id/software-engineer-jobs/in-Cipondoh-Banten
+                                    - text: Cipondoh
+                                - generic [ref=e2163]:
+                                  - text: ","
+                                  - link "Limit results to Banten":
+                                    - /url: /id/software-engineer-jobs/in-Banten
+                                    - text: Banten
+                                - generic [ref=e2164]: (Hibrid)
+                              - 'generic "Salary: Rp 10.000.000 – Rp 13.000.000 per month" [ref=e2165]':
+                                - generic [ref=e2167]: Rp 10.000.000 – Rp 13.000.000 per month
+                      - list [ref=e2169]:
+                        - listitem [ref=e2170]:
+                          - generic [ref=e2175]: Competitive Benefit Package
+                        - listitem [ref=e2176]:
+                          - generic [ref=e2181]: Flexible Benefit (Medical & Lifestyle Benefit)
+                        - listitem [ref=e2182]:
+                          - generic [ref=e2187]: Training Fasilitator & Career Development Center
+                      - generic [ref=e2189]: At least 3-4 years as a Golang Developer or 5 years as a Backend Developer. Experience with Go frameworks (Fiber, Echo, and Gin).
+                      - generic [ref=e2190]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Teknik – Perangkat Lunak"
+                                - generic: Teknik – Perangkat Lunak
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e2191]:
+                          - generic [ref=e2196]: 17 hari yang lalu
+                          - generic [ref=e2198]:
+                            - button "Lebih banyak" [ref=e2201]:
+                              - img [ref=e2204]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e2209]:
+                              - img [ref=e2212]
+                  - article "Full-stack Engineer" [ref=e2215] [cursor=pointer]:
+                    - link [ref=e2216]:
+                      - /url: /id/job/92060205?type=standard&ref=search-standalone&origin=jobCard#sol=0827c08bb7c7e0741d7f6559e1abe49b7b743fbb
+                    - generic [ref=e2217]: Listed more than ten days ago
+                    - generic [ref=e2218]:
+                      - generic [ref=e2219]:
+                        - generic [ref=e2222]:
+                          - img
+                        - generic [ref=e2226]:
+                          - heading "Full-stack Engineer" [level=3] [ref=e2227]:
+                            - link "Full-stack Engineer" [ref=e2229]:
+                              - /url: /id/job/92060205?type=standard&ref=search-standalone&origin=cardTitle#sol=0827c08bb7c7e0741d7f6559e1abe49b7b743fbb
+                          - generic [ref=e2232]:
+                            - generic [ref=e2233]: di
+                            - link "Lowongan di Cryocord Sdn Bhd" [ref=e2234]:
+                              - /url: /id/Cryocord-Sdn-Bhd-jobs
+                              - text: PT CryoCord Indonesia
+                          - generic [ref=e2235]:
+                            - paragraph [ref=e2237]: Ini adalah lowongan kerja Kontrak/Temporer
+                            - generic [ref=e2238]:
+                              - generic [ref=e2240]:
+                                - generic [ref=e2241]:
+                                  - link "Limit results to Jakarta Pusat":
+                                    - /url: /id/software-engineer-jobs/in-Jakarta-Pusat-Jakarta-Raya
+                                    - text: Jakarta Pusat
+                                - generic [ref=e2242]:
+                                  - text: ","
+                                  - link "Limit results to Jakarta Raya":
+                                    - /url: /id/software-engineer-jobs/in-Jakarta-Raya
+                                    - text: Jakarta Raya
+                                - generic [ref=e2243]: (Jarak jauh)
+                              - 'generic "Salary: Rp 16.000.000 – Rp 24.000.000 per month" [ref=e2244]':
+                                - generic [ref=e2246]: Rp 16.000.000 – Rp 24.000.000 per month
+                      - generic [ref=e2248]: Build the operating system for Southeast Asia’s leading cord blood and stem cell bank — and ship code that quietly protects the biological future.
+                      - generic [ref=e2249]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: "subClassification: Developer/Programmer"
+                                - generic: Developer/Programmer
+                                - generic: "classification: Teknologi Informasi & Komunikasi"
+                                - generic: (Teknologi Informasi & Komunikasi)
+                        - generic [ref=e2250]:
+                          - generic [ref=e2255]: 10 hari yang lalu
+                          - generic [ref=e2257]:
+                            - button "Lebih banyak" [ref=e2260]:
+                              - img [ref=e2263]
+                            - button "Masuk untuk menyimpan lowongan kerja ini" [ref=e2268]:
+                              - img [ref=e2271]
+                - button "Ubah pencarian saya" [ref=e2275] [cursor=pointer]
+            - generic [ref=e2279]:
+              - generic [ref=e2281]: Seberapa relevan hasil pencarian Anda?
+              - generic [ref=e2284]:
+                - button "Relevan" [ref=e2287] [cursor=pointer]:
+                  - img [ref=e2290]
+                - button "Tidak relevan" [ref=e2294] [cursor=pointer]:
+                  - img [ref=e2297]
+            - navigation "Penomoran halaman hasil" [ref=e2301]:
+              - list [ref=e2302]:
+                - listitem:
+                  - link:
+                    - /url: /id/software-engineer-jobs/in-Indonesia
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - img
+                          - text: Sebelumnya
+                - listitem [ref=e2303]:
+                  - link "Go to page 1" [ref=e2304] [cursor=pointer]:
+                    - /url: /id/software-engineer-jobs/in-Indonesia
+                    - generic [ref=e2307]: "1"
+                - listitem [ref=e2308]:
+                  - link "Go to page 2" [ref=e2309] [cursor=pointer]:
+                    - /url: /id/software-engineer-jobs/in-Indonesia?page=2
+                    - generic [ref=e2312]: "2"
+                - listitem [ref=e2313]:
+                  - link "Go to page 3" [ref=e2314] [cursor=pointer]:
+                    - /url: /id/software-engineer-jobs/in-Indonesia?page=3
+                    - generic [ref=e2317]: "3"
+                - listitem [ref=e2318]:
+                  - link "Selanjutnya" [ref=e2319] [cursor=pointer]:
+                    - /url: /id/software-engineer-jobs/in-Indonesia?page=2
+                    - generic [ref=e2322]:
+                      - text: Selanjutnya
+                      - img [ref=e2324]
+            - generic [ref=e2327]:
+              - heading "Dapatkan lowongan baru untuk pencarian ini melalui email" [level=4] [ref=e2328]
+              - generic [ref=e2332]:
+                - textbox "Masukkan email" [ref=e2338]
+                - button "Buat pengingat" [ref=e2341] [cursor=pointer]:
+                  - generic [ref=e2342]:
+                    - generic:
+                      - generic: Buat pengingat
+          - generic [ref=e2348]:
+            - button "Kembali ke hasil pencarian" [ref=e2351] [cursor=pointer]
+            - button "Ubah pencarian saya" [ref=e2354] [cursor=pointer]
+            - generic [ref=e2356]:
+              - generic [ref=e2357]:
+                - img [ref=e2358]
+                - generic [ref=e2360]:
+                  - heading "Pilih lowongan kerja" [level=3] [ref=e2361]
+                  - generic [ref=e2362]: Tampilkan detail di sini
+              - img [ref=e2364]
+  - contentinfo [ref=e2384]:
+    - generic [ref=e2386]:
+      - generic [ref=e2389]:
+        - generic [ref=e2391]:
+          - generic [ref=e2393]:
+            - generic [ref=e2394]: Pencari kerja
+            - list [ref=e2395]:
+              - listitem [ref=e2396]:
+                - link "Cari lowongan" [ref=e2397] [cursor=pointer]:
+                  - /url: /
+                  - generic [ref=e2399]: Cari lowongan
+              - listitem [ref=e2400]:
+                - link "Lihat profil" [ref=e2401] [cursor=pointer]:
+                  - /url: /id/profile
+                  - generic [ref=e2403]: Lihat profil
+              - listitem [ref=e2404]:
+                - link "Cari profil" [ref=e2405] [cursor=pointer]:
+                  - /url: /id/profiles/search?tracking=ILC-profile-search-footer
+                  - generic [ref=e2407]: Cari profil
+              - listitem [ref=e2408]:
+                - link "Pencarian tersimpan" [ref=e2409] [cursor=pointer]:
+                  - /url: /id/oauth/login?returnUrl=%2Fid%2Fmy-activity%2Fsaved-searches
+                  - generic [ref=e2411]: Pencarian tersimpan
+              - listitem [ref=e2412]:
+                - link "Lowongan tersimpan" [ref=e2413] [cursor=pointer]:
+                  - /url: /id/oauth/login?returnUrl=%2Fid%2Fmy-activity%2Fsaved-jobs
+                  - generic [ref=e2415]: Lowongan tersimpan
+              - listitem [ref=e2416]:
+                - link "Lamaran kerja" [ref=e2417] [cursor=pointer]:
+                  - /url: /id/oauth/login?returnUrl=%2Fid%2Fmy-activity%2Fapplied-jobs
+                  - generic [ref=e2419]: Lamaran kerja
+              - listitem [ref=e2420]:
+                - link "Sumber daya karir" [ref=e2421] [cursor=pointer]:
+                  - /url: /id/career-advice
+                  - generic [ref=e2423]: Sumber daya karir
+              - listitem [ref=e2424]:
+                - link "Jelajahi karier" [ref=e2425] [cursor=pointer]:
+                  - /url: /id/career-advice/explore-careers
+                  - generic [ref=e2427]: Jelajahi karier
+              - listitem [ref=e2428]:
+                - link "Jelajahi gaji" [ref=e2429] [cursor=pointer]:
+                  - /url: /id/career-advice/explore-salaries
+                  - generic [ref=e2431]: Jelajahi gaji
+              - listitem [ref=e2432]:
+                - link "Perusahaan" [ref=e2433] [cursor=pointer]:
+                  - /url: /id/companies
+                  - generic [ref=e2435]: Perusahaan
+              - listitem [ref=e2436]:
+                - link "Komunitas" [ref=e2437] [cursor=pointer]:
+                  - /url: /id/community
+                  - generic [ref=e2439]: Komunitas
+              - listitem [ref=e2440]:
+                - generic [ref=e2442] [cursor=pointer]:
+                  - button "Unduh aplikasi" [ref=e2445]
+                  - img [ref=e2451]
+          - generic [ref=e2454]:
+            - generic [ref=e2455]: Perusahaan
+            - list [ref=e2456]:
+              - listitem [ref=e2457]:
+                - link "Daftar gratis" [ref=e2458] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id
+                  - generic [ref=e2460]: Daftar gratis
+              - listitem [ref=e2461]:
+                - link "Pasang iklan lowongan kerja" [ref=e2462] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id
+                  - generic [ref=e2464]: Pasang iklan lowongan kerja
+              - listitem [ref=e2465]:
+                - link "Produk & harga" [ref=e2466] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id/products/jobads
+                  - generic [ref=e2468]: Produk & harga
+              - listitem [ref=e2469]:
+                - link "Layanan pelanggan" [ref=e2470] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id/contactus
+                  - generic [ref=e2472]: Layanan pelanggan
+              - listitem [ref=e2473]:
+                - link "Saran perekrutan" [ref=e2474] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id/hiring-advice
+                  - generic [ref=e2476]: Saran perekrutan
+              - listitem [ref=e2477]:
+                - link "Wawasan pasar" [ref=e2478] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id/market-insights
+                  - generic [ref=e2480]: Wawasan pasar
+              - listitem [ref=e2481]:
+                - link "Mitra perangkat lunak perekrutan" [ref=e2482] [cursor=pointer]:
+                  - /url: https://id.employer.seek.com/id/partners/connect-with-seek
+                  - generic [ref=e2484]: Mitra perangkat lunak perekrutan
+        - generic [ref=e2487]:
+          - generic [ref=e2489]:
+            - generic [ref=e2490]: Tentang kami
+            - list [ref=e2491]:
+              - listitem [ref=e2492]:
+                - link "Tentang kami" [ref=e2493] [cursor=pointer]:
+                  - /url: /id/about
+                  - generic [ref=e2495]: Tentang kami
+              - listitem [ref=e2496]:
+                - link "Ruang berita" [ref=e2497] [cursor=pointer]:
+                  - /url: /id/about/news
+                  - generic [ref=e2499]: Ruang berita
+              - listitem [ref=e2500]:
+                - link "Investor" [ref=e2501] [cursor=pointer]:
+                  - /url: https://au.seek.com/about/investors
+                  - generic [ref=e2503]: Investor
+              - listitem [ref=e2504]:
+                - link "Karir" [ref=e2505] [cursor=pointer]:
+                  - /url: /id/careers
+                  - generic [ref=e2507]: Karir
+              - listitem [ref=e2508]:
+                - generic [ref=e2510] [cursor=pointer]:
+                  - button "Mitra internasional" [ref=e2513]
+                  - img [ref=e2519]
+              - listitem [ref=e2521]:
+                - generic [ref=e2523] [cursor=pointer]:
+                  - button "Layanan mitra" [ref=e2526]
+                  - img [ref=e2532]
+          - generic [ref=e2535]:
+            - generic [ref=e2536]: Kontak
+            - list [ref=e2537]:
+              - listitem [ref=e2538]:
+                - link "Pusat bantuan" [ref=e2539] [cursor=pointer]:
+                  - /url: https://help.id.jobstreet.com/id/s/?language=in
+                  - generic [ref=e2541]: Pusat bantuan
+              - listitem [ref=e2542]:
+                - link "Hubungi kami" [ref=e2543] [cursor=pointer]:
+                  - /url: /id/contact-us
+                  - generic [ref=e2545]: Hubungi kami
+              - listitem [ref=e2546]:
+                - link "Blog produk & teknologi" [ref=e2547] [cursor=pointer]:
+                  - /url: https://medium.com/seek-blog
+                  - generic [ref=e2549]: Blog produk & teknologi
+              - listitem [ref=e2550]:
+                - generic [ref=e2552] [cursor=pointer]:
+                  - button "Media sosial" [ref=e2555]
+                  - img [ref=e2561]
+      - generic [ref=e2565]:
+        - button "Lokasi" [ref=e2569] [cursor=pointer]:
+          - generic [ref=e2571]:
+            - img [ref=e2574]
+            - generic [ref=e2578]: Indonesia
+            - img [ref=e2581]
+        - generic [ref=e2583]:
+          - generic [ref=e2584]:
+            - link "Persyaratan & ketentuan" [ref=e2586] [cursor=pointer]:
+              - /url: /id/terms
+              - generic [ref=e2588]: Persyaratan & ketentuan
+            - link "Keamanan" [ref=e2590] [cursor=pointer]:
+              - /url: /id/security-hub
+              - generic [ref=e2592]: Keamanan
+            - link "Privasi" [ref=e2594] [cursor=pointer]:
+              - /url: /id/my-privacy
+              - generic [ref=e2596]: Privasi
+          - generic [ref=e2597]: Hak cipta © 2026 Jobstreet

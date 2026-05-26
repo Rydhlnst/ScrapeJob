@@ -1,0 +1,3 @@
+display_name: "PRD Analyst & Scope Planner"
+short_description: "Analyze PRDs into strict, phased, scope-safe execution plans for coding agents."
+default_prompt: "Analyze the provided PRD and produce a strict, implementation-ready development plan with in-scope/out-of-scope boundaries, open questions, phased execution, and a final coding-agent prompt with scope control. Do not write production code unless explicitly asked."

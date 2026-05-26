@@ -1,33 +1,41 @@
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 export function AdminHeader({
   title,
   description,
   actions,
+  className,
 }: {
   title: string
   description?: string
   actions?: React.ReactNode
+  className?: string
 }) {
   return (
-    <div className="flex flex-col gap-3 border-b bg-white px-4 py-4 md:px-6">
-      <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1">
-          <h1 className="text-lg font-semibold text-slate-900 md:text-xl">
+    <header
+      className={cn(
+        "rounded-2xl border border-border bg-card/80 px-5 py-5 shadow-sm backdrop-blur-sm md:px-6",
+        className,
+      )}
+    >
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-1.5">
+          <h1 className="text-xl font-semibold tracking-tight text-foreground md:text-2xl">
             {title}
           </h1>
           {description ? (
-            <p className="text-sm text-slate-500">{description}</p>
+            <p className="max-w-2xl text-sm text-muted-foreground">{description}</p>
           ) : null}
         </div>
-        {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
+        {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
       </div>
+
       <div className="md:hidden">
-        <Button asChild variant="outline" className="w-full">
+        <Button asChild variant="outline" className="mt-4 w-full">
           <a href="/">Back to Public</a>
         </Button>
       </div>
-    </div>
+    </header>
   )
 }
-

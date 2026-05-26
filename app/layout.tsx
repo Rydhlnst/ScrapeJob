@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import type { ReactNode } from "react"
+import { Toaster } from "@/components/ui/sonner"
 
 import "./globals.css"
 
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="id">
       <body className="min-h-screen bg-background font-sans text-foreground">
         {children}
+        <Toaster richColors />
       </body>
     </html>
   )

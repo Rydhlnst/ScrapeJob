@@ -1,21 +1,33 @@
-import { listJobs } from "@/lib/api/jobs"
 import { AdminHeader } from "@/components/admin/admin-header"
-import { RawDataTable } from "@/components/admin/raw-data-table"
+import { RawDataReviewClient } from "@/components/admin/raw-data-review-client"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { RefreshCw, Play } from "lucide-react"
 
-export default async function AdminRawDataPage() {
-  const all = await listJobs({ admin: true, perPage: 100, page: 1, sort: "newest" })
-  const raw = all.data.filter((j) => j.status === "raw" || j.status === "duplicate")
-
+export default function AdminRawDataPage() {
   return (
-    <div>
+    <div className="space-y-6 p-4 md:p-6 lg:p-8">
       <AdminHeader
-        title="Raw Data"
-        description="Data scraping sebelum dibersihkan/normalisasi. Tidak otomatis publish."
+        title="Scraped Jobs Review"
+        description="Review, clean, approve, or reject scraped job listings before publishing."
+        actions={
+          <>
+            <Button asChild variant="outline">
+              <Link href="/admin/scrape-runs">
+                <Play className="h-4 w-4" />
+                Run Scraper
+              </Link>
+            </Button>
+            <Button asChild variant="default">
+              <Link href="/admin/raw-data" className="inline-flex items-center gap-2">
+                <RefreshCw className="h-4 w-4" />
+                Refresh Data
+              </Link>
+            </Button>
+          </>
+        }
       />
-      <div className="space-y-4 p-4 md:p-6">
-        <RawDataTable jobs={raw.length ? raw : all.data.slice(0, 6)} />
-      </div>
+      <RawDataReviewClient />
     </div>
   )
 }
-

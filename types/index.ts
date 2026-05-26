@@ -65,3 +65,8 @@ export type Paginated<T> = {
   totalPages: number
 }
 
+export type {
+  Job as PipelineJob,
+  ScrapedJob as PipelineScrapedJob,
+  ScrapedJobStatus,
+} from "./job"

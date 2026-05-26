@@ -12,7 +12,7 @@ export default async function JobDetailPage({
   params: { slug: string }
 }) {
   const job = await getJobBySlug(params.slug)
-  if (!job || job.status !== "published") notFound()
+  if (!job || (job.status && job.status !== "published")) notFound()
 
   return (
     <div className="min-h-screen bg-background">

@@ -1,0 +1,66 @@
+<?php
+
+use App\Http\Controllers\Api\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Api\Admin\DashboardController;
+use App\Http\Controllers\Api\Admin\JobController as AdminJobController;
+use App\Http\Controllers\Api\Admin\JobSourceController as AdminJobSourceController;
+use App\Http\Controllers\Api\Admin\AdminScrapedJobController;
+use App\Http\Controllers\Api\Admin\ScrapeRunController;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
+use App\Http\Controllers\Api\Public\JobController as PublicJobController;
+use App\Http\Controllers\Api\Public\LocationController as PublicLocationController;
+use App\Http\Controllers\Api\Public\ScraperController as PublicScraperController;
+use App\Http\Controllers\Api\ScrapedJobImportController;
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('auth')->group(function () {
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:auth-login');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
+});
+
+Route::get('/jobs', [PublicJobController::class, 'index']);
+Route::get('/jobs/stats', [PublicJobController::class, 'stats']);
+Route::get('/jobs/{identifier}', [PublicJobController::class, 'show']);
+Route::post('/internal/scraped-jobs/import', ScrapedJobImportController::class)->middleware('internal.token');
+Route::post('/scraper/run', [PublicScraperController::class, 'trigger'])->middleware('throttle:scrape-run');
+Route::get('/scraper/logs', [PublicScraperController::class, 'logs']);
+Route::get('/categories', [PublicCategoryController::class, 'index']);
+Route::get('/locations', [PublicLocationController::class, 'index']);
+
+Route::prefix('admin')
+    ->middleware(['auth:sanctum'])
+    ->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('permission:view dashboard');
+
+        Route::apiResource('/jobs', AdminJobController::class)
+            ->middlewareFor(['index', 'show'], 'permission:view jobs')
+            ->middlewareFor('store', 'permission:create jobs')
+            ->middlewareFor('update', 'permission:edit jobs')
+            ->middlewareFor('destroy', 'permission:delete jobs');
+        Route::patch('/jobs/{job}/publish', [AdminJobController::class, 'publish'])->middleware('permission:publish jobs');
+        Route::patch('/jobs/{job}/unpublish', [AdminJobController::class, 'unpublish'])->middleware('permission:publish jobs');
+        Route::patch('/jobs/{job}/reject', [AdminJobController::class, 'reject'])->middleware('permission:reject jobs');
+        Route::patch('/jobs/{job}/mark-duplicate', [AdminJobController::class, 'markDuplicate'])->middleware('permission:edit jobs');
+        Route::patch('/jobs/{job}/restore-draft', [AdminJobController::class, 'restoreDraft'])->middleware('permission:edit jobs');
+
+        Route::apiResource('/categories', AdminCategoryController::class)->middleware('permission:manage categories');
+        Route::apiResource('/job-sources', AdminJobSourceController::class)->middleware('permission:manage sources');
+
+        Route::get('/scrape-runs', [ScrapeRunController::class, 'index'])->middleware('permission:view scrape logs');
+        Route::post('/scrape-runs/run', [ScrapeRunController::class, 'run'])
+            ->middleware(['permission:run scraping', 'throttle:scrape-run']);
+        Route::get('/scrape-runs/{id}', [ScrapeRunController::class, 'show'])->middleware('permission:view scrape logs');
+        Route::get('/scrape-runs/{id}/logs', [ScrapeRunController::class, 'logs'])->middleware('permission:view scrape logs');
+
+        Route::get('/scraped-jobs', [AdminScrapedJobController::class, 'index'])->middleware('permission:view jobs');
+        Route::get('/scraped-jobs/{scrapedJob}', [AdminScrapedJobController::class, 'show'])->middleware('permission:view jobs');
+        Route::patch('/scraped-jobs/{scrapedJob}', [AdminScrapedJobController::class, 'update'])->middleware('permission:edit jobs');
+        Route::patch('/scraped-jobs/{scrapedJob}/approve', [AdminScrapedJobController::class, 'approve'])->middleware('permission:edit jobs');
+        Route::patch('/scraped-jobs/{scrapedJob}/reject', [AdminScrapedJobController::class, 'reject'])->middleware('permission:edit jobs');
+        Route::post('/scraped-jobs/{scrapedJob}/publish', [AdminScrapedJobController::class, 'publish'])->middleware('permission:publish jobs');
+    });

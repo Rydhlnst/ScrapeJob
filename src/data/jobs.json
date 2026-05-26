@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "source": "jobstreet",
+    "scraped_at": "2026-05-23T10:00:00+07:00",
+    "total": 2,
+    "roles": ["Data Analyst", "Data Engineer"],
+    "filter": {
+      "type": "pages",
+      "max_pages": 1,
+      "max_days_ago": 30,
+      "start_date": null
+    }
+  },
+  "data": [
+    {
+      "external_id": "jobstreet_demo_001",
+      "source": "jobstreet",
+      "source_url": "https://id.jobstreet.com/job/demo-001",
+      "role_keyword": "Data Analyst",
+      "title": "Data Analyst",
+      "company": "Demo Company",
+      "location": "Jakarta",
+      "salary": "Rp 8.000.000 - Rp 12.000.000",
+      "employment_type": "Full time",
+      "description": "Analyze business data and create reports.",
+      "description_summary": "Analyze business data.",
+      "posted_date": "2026-05-22",
+      "scraped_at": "2026-05-23T10:00:00+07:00",
+      "status": "pending",
+      "raw": {
+        "posted_text": "1 hari yang lalu",
+        "role_url": "data-analyst",
+        "page": 1
+      }
+    },
+    {
+      "external_id": "jobstreet_demo_002",
+      "source": "jobstreet",
+      "source_url": "https://id.jobstreet.com/job/demo-002",
+      "role_keyword": "Data Engineer",
+      "title": "Data Engineer",
+      "company": "Demo Tech",
+      "location": "Bandung",
+      "salary": null,
+      "employment_type": "Contract",
+      "description": "Build ETL pipelines and maintain data warehouse.",
+      "description_summary": "Build ETL pipelines.",
+      "posted_date": "2026-05-21",
+      "scraped_at": "2026-05-23T10:00:00+07:00",
+      "status": "approved",
+      "raw": {
+        "posted_text": "2 hari yang lalu",
+        "role_url": "data-engineer",
+        "page": 1
+      }
+    }
+  ]
+}
