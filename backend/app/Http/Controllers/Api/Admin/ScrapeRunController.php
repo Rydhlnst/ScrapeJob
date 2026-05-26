@@ -57,11 +57,12 @@ class ScrapeRunController extends Controller
         $location = $request->filled('location') ? $request->string('location')->trim()->value() : null;
         $source = JobSource::query()->whereRaw('LOWER(name) = ?', [$sourceName])->first();
 
-        if (! $source || ! $source->is_active) {
-            return ApiResponse::error('Source is not active or not found.', 422);
+        // Allow built-in sources to run even when they are not persisted yet.
+        if ($source && ! $source->is_active) {
+            return ApiResponse::error('Source is not active.', 422);
         }
 
-        if (! $source->scraping_allowed) {
+        if ($source && ! $source->scraping_allowed) {
             return ApiResponse::error('Scraping is not allowed for this source.', 422);
         }
 

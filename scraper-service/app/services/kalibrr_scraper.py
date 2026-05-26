@@ -15,6 +15,7 @@ from app.utils.cleaner import clean_text
 
 class KalibrrScraper:
     BASE_URL = "https://www.kalibrr.com"
+    LIST_URL = "https://www.kalibrr.com/job-board/te"
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -42,15 +43,33 @@ class KalibrrScraper:
 
     def _scrape_role(self, role: str, scraped_at: str) -> List[Dict]:
         query = quote_plus(role.strip())
-        url = f"{self.BASE_URL}/job-board/te/{query}?page=1"
+        candidate_urls = [
+            self.LIST_URL,
+            f"{self.LIST_URL}?text={query}",
+            f"{self.LIST_URL}?keyword={query}",
+            f"{self.BASE_URL}/job-board/te/{query}",
+        ]
 
-        try:
-            response = self._http.get(url, timeout=max(self.settings.page_timeout_seconds, 20))
-            response.raise_for_status()
-        except Exception:
+        soup: Optional[BeautifulSoup] = None
+        active_url = candidate_urls[0]
+        for candidate_url in candidate_urls:
+            try:
+                response = self._http.get(candidate_url, timeout=max(self.settings.page_timeout_seconds, 20))
+                response.raise_for_status()
+                parsed = BeautifulSoup(response.text, "html.parser")
+                if parsed.select("a.kalibrr-job-list-card") or parsed.select("a[href*='/c/']"):
+                    soup = parsed
+                    active_url = candidate_url
+                    break
+                if soup is None:
+                    soup = parsed
+                    active_url = candidate_url
+            except Exception:
+                continue
+
+        if soup is None:
             return []
 
-        soup = BeautifulSoup(response.text, "html.parser")
         cards = soup.select("a.kalibrr-job-list-card") or soup.select("a[href*='/c/']")
 
         results: List[Dict] = []
@@ -89,9 +108,8 @@ class KalibrrScraper:
                     description=None,
                     description_summary=None,
                     posted_date=None,
-                    raw={"source": "kalibrr", "query_url": url},
+                    raw={"source": "kalibrr", "query_url": active_url},
                 )
             )
 
         return results
-

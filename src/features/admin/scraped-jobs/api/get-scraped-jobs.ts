@@ -17,12 +17,19 @@ export async function getScrapedJobs(
   status: ScrapedJob["status"] = "pending",
   page = 1,
   perPage = 15,
+  keyword?: string,
+  source?: string,
 ) {
-  const query = new URLSearchParams({
-    status,
-    page: String(page),
-    perPage: String(perPage),
-  })
+  const query = new URLSearchParams()
+  query.set("status", status)
+  query.set("page", String(page))
+  query.set("perPage", String(perPage))
+  if (keyword && keyword.trim() !== "") {
+    query.set("keyword", keyword.trim())
+  }
+  if (source && source.trim() !== "" && source.trim().toLowerCase() !== "all") {
+    query.set("source", source.trim())
+  }
   const response = await fetchJson<ApiEnvelope<ScrapedJob[]>>(
     `/api/admin/scraped-jobs?${query.toString()}`,
   )

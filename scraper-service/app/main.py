@@ -15,6 +15,7 @@ from app.config import get_settings
 from app.services.api_client import LaravelApiClient
 from app.services.glints_scraper import GlintsScraper
 from app.services.jobstreet_scraper import JobstreetScraper
+from app.services.jobstreetexpress_scraper import JobstreetExpressScraper
 from app.services.kalibrr_scraper import KalibrrScraper
 from app.services.lokerid_scraper import LokerIdScraper
 from app.services.json_exporter import save_json
@@ -53,6 +54,8 @@ def build_payload(
 def select_scraper(source: str, settings):
     if source == "jobstreet":
         return JobstreetScraper(settings)
+    if source in {"jobstreetexpress", "jobstreet-express", "jse"}:
+        return JobstreetExpressScraper(settings)
     if source == "glints":
         return GlintsScraper(settings)
     if source == "kalibrr":

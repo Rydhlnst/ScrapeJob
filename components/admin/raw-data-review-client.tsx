@@ -58,6 +58,16 @@ function cleanJobTitle(value: string) {
   return value.replace(/^job\s*card\s*title\s*:\s*/i, "").trim()
 }
 
+function normalizeLocation(value: string | null) {
+  if (!value) return null
+  const cleaned = value.trim()
+  const blocked = new Set(["di mana", "dimana", "where", "lokasi", "location", "semua lokasi", "all locations"])
+  if (blocked.has(cleaned.toLowerCase())) {
+    return null
+  }
+  return cleaned
+}
+
 function statusLabel(status: ScrapedJobStatus | "all") {
   if (status === "all") return "All"
   switch (status) {
@@ -140,6 +150,7 @@ export function RawDataReviewClient() {
   const [busyId, setBusyId] = React.useState<string | null>(null)
   const [selected, setSelected] = React.useState<string[]>([])
   const [search, setSearch] = React.useState("")
+  const [searchInput, setSearchInput] = React.useState("")
   const [sourceFilter, setSourceFilter] = React.useState("all")
   const [statusFilter, setStatusFilter] = React.useState<ScrapedJobStatus | "all">("pending")
 
@@ -167,10 +178,10 @@ export function RawDataReviewClient() {
 
         if (currentStatus === "all") {
           const [pending, approved, rejected, published] = await Promise.all([
-            getScrapedJobs("pending", 1, ALL_PAGE_SIZE),
-            getScrapedJobs("approved", 1, ALL_PAGE_SIZE),
-            getScrapedJobs("rejected", 1, ALL_PAGE_SIZE),
-            getScrapedJobs("published", 1, ALL_PAGE_SIZE),
+            getScrapedJobs("pending", 1, ALL_PAGE_SIZE, search, sourceFilter),
+            getScrapedJobs("approved", 1, ALL_PAGE_SIZE, search, sourceFilter),
+            getScrapedJobs("rejected", 1, ALL_PAGE_SIZE, search, sourceFilter),
+            getScrapedJobs("published", 1, ALL_PAGE_SIZE, search, sourceFilter),
           ])
 
           const merged = [...pending.data, ...approved.data, ...rejected.data, ...published.data].sort((a, b) =>
@@ -188,7 +199,13 @@ export function RawDataReviewClient() {
           setTotal(localTotal)
           setTotalPages(localTotalPages)
         } else {
-          const result = await getScrapedJobs(currentStatus, nextPage, PER_PAGE)
+          const result = await getScrapedJobs(
+            currentStatus,
+            nextPage,
+            PER_PAGE,
+            search,
+            sourceFilter,
+          )
           setJobs(result.data)
           setPage(result.page)
           setTotal(result.total)
@@ -204,8 +221,15 @@ export function RawDataReviewClient() {
         setLoading(false)
       }
     },
-    [ALL_PAGE_SIZE, PER_PAGE, statusFilter],
+    [ALL_PAGE_SIZE, PER_PAGE, search, sourceFilter, statusFilter],
   )
+
+  React.useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setSearch(searchInput.trim())
+    }, 350)
+    return () => window.clearTimeout(timer)
+  }, [searchInput])
 
   React.useEffect(() => {
     void Promise.all([refresh(1, statusFilter), refreshStats()])
@@ -216,16 +240,7 @@ export function RawDataReviewClient() {
     return ["all", ...Array.from(all)]
   }, [jobs])
 
-  const filteredJobs = React.useMemo(() => {
-    return jobs.filter((job) => {
-      const text = `${job.title} ${job.company} ${job.location ?? ""}`.toLowerCase()
-      const textMatch = search.trim() === "" || text.includes(search.trim().toLowerCase())
-      const sourceMatch = sourceFilter === "all" || job.source === sourceFilter
-      return textMatch && sourceMatch
-    })
-  }, [jobs, search, sourceFilter])
-
-  const allChecked = filteredJobs.length > 0 && selected.length === filteredJobs.length
+  const allChecked = jobs.length > 0 && selected.length === jobs.length
   const selectedCount = selected.length
 
   const pageItems = React.useMemo(() => {
@@ -317,7 +332,7 @@ export function RawDataReviewClient() {
             <div>
               <CardTitle className="text-base">Review Queue</CardTitle>
               <CardDescription>
-                Showing {filteredJobs.length} of {total} {statusLabel(statusFilter).toLowerCase()} jobs
+                Showing {jobs.length} of {total} {statusLabel(statusFilter).toLowerCase()} jobs
               </CardDescription>
             </div>
             {selectedCount > 0 ? (
@@ -332,8 +347,8 @@ export function RawDataReviewClient() {
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
                 placeholder="Search title, company, or location"
                 className="pl-9"
               />
@@ -390,7 +405,7 @@ export function RawDataReviewClient() {
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-6 text-sm text-red-700">
               Failed to load scraped jobs. Please try refresh again.
             </div>
-          ) : filteredJobs.length === 0 ? (
+          ) : jobs.length === 0 ? (
             <div className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-10 text-center">
               <p className="text-sm font-medium text-foreground">No pending scraped jobs to review.</p>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -408,7 +423,7 @@ export function RawDataReviewClient() {
                           checked={allChecked}
                           onCheckedChange={(checked) => {
                             if (checked) {
-                              setSelected(filteredJobs.map((job) => job.id))
+                              setSelected(jobs.map((job) => job.id))
                             } else {
                               setSelected([])
                             }
@@ -424,7 +439,7 @@ export function RawDataReviewClient() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredJobs.map((job) => {
+                    {jobs.map((job) => {
                       const checked = selected.includes(job.id)
                       const busy = busyId === job.id
                       const title = cleanJobTitle(job.title)
@@ -456,7 +471,7 @@ export function RawDataReviewClient() {
                           <TableCell>
                             <div className="flex items-center gap-1.5 text-sm">
                               <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-                              <span>{job.location ?? <span className="text-muted-foreground">-</span>}</span>
+                              <span>{normalizeLocation(job.location) ?? <span className="text-muted-foreground">-</span>}</span>
                             </div>
                           </TableCell>
                           <TableCell>
