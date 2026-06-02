@@ -10,10 +10,9 @@ export default async function AdminJobsPage() {
         title="Jobs"
         description="Kelola raw/draft/published/rejected/duplicate. Publish/unpublish/reject aman (mock)."
       />
-      <div className="p-4 md:p-6">
+      <div>
         <JobsTable jobs={all.data} />
       </div>
     </div>
   )
 }
-

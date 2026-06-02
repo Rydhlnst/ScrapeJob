@@ -10,10 +10,9 @@ export default async function AdminCategoriesPage() {
         title="Categories"
         description="CRUD kategori (mock)."
       />
-      <div className="p-4 md:p-6">
+      <div>
         <CategoryTable categories={categories} />
       </div>
     </div>
   )
 }
-

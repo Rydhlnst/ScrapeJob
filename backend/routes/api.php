@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:auth-login');
+    Route::post('/user/register', [AuthController::class, 'registerUser'])->middleware('throttle:auth-login');
+    Route::post('/user/login', [AuthController::class, 'loginUser'])->middleware('throttle:auth-login');
+    Route::post('/admin/register', [AuthController::class, 'registerAdmin'])->middleware('throttle:auth-login');
+    Route::post('/admin/login', [AuthController::class, 'loginAdmin'])->middleware('throttle:auth-login');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);

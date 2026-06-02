@@ -1,28 +1,11 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { toast } from "sonner"
-import {
-  CheckCheck,
-  CircleCheckBig,
-  CircleX,
-  ExternalLink,
-  FileSearch,
-  Loader2,
-  ListFilter,
-  MapPin,
-  Search,
-  Send,
-  Sparkles,
-} from "lucide-react"
 
 import type { ScrapedJob, ScrapedJobStatus } from "@/types/job"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
 import {
   Pagination,
   PaginationContent,
@@ -32,27 +15,18 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Skeleton } from "@/components/ui/skeleton"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { getScrapedJobs } from "@/src/features/admin/scraped-jobs/api/get-scraped-jobs"
 import { approveScrapedJob } from "@/src/features/admin/scraped-jobs/api/approve-scraped-job"
 import { publishScrapedJob } from "@/src/features/admin/scraped-jobs/api/publish-scraped-job"
 import { rejectScrapedJob } from "@/src/features/admin/scraped-jobs/api/reject-scraped-job"
-
-type Stats = {
-  pending: number
-  approved: number
-  rejected: number
-  published: number
-}
+import { BulkActionBar } from "@/components/dashboard/scraped-review/bulk-action-bar"
+import { ReviewEmptyState } from "@/components/dashboard/scraped-review/empty-state"
+import { ReviewErrorState } from "@/components/dashboard/scraped-review/error-state"
+import { ReviewFilters } from "@/components/dashboard/scraped-review/review-filters"
+import { ReviewLoadingState } from "@/components/dashboard/scraped-review/loading-state"
+import { ReviewStatsCards } from "@/components/dashboard/scraped-review/review-stats"
+import { ReviewTable } from "@/components/dashboard/scraped-review/review-table"
+import type { RowAction, ReviewStats } from "@/components/dashboard/scraped-review/types"
 
 function cleanJobTitle(value: string) {
   return value.replace(/^job\s*card\s*title\s*:\s*/i, "").trim()
@@ -62,41 +36,25 @@ function normalizeLocation(value: string | null) {
   if (!value) return null
   const cleaned = value.trim()
   const blocked = new Set(["di mana", "dimana", "where", "lokasi", "location", "semua lokasi", "all locations"])
-  if (blocked.has(cleaned.toLowerCase())) {
-    return null
-  }
+  if (blocked.has(cleaned.toLowerCase())) return null
   return cleaned
 }
 
 function statusLabel(status: ScrapedJobStatus | "all") {
   if (status === "all") return "All"
-  switch (status) {
-    case "pending":
-      return "Pending"
-    case "approved":
-      return "Approved"
-    case "rejected":
-      return "Rejected"
-    case "published":
-      return "Published"
-    default:
-      return "Duplicate"
-  }
+  if (status === "pending") return "Pending"
+  if (status === "approved") return "Approved"
+  if (status === "rejected") return "Rejected"
+  if (status === "published") return "Published"
+  return "Duplicate"
 }
 
 function statusBadgeClass(status: ScrapedJobStatus) {
-  switch (status) {
-    case "pending":
-      return "bg-amber-100 text-amber-800 hover:bg-amber-100"
-    case "approved":
-      return "bg-blue-100 text-blue-800 hover:bg-blue-100"
-    case "rejected":
-      return "bg-red-100 text-red-700 hover:bg-red-100"
-    case "published":
-      return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-    default:
-      return "bg-slate-100 text-slate-700 hover:bg-slate-100"
-  }
+  if (status === "pending") return "bg-amber-100 text-amber-800 hover:bg-amber-100"
+  if (status === "approved") return "bg-blue-100 text-blue-800 hover:bg-blue-100"
+  if (status === "rejected") return "bg-red-100 text-red-700 hover:bg-red-100"
+  if (status === "published") return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+  return "bg-slate-100 text-slate-700 hover:bg-slate-100"
 }
 
 function sourceBadgeClass(source: string) {
@@ -104,21 +62,8 @@ function sourceBadgeClass(source: string) {
   if (key.includes("glints")) return "bg-sky-100 text-sky-800 hover:bg-sky-100"
   if (key.includes("jobstreet")) return "bg-indigo-100 text-indigo-800 hover:bg-indigo-100"
   if (key.includes("linkedin")) return "bg-blue-100 text-blue-800 hover:bg-blue-100"
-  if (key.includes("loker")) return "bg-cyan-100 text-cyan-800 hover:bg-cyan-100"
+  if (key.includes("indeed")) return "bg-cyan-100 text-cyan-800 hover:bg-cyan-100"
   return "bg-slate-100 text-slate-700 hover:bg-slate-100"
-}
-
-function statusIcon(status: ScrapedJobStatus) {
-  switch (status) {
-    case "approved":
-      return <CircleCheckBig className="h-4 w-4" />
-    case "rejected":
-      return <CircleX className="h-4 w-4" />
-    case "published":
-      return <Send className="h-4 w-4" />
-    default:
-      return <FileSearch className="h-4 w-4" />
-  }
 }
 
 function formatDate(date: string | null) {
@@ -139,7 +84,7 @@ export function RawDataReviewClient() {
   const [page, setPage] = React.useState(1)
   const [total, setTotal] = React.useState(0)
   const [totalPages, setTotalPages] = React.useState(1)
-  const [stats, setStats] = React.useState<Stats>({
+  const [stats, setStats] = React.useState<ReviewStats>({
     pending: 0,
     approved: 0,
     rejected: 0,
@@ -161,13 +106,7 @@ export function RawDataReviewClient() {
       getScrapedJobs("rejected", 1, 1),
       getScrapedJobs("published", 1, 1),
     ])
-
-    setStats({
-      pending: pending.total,
-      approved: approved.total,
-      rejected: rejected.total,
-      published: published.total,
-    })
+    setStats({ pending: pending.total, approved: approved.total, rejected: rejected.total, published: published.total })
   }, [])
 
   const refresh = React.useCallback(
@@ -183,29 +122,19 @@ export function RawDataReviewClient() {
             getScrapedJobs("rejected", 1, ALL_PAGE_SIZE, search, sourceFilter),
             getScrapedJobs("published", 1, ALL_PAGE_SIZE, search, sourceFilter),
           ])
-
           const merged = [...pending.data, ...approved.data, ...rejected.data, ...published.data].sort((a, b) =>
             (b.scrapedAt ?? "").localeCompare(a.scrapedAt ?? ""),
           )
-
           const localTotal = merged.length
           const localTotalPages = Math.max(1, Math.ceil(localTotal / PER_PAGE))
           const safePage = Math.min(nextPage, localTotalPages)
           const start = (safePage - 1) * PER_PAGE
-          const paged = merged.slice(start, start + PER_PAGE)
-
-          setJobs(paged)
+          setJobs(merged.slice(start, start + PER_PAGE))
           setPage(safePage)
           setTotal(localTotal)
           setTotalPages(localTotalPages)
         } else {
-          const result = await getScrapedJobs(
-            currentStatus,
-            nextPage,
-            PER_PAGE,
-            search,
-            sourceFilter,
-          )
+          const result = await getScrapedJobs(currentStatus, nextPage, PER_PAGE, search, sourceFilter)
           setJobs(result.data)
           setPage(result.page)
           setTotal(result.total)
@@ -225,9 +154,7 @@ export function RawDataReviewClient() {
   )
 
   React.useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setSearch(searchInput.trim())
-    }, 350)
+    const timer = window.setTimeout(() => setSearch(searchInput.trim()), 350)
     return () => window.clearTimeout(timer)
   }, [searchInput])
 
@@ -237,298 +164,135 @@ export function RawDataReviewClient() {
 
   const sources = React.useMemo(() => {
     const all = new Set(jobs.map((job) => job.source).filter(Boolean))
-    return ["all", ...Array.from(all)]
+    return Array.from(all)
   }, [jobs])
 
   const allChecked = jobs.length > 0 && selected.length === jobs.length
   const selectedCount = selected.length
+  const batchBusy = busyId === "__batch__"
 
   const pageItems = React.useMemo(() => {
-    if (totalPages <= 5) {
-      return Array.from({ length: totalPages }, (_, index) => index + 1)
-    }
-    if (page <= 3) {
-      return [1, 2, 3, 4, "ellipsis-right", totalPages] as const
-    }
-    if (page >= totalPages - 2) {
-      return [1, "ellipsis-left", totalPages - 3, totalPages - 2, totalPages - 1, totalPages] as const
-    }
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, index) => index + 1)
+    if (page <= 3) return [1, 2, 3, 4, "ellipsis-right", totalPages] as const
+    if (page >= totalPages - 2) return [1, "ellipsis-left", totalPages - 3, totalPages - 2, totalPages - 1, totalPages] as const
     return [1, "ellipsis-left", page - 1, page, page + 1, "ellipsis-right", totalPages] as const
   }, [page, totalPages])
 
-  async function runAction(id: string, action: "approve" | "reject" | "publish") {
+  async function runAction(id: string, action: RowAction) {
     setBusyId(id)
     try {
-      if (action === "approve") {
-        await approveScrapedJob(id)
-        toast.success("Job berhasil di-approve.")
-      } else if (action === "reject") {
-        await rejectScrapedJob(id)
-        toast.success("Job berhasil di-reject.")
-      } else {
-        await publishScrapedJob(id)
-        toast.success("Job berhasil dipublish.")
-      }
+      if (action === "approve") await approveScrapedJob(id)
+      if (action === "reject") await rejectScrapedJob(id)
+      if (action === "publish") await publishScrapedJob(id)
       const targetPage = jobs.length === 1 && page > 1 ? page - 1 : page
       await Promise.all([refresh(targetPage), refreshStats()])
+      toast.success("Action completed.")
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Aksi gagal."
-      toast.error(message)
+      toast.error(err instanceof Error ? err.message : "Aksi gagal.")
     } finally {
       setBusyId(null)
     }
   }
 
-  const statsCards = [
-    {
-      key: "pending",
-      label: "Pending Jobs",
-      count: stats.pending,
-      icon: FileSearch,
-      accent: "text-amber-600",
-    },
-    {
-      key: "approved",
-      label: "Approved Jobs",
-      count: stats.approved,
-      icon: CheckCheck,
-      accent: "text-blue-600",
-    },
-    {
-      key: "rejected",
-      label: "Rejected Jobs",
-      count: stats.rejected,
-      icon: CircleX,
-      accent: "text-red-600",
-    },
-    {
-      key: "published",
-      label: "Published Jobs",
-      count: stats.published,
-      icon: Send,
-      accent: "text-emerald-600",
-    },
-  ] as const
+  async function runBulkAction(action: RowAction) {
+    if (!selected.length) return
+    setBusyId("__batch__")
+    try {
+      for (const id of selected) {
+        if (action === "approve") await approveScrapedJob(id)
+        if (action === "reject") await rejectScrapedJob(id)
+        if (action === "publish") await publishScrapedJob(id)
+      }
+      await Promise.all([refresh(page), refreshStats()])
+      toast.success(`Bulk ${action} completed.`)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Bulk action failed.")
+    } finally {
+      setBusyId(null)
+    }
+  }
+
+  const helpers = {
+    cleanJobTitle,
+    normalizeLocation,
+    formatDate,
+    sourceBadgeClass,
+    statusBadgeClass,
+    statusLabel,
+  }
 
   return (
     <section className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {statsCards.map((item) => (
-          <Card key={item.key} className="border border-border shadow-sm">
-            <CardHeader>
-              <CardDescription className="flex items-center justify-between text-xs uppercase tracking-wide">
-                {item.label}
-                <item.icon className={`h-4 w-4 ${item.accent}`} />
-              </CardDescription>
-              <CardTitle className="text-2xl">{item.count}</CardTitle>
-            </CardHeader>
-          </Card>
-        ))}
-      </div>
+      <ReviewStatsCards stats={stats} />
 
-      <Card className="border border-border shadow-sm">
-        <CardHeader className="gap-3 border-b border-border">
-          <div className="flex items-center justify-between gap-3">
+      <Card className="border-border/70 shadow-sm">
+        <CardHeader className="gap-4 border-b border-border/70 bg-muted/20">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <CardTitle className="text-base">Review Queue</CardTitle>
-              <CardDescription>
-                Showing {jobs.length} of {total} {statusLabel(statusFilter).toLowerCase()} jobs
-              </CardDescription>
+              <CardDescription>Showing {jobs.length} of {total} {statusLabel(statusFilter).toLowerCase()} jobs</CardDescription>
             </div>
             {selectedCount > 0 ? (
-              <Button size="sm">
-                <Sparkles className="h-4 w-4" />
-                Bulk Publish ({selectedCount})
+              <Button size="sm" variant="secondary">
+                {selectedCount} selected
               </Button>
             ) : null}
           </div>
 
-          <div className="grid gap-3 lg:grid-cols-[1.5fr_1fr_1fr_auto]">
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
-                placeholder="Search title, company, or location"
-                className="pl-9"
-              />
-            </div>
-
-            <Select value={sourceFilter} onValueChange={setSourceFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="All sources" />
-              </SelectTrigger>
-              <SelectContent>
-                {sources.map((item) => (
-                  <SelectItem key={item} value={item}>
-                    {item === "all" ? "All sources" : item}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select
-              value={statusFilter}
-              onValueChange={(value) => setStatusFilter(value as ScrapedJobStatus)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="approved">Approved</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-                <SelectItem value="published">Published</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Button variant="outline" onClick={() => void refresh(1)}>
-              <ListFilter className="h-4 w-4" />
-              Refresh
-            </Button>
-          </div>
+          <ReviewFilters
+            searchInput={searchInput}
+            sourceFilter={sourceFilter}
+            statusFilter={statusFilter}
+            sources={sources}
+            onSearchInputChange={setSearchInput}
+            onSourceFilterChange={setSourceFilter}
+            onStatusFilterChange={setStatusFilter}
+            onRefresh={() => void refresh(1)}
+          />
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 p-4 md:p-6">
+          <BulkActionBar
+            selectedCount={selectedCount}
+            busy={batchBusy}
+            onApproveSelected={() => void runBulkAction("approve")}
+            onRejectSelected={() => void runBulkAction("reject")}
+            onPublishSelected={() => void runBulkAction("publish")}
+            onClear={() => setSelected([])}
+          />
+
           {loading ? (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 pb-1 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Loading scraped jobs...
-              </div>
-              {Array.from({ length: 6 }, (_, idx) => (
-                <Skeleton key={idx} className="h-14 w-full rounded-lg" />
-              ))}
-            </div>
+            <ReviewLoadingState />
           ) : error ? (
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-6 text-sm text-red-700">
-              Failed to load scraped jobs. Please try refresh again.
-            </div>
+            <ReviewErrorState onRetry={() => void refresh(1)} />
           ) : jobs.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-10 text-center">
-              <p className="text-sm font-medium text-foreground">No pending scraped jobs to review.</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Run scraper again or change the filter to see other statuses.
-              </p>
-            </div>
+            <ReviewEmptyState
+              onReset={() => {
+                setSearchInput("")
+                setSearch("")
+                setSourceFilter("all")
+                setStatusFilter("pending")
+              }}
+            />
           ) : (
             <>
-              <div className="overflow-x-auto rounded-lg border border-border">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/50">
-                      <TableHead className="w-10">
-                        <Checkbox
-                          checked={allChecked}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSelected(jobs.map((job) => job.id))
-                            } else {
-                              setSelected([])
-                            }
-                          }}
-                        />
-                      </TableHead>
-                      <TableHead className="min-w-[260px]">Job Title</TableHead>
-                      <TableHead>Company</TableHead>
-                      <TableHead>Location</TableHead>
-                      <TableHead>Source</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {jobs.map((job) => {
-                      const checked = selected.includes(job.id)
-                      const busy = busyId === job.id
-                      const title = cleanJobTitle(job.title)
-
-                      return (
-                        <TableRow key={job.id}>
-                          <TableCell>
-                            <Checkbox
-                              checked={checked}
-                              onCheckedChange={(value) => {
-                                if (value) {
-                                  setSelected((prev) => [...prev, job.id])
-                                } else {
-                                  setSelected((prev) => prev.filter((id) => id !== job.id))
-                                }
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell className="max-w-[420px]">
-                            <div className="space-y-1">
-                              <p className="truncate font-semibold text-foreground">{title}</p>
-                              <div className="text-xs text-muted-foreground">
-                                Scraped: {formatDate(job.scrapedAt)}
-                                {job.employmentType ? ` • ${job.employmentType}` : ""}
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>{job.company || <span className="text-muted-foreground">Unknown company</span>}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1.5 text-sm">
-                              <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-                              <span>{normalizeLocation(job.location) ?? <span className="text-muted-foreground">-</span>}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={sourceBadgeClass(job.source)}>{job.source}</Badge>
-                          </TableCell>
-                          <TableCell>
-                            <Badge className={statusBadgeClass(job.status)}>
-                              {statusIcon(job.status)}
-                              {statusLabel(job.status)}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex flex-wrap justify-end gap-2">
-                              <Button asChild variant="ghost" size="sm">
-                                <Link href={job.sourceUrl} target="_blank" rel="noopener noreferrer">
-                                  <ExternalLink className="h-4 w-4" />
-                                  View Source
-                                </Link>
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="border-red-200 text-red-700 hover:bg-red-50"
-                                disabled={busy}
-                                onClick={() => void runAction(job.id, "reject")}
-                              >
-                                Reject
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                disabled={busy}
-                                onClick={() => void runAction(job.id, "approve")}
-                              >
-                                Approve
-                              </Button>
-                              <Button
-                                size="sm"
-                                disabled={busy}
-                                onClick={() => void runAction(job.id, "publish")}
-                              >
-                                Publish
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
+              <ReviewTable
+                jobs={jobs}
+                selected={selected}
+                busyId={busyId}
+                allChecked={allChecked}
+                helpers={helpers}
+                onToggleAll={(checked) => setSelected(checked ? jobs.map((job) => job.id) : [])}
+                onToggleRow={(id, checked) =>
+                  setSelected((prev) => (checked ? (prev.includes(id) ? prev : [...prev, id]) : prev.filter((item) => item !== id)))
+                }
+                onAction={runAction}
+              />
 
               {totalPages > 1 ? (
                 <div className="flex flex-col gap-3 border-t border-border pt-4 md:flex-row md:items-center md:justify-between">
                   <p className="text-sm text-muted-foreground">
-                    Showing {(page - 1) * PER_PAGE + 1}-{Math.min(page * PER_PAGE, total)} of {total}{" "}
-                    {statusLabel(statusFilter).toLowerCase()} jobs
+                    Showing {(page - 1) * PER_PAGE + 1}-{Math.min(page * PER_PAGE, total)} of {total} {statusLabel(statusFilter).toLowerCase()} jobs
                   </p>
                   <Pagination className="mx-0 w-auto justify-start md:justify-end">
                     <PaginationContent>
@@ -537,9 +301,7 @@ export function RawDataReviewClient() {
                           href="#"
                           onClick={(event) => {
                             event.preventDefault()
-                            if (page > 1) {
-                              void refresh(page - 1)
-                            }
+                            if (page > 1) void refresh(page - 1)
                           }}
                           className={page <= 1 ? "pointer-events-none opacity-50" : ""}
                           text="Previous"
@@ -554,9 +316,7 @@ export function RawDataReviewClient() {
                               isActive={item === page}
                               onClick={(event) => {
                                 event.preventDefault()
-                                if (item !== page) {
-                                  void refresh(item)
-                                }
+                                if (item !== page) void refresh(item)
                               }}
                             >
                               {item}
@@ -574,9 +334,7 @@ export function RawDataReviewClient() {
                           href="#"
                           onClick={(event) => {
                             event.preventDefault()
-                            if (page < totalPages) {
-                              void refresh(page + 1)
-                            }
+                            if (page < totalPages) void refresh(page + 1)
                           }}
                           className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
                           text="Next"
@@ -593,3 +351,4 @@ export function RawDataReviewClient() {
     </section>
   )
 }
+

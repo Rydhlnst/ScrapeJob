@@ -31,7 +31,10 @@ export function TrustedCompanies() {
   const [paused, setPaused] = useState(false)
 
   const items = useMemo(() => companies, [])
-  const loopItems = useMemo(() => [...items, ...items], [items])
+  const displayItems = useMemo(
+    () => (reduceMotion ? items : [...items, ...items]),
+    [items, reduceMotion]
+  )
 
   const trackRef = useRef<HTMLDivElement | null>(null)
   const x = useMotionValue(0)
@@ -60,7 +63,7 @@ export function TrustedCompanies() {
     })
 
     return () => controls.stop()
-  }, [paused, reduceMotion, x, loopItems.length])
+  }, [paused, reduceMotion, x, displayItems.length])
 
   return (
     <section className="border-y border-border/70 bg-card py-14 md:py-20" id="companies">
@@ -79,27 +82,23 @@ export function TrustedCompanies() {
           <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-card to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-card to-transparent" />
 
-          {reduceMotion ? (
-            <div className="flex flex-wrap justify-center gap-3">
-              {items.map((c) => (
-                <CompanyChip key={c.id} name={c.name} color={c.brandColor} />
-              ))}
-            </div>
-          ) : (
-            <motion.div
-              ref={trackRef}
-              className="flex gap-3 will-change-transform"
-              style={{ x, width: "max-content" }}
-            >
-              {loopItems.map((c, idx) => (
-                <CompanyChip
-                  key={`${c.id}-${idx}`}
-                  name={c.name}
-                  color={c.brandColor}
-                />
-              ))}
-            </motion.div>
-          )}
+          <motion.div
+            ref={trackRef}
+            className={
+              reduceMotion
+                ? "flex flex-wrap justify-center gap-3"
+                : "flex gap-3 will-change-transform"
+            }
+            style={reduceMotion ? undefined : { x, width: "max-content" }}
+          >
+            {displayItems.map((c, idx) => (
+              <CompanyChip
+                key={reduceMotion ? c.id : `${c.id}-${idx}`}
+                name={c.name}
+                color={c.brandColor}
+              />
+            ))}
+          </motion.div>
         </div>
       </Container>
     </section>

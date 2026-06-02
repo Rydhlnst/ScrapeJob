@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 
 import { cn } from "@/lib/utils"
@@ -27,6 +28,7 @@ function Logo() {
       className="flex items-center gap-3"
       aria-label="Lowongaku home"
 >
+      <Image src="/logo.png" alt="Lowonganku logo" width={32} height={32} className="h-8 w-8 rounded-md object-cover" />
       <span className="text-base font-semibold text-[#151515]">Lowongaku</span>
     </Link>
   )

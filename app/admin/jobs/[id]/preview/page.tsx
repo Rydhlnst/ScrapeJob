@@ -14,9 +14,9 @@ export default async function AdminJobPreviewPage({
   if (!job) notFound()
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="space-y-4">
       <JobPreviewBar jobId={job.id} />
-      <main className="mx-auto max-w-6xl px-4 py-8">
+      <main className="mx-auto max-w-6xl">
         <div className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
           <JobDetailContent job={job} />
           <JobSummaryCard job={job} />
@@ -25,4 +25,3 @@ export default async function AdminJobPreviewPage({
     </div>
   )
 }
-

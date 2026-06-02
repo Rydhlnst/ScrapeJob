@@ -8,7 +8,7 @@ export default function AdminScrapeRunsPage() {
         title="Scrape Runs"
         description="Jalankan scraping manual (mock) dan lihat log status success/failed/duplicate/skipped."
       />
-      <div className="p-4 md:p-6">
+      <div>
         <ScrapeRunsClient runs={[]} />
       </div>
     </div>
