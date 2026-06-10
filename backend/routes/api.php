@@ -14,6 +14,11 @@ use App\Http\Controllers\Api\Public\ScraperController as PublicScraperController
 use App\Http\Controllers\Api\ScrapedJobImportController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/healthz', static fn () => response()->json([
+    'success' => true,
+    'message' => 'ok',
+]));
+
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:auth-login');
     Route::post('/user/register', [AuthController::class, 'registerUser'])->middleware('throttle:auth-login');

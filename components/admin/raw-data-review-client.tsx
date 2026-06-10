@@ -170,6 +170,12 @@ export function RawDataReviewClient() {
   const allChecked = jobs.length > 0 && selected.length === jobs.length
   const selectedCount = selected.length
   const batchBusy = busyId === "__batch__"
+  const selectedJobs = React.useMemo(
+    () => jobs.filter((job) => selected.includes(job.id)),
+    [jobs, selected],
+  )
+  const canPublish = React.useCallback((job: ScrapedJob) => job.status === "approved", [])
+  const canBulkPublish = selectedJobs.length > 0 && selectedJobs.every(canPublish)
 
   const pageItems = React.useMemo(() => {
     if (totalPages <= 5) return Array.from({ length: totalPages }, (_, index) => index + 1)
@@ -255,6 +261,7 @@ export function RawDataReviewClient() {
           <BulkActionBar
             selectedCount={selectedCount}
             busy={batchBusy}
+            publishDisabled={!canBulkPublish}
             onApproveSelected={() => void runBulkAction("approve")}
             onRejectSelected={() => void runBulkAction("reject")}
             onPublishSelected={() => void runBulkAction("publish")}
@@ -287,6 +294,7 @@ export function RawDataReviewClient() {
                   setSelected((prev) => (checked ? (prev.includes(id) ? prev : [...prev, id]) : prev.filter((item) => item !== id)))
                 }
                 onAction={runAction}
+                canPublish={canPublish}
               />
 
               {totalPages > 1 ? (
@@ -351,4 +359,3 @@ export function RawDataReviewClient() {
     </section>
   )
 }
-

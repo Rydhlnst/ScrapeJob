@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { RichTextEditor } from "@/components/ui/rich-text-editor"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 const schema = z.object({
@@ -152,7 +152,7 @@ export function JobEditorForm({ job }: { job: Job }) {
       >
         {(field) => (
           <Field label="Description" error={field.state.meta.errors?.[0] as string | undefined}>
-            <Textarea className="min-h-[160px]" value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
+            <RichTextEditor value={field.state.value} onChange={(val) => field.handleChange(val)} />
           </Field>
         )}
       </form.Field>

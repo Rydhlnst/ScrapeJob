@@ -1,0 +1,515 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "Lowonganku home" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - img "Lowonganku logo" [ref=e7]
+            - generic [ref=e8]: Lowonganku
+          - navigation [ref=e9]:
+            - link "Lowongan" [ref=e10] [cursor=pointer]:
+              - /url: /jobs
+            - link "Kategori" [ref=e11] [cursor=pointer]:
+              - /url: /#categories
+            - link "Cara Kerja" [ref=e12] [cursor=pointer]:
+              - /url: /#how
+        - generic [ref=e13]:
+          - generic [ref=e14]: Curated job board
+          - link "Masuk" [ref=e15] [cursor=pointer]:
+            - /url: /login
+          - link "Cari Lowongan" [ref=e16] [cursor=pointer]:
+            - /url: /jobs
+    - main [ref=e17]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]:
+            - img [ref=e25]
+            - text: Lowongan yang lebih mudah dipindai
+          - heading "Job board yang terasa rapi, ringan, dan penuh warna brand." [level=1] [ref=e28]
+          - paragraph [ref=e29]: Lowonganku mengumpulkan listing dari banyak sumber lalu menampilkannya dalam kartu yang cepat dibaca, tanpa layout generik yang terasa seperti template.
+          - generic [ref=e30]:
+            - link "Explore Jobs" [ref=e31] [cursor=pointer]:
+              - /url: /jobs
+              - text: Explore Jobs
+              - img
+            - link "Browse Categories" [ref=e32] [cursor=pointer]:
+              - /url: /#categories
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - generic [ref=e35]: Sources
+              - generic [ref=e36]: Multi-board
+            - generic [ref=e37]:
+              - generic [ref=e38]: Focus
+              - generic [ref=e39]: Clean scan
+            - generic [ref=e40]:
+              - generic [ref=e41]: Style
+              - generic [ref=e42]: Brand color
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]:
+              - generic [ref=e48]: Reserved Image Space
+              - generic [ref=e49]: Add your campaign image here
+            - generic [ref=e50]: No generated image
+          - generic [ref=e51]:
+            - generic [ref=e52]:
+              - generic [ref=e53]:
+                - img [ref=e55]
+                - button "Save" [ref=e59] [cursor=pointer]
+              - generic [ref=e60]: UI Designer
+              - generic [ref=e61]: Remote - Jakarta
+              - generic [ref=e64]: Use this area for team photo, product shot, office image, or campaign art.
+            - generic [ref=e65]:
+              - generic [ref=e66]:
+                - img [ref=e68]
+                - button "Save" [ref=e72] [cursor=pointer]
+              - generic [ref=e73]: Frontend Engineer
+              - generic [ref=e74]: Hybrid - Bandung
+              - generic [ref=e77]: Use this area for team photo, product shot, office image, or campaign art.
+            - generic [ref=e78]:
+              - generic [ref=e79]:
+                - img [ref=e81]
+                - button "Save" [ref=e85] [cursor=pointer]
+              - generic [ref=e86]: Product Manager
+              - generic [ref=e87]: On-site - Surabaya
+              - generic [ref=e90]: Use this area for team photo, product shot, office image, or campaign art.
+      - generic [ref=e92]:
+        - generic [ref=e93]:
+          - heading "Sumber yang sering muncul" [level=2] [ref=e94]
+          - paragraph [ref=e95]: Lowongan dikumpulkan dari berbagai platform agar pencarian lebih praktis dan tetap terstruktur.
+        - generic [ref=e97]:
+          - generic [ref=e99]: Spotify
+          - generic [ref=e102]: Airbnb
+          - generic [ref=e105]: Canva
+          - generic [ref=e108]: Notion
+          - generic [ref=e111]: Google
+          - generic [ref=e114]: OpenAI
+          - generic [ref=e117]: Stripe
+          - generic [ref=e120]: Figma
+          - generic [ref=e123]: Spotify
+          - generic [ref=e126]: Airbnb
+          - generic [ref=e129]: Canva
+          - generic [ref=e132]: Notion
+          - generic [ref=e135]: Google
+          - generic [ref=e138]: OpenAI
+          - generic [ref=e141]: Stripe
+          - generic [ref=e144]: Figma
+      - generic [ref=e147]:
+        - generic [ref=e148]:
+          - generic [ref=e149]:
+            - heading "Kenapa Lowonganku" [level=2] [ref=e150]
+            - paragraph [ref=e151]: Warna brand, jarak antar elemen, dan ritme section dibuat lebih ringan supaya halaman tidak terasa seperti template SaaS biasa.
+          - link "Lihat lowongan terbaru" [ref=e152] [cursor=pointer]:
+            - /url: /jobs
+        - generic [ref=e153]:
+          - generic [ref=e155]:
+            - img [ref=e157]
+            - generic [ref=e161]:
+              - generic [ref=e162]: Pencarian lebih fokus
+              - paragraph [ref=e163]: Cari lowongan dari banyak sumber dengan hasil yang lebih cepat dibaca dan lebih mudah dibandingkan.
+          - generic [ref=e165]:
+            - img [ref=e167]
+            - generic [ref=e170]:
+              - generic [ref=e171]: Sumber lebih jelas
+              - paragraph [ref=e172]: Lanjutkan ke sumber resmi lowongan tanpa bingung dengan tampilan yang terlalu ramai atau tidak konsisten.
+          - generic [ref=e174]:
+            - img [ref=e176]
+            - generic [ref=e179]:
+              - generic [ref=e180]: Filter yang membantu
+              - paragraph [ref=e181]: Gunakan filter inti seperti kategori, lokasi, dan tipe kerja untuk mempersempit pilihan dengan cepat.
+      - generic [ref=e183]:
+        - generic [ref=e184]:
+          - generic [ref=e185]:
+            - heading "Kategori populer" [level=2] [ref=e186]
+            - paragraph [ref=e187]: Temukan bidang kerja yang sering dicari tanpa harus mulai dari pencarian kosong.
+          - link "Browse all jobs" [ref=e188] [cursor=pointer]:
+            - /url: /jobs
+            - text: Browse all jobs
+            - img [ref=e189]
+        - generic [ref=e191]:
+          - generic [ref=e193]:
+            - generic [ref=e195]: I
+            - generic [ref=e196]:
+              - generic [ref=e197]: IT & Software
+              - generic [ref=e198]: 128 jobs
+          - generic [ref=e200]:
+            - generic [ref=e202]: M
+            - generic [ref=e203]:
+              - generic [ref=e204]: Marketing
+              - generic [ref=e205]: 76 jobs
+          - generic [ref=e207]:
+            - generic [ref=e209]: A
+            - generic [ref=e210]:
+              - generic [ref=e211]: Admin
+              - generic [ref=e212]: 64 jobs
+          - generic [ref=e214]:
+            - generic [ref=e216]: F
+            - generic [ref=e217]:
+              - generic [ref=e218]: Finance
+              - generic [ref=e219]: 42 jobs
+          - generic [ref=e221]:
+            - generic [ref=e223]: D
+            - generic [ref=e224]:
+              - generic [ref=e225]: Design
+              - generic [ref=e226]: 39 jobs
+          - generic [ref=e228]:
+            - generic [ref=e230]: S
+            - generic [ref=e231]:
+              - generic [ref=e232]: Sales
+              - generic [ref=e233]: 81 jobs
+          - generic [ref=e235]:
+            - generic [ref=e237]: C
+            - generic [ref=e238]:
+              - generic [ref=e239]: Customer Service
+              - generic [ref=e240]: 33 jobs
+          - generic [ref=e242]:
+            - generic [ref=e244]: I
+            - generic [ref=e245]:
+              - generic [ref=e246]: Internship
+              - generic [ref=e247]: 22 jobs
+      - generic [ref=e250]:
+        - generic [ref=e251]:
+          - generic [ref=e252]:
+            - heading "Lowongan terbaru" [level=2] [ref=e253]
+            - paragraph [ref=e254]: Kartu pastel dan tombol yang lebih tegas bikin daftar lowongan lebih cepat dibaca dalam sekali sapu.
+          - link "Lihat lebih banyak" [ref=e255] [cursor=pointer]:
+            - /url: /jobs
+        - generic [ref=e256]:
+          - generic [ref=e257]:
+            - generic [ref=e258]:
+              - generic [ref=e259]:
+                - generic [ref=e260]: PL
+                - button "Save job" [ref=e261] [cursor=pointer]:
+                  - img [ref=e262]
+              - generic [ref=e264]:
+                - generic [ref=e265]:
+                  - generic [ref=e266]: Full-time
+                  - generic [ref=e267]: Customer Service
+                - heading "Customer Support Agent" [level=3] [ref=e268]:
+                  - link "Customer Support Agent" [ref=e269] [cursor=pointer]:
+                    - /url: /jobs/customer-support-agent-jakarta
+                - generic [ref=e270]: PT Layanan Cepat
+                - generic [ref=e271]:
+                  - img [ref=e272]
+                  - generic [ref=e275]: Jakarta Pusat
+            - generic [ref=e276]:
+              - paragraph [ref=e277]: "Ringkasan: Kamu akan menangani pertanyaan pelanggan via chat/email, memastikan SLA terpenuhi, dan mendokumentasikan kasus. Tanggung jawab: - Menjawab tiket pelanggan (chat/email) - Eskalasi isu teknis ke tim terkait - Update knowledge base Kualifikasi: - Komunikasi jelas, empati tinggi - Familiar dengan helpdesk tools (Zendesk/Freshdesk) nilai plus - Siap kerja shift Benefit: - BPJS + asuransi - Allowance shift - Training onboarding"
+              - generic [ref=e278]:
+                - generic [ref=e279]: Source Website
+                - generic [ref=e280]: 2026-05-12
+              - generic [ref=e281]: Rp 4.800.000 - Rp 6.800.000
+            - generic [ref=e282]:
+              - generic [ref=e283]:
+                - link "Details" [ref=e284] [cursor=pointer]:
+                  - /url: /jobs/customer-support-agent-jakarta
+                - link "Apply" [ref=e285] [cursor=pointer]:
+                  - /url: https://example.com/job/cs
+              - generic [ref=e286]:
+                - generic [ref=e287]: Open source listing
+                - img [ref=e288]
+          - generic [ref=e292]:
+            - generic [ref=e293]:
+              - generic [ref=e294]:
+                - generic [ref=e295]: PD
+                - button "Save job" [ref=e296] [cursor=pointer]:
+                  - img [ref=e297]
+              - generic [ref=e299]:
+                - generic [ref=e300]:
+                  - generic [ref=e301]: Full-time
+                  - generic [ref=e302]: IT & Software
+                - heading "Frontend Developer" [level=3] [ref=e303]:
+                  - link "Frontend Developer" [ref=e304] [cursor=pointer]:
+                    - /url: /jobs/frontend-developer-jakarta
+                - generic [ref=e305]: PT Digital Indonesia
+                - generic [ref=e306]:
+                  - img [ref=e307]
+                  - generic [ref=e310]: Jakarta Selatan
+            - generic [ref=e311]:
+              - paragraph [ref=e312]: "Kami mencari Frontend Developer yang kuat di React/Next.js untuk membangun UI job portal yang cepat, rapi, dan scalable. Tanggung jawab: - Membangun UI dengan Next.js + Tailwind - Integrasi API dan state management - Kolaborasi dengan backend dan designer Kualifikasi: - Pengalaman 2+ tahun - Menguasai TypeScript, React - Paham UX dan performance Benefit: - Hybrid work - BPJS, asuransi - Budget learning"
+              - generic [ref=e313]:
+                - generic [ref=e314]: Source Website
+                - generic [ref=e315]: 2026-05-11
+              - generic [ref=e316]: Rp 6.000.000 - Rp 10.000.000
+            - generic [ref=e317]:
+              - generic [ref=e318]:
+                - link "Details" [ref=e319] [cursor=pointer]:
+                  - /url: /jobs/frontend-developer-jakarta
+                - link "Apply" [ref=e320] [cursor=pointer]:
+                  - /url: https://example.com/job/frontend
+              - generic [ref=e321]:
+                - generic [ref=e322]: Open source listing
+                - img [ref=e323]
+          - generic [ref=e327]:
+            - generic [ref=e328]:
+              - generic [ref=e329]:
+                - generic [ref=e330]: PD
+                - button "Save job" [ref=e331] [cursor=pointer]:
+                  - img [ref=e332]
+              - generic [ref=e334]:
+                - generic [ref=e335]:
+                  - generic [ref=e336]: Full-time
+                  - generic [ref=e337]: Sales
+                - heading "Sales Executive" [level=3] [ref=e338]:
+                  - link "Sales Executive" [ref=e339] [cursor=pointer]:
+                    - /url: /jobs/sales-executive-medan
+                - generic [ref=e340]: PT Distribusi Maju
+                - generic [ref=e341]:
+                  - img [ref=e342]
+                  - generic [ref=e345]: Medan
+            - generic [ref=e346]:
+              - paragraph [ref=e347]: "Ringkasan: Fokus akuisisi pelanggan baru (B2B), maintain pipeline, dan capai target bulanan. Tanggung jawab: - Prospecting & meeting klien - Buat penawaran dan negosiasi - Update CRM dan laporan Kualifikasi: - 1+ tahun pengalaman sales - Terbiasa target dan CRM - Mampu presentasi Benefit: - Komisi menarik - Tunjangan transport - Jenjang karir"
+              - generic [ref=e348]:
+                - generic [ref=e349]: Job Aggregator
+                - generic [ref=e350]: 2026-05-11
+              - generic [ref=e351]: Rp 5.000.000 + Komisi
+            - generic [ref=e352]:
+              - generic [ref=e353]:
+                - link "Details" [ref=e354] [cursor=pointer]:
+                  - /url: /jobs/sales-executive-medan
+                - link "Apply" [ref=e355] [cursor=pointer]:
+                  - /url: https://example.com/job/sales
+              - generic [ref=e356]:
+                - generic [ref=e357]: Open source listing
+                - img [ref=e358]
+          - generic [ref=e362]:
+            - generic [ref=e363]:
+              - generic [ref=e364]:
+                - generic [ref=e365]: CG
+                - button "Save job" [ref=e366] [cursor=pointer]:
+                  - img [ref=e367]
+              - generic [ref=e369]:
+                - generic [ref=e370]:
+                  - generic [ref=e371]: Full-time
+                  - generic [ref=e372]: Marketing
+                - heading "Marketing Specialist" [level=3] [ref=e373]:
+                  - link "Marketing Specialist" [ref=e374] [cursor=pointer]:
+                    - /url: /jobs/marketing-specialist-surabaya
+                - generic [ref=e375]: CV Growth Kita
+                - generic [ref=e376]:
+                  - img [ref=e377]
+                  - generic [ref=e380]: Surabaya
+            - generic [ref=e381]:
+              - paragraph [ref=e382]: Rancang campaign, kelola channel digital, analisa performa. Pengalaman minimal 1 tahun.
+              - generic [ref=e383]:
+                - generic [ref=e384]: Source Website
+                - generic [ref=e385]: 2026-05-10
+              - generic [ref=e386]: Salary not listed
+            - generic [ref=e387]:
+              - generic [ref=e388]:
+                - link "Details" [ref=e389] [cursor=pointer]:
+                  - /url: /jobs/marketing-specialist-surabaya
+                - link "Apply" [ref=e390] [cursor=pointer]:
+                  - /url: https://example.com/job/marketing
+              - generic [ref=e391]:
+                - generic [ref=e392]: Open source listing
+                - img [ref=e393]
+          - generic [ref=e397]:
+            - generic [ref=e398]:
+              - generic [ref=e399]:
+                - generic [ref=e400]: PK
+                - button "Save job" [ref=e401] [cursor=pointer]:
+                  - img [ref=e402]
+              - generic [ref=e404]:
+                - generic [ref=e405]:
+                  - generic [ref=e406]: Full-time
+                  - generic [ref=e407]: Finance
+                - heading "Finance & Accounting Officer" [level=3] [ref=e408]:
+                  - link "Finance & Accounting Officer" [ref=e409] [cursor=pointer]:
+                    - /url: /jobs/finance-accounting-officer-semarang
+                - generic [ref=e410]: PT Keuangan Aman
+                - generic [ref=e411]:
+                  - img [ref=e412]
+                  - generic [ref=e415]: Semarang
+            - generic [ref=e416]:
+              - paragraph [ref=e417]: "Ringkasan: Menangani pencatatan transaksi, rekonsiliasi bank, dan laporan keuangan bulanan. Tanggung jawab: - AP/AR dasar - Rekonsiliasi dan jurnal - Support audit internal Kualifikasi: - S1 Akuntansi/Keuangan - Paham Excel - Teliti dan rapi Benefit: - Bonus kinerja - BPJS - Cuti tahunan"
+              - generic [ref=e418]:
+                - generic [ref=e419]: Source Website
+                - generic [ref=e420]: 2026-05-10
+              - generic [ref=e421]: Rp 6.000.000 - Rp 9.000.000
+            - generic [ref=e422]:
+              - generic [ref=e423]:
+                - link "Details" [ref=e424] [cursor=pointer]:
+                  - /url: /jobs/finance-accounting-officer-semarang
+                - link "Apply" [ref=e425] [cursor=pointer]:
+                  - /url: https://example.com/job/finance
+              - generic [ref=e426]:
+                - generic [ref=e427]: Open source listing
+                - img [ref=e428]
+          - generic [ref=e432]:
+            - generic [ref=e433]:
+              - generic [ref=e434]:
+                - generic [ref=e435]: PO
+                - button "Save job" [ref=e436] [cursor=pointer]:
+                  - img [ref=e437]
+              - generic [ref=e439]:
+                - generic [ref=e440]:
+                  - generic [ref=e441]: Full-time
+                  - generic [ref=e442]: Admin
+                - heading "Admin Staff" [level=3] [ref=e443]:
+                  - link "Admin Staff" [ref=e444] [cursor=pointer]:
+                    - /url: /jobs/admin-staff-bekasi
+                - generic [ref=e445]: PT Operasional Jaya
+                - generic [ref=e446]:
+                  - img [ref=e447]
+                  - generic [ref=e450]: Bekasi
+            - generic [ref=e451]:
+              - paragraph [ref=e452]: Mengelola administrasi, input data, koordinasi internal. Teliti dan rapi.
+              - generic [ref=e453]:
+                - generic [ref=e454]: Source Website
+                - generic [ref=e455]: 2026-05-09
+              - generic [ref=e456]: Rp 4.500.000 - Rp 6.500.000
+            - generic [ref=e457]:
+              - generic [ref=e458]:
+                - link "Details" [ref=e459] [cursor=pointer]:
+                  - /url: /jobs/admin-staff-bekasi
+                - link "Apply" [ref=e460] [cursor=pointer]:
+                  - /url: https://example.com/job/admin
+              - generic [ref=e461]:
+                - generic [ref=e462]: Open source listing
+                - img [ref=e463]
+      - generic [ref=e468]:
+        - generic [ref=e469]:
+          - heading "Cara kerja" [level=2] [ref=e470]
+          - paragraph [ref=e471]: Alur sederhana yang bantu kamu dari cari sampai shortlist dalam hitungan menit.
+        - generic [ref=e472]:
+          - generic [ref=e473]:
+            - generic [ref=e474]:
+              - img [ref=e476]
+              - generic [ref=e479]: "01"
+            - generic [ref=e480]: Buat profil
+            - paragraph [ref=e481]: Tambahkan skill, preferensi posisi, dan target gaji agar pencarian lebih relevan sejak awal.
+          - generic [ref=e482]:
+            - generic [ref=e483]:
+              - img [ref=e485]
+              - generic [ref=e488]: "02"
+            - generic [ref=e489]: Cari lowongan terkurasi
+            - paragraph [ref=e490]: Gunakan filter yang jelas untuk menemukan lowongan yang tepat tanpa scroll berlebihan.
+          - generic [ref=e491]:
+            - generic [ref=e492]:
+              - img [ref=e494]
+              - generic [ref=e497]: "03"
+            - generic [ref=e498]: Apply lebih cepat
+            - paragraph [ref=e499]: Simpan lowongan favorit, bandingkan pilihan, dan apply dengan percaya diri.
+      - generic [ref=e501]:
+        - generic [ref=e502]:
+          - heading "Kenapa pengalaman ini terasa lebih jelas" [level=2] [ref=e503]
+          - paragraph [ref=e504]: Beberapa hal yang paling terasa saat orang memakai Lowonganku untuk mencari lowongan.
+        - generic [ref=e505]:
+          - generic [ref=e506]:
+            - paragraph [ref=e507]: "\"UI-nya rapi dan cepat. Aku bisa shortlist lowongan yang relevan tanpa kebanyakan distraksi.\""
+            - generic [ref=e508]:
+              - generic [ref=e509]: Raka Pratama
+              - generic [ref=e510]: Product Designer
+          - generic [ref=e511]:
+            - paragraph [ref=e512]: "\"Rekomendasinya terasa pas. Proses cari kerja jadi lebih terstruktur dan nggak bikin capek.\""
+            - generic [ref=e513]:
+              - generic [ref=e514]: Nadia Aulia
+              - generic [ref=e515]: Frontend Engineer
+          - generic [ref=e516]:
+            - paragraph [ref=e517]: "\"Filter dan ringkasan lowongan jelas. Enak buat compare beberapa perusahaan sekaligus.\""
+            - generic [ref=e518]:
+              - generic [ref=e519]: Bagas Wicaksono
+              - generic [ref=e520]: Data Analyst
+          - generic [ref=e521]:
+            - paragraph [ref=e522]: "\"Dari sisi perusahaan, kualitas listing konsisten dan tampil profesional. Kandidat juga lebih engaged.\""
+            - generic [ref=e523]:
+              - generic [ref=e524]: Salsa Maharani
+              - generic [ref=e525]: HR Specialist
+      - generic [ref=e529]:
+        - heading "Siap dapat peluang karier berikutnya?" [level=3] [ref=e530]
+        - paragraph [ref=e531]: Mulai cari lowongan dari perusahaan terpercaya dan temukan posisi yang cocok dengan target kariermu.
+        - generic [ref=e532]:
+          - link "Cari lowongan" [ref=e533] [cursor=pointer]:
+            - /url: /jobs
+          - link "Buat profil" [ref=e534] [cursor=pointer]:
+            - /url: /#how
+    - contentinfo [ref=e535]:
+      - generic [ref=e536]:
+        - generic [ref=e538]:
+          - generic [ref=e539]: Mulai pencarian kerja yang lebih rapi dan cepat.
+          - paragraph [ref=e540]: Temukan lowongan terbaru dari berbagai sumber, bandingkan pilihan, dan lanjutkan ke sumber resmi dengan pengalaman yang lebih jelas.
+          - generic [ref=e541]:
+            - link "Cari lowongan" [ref=e542] [cursor=pointer]:
+              - /url: /jobs
+            - link "Pelajari cara kerja" [ref=e543] [cursor=pointer]:
+              - /url: /#how
+        - generic [ref=e544]:
+          - generic [ref=e545]:
+            - generic [ref=e546]: Lowonganku
+            - generic [ref=e547]: Platform pencarian kerja untuk Indonesia.
+            - paragraph [ref=e548]: "Cari lowongan berdasarkan posisi, lokasi, dan tipe kerja. Fokus ke yang penting: informasi jelas, tampilan bersih, dan proses cepat."
+            - generic [ref=e549]:
+              - button "Website" [ref=e550] [cursor=pointer]:
+                - img
+              - button "Career" [ref=e551] [cursor=pointer]:
+                - img
+              - button "Trust" [ref=e552] [cursor=pointer]:
+                - img
+          - generic [ref=e553]:
+            - generic [ref=e554]:
+              - generic [ref=e555]: Produk
+              - list [ref=e556]:
+                - listitem [ref=e557]:
+                  - link "Lowongan" [ref=e558] [cursor=pointer]:
+                    - /url: /jobs
+                - listitem [ref=e559]:
+                  - link "Perusahaan" [ref=e560] [cursor=pointer]:
+                    - /url: /#companies
+                - listitem [ref=e561]:
+                  - link "Untuk Perusahaan" [ref=e562] [cursor=pointer]:
+                    - /url: /#employers
+            - generic [ref=e563]:
+              - generic [ref=e564]: Resource
+              - list [ref=e565]:
+                - listitem [ref=e566]:
+                  - link "Panduan" [ref=e567] [cursor=pointer]:
+                    - /url: /#how
+                - listitem [ref=e568]:
+                  - link "Tips Karier" [ref=e569] [cursor=pointer]:
+                    - /url: /#insights
+                - listitem [ref=e570]:
+                  - link "Bantuan" [ref=e571] [cursor=pointer]:
+                    - /url: /#faq
+                - listitem [ref=e572]:
+                  - link "Status" [ref=e573] [cursor=pointer]:
+                    - /url: /#status
+            - generic [ref=e574]:
+              - generic [ref=e575]: Perusahaan
+              - list [ref=e576]:
+                - listitem [ref=e577]:
+                  - link "Tentang" [ref=e578] [cursor=pointer]:
+                    - /url: /#company
+                - listitem [ref=e579]:
+                  - link "Karier" [ref=e580] [cursor=pointer]:
+                    - /url: /#company
+                - listitem [ref=e581]:
+                  - link "Kontak" [ref=e582] [cursor=pointer]:
+                    - /url: /#company
+                - listitem [ref=e583]:
+                  - link "Media" [ref=e584] [cursor=pointer]:
+                    - /url: /#company
+            - generic [ref=e585]:
+              - generic [ref=e586]: Legal
+              - list [ref=e587]:
+                - listitem [ref=e588]:
+                  - link "Privasi" [ref=e589] [cursor=pointer]:
+                    - /url: /#legal
+                - listitem [ref=e590]:
+                  - link "Ketentuan" [ref=e591] [cursor=pointer]:
+                    - /url: /#legal
+                - listitem [ref=e592]:
+                  - link "Cookie" [ref=e593] [cursor=pointer]:
+                    - /url: /#legal
+                - listitem [ref=e594]:
+                  - link "Keamanan" [ref=e595] [cursor=pointer]:
+                    - /url: /#legal
+        - generic [ref=e596]:
+          - generic [ref=e597]: © 2026 Lowonganku. Hak cipta dilindungi.
+          - generic [ref=e598]:
+            - link "Privasi" [ref=e599] [cursor=pointer]:
+              - /url: /#legal
+            - link "Ketentuan" [ref=e600] [cursor=pointer]:
+              - /url: /#legal
+            - link "Cookie" [ref=e601] [cursor=pointer]:
+              - /url: /#legal
+  - region "Notifications alt+T"

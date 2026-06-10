@@ -65,6 +65,13 @@ export type Paginated<T> = {
   totalPages: number
 }
 
+export type JobStats = {
+  totalActive: number
+  totalBySource: Record<string, number>
+  newToday: number
+  remoteJobs: number
+}
+
 export type {
   Job as PipelineJob,
   ScrapedJob as PipelineScrapedJob,

@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -eu
+
+php artisan queue:work --tries="${QUEUE_TRIES:-3}" --timeout="${QUEUE_TIMEOUT:-900}"

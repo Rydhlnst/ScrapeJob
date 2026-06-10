@@ -15,8 +15,14 @@ export type ApiEnvelope<T> = {
   }
 }
 
-export const API_BASE_URL =
+const CLIENT_API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? ""
+
+const SERVER_API_BASE_URL =
+  process.env.INTERNAL_API_BASE_URL?.replace(/\/$/, "") ?? CLIENT_API_BASE_URL
+
+export const API_BASE_URL =
+  typeof window === "undefined" ? SERVER_API_BASE_URL : CLIENT_API_BASE_URL
 
 const SERVER_BEARER_TOKEN = process.env.API_BEARER_TOKEN
 

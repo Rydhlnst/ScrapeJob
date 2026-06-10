@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Public;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\JobResource;
+use App\Models\Category;
 use App\Models\Job;
 use App\Support\ApiResponse;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,6 +12,57 @@ use Illuminate\Http\Request;
 
 class JobController extends Controller
 {
+    private function applyOrdering(Builder $query, Request $request): void
+    {
+        $sort = $request->string('sort')->value();
+
+        if ($sort === 'oldest') {
+            $query->orderBy('published_at')->orderBy('created_at');
+
+            return;
+        }
+
+        if ($sort === 'company') {
+            $query
+                ->orderBy('company_name')
+                ->orderByDesc('published_at')
+                ->orderByDesc('created_at');
+
+            return;
+        }
+
+        if ($sort === 'relevance' && $request->filled('keyword')) {
+            $keyword = mb_strtolower(trim($request->string('keyword')->value()));
+
+            $query
+                ->orderByRaw(
+                    'CASE
+                        WHEN lower(title) = ? THEN 0
+                        WHEN lower(company_name) = ? THEN 1
+                        WHEN lower(title) LIKE ? THEN 2
+                        WHEN lower(company_name) LIKE ? THEN 3
+                        WHEN lower(location) LIKE ? THEN 4
+                        WHEN lower(description) LIKE ? THEN 5
+                        ELSE 6
+                    END',
+                    [
+                        $keyword,
+                        $keyword,
+                        $keyword.'%',
+                        $keyword.'%',
+                        $keyword.'%',
+                        '%'.$keyword.'%',
+                    ]
+                )
+                ->orderByDesc('published_at')
+                ->orderByDesc('created_at');
+
+            return;
+        }
+
+        $query->orderByDesc('published_at')->orderByDesc('created_at');
+    }
+
     public function index(Request $request)
     {
         $perPage = min(max((int) ($request->query('limit', $request->query('perPage', 15))), 1), 100);
@@ -46,23 +98,26 @@ class JobController extends Controller
                 });
             })
             ->when($request->filled('location'), fn ($query) => $query->where('location', 'like', '%'.$request->string('location').'%'))
-            ->when($request->filled('category'), fn ($query) => $query->where('category_id', $request->string('category')))
+            ->when($request->filled('category'), function ($query) use ($request) {
+                $category = $request->string('category')->value();
+
+                $query->where(function (Builder $sub) use ($category): void {
+                    $sub->where('category_id', $category)
+                        ->orWhereHas('category', function (Builder $categoryQuery) use ($category): void {
+                            $categoryQuery
+                                ->where('id', $category)
+                                ->orWhere('slug', $category)
+                                ->orWhere('name', 'like', "%{$category}%");
+                        });
+                });
+            })
             ->when($request->filled('job_type') || $request->filled('jobType'), function ($query) use ($request) {
                 $jobType = $request->string('job_type')->value() ?: $request->string('jobType')->value();
                 $query->where('job_type', $jobType);
             })
             ->when($request->filled('work_arrangement'), fn ($query) => $query->where('remote_type', $request->string('work_arrangement')))
             ->when($request->filled('source'), fn ($query) => $query->where('source_name', $request->string('source')))
-            ->when($request->filled('sort'), function ($query) use ($request) {
-                $sort = $request->string('sort')->value();
-                if ($sort === 'oldest') {
-                    $query->orderBy('published_at')->orderBy('created_at');
-
-                    return;
-                }
-
-                $query->orderByDesc('published_at')->orderByDesc('created_at');
-            }, fn ($query) => $query->orderByDesc('published_at')->orderByDesc('created_at'))
+            ->tap(fn ($query) => $this->applyOrdering($query, $request))
             ->paginate($perPage)
             ->withQueryString();
 

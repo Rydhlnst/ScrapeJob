@@ -1,4 +1,4 @@
-import { CheckCircle2, Sparkles, Wand2 } from "lucide-react"
+import { CheckCircle2, SearchCheck, ShieldCheck } from "lucide-react"
 
 import { Container } from "@/components/shared/Container"
 import { SectionHeader } from "@/components/shared/SectionHeader"
@@ -7,96 +7,116 @@ import { Card } from "@/components/ui/card"
 
 const benefits = [
   {
-    icon: Sparkles,
-    title: "Smart Job Matching",
+    icon: SearchCheck,
+    title: "Pencarian lebih fokus",
     description:
-      "Get recommended jobs based on your skills, interests, and career goals—so you spend less time searching.",
+      "Cari lowongan dari banyak sumber dengan hasil yang lebih cepat dibaca dan lebih mudah dibandingkan.",
   },
   {
-    icon: Wand2,
-    title: "Resume Optimization",
+    icon: ShieldCheck,
+    title: "Sumber lebih jelas",
     description:
-      "Improve your resume so it matches job descriptions more effectively and stands out to recruiters.",
+      "Lanjutkan ke sumber resmi lowongan tanpa bingung dengan tampilan yang terlalu ramai atau tidak konsisten.",
   },
   {
     icon: CheckCircle2,
-    title: "Interview Preparation",
+    title: "Filter yang membantu",
     description:
-      "Prepare better with practice questions and feedback to build confidence before interviews.",
+      "Gunakan filter inti seperti kategori, lokasi, dan tipe kerja untuk mempersempit pilihan dengan cepat.",
   },
 ]
 
 export function BenefitsSection() {
   return (
-    <section className="border-y border-border/70 bg-card py-14 md:py-20" id="features">
+    <section
+      className="border-b py-16 md:py-20"
+      id="features"
+      style={{
+        borderColor: "var(--brand-shell-strong)",
+        backgroundColor: "var(--brand-shell)",
+      }}
+    >
       <Container>
-        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+        <div className="max-w-4xl">
           <SectionHeader
-            title="Why Choose Our Job Platform?"
-            description="Find better opportunities faster with smart matching, resume optimization, and career insights."
+            title="A cleaner way to compare jobs from different sources"
+            description="The homepage now shows the product experience first, so visitors can search, browse, and evaluate roles immediately."
           />
-          <div className="flex items-center gap-2 rounded-full border border-border bg-muted p-1">
-            <Button
-              type="button"
-              variant="secondary"
-              className="h-9 rounded-full bg-card px-4 text-foreground shadow-sm"
-            >
-              For Job Seekers
-            </Button>
-            <Button type="button" variant="ghost" className="h-9 rounded-full px-4">
-              For Companies
-            </Button>
-          </div>
         </div>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_0.95fr] lg:items-stretch">
-          <div className="space-y-4">
-            {benefits.map((b) => (
-              <Card
-                key={b.title}
-                className="rounded-3xl border-border bg-card p-6 shadow-sm"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="grid size-11 place-items-center rounded-2xl bg-[hsl(var(--accent))] text-[hsl(var(--dark))] shadow-sm">
-                    <b.icon className="size-5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-base font-semibold tracking-tight text-foreground">
-                      {b.title}
-                    </div>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {b.description}
-                    </p>
-                  </div>
+        <div
+          className="mt-10 grid gap-px border md:grid-cols-2"
+          style={{
+            borderColor: "var(--brand-shell-strong)",
+            backgroundColor: "var(--brand-shell-strong)",
+          }}
+        >
+          {benefits.map((benefit, index) => (
+            <Card
+              key={benefit.title + index}
+              className="rounded-none border-0 bg-white p-8 shadow-none"
+            >
+              <div className="flex items-start gap-4">
+                <div
+                  className="grid size-12 place-items-center border"
+                  style={{
+                    borderColor: "var(--brand-shell-strong)",
+                    backgroundColor: "var(--brand-shell)",
+                    color: "var(--brand-blue)",
+                  }}
+                >
+                  <benefit.icon className="size-5" />
                 </div>
-              </Card>
-            ))}
-          </div>
+                <div className="min-w-0">
+                  <div
+                    className="text-[1.75rem] font-medium tracking-[-0.04em]"
+                    style={{ color: "var(--brand-ink)" }}
+                  >
+                    {benefit.title}
+                  </div>
+                  <p
+                    className="mt-3 max-w-xl text-sm leading-7"
+                    style={{ color: "rgba(23,37,84,0.72)" }}
+                  >
+                    {benefit.description}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
 
-          <Card className="relative overflow-hidden rounded-[32px] border-border bg-[hsl(var(--primary))] p-8 text-white shadow-sm">
-            <div className="absolute inset-0">
-              <div className="absolute -right-20 -top-20 size-72 rounded-full bg-[hsl(var(--accent))]/35 blur-2xl" />
-              <div className="absolute -left-24 -bottom-24 size-80 rounded-full bg-black/20 blur-2xl" />
+        <div
+          className="mt-10 grid gap-0 overflow-hidden border lg:grid-cols-[0.95fr_1.05fr]"
+          style={{ borderColor: "var(--brand-shell-strong)" }}
+        >
+          <div
+            className="p-8 text-white md:p-10"
+            style={{ backgroundColor: "var(--brand-blue)" }}
+          >
+            <div className="max-w-md text-4xl font-semibold leading-tight tracking-[-0.05em]">
+              Find relevant roles faster, then continue on the official source.
             </div>
-            <div className="relative space-y-4">
-              <div className="inline-flex w-fit items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80">
-                Benefits
-              </div>
-              <div className="text-3xl font-semibold tracking-tight">
-                Choose Lowongaku for Job Search
-              </div>
-              <p className="max-w-md text-sm leading-relaxed text-white/75">
-                A simple, elegant interface that makes job discovery feel fast,
-                focused, and trustworthy—powered by tailored recommendations.
-              </p>
-              <div className="pt-2">
-                <Button className="rounded-2xl bg-white text-black hover:bg-white/90">
-                  Get Started Now
-                </Button>
-              </div>
-              <div className="pt-4 text-xs text-white/60">Lowongaku</div>
+            <p className="mt-6 max-w-md text-sm leading-7 text-white/78">
+              Use one cleaner browsing experience to narrow the list before opening the full posting.
+            </p>
+            <div className="mt-8">
+              <Button
+                asChild
+                className="h-12 rounded-none bg-white px-5 text-sm font-medium hover:opacity-90"
+                style={{ color: "var(--brand-ink)" }}
+              >
+                <a href="/jobs">Explore jobs</a>
+              </Button>
             </div>
-          </Card>
+          </div>
+          <div
+            className="min-h-[320px] border-t lg:border-l lg:border-t-0"
+            style={{
+              borderColor: "var(--brand-shell-strong)",
+              backgroundColor: "#ffffff",
+            }}
+          />
         </div>
       </Container>
     </section>

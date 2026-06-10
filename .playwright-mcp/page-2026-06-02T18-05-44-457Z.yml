@@ -1,0 +1,475 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "Lowonganku home" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - img "Lowonganku logo" [ref=e7]
+            - generic [ref=e8]: Lowonganku
+          - navigation [ref=e9]:
+            - link "Lowongan" [ref=e10] [cursor=pointer]:
+              - /url: /jobs
+            - link "Kategori" [ref=e11] [cursor=pointer]:
+              - /url: /#categories
+            - link "Cara Kerja" [ref=e12] [cursor=pointer]:
+              - /url: /#how
+        - generic [ref=e13]:
+          - generic [ref=e14]: Curated job board
+          - link "Masuk" [ref=e15] [cursor=pointer]:
+            - /url: /login
+          - link "Cari Lowongan" [ref=e16] [cursor=pointer]:
+            - /url: /jobs
+    - main [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - generic [ref=e22]: Jobs board
+            - generic [ref=e23]:
+              - heading "Temukan lowongan dalam layout yang lebih hidup." [level=1] [ref=e24]
+              - paragraph [ref=e25]: Search bar, filter rail, dan job card disusun ulang supaya terasa seperti product board, bukan template daftar biasa.
+            - generic [ref=e26]:
+              - generic [ref=e28]:
+                - generic [ref=e29]:
+                  - img [ref=e30]
+                  - textbox "Posisi / perusahaan / keyword" [ref=e33]
+                - generic [ref=e34]:
+                  - img [ref=e35]
+                  - textbox "Lokasi (kota/provinsi)" [ref=e38]
+                - combobox [ref=e39] [cursor=pointer]:
+                  - img
+                - combobox [ref=e40]
+              - button "Cari" [ref=e41] [cursor=pointer]
+          - generic [ref=e43]:
+            - generic [ref=e44]: Reserved Image Space
+            - generic [ref=e45]: Add board screenshot, team photo, or campaign image
+            - generic [ref=e46]:
+              - generic [ref=e47]:
+                - generic [ref=e48]: Curated filters
+                - generic [ref=e49]: Cleaner grouping for category, job type, and source.
+              - generic [ref=e50]:
+                - generic [ref=e51]: Colorful cards
+                - generic [ref=e52]: Brand-led card palette inspired by the logo colors.
+        - generic [ref=e53]:
+          - generic [ref=e55]:
+            - generic [ref=e57]: Filters
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - generic [ref=e62]: Kategori
+                - button "Semua" [ref=e64] [cursor=pointer]
+              - generic [ref=e65]:
+                - generic [ref=e66]: Tipe kerja
+                - radiogroup [ref=e67]:
+                  - generic [ref=e68] [cursor=pointer]:
+                    - radio "Full-Time" [ref=e69]
+                    - radio
+                    - text: Full-Time
+                  - generic [ref=e70] [cursor=pointer]:
+                    - radio "Part-Time" [ref=e71]
+                    - radio
+                    - text: Part-Time
+                  - generic [ref=e72] [cursor=pointer]:
+                    - radio "Contract" [ref=e73]
+                    - radio
+                    - text: Contract
+                  - generic [ref=e74] [cursor=pointer]:
+                    - radio "Freelance" [ref=e75]
+                    - radio
+                    - text: Freelance
+                  - generic [ref=e76] [cursor=pointer]:
+                    - radio "Internship" [ref=e77]
+                    - radio
+                    - text: Internship
+                  - generic [ref=e78] [cursor=pointer]:
+                    - radio "Semua" [checked] [ref=e79]
+                    - radio [checked]
+                    - text: Semua
+              - generic [ref=e82]:
+                - generic [ref=e83]: Sumber
+                - radiogroup [ref=e84]:
+                  - generic [ref=e85] [cursor=pointer]:
+                    - radio "Codex-Verification" [ref=e86]
+                    - radio
+                    - text: Codex-Verification
+                  - generic [ref=e87] [cursor=pointer]:
+                    - radio "Jobstreet" [ref=e88]
+                    - radio
+                    - text: Jobstreet
+                  - generic [ref=e89] [cursor=pointer]:
+                    - radio "Semua" [checked] [ref=e90]
+                    - radio [checked]
+                    - text: Semua
+              - generic [ref=e93]:
+                - button "Terapkan" [ref=e94] [cursor=pointer]
+                - button "Reset" [ref=e95] [cursor=pointer]
+          - generic [ref=e96]:
+            - generic [ref=e99]:
+              - generic [ref=e100]: Search Result
+              - generic [ref=e101]: Menampilkan 59 lowongan
+            - generic [ref=e102]:
+              - generic [ref=e103]:
+                - generic [ref=e104]:
+                  - generic [ref=e105]:
+                    - generic [ref=e106]: CQ
+                    - button "Save job" [ref=e107] [cursor=pointer]:
+                      - img [ref=e108]
+                  - generic [ref=e110]:
+                    - generic [ref=e112]: full_time
+                    - heading "Codex Verification Engineer codex-verify-1780423404" [level=3] [ref=e113]:
+                      - link "Codex Verification Engineer codex-verify-1780423404" [ref=e114] [cursor=pointer]:
+                        - /url: /jobs/codex-verification-engineer-codex-verify-1780423404-codex-qa-labs-jakarta
+                    - generic [ref=e115]: Codex QA Labs
+                    - generic [ref=e116]:
+                      - img [ref=e117]
+                      - generic [ref=e120]: Jakarta
+                - generic [ref=e121]:
+                  - paragraph [ref=e122]: <p>Verification-only job for admin approval flow.</p>
+                  - generic [ref=e123]:
+                    - generic [ref=e124]: Codex-Verification
+                    - generic [ref=e125]: Recently found
+                  - generic [ref=e126]: Salary not listed
+                - generic [ref=e127]:
+                  - generic [ref=e128]:
+                    - link "Details" [ref=e129] [cursor=pointer]:
+                      - /url: /jobs/codex-verification-engineer-codex-verify-1780423404-codex-qa-labs-jakarta
+                    - link "Apply" [ref=e130] [cursor=pointer]:
+                      - /url: https://example.com/jobs/codex-verify-1780423404
+                  - generic [ref=e131]:
+                    - generic [ref=e132]: Open source listing
+                    - img [ref=e133]
+              - generic [ref=e137]:
+                - generic [ref=e138]:
+                  - generic [ref=e139]:
+                    - generic [ref=e140]: PB
+                    - button "Save job" [ref=e141] [cursor=pointer]:
+                      - img [ref=e142]
+                  - generic [ref=e144]:
+                    - generic [ref=e146]: full_time
+                    - heading "Unit Head – Batch Data Engineering" [level=3] [ref=e147]:
+                      - link "Unit Head – Batch Data Engineering" [ref=e148] [cursor=pointer]:
+                        - /url: /jobs/unit-head-batch-data-engineering-pt-bank-permata-tbk-south-tangerang-banten
+                    - generic [ref=e149]: PT Bank Permata, Tbk
+                    - generic [ref=e150]:
+                      - img [ref=e151]
+                      - generic [ref=e154]: South Tangerang, Banten
+                - generic [ref=e155]:
+                  - paragraph [ref=e156]: "Company Description : We are one of the top 10 biggest banks in terms of assets in Indonesia and listed in the Indonesia Stock Exchange. Permata Bank is a KBMI 3 with a strong core capital of nearly 50 trillion rupiahs. We believe that our employees are our greatest asset, and we are deeply committed to creating an environment where they can Learn, Grow, and Make a difference. This commitment is reflected in the recognition we've received-HR Excellent Award 2024 in the Learning Development and Knowledge Management categories. In addition, we achieve a net profit of over 2 trillions rupiahs in 2024, further solidifying our position as a leading financial institution. Why PermataBank ? Here at PermataBank, you will Learn, Grow, and Make A Difference, You will have the appetite and the ability to learn many things, challenged to grow beyond ways you can imagine, and see the incredible difference you would have made along the journey. This is our platform for you. We cannot promise a smooth ride, but rest assured, it is going to be a meaningful journey! Learn : We always think innovatively to improve the way we work, making it easier, better and faster. Grow : We provide excellent service to customers and encourage excellent performance in our daily work. Make a difference : We understand each other and together build strong relationships with internal and external parties based on mutual respect. Key Responsibilities Lead and grow the data engineering team Design and manage scalable data pipelines (ETL/ELT) Oversee data warehouse and data lake platforms Ensure data quality, reliability, and performance Implement data governance, lineage, and security Collaborate with BI, Analytics, IT, and business teams Requirements 5+ years of experience in data engineering / data platforms Proven experience managing large-scale data environments (banking is a plus) Strong knowledge of ETL/ELT tools (Informatica, Talend, DataStage, Airflow) Solid experience with SQL Server, Oracle, and data warehousing Familiar with big data technologies, Git, and CI/CD Strong leadership, communication, and problem-solving skills Directorates : Technology PT Bank Permata Tbk hereby informs that the company does not impose any charges in the employee recruitment process."
+                  - generic [ref=e157]:
+                    - generic [ref=e158]: Jobstreet
+                    - generic [ref=e159]: Recently found
+                  - generic [ref=e160]: Salary not listed
+                - generic [ref=e161]:
+                  - generic [ref=e162]:
+                    - link "Details" [ref=e163] [cursor=pointer]:
+                      - /url: /jobs/unit-head-batch-data-engineering-pt-bank-permata-tbk-south-tangerang-banten
+                    - link "Apply" [ref=e164] [cursor=pointer]:
+                      - /url: https://id.jobstreet.com/id/job/92203151?type=standard&ref=search-standalone#sol=2c18a589eac294bd2f9575b38d742dfdd0d37cf8
+                  - generic [ref=e165]:
+                    - generic [ref=e166]: Open source listing
+                    - img [ref=e167]
+              - generic [ref=e171]:
+                - generic [ref=e172]:
+                  - generic [ref=e173]:
+                    - generic [ref=e174]: PK
+                    - button "Save job" [ref=e175] [cursor=pointer]:
+                      - img [ref=e176]
+                  - generic [ref=e178]:
+                    - heading "Data Engineer" [level=3] [ref=e179]:
+                      - link "Data Engineer" [ref=e180] [cursor=pointer]:
+                        - /url: /jobs/data-engineer-pt-kencana-taraswin-indonesia-jakarta-selatan-jakarta-raya
+                    - generic [ref=e181]: PT Kencana Taraswin Indonesia
+                    - generic [ref=e182]:
+                      - img [ref=e183]
+                      - generic [ref=e186]: Jakarta Selatan, Jakarta Raya
+                - generic [ref=e187]:
+                  - paragraph [ref=e188]: "Key Responsibilities: - Design , build and manage data warehouse / data lake. - Design, build, and maintain data pipelines from multiple companies/business units into a centralized data warehouse. - Develop and manage ETL/ELT processes to ensure data is accurate, clean, and available for reporting. - Build and maintain data warehouse, data marts, and structured datasets for business intelligence needs. - Integrate data from various sources such as accounting systems, internal systems, databases, APIs, Excel, and Google Sheets. - Perform data cleaning, transformation, validation, and standardization across business units. - Monitor pipeline performance, data freshness, data quality, and system reliability. - Collaborate with BI Engineer and business stakeholders to prepare data for dashboards and management reports. - Implement data security, access control, backup, and documentation for data architecture and pipelines. - Troubleshoot data issues and ensure consistency between source systems and the data warehouse. Qualifications: - Bachelor’s degree (S1) in Computer Science, Information Systems, Data Engineering, Statistics, Mathematics, Engineering, or related fields. - Minimum 2 years of experience as Data Engineer, ETL Developer, Database Engineer, or similar role. - Strong proficiency in SQL and relational databases such as PostgreSQL, MySQL, SQL Server, BigQuery, Snowflake, or Redshift. - Experience in ETL/ELT processes, data warehouse design, and data modeling. - Proficiency in Python for data processing and automation. - Experience with API integration, data ingestion, and workflow orchestration tools such as Airflow, Prefect, Dagster, or similar. - Familiarity with cloud platforms. - Strong understanding of data quality, data governance, and database performance optimization. - Strong analytical thinking, problem-solving skills, and attention to detail. - Able to work with cross-functional teams and understand business data needs."
+                  - generic [ref=e189]:
+                    - generic [ref=e190]: Jobstreet
+                    - generic [ref=e191]: Recently found
+                  - generic [ref=e192]: Salary not listed
+                - generic [ref=e193]:
+                  - generic [ref=e194]:
+                    - link "Details" [ref=e195] [cursor=pointer]:
+                      - /url: /jobs/data-engineer-pt-kencana-taraswin-indonesia-jakarta-selatan-jakarta-raya
+                    - link "Apply" [ref=e196] [cursor=pointer]:
+                      - /url: https://id.jobstreet.com/id/job/91945196?type=standard&ref=search-standalone#sol=614141356339ff63be63471465b0beeda03111f3
+                  - generic [ref=e197]:
+                    - generic [ref=e198]: Open source listing
+                    - img [ref=e199]
+              - generic [ref=e203]:
+                - generic [ref=e204]:
+                  - generic [ref=e205]:
+                    - generic [ref=e206]: PS
+                    - button "Save job" [ref=e207] [cursor=pointer]:
+                      - img [ref=e208]
+                  - generic [ref=e210]:
+                    - generic [ref=e212]: full_time
+                    - heading "Data Engineer" [level=3] [ref=e213]:
+                      - link "Data Engineer" [ref=e214] [cursor=pointer]:
+                        - /url: /jobs/data-engineer-pt-sigmantara-alfindo-tangerang-banten
+                    - generic [ref=e215]: PT Sigmantara Alfindo
+                    - generic [ref=e216]:
+                      - img [ref=e217]
+                      - generic [ref=e220]: Tangerang, Banten
+                - generic [ref=e221]:
+                  - paragraph [ref=e222]: "Responsibilities: Design, build, and maintain scalable ETL/ELT data pipelines. Integrate data from multiple sources (databases, APIs, files, streaming systems). Ensure data quality, reliability, and consistency through validation and monitoring. Optimize data pipelines for performance, cost, and scalability. Collaborate with: - Business Analysts on reporting and dashboards - Data Scientists on feature and dataset preparation - Software Engineers on data integrations Maintain clear documentation for data pipelines, schemas, and processes. Implement best practices for data security, access control, and governance. Troubleshoot and resolve data pipeline failures or performance issues. Requirements: Bachelor’s degree in Business, Computer Science, Engineering, or related field. 3–5 years of experience in data engineering or related roles. Strong proficiency in SQL. Experience with at least one programming language: Python, Scala, or Java Hands-on experience with data warehouses (e.g., BigQuery, Redshift, Snowflake). Familiarity with cloud platforms such as AWS, GCP, or Azure. Understanding of data modeling concepts (star schema, normalization, etc.). Experience working with large datasets and production data systems. Experience supporting BI tools (Looker, Power BI, Tableau) Knowledge of containerization and orchestration (Docker, Kubernetes) is a plus Experience with CI/CD for data pipelines will be preferred"
+                  - generic [ref=e223]:
+                    - generic [ref=e224]: Jobstreet
+                    - generic [ref=e225]: Recently found
+                  - generic [ref=e226]: Salary not listed
+                - generic [ref=e227]:
+                  - generic [ref=e228]:
+                    - link "Details" [ref=e229] [cursor=pointer]:
+                      - /url: /jobs/data-engineer-pt-sigmantara-alfindo-tangerang-banten
+                    - link "Apply" [ref=e230] [cursor=pointer]:
+                      - /url: https://id.jobstreet.com/id/job/92200793?type=standard&ref=search-standalone#sol=3c5e515ed64eac08ad1e678a174b1747ce254e08
+                  - generic [ref=e231]:
+                    - generic [ref=e232]: Open source listing
+                    - img [ref=e233]
+              - generic [ref=e237]:
+                - generic [ref=e238]:
+                  - generic [ref=e239]:
+                    - generic [ref=e240]: PE
+                    - button "Save job" [ref=e241] [cursor=pointer]:
+                      - img [ref=e242]
+                  - generic [ref=e244]:
+                    - generic [ref=e246]: full_time
+                    - heading "Repair Engineer" [level=3] [ref=e247]:
+                      - link "Repair Engineer" [ref=e248] [cursor=pointer]:
+                        - /url: /jobs/repair-engineer-pt-ebara-turbomachinery-services-indonesia-karawang-jawa-barat
+                    - generic [ref=e249]: PT Ebara Turbomachinery Services Indonesia
+                    - generic [ref=e250]:
+                      - img [ref=e251]
+                      - generic [ref=e254]: Karawang, Jawa Barat
+                - generic [ref=e255]:
+                  - paragraph [ref=e256]: "Job Requirement : • Having work experience as Rotating Equipment Engineer is preferred • Having work experience to repair centrifugal pump, steam turbines is preferred • Graduate of an engineering curriculum with degree and specialized training and experience in turbomachinery and related disciplines that provides technical qualification for assigned function. • Knowledge of CAD, 3D CAD, CREO is preferable. • Demonstrated effective judgment and independence of action. • Knowledge of company policies, markets, organization structure and procedures. • Minimum applicable engineering experience level five (5) years. Job Description : • Plans, budgets, schedules and performs engineering assignments toward specified objectives within allocated time, schedule, cost and constraint established by supervision. • Independently initiates, develops, applies and test designs for new repair opportunity, special application /systems and existing products/systems improvements. • Independently plans, prepares and executes experimental program for the development of new or existing repair opportunity, design procedures. method or systems and issue applicable documentation, • Initiates changes to existing component designs and repair methods as required for shop orders product improvements, manufacturing considerations and field modifications • Responsible for planning, organizing and completion of major elements of the technical plan. • Provides participative direction to those performing the assignment in the calculation and analysis of data and final reporting, • Provides technical information, co-ordinates and follows up in intra/inter- departmental activities to insure conformance to design and quality standards. • Approves layouts and drawings for assigned projects, issues appropriate documentation and informs supervision of activity status. • Provides specialized technical support/information to Sales and Service as assigned. • Provides innovation and original ideas. • Maintains awareness to new and state-of-the-art technology, competitive intelligence and new turbomachinery applications/user requirements. • Administers capital and inter-departmental programs as assigned by supervision. • Maintains knowledge of company objectives and technical plan as applied to assignment and related products/systems/functions. • Promotes, implements and reflects productivity and quality ideas as relates to assigned function. • Pursues a personal career development plan prepared in conjunction with supervision. • Performs other duties as assigned by supervision. • Performs planning and technical detailing for field service jobs in order to establish the service work requirements to be performed • Establishes quality and documentation requirements for repair jobs"
+                  - generic [ref=e257]:
+                    - generic [ref=e258]: Jobstreet
+                    - generic [ref=e259]: Recently found
+                  - generic [ref=e260]: Salary not listed
+                - generic [ref=e261]:
+                  - generic [ref=e262]:
+                    - link "Details" [ref=e263] [cursor=pointer]:
+                      - /url: /jobs/repair-engineer-pt-ebara-turbomachinery-services-indonesia-karawang-jawa-barat
+                    - link "Apply" [ref=e264] [cursor=pointer]:
+                      - /url: https://id.jobstreet.com/id/job/92452775?type=standard&ref=search-standalone#sol=068a36ac4acc11fa3ddfd60731aaaa34d385ba13
+                  - generic [ref=e265]:
+                    - generic [ref=e266]: Open source listing
+                    - img [ref=e267]
+              - generic [ref=e271]:
+                - generic [ref=e272]:
+                  - generic [ref=e273]:
+                    - generic [ref=e274]: PW
+                    - button "Save job" [ref=e275] [cursor=pointer]:
+                      - img [ref=e276]
+                  - generic [ref=e278]:
+                    - generic [ref=e280]: full_time
+                    - heading "Process Supervisor" [level=3] [ref=e281]:
+                      - link "Process Supervisor" [ref=e282] [cursor=pointer]:
+                        - /url: /jobs/process-supervisor-pt-warlbor-international-indonesia-batam-kota-kepulauan-riau
+                    - generic [ref=e283]: PT. Warlbor International Indonesia
+                    - generic [ref=e284]:
+                      - img [ref=e285]
+                      - generic [ref=e288]: Batam Kota, Kepulauan Riau
+                - generic [ref=e289]:
+                  - paragraph [ref=e290]: Responsibilities Monitor, evaluate, and continuously optimize production processes to enhance product quality, improve production yield, and reduce manufacturing costs. Investigate, troubleshoot, and resolve process-related issues to ensure stable and efficient production operations. Develop, maintain, and update process documentation, including Standard Operating Procedures (SOP), Work Instructions (WI), and other technical documents. Support product and process trials, including formulation development, process parameter validation, data collection, documentation, and experimental activities. Analyze production and process performance data to identify improvement opportunities and implement corrective and preventive actions. Collaborate closely with Production, Quality, R&D/Technology, and other cross-functional teams to drive process improvements and achieve operational objectives. Provide technical guidance and process-related training to operators and production personnel to ensure compliance with established standards and best practices. Ensure all process activities are conducted in compliance with ISO standards, quality requirements, safety regulations, and company policies. Qualifications Bachelor's Degree in Chemical Engineering or a related discipline. Minimum 3 years of relevant working experience in process engineering, process improvement, or a related field. Strong analytical skills with the ability to interpret and evaluate statistical data for process optimization and decision-making. Proficient in the use of statistical and business applications, including Minitab and SAP. Hands-on experience with quality and continuous improvement methodologies, such as PFMEA, DFMEA, Six Sigma, and Statistical Process Control (SPC). Sound knowledge of process engineering standards, manufacturing best practices, and occupational health, safety, and environmental (HSE) regulations. Knowledge of AI – assisted development tools (e.g., Codex, Claude Code) will be a distinctive advantage. Excellent communication and interpersonal skills, with the ability to communicate effectively in English, both written and spoken.
+                  - generic [ref=e291]:
+                    - generic [ref=e292]: Jobstreet
+                    - generic [ref=e293]: Recently found
+                  - generic [ref=e294]: Salary not listed
+                - generic [ref=e295]:
+                  - generic [ref=e296]:
+                    - link "Details" [ref=e297] [cursor=pointer]:
+                      - /url: /jobs/process-supervisor-pt-warlbor-international-indonesia-batam-kota-kepulauan-riau
+                    - link "Apply" [ref=e298] [cursor=pointer]:
+                      - /url: https://id.jobstreet.com/id/job/92456319?type=standard&ref=search-standalone#sol=ccad7ceac9bd164515f16a5e5c5772e620ec7b78
+                  - generic [ref=e299]:
+                    - generic [ref=e300]: Open source listing
+                    - img [ref=e301]
+              - generic [ref=e305]:
+                - generic [ref=e306]:
+                  - generic [ref=e307]:
+                    - generic [ref=e308]: PW
+                    - button "Save job" [ref=e309] [cursor=pointer]:
+                      - img [ref=e310]
+                  - generic [ref=e312]:
+                    - generic [ref=e314]: full_time
+                    - heading "Data Engineer" [level=3] [ref=e315]:
+                      - link "Data Engineer" [ref=e316] [cursor=pointer]:
+                        - /url: /jobs/data-engineer-pt-wahana-makmur-sejati-wahanaartha-group-jakarta-pusat-jakarta-raya
+                    - generic [ref=e317]: PT Wahana Makmur Sejati (Wahanaartha Group)
+                    - generic [ref=e318]:
+                      - img [ref=e319]
+                      - generic [ref=e322]: Jakarta Pusat, Jakarta Raya
+                - generic [ref=e323]:
+                  - paragraph [ref=e324]: Tugas & Tanggung Jawab • Merancang dan membangun infrastruktur pengelolaan data secara efisien • Mengumpulkan dan mengintegrasikan data dari berbagai sumber agar terintegrasi ke dalam system terpusat • Merancang dan membangun proses ETL (Extract, Transform, Load), mencakup transformasi, validasi dan cleansing data, alert system, serta penanganan error • Merancang struktur Data Warehouse yang optimal dan efisien sesuai kebutuhan bisnis dan analitik • Memastikan data tersedia secara real-time dan siap digunakan untuk keperluan analisa, dashboard, serta model machine learning • Memastikan data bersih, konsisten, dan siap pakai untuk kebutuhan Data Analyst ______________ Kualifikasi • Pengalaman 2–3 tahun di bidang data engineering, ETL, arsitektur data dan data warehouse • Pendidikan minimal S1 Teknik Informatika, Sistem Informasi, atau jurusan terkait • Menguasai Bahasa pemgrograman Phyton, PHP dan SQL • Menguasai proses dan tools ETL serta memahami konsep Data warehouse • Memiliki kemampuan problem solving dan ketelitian yang baik • Mampu beradaptasi dan berkolaborasi secara efektif
+                  - generic [ref=e325]:
+                    - generic [ref=e326]: Jobstreet
+                    - generic [ref=e327]: Recently found
+                  - generic [ref=e328]: Salary not listed
+                - generic [ref=e329]:
+                  - generic [ref=e330]:
+                    - link "Details" [ref=e331] [cursor=pointer]:
+                      - /url: /jobs/data-engineer-pt-wahana-makmur-sejati-wahanaartha-group-jakarta-pusat-jakarta-raya
+                    - link "Apply" [ref=e332] [cursor=pointer]:
+                      - /url: https://id.jobstreet.com/id/job/92234192?type=standard&ref=search-standalone#sol=15569a717a921006ba4ca20a73e91bcc5672c62f
+                  - generic [ref=e333]:
+                    - generic [ref=e334]: Open source listing
+                    - img [ref=e335]
+              - generic [ref=e339]:
+                - generic [ref=e340]:
+                  - generic [ref=e341]:
+                    - generic [ref=e342]: PI
+                    - button "Save job" [ref=e343] [cursor=pointer]:
+                      - img [ref=e344]
+                  - generic [ref=e346]:
+                    - generic [ref=e348]: full_time
+                    - heading "Data Engineer (Analyst, ETL, DBA)" [level=3] [ref=e349]:
+                      - link "Data Engineer (Analyst, ETL, DBA)" [ref=e350] [cursor=pointer]:
+                        - /url: /jobs/data-engineer-analyst-etl-dba-pt-insura-media-solusi-jakarta-jakarta-raya
+                    - generic [ref=e351]: PT Insura Media Solusi (Jakarta)
+                    - generic [ref=e352]:
+                      - img [ref=e353]
+                      - generic [ref=e356]: Jakarta Raya
+                - generic [ref=e357]:
+                  - paragraph [ref=e358]: "Data Engineer / Database Warehouse : Minimum of 1-5 years of experience in Data Engineer / DBA / Data Scientist Proficiency in multiple database management systems such as SQL Server, Oracle, Python etc. Strong understanding of database architecture, design, and implementation Skills in SSIS, ETL, Store Procedure Database Experience with data backup and recovery Experience with performance tuning Query and optimization Experience with data Visualization Ms Power BI, Tableau, etc Familiar with Data Science, Python, R Ability to troubleshoot and resolve database issues Excellent communication and collaboration skills Ability to work independently and as part of a team Experience with machine learning, AI engineer (is a plus) Experience with AB Initio Data pipeline ETL (is a plus) (Jika Anda memiliki keahlian apapun di bidang Informasi Teknologi) Silahkan apply/terhubung dengan INSURA untuk mendapatkan informasi lebih lanjut."
+                  - generic [ref=e359]:
+                    - generic [ref=e360]: Jobstreet
+                    - generic [ref=e361]: Recently found
+                  - generic [ref=e362]: Salary not listed
+                - generic [ref=e363]:
+                  - generic [ref=e364]:
+                    - link "Details" [ref=e365] [cursor=pointer]:
+                      - /url: /jobs/data-engineer-analyst-etl-dba-pt-insura-media-solusi-jakarta-jakarta-raya
+                    - link "Apply" [ref=e366] [cursor=pointer]:
+                      - /url: https://id.jobstreet.com/id/job/92308452?type=standard&ref=search-standalone#sol=f168e72e025771573225f8ac18f7875d2be97392
+                  - generic [ref=e367]:
+                    - generic [ref=e368]: Open source listing
+                    - img [ref=e369]
+              - generic [ref=e373]:
+                - generic [ref=e374]:
+                  - generic [ref=e375]:
+                    - generic [ref=e376]: PN
+                    - button "Save job" [ref=e377] [cursor=pointer]:
+                      - img [ref=e378]
+                  - generic [ref=e380]:
+                    - generic [ref=e382]: full_time
+                    - heading "Senior Presales Engineer" [level=3] [ref=e383]:
+                      - link "Senior Presales Engineer" [ref=e384] [cursor=pointer]:
+                        - /url: /jobs/senior-presales-engineer-pt-nusantara-compnet-integrator-jakarta-barat-jakarta-raya
+                    - generic [ref=e385]: PT Nusantara Compnet Integrator
+                    - generic [ref=e386]:
+                      - img [ref=e387]
+                      - generic [ref=e390]: Jakarta Barat, Jakarta Raya
+                - generic [ref=e391]:
+                  - paragraph [ref=e392]: "Job Description : Gathering information from customer to identify customer’s needs Analyzing, developing, and proposing technical solutions Making design, bill of material, scope of works, schedule and proposal Delivering presentation about technical solutions to customer If needed, doing demo or proof of concept Coordinating with external parties (vendors, principals, distributors) to obtain required information (price, demo equipment, technical specifications) to provide technical solutions Coordinating with other department to provide required information before the project begin Requirements : Bachelor’s degree in Information Technology, Information Systems, Telecommunication Engineering, or Computer Engineering Minimum 5 years of experience as a Presales Engineer or in a similar role Experience in handling various IT technologies (network, security, data center, etc) Having excellent communication skill and good in English Fast learner and have attention to detail"
+                  - generic [ref=e393]:
+                    - generic [ref=e394]: Jobstreet
+                    - generic [ref=e395]: Recently found
+                  - generic [ref=e396]: Salary not listed
+                - generic [ref=e397]:
+                  - generic [ref=e398]:
+                    - link "Details" [ref=e399] [cursor=pointer]:
+                      - /url: /jobs/senior-presales-engineer-pt-nusantara-compnet-integrator-jakarta-barat-jakarta-raya
+                    - link "Apply" [ref=e400] [cursor=pointer]:
+                      - /url: https://id.jobstreet.com/id/job/92458430?type=standard&ref=search-standalone#sol=61caeae9c4624d09bacaa39021eaab8b7f0b7826
+                  - generic [ref=e401]:
+                    - generic [ref=e402]: Open source listing
+                    - img [ref=e403]
+            - generic [ref=e408]:
+              - link "Prev" [disabled] [ref=e409] [cursor=pointer]:
+                - /url: /jobs?page=1
+              - generic [ref=e410]: Page 1 / 7
+              - link "Next" [ref=e411] [cursor=pointer]:
+                - /url: /jobs?page=2
+    - contentinfo [ref=e412]:
+      - generic [ref=e413]:
+        - generic [ref=e415]:
+          - generic [ref=e416]: Mulai pencarian kerja yang lebih rapi dan cepat.
+          - paragraph [ref=e417]: Temukan lowongan terbaru dari berbagai sumber, bandingkan pilihan, dan lanjutkan ke sumber resmi dengan pengalaman yang lebih jelas.
+          - generic [ref=e418]:
+            - link "Cari lowongan" [ref=e419] [cursor=pointer]:
+              - /url: /jobs
+            - link "Pelajari cara kerja" [ref=e420] [cursor=pointer]:
+              - /url: /#how
+        - generic [ref=e421]:
+          - generic [ref=e422]:
+            - generic [ref=e423]: Lowonganku
+            - generic [ref=e424]: Platform pencarian kerja untuk Indonesia.
+            - paragraph [ref=e425]: "Cari lowongan berdasarkan posisi, lokasi, dan tipe kerja. Fokus ke yang penting: informasi jelas, tampilan bersih, dan proses cepat."
+            - generic [ref=e426]:
+              - button "Website" [ref=e427] [cursor=pointer]:
+                - img
+              - button "Career" [ref=e428] [cursor=pointer]:
+                - img
+              - button "Trust" [ref=e429] [cursor=pointer]:
+                - img
+          - generic [ref=e430]:
+            - generic [ref=e431]:
+              - generic [ref=e432]: Produk
+              - list [ref=e433]:
+                - listitem [ref=e434]:
+                  - link "Lowongan" [ref=e435] [cursor=pointer]:
+                    - /url: /jobs
+                - listitem [ref=e436]:
+                  - link "Perusahaan" [ref=e437] [cursor=pointer]:
+                    - /url: /#companies
+                - listitem [ref=e438]:
+                  - link "Untuk Perusahaan" [ref=e439] [cursor=pointer]:
+                    - /url: /#employers
+            - generic [ref=e440]:
+              - generic [ref=e441]: Resource
+              - list [ref=e442]:
+                - listitem [ref=e443]:
+                  - link "Panduan" [ref=e444] [cursor=pointer]:
+                    - /url: /#how
+                - listitem [ref=e445]:
+                  - link "Tips Karier" [ref=e446] [cursor=pointer]:
+                    - /url: /#insights
+                - listitem [ref=e447]:
+                  - link "Bantuan" [ref=e448] [cursor=pointer]:
+                    - /url: /#faq
+                - listitem [ref=e449]:
+                  - link "Status" [ref=e450] [cursor=pointer]:
+                    - /url: /#status
+            - generic [ref=e451]:
+              - generic [ref=e452]: Perusahaan
+              - list [ref=e453]:
+                - listitem [ref=e454]:
+                  - link "Tentang" [ref=e455] [cursor=pointer]:
+                    - /url: /#company
+                - listitem [ref=e456]:
+                  - link "Karier" [ref=e457] [cursor=pointer]:
+                    - /url: /#company
+                - listitem [ref=e458]:
+                  - link "Kontak" [ref=e459] [cursor=pointer]:
+                    - /url: /#company
+                - listitem [ref=e460]:
+                  - link "Media" [ref=e461] [cursor=pointer]:
+                    - /url: /#company
+            - generic [ref=e462]:
+              - generic [ref=e463]: Legal
+              - list [ref=e464]:
+                - listitem [ref=e465]:
+                  - link "Privasi" [ref=e466] [cursor=pointer]:
+                    - /url: /#legal
+                - listitem [ref=e467]:
+                  - link "Ketentuan" [ref=e468] [cursor=pointer]:
+                    - /url: /#legal
+                - listitem [ref=e469]:
+                  - link "Cookie" [ref=e470] [cursor=pointer]:
+                    - /url: /#legal
+                - listitem [ref=e471]:
+                  - link "Keamanan" [ref=e472] [cursor=pointer]:
+                    - /url: /#legal
+        - generic [ref=e473]:
+          - generic [ref=e474]: © 2026 Lowonganku. Hak cipta dilindungi.
+          - generic [ref=e475]:
+            - link "Privasi" [ref=e476] [cursor=pointer]:
+              - /url: /#legal
+            - link "Ketentuan" [ref=e477] [cursor=pointer]:
+              - /url: /#legal
+            - link "Cookie" [ref=e478] [cursor=pointer]:
+              - /url: /#legal
+  - region "Notifications alt+T"
+  - alert [ref=e479]

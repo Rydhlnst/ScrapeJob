@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\CleanScrapedJobWithAI;
 use App\Models\ScrapedJob;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,8 @@ class ScrapedJobImportService
             'updated_count' => 0,
             'duplicate_count' => 0,
             'error_count' => 0,
+            'pending_count' => 0,
+            'published_count' => 0,
         ];
 
         $scrapedAtCarbon = $scrapedAt ? Carbon::parse($scrapedAt) : now();
@@ -36,7 +39,11 @@ class ScrapedJobImportService
                         ->first();
                     if ($existingByExternal) {
                         $existingByExternal->update($this->toScrapedJobPayload($job, $source, $scrapedAtCarbon));
+                        if (config('services.ai_cleanup.enabled')) {
+                            CleanScrapedJobWithAI::dispatch($existingByExternal)->afterCommit();
+                        }
                         $summary['updated_count']++;
+                        $summary['pending_count']++;
                         continue;
                     }
 
@@ -52,8 +59,12 @@ class ScrapedJobImportService
                         continue;
                     }
 
-                    ScrapedJob::query()->create($this->toScrapedJobPayload($job, $source, $scrapedAtCarbon));
+                    $scrapedJob = ScrapedJob::query()->create($this->toScrapedJobPayload($job, $source, $scrapedAtCarbon));
+                    if (config('services.ai_cleanup.enabled')) {
+                        CleanScrapedJobWithAI::dispatch($scrapedJob)->afterCommit();
+                    }
                     $summary['created_count']++;
+                    $summary['pending_count']++;
                 } catch (\Throwable $exception) {
                     report($exception);
                     $summary['error_count']++;

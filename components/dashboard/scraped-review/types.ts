@@ -27,5 +27,5 @@ export type ReviewTableProps = {
   onToggleAll: (checked: boolean) => void
   onToggleRow: (id: string, checked: boolean) => void
   onAction: (id: string, action: RowAction) => Promise<void>
+  canPublish: (job: ScrapedJob) => boolean
 }
-

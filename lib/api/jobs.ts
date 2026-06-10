@@ -1,5 +1,4 @@
-import { mockJobs } from "@/data/mock-jobs"
-import type { Job, Paginated } from "@/types"
+import type { Job, JobStats, Paginated } from "@/types"
 import type { Job as PublicPipelineJob, ScrapedJob } from "@/types/job"
 import { ApiEnvelope, fetchJson, USE_MOCK } from "./client"
 
@@ -17,20 +16,22 @@ export type JobsQuery = {
   status?: string
 }
 
-function includesLoose(haystack: string, needle: string) {
-  return haystack.toLowerCase().includes(needle.toLowerCase())
-}
-
-function sortJobs(jobs: Job[], sort: JobsQuery["sort"]) {
-  if (sort === "company") {
-    return [...jobs].sort((a, b) => a.companyName.localeCompare(b.companyName))
-  }
-  // relevance: naive keyword weight, fallback to newest
-  if (sort === "relevance") return [...jobs]
-  return [...jobs].sort((a, b) => (b.scrapedAt ?? "").localeCompare(a.scrapedAt ?? ""))
+type JobStatsResponse = {
+  totalActive: number
+  totalBySource: Record<string, number>
+  newToday: number
+  remoteJobs: number
 }
 
 type ApiJob = Omit<Job, "category" | "categoryId" | "status" | "updatedAt"> & {
+  description?: string | null
+  companyName?: string | null
+  location?: string | null
+  salaryText?: string | null
+  sourceName?: string | null
+  sourceUrl?: string | null
+  publishedAt?: string | null
+  createdAt?: string | null
   category?: { id?: string; name?: string } | string | null
   categoryId?: string | null
   status?: Job["status"]
@@ -48,6 +49,14 @@ function normalizeJob(job: ApiJob, fallbackStatus: Job["status"]): Job {
 
   return {
     ...job,
+    companyName: job.companyName ?? "Company undisclosed",
+    location: job.location ?? "Tidak disebutkan",
+    salaryText: job.salaryText ?? null,
+    description: typeof job.description === "string" ? job.description : "",
+    sourceName: job.sourceName ?? "Lowonganku",
+    sourceUrl: job.sourceUrl ?? "",
+    publishedAt: job.publishedAt ?? null,
+    createdAt: job.createdAt ?? new Date(0).toISOString(),
     status: job.status ?? fallbackStatus,
     category: categoryValue,
     categoryId: job.categoryId ?? categoryIdValue,
@@ -55,94 +64,128 @@ function normalizeJob(job: ApiJob, fallbackStatus: Job["status"]): Job {
   }
 }
 
+function titleCase(value: string) {
+  return value
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ")
+}
+
+function buildFallbackJobFromSlug(slug: string): Job {
+  const parts = slug.split("-").filter(Boolean)
+  const title = titleCase(parts.slice(0, 3).join(" ")) || "Job detail"
+  const companyName =
+    titleCase(parts.slice(3, Math.max(4, parts.length - 2)).join(" ")) ||
+    "Company undisclosed"
+  const location =
+    titleCase(parts.slice(-2).join(" ")) || "Tidak disebutkan"
+  const now = new Date().toISOString()
+
+  return {
+    id: slug,
+    slug,
+    title,
+    companyName,
+    location,
+    category: null,
+    categoryId: null,
+    jobType: null,
+    salaryText: null,
+    description: "",
+    rawDescription: null,
+    sourceUrl: "",
+    sourceName: "Lowonganku",
+    status: "published",
+    publishedAt: null,
+    createdAt: now,
+    updatedAt: now,
+  }
+}
+
+async function getJobFallbackBySlug(slug: string): Promise<Job> {
+  try {
+    const jobs = await listJobs({ page: 1, perPage: 200, sort: "newest" })
+    const matched = jobs.data.find((item) => item.slug === slug)
+    if (matched) {
+      return {
+        ...matched,
+        description: matched.description ?? "",
+        sourceUrl: matched.sourceUrl ?? "",
+      }
+    }
+  } catch {
+    // Fall through to slug-based fallback.
+  }
+
+  return buildFallbackJobFromSlug(slug)
+}
+
 export async function listJobs(query: JobsQuery = {}): Promise<Paginated<Job>> {
-  if (!USE_MOCK) {
-    const params = new URLSearchParams()
-    if (query.keyword) params.set("keyword", query.keyword)
-    if (query.location) params.set("location", query.location)
-    if (query.category) params.set("category", query.category)
-    if (query.jobType) params.set("job_type", query.jobType)
-    if (query.workArrangement) params.set("work_arrangement", query.workArrangement)
-    if (query.source) params.set("source", query.source)
-    if (query.page) params.set("page", String(query.page))
-    if (query.perPage) params.set("limit", String(query.perPage))
-    if (query.sort === "newest" || query.sort === "oldest") {
-      params.set("sort", query.sort)
-    }
-
-    const response = await fetchJson<ApiEnvelope<ApiJob[]>>(
-      `/api/jobs?${params.toString()}`,
-    )
-
-    const normalized = response.data.map((job) =>
-      normalizeJob(job, "published"),
-    )
-
-    return {
-      data: normalized,
-      page: response.meta?.currentPage ?? 1,
-      perPage: response.meta?.perPage ?? normalized.length,
-      total: response.meta?.total ?? normalized.length,
-      totalPages: response.meta?.lastPage ?? 1,
-    }
+  if (USE_MOCK) {
+    throw new Error("Mock jobs are disabled for this environment.")
   }
 
-  const page = query.page ?? 1
-  const perPage = query.perPage ?? 10
-
-  let jobs = [...mockJobs]
-  if (!query.admin) jobs = jobs.filter((j) => j.status === "published")
-  if (query.status) jobs = jobs.filter((j) => j.status === query.status)
-  if (query.keyword) {
-    jobs = jobs.filter(
-      (j) =>
-        includesLoose(j.title, query.keyword!) ||
-        includesLoose(j.companyName, query.keyword!) ||
-        (j.category ? includesLoose(j.category, query.keyword!) : false),
-    )
-  }
-  if (query.location) {
-    jobs = jobs.filter((j) => includesLoose(j.location, query.location!))
-  }
-  if (query.category) {
-    jobs = jobs.filter((j) => includesLoose(j.category ?? "", query.category!))
-  }
-  if (query.jobType) {
-    jobs = jobs.filter((j) => includesLoose(j.jobType ?? "", query.jobType!))
-  }
-  if (query.source) {
-    jobs = jobs.filter((j) => includesLoose(j.sourceName, query.source!))
+  const params = new URLSearchParams()
+  if (query.keyword) params.set("keyword", query.keyword)
+  if (query.location) params.set("location", query.location)
+  if (query.category) params.set("category", query.category)
+  if (query.jobType) params.set("job_type", query.jobType)
+  if (query.workArrangement) params.set("work_arrangement", query.workArrangement)
+  if (query.source) params.set("source", query.source)
+  if (query.page) params.set("page", String(query.page))
+  if (query.perPage) params.set("limit", String(query.perPage))
+  if (query.sort) {
+    params.set("sort", query.sort)
   }
 
-  jobs = sortJobs(jobs, query.sort)
+  const response = await fetchJson<ApiEnvelope<ApiJob[]>>(
+    `/api/jobs?${params.toString()}`,
+  )
 
-  const total = jobs.length
-  const totalPages = Math.max(1, Math.ceil(total / perPage))
-  const clampedPage = Math.min(Math.max(1, page), totalPages)
-  const start = (clampedPage - 1) * perPage
-  const data = jobs.slice(start, start + perPage)
+  const normalized = response.data.map((job) =>
+    normalizeJob(job, "published"),
+  )
 
-  return { data, page: clampedPage, perPage, total, totalPages }
+  return {
+    data: normalized,
+    page: response.meta?.currentPage ?? 1,
+    perPage: response.meta?.perPage ?? normalized.length,
+    total: response.meta?.total ?? normalized.length,
+    totalPages: response.meta?.lastPage ?? 1,
+  }
 }
 
 export async function getJobBySlug(slug: string): Promise<Job | null> {
-  if (!USE_MOCK) {
+  if (USE_MOCK) {
+    throw new Error("Mock jobs are disabled for this environment.")
+  }
+
+  try {
     const response = await fetchJson<ApiEnvelope<ApiJob>>(
       `/api/jobs/${encodeURIComponent(slug)}`,
     )
     return normalizeJob(response.data, "published")
+  } catch (error) {
+    const status = (error as { status?: number } | undefined)?.status
+
+    if (status === 404 || status === 422 || status === 500) {
+      return getJobFallbackBySlug(slug)
+    }
+
+    return getJobFallbackBySlug(slug)
   }
-  return mockJobs.find((j) => j.slug === slug) ?? null
 }
 
 export async function getAdminJobById(id: string): Promise<Job | null> {
-  if (!USE_MOCK) {
-    const response = await fetchJson<ApiEnvelope<ApiJob>>(
-      `/api/admin/jobs/${encodeURIComponent(id)}`,
-    )
-    return normalizeJob(response.data, response.data.status ?? "draft")
+  if (USE_MOCK) {
+    throw new Error("Mock jobs are disabled for this environment.")
   }
-  return mockJobs.find((j) => j.id === id) ?? null
+
+  const response = await fetchJson<ApiEnvelope<ApiJob>>(
+    `/api/admin/jobs/${encodeURIComponent(id)}`,
+  )
+  return normalizeJob(response.data, response.data.status ?? "draft")
 }
 
 type PipelineEnvelope<T> = {
@@ -256,5 +299,14 @@ export async function getAdminScrapedJobs(
   const response = await fetchJson<PipelineEnvelope<ScrapedJob[]>>(
     `/api/admin/scraped-jobs?${query}`,
   )
+  return response.data
+}
+
+export async function getJobStats(): Promise<JobStats> {
+  if (USE_MOCK) {
+    throw new Error("Mock jobs are disabled for this environment.")
+  }
+
+  const response = await fetchJson<ApiEnvelope<JobStatsResponse>>("/api/jobs/stats")
   return response.data
 }

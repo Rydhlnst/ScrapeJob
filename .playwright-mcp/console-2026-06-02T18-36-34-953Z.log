@@ -1,0 +1,11 @@
+[ 1335837ms] An error occurred in the Server Components render. The specific message is omitted in production builds to avoid leaking sensitive details. A digest property is included on this error instance which may provide additional details about the nature of the error.
+[ 1338266ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/jobs/data-engineer-pt-wahana-makmur-sejati-wahanaartha-group-jakarta-pusat-jakarta-raya?:0
+[ 1338313ms] An error occurred in the Server Components render. The specific message is omitted in production builds to avoid leaking sensitive details. A digest property is included on this error instance which may provide additional details about the nature of the error.
+[ 1734760ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3000/jobs/data-engineer-pt-wahana-makmur-sejati-wahanaartha-group-jakarta-pusat-jakarta-raya:0
+[ 1734809ms] An error occurred in the Server Components render. The specific message is omitted in production builds to avoid leaking sensitive details. A digest property is included on this error instance which may provide additional details about the nature of the error.
+[ 3978064ms] An error occurred in the Server Components render. The specific message is omitted in production builds to avoid leaking sensitive details. A digest property is included on this error instance which may provide additional details about the nature of the error.
+[40273133ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/jobs?category=it-software&_rsc=2Md0sTUZcnjCijMr:0
+[40273135ms] [ERROR] Failed to fetch RSC payload for http://localhost:3000/jobs?category=it-software. Falling back to browser navigation. TypeError: Failed to fetch
+    at O (http://localhost:3000/_next/static/chunks/208-0235ed1195f9f206.js:31:51233)
+    at async E (http://localhost:3000/_next/static/chunks/208-0235ed1195f9f206.js:31:49369)
+    at async E (http://localhost:3000/_next/static/chunks/208-0235ed1195f9f206.js:31:75834) @ http://localhost:3000/_next/static/chunks/208-0235ed1195f9f206.js:30

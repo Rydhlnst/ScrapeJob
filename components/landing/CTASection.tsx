@@ -1,45 +1,71 @@
 import Link from "next/link"
 
 import { Container } from "@/components/shared/Container"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 
 export function CTASection() {
   return (
-    <section className="py-14 md:py-20">
+    <section
+      className="py-16 text-white md:py-20"
+      style={{ backgroundColor: "var(--brand-blue)" }}
+    >
       <Container>
-        <Card
-          className="relative overflow-hidden rounded-3xl border-border bg-[hsl(var(--primary))] p-10 text-primary-foreground shadow-sm md:p-12"
-          id="employers"
-        >
-          <div className="relative z-10 max-w-2xl">
-            <h3 className="text-3xl font-semibold tracking-tight md:text-4xl">
-              Siap dapat peluang karier berikutnya?
-            </h3>
-            <p className="mt-3 text-sm text-primary-foreground/80 md:text-base">
-              Mulai cari lowongan dari perusahaan terpercaya dan temukan posisi
-              yang cocok dengan target kariermu.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Button asChild className="rounded-xl bg-white text-primary hover:bg-white/90">
-                <Link href="/jobs">Cari lowongan</Link>
-              </Button>
-              <Button
-                asChild
-                variant="secondary"
-                className="rounded-xl bg-white/10 text-white hover:bg-white/15"
-              >
-                <Link href="/#how">Buat profil</Link>
-              </Button>
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]" id="employers">
+          <div>
+            <div className="max-w-4xl text-6xl font-semibold leading-[0.96] tracking-[-0.06em] md:text-7xl">
+              Find Work.
+              <br />
+              Share Work.
+              <br />
+              All in One Place.
+            </div>
+            <div className="mt-12 text-xs text-white/72">
+              (c) {new Date().getFullYear()} Lowonganku. All rights reserved.
             </div>
           </div>
 
-          {/* clean, plain background (no blobs / extra colors) */}
-          <div className="pointer-events-none absolute inset-0 opacity-40">
-            <div className="absolute -right-16 -top-16 size-72 rounded-full border border-white/10" />
-            <div className="absolute -left-20 -bottom-20 size-80 rounded-full border border-white/10" />
+          <div className="grid gap-8 sm:grid-cols-3">
+            <div className="space-y-4">
+              <div
+                className="text-sm font-semibold"
+                style={{ color: "var(--brand-yellow)" }}
+              >
+                Product
+              </div>
+              <div className="space-y-3 text-sm text-white/88">
+                <Link href="/#about">About us</Link>
+                <Link href="/jobs">Services</Link>
+                <Link href="/#employers">Contact</Link>
+                <Link href="/#features">Question?</Link>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div
+                className="text-sm font-semibold"
+                style={{ color: "var(--brand-yellow)" }}
+              >
+                Company
+              </div>
+              <div className="space-y-3 text-sm text-white/88">
+                <Link href="/#categories">Partners</Link>
+                <Link href="/#jobs">Customers</Link>
+                <Link href="/#how">Brand</Link>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div
+                className="text-sm font-semibold"
+                style={{ color: "var(--brand-yellow)" }}
+              >
+                Resources
+              </div>
+              <div className="space-y-3 text-sm text-white/88">
+                <Link href="/jobs">Community</Link>
+                <Link href="/#employers">Contact</Link>
+                <Link href="/#features">Terms of service</Link>
+              </div>
+            </div>
           </div>
-        </Card>
+        </div>
       </Container>
     </section>
   )

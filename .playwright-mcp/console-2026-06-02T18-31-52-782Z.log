@@ -1,0 +1,11 @@
+[     186ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:8000/api/admin/scraped-jobs?status=rejected&page=1&perPage=1:0
+[     187ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:8000/api/admin/scraped-jobs?status=approved&page=1&perPage=1:0
+[     187ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:8000/api/admin/scraped-jobs?status=pending&page=1&perPage=15:0
+[     191ms] Error: Unauthenticated.
+    at d (http://localhost:3000/_next/static/chunks/app/admin/raw-data/page-b88bf45e76ce9b30.js:1:29363)
+    at async j (http://localhost:3000/_next/static/chunks/app/admin/raw-data/page-b88bf45e76ce9b30.js:1:5630)
+    at async Promise.all (index 2)
+    at async http://localhost:3000/_next/static/chunks/app/admin/raw-data/page-b88bf45e76ce9b30.js:1:19350
+    at async Promise.all (index 1)
+[     201ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:8000/api/admin/scraped-jobs?status=published&page=1&perPage=1:0
+[     202ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:8000/api/admin/scraped-jobs?status=pending&page=1&perPage=1:0

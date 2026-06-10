@@ -1,49 +1,65 @@
 import type { Job } from "@/types"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 
 export function JobSummaryCard({ job }: { job: Job }) {
+  const hasSourceUrl = Boolean(job.sourceUrl)
+
   return (
-    <Card className="sticky top-24 rounded-[28px] border-border bg-card shadow-sm">
+    <Card className="sticky top-24 rounded-[30px] border border-white/80 bg-white/82 shadow-[var(--shadow-md)]">
       <CardHeader>
-        <CardTitle className="text-base">Ringkasan</CardTitle>
+        <CardTitle className="text-base font-semibold tracking-[0.12em] uppercase text-slate-500">
+          Ringkasan
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="space-y-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <span className="font-medium text-foreground">{job.companyName}</span>
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-[var(--brand-shell)] px-4 py-3">
+            <span>Perusahaan</span>
+            <span className="text-right font-medium text-foreground">
+              {job.companyName || "Company undisclosed"}
+            </span>
           </div>
-          <div className="flex items-center gap-2">
-            <span>{job.location}</span>
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-[var(--brand-shell)] px-4 py-3">
+            <span>Lokasi</span>
+            <span className="text-right text-foreground">
+              {job.location || "Tidak disebutkan"}
+            </span>
           </div>
           {job.jobType ? (
-            <div className="flex items-center gap-2">
-              <span>{job.jobType}</span>
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-[var(--brand-shell)] px-4 py-3">
+              <span>Tipe kerja</span>
+              <span className="text-right text-foreground">{job.jobType}</span>
             </div>
           ) : null}
-          {job.scrapedAt ? (
-            <div className="flex items-center gap-2">
-              <span>Posted: {job.scrapedAt}</span>
-            </div>
-          ) : null}
-          <div className="text-xs text-muted-foreground">
-            Sumber: {job.sourceName}
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-[var(--brand-shell)] px-4 py-3">
+            <span>Ditemukan</span>
+            <span className="text-right text-foreground">
+              {job.publishedAt || job.scrapedAt || "Recently found"}
+            </span>
           </div>
+          <Badge variant="outline" className="w-fit rounded-full border-white bg-white text-slate-600">
+            Sumber: {job.sourceName}
+          </Badge>
         </div>
 
         <Separator />
 
-        <Button
-          asChild
-          className="w-full rounded-2xl bg-[hsl(var(--dark))] text-white hover:bg-[hsl(var(--dark-soft))]"
-        >
-          <a href={job.sourceUrl} target="_blank" rel="noreferrer">
-            Lihat Sumber Lowongan
-          </a>
-        </Button>
+        {hasSourceUrl ? (
+          <Button asChild className="w-full rounded-2xl bg-slate-950 text-white hover:bg-slate-800">
+            <a href={job.sourceUrl} target="_blank" rel="noreferrer">
+              Lihat Sumber Lowongan
+            </a>
+          </Button>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            Source detail is not available for this job.
+          </div>
+        )}
 
-        <div className="rounded-2xl border border-border bg-[hsl(var(--muted))] p-3 text-xs text-muted-foreground">
+        <div className="rounded-2xl border border-white bg-[var(--brand-shell)] p-3 text-xs text-muted-foreground">
           Pastikan membaca informasi dari sumber resmi sebelum melamar.
         </div>
       </CardContent>

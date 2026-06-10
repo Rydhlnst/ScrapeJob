@@ -9,9 +9,10 @@ import { Button } from "@/components/ui/button"
 export default async function AdminJobEditPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const job = await getAdminJobById(params.id)
+  const { id } = await params
+  const job = await getAdminJobById(id)
   if (!job) notFound()
 
   return (

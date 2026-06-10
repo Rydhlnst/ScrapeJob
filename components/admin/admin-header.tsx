@@ -15,7 +15,7 @@ export function AdminHeader({
   return (
     <header
       className={cn(
-        "rounded-2xl border border-border bg-card/80 px-5 py-5 shadow-sm backdrop-blur-sm md:px-6",
+        "rounded-3xl border border-border bg-card px-5 py-5 shadow-[var(--shadow-sm)] md:px-6",
         className,
       )}
     >
@@ -32,7 +32,7 @@ export function AdminHeader({
       </div>
 
       <div className="md:hidden">
-        <Button asChild variant="outline" className="mt-4 w-full">
+        <Button asChild variant="outline" className="mt-4 h-11 w-full rounded-xl">
           <a href="/">Back to Public</a>
         </Button>
       </div>

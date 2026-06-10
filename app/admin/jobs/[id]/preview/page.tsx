@@ -1,16 +1,17 @@
 import { notFound } from "next/navigation"
 
 import { getAdminJobById } from "@/lib/api/jobs"
+import { JobPreviewBar } from "@/components/admin/job-preview-bar"
 import { JobDetailContent } from "@/components/public/job-detail-content"
 import { JobSummaryCard } from "@/components/public/job-summary-card"
-import { JobPreviewBar } from "@/components/admin/job-preview-bar"
 
 export default async function AdminJobPreviewPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const job = await getAdminJobById(params.id)
+  const { id } = await params
+  const job = await getAdminJobById(id)
   if (!job) notFound()
 
   return (

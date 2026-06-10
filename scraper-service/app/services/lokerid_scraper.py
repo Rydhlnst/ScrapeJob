@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import random
+import time
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 from urllib.parse import quote_plus
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import json
@@ -13,6 +15,7 @@ from bs4 import BeautifulSoup
 from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
 from app.utils.cleaner import clean_text
+from app.utils.date_parser import parse_posted_date
 
 
 class LokerIdScraper:
@@ -123,23 +126,31 @@ class LokerIdScraper:
                         if isinstance(address, dict):
                             location = clean_text(str(address.get("addressLocality") or "")) or None
 
+                    detail = self._scrape_detail_page(link)
+
                     results.append(
                         normalize_job_payload(
                             source=self.settings.source,
                             scraped_at_iso=scraped_at,
                             role_keyword=role,
                             source_url=link,
-                            title=title,
-                            company=company_name,
-                            location=location,
-                            salary=None,
-                            employment_type=None,
-                            description=None,
+                            title=detail.get("title") or title,
+                            company=detail.get("company") or company_name,
+                            location=detail.get("location") or location,
+                            salary=detail.get("salary"),
+                            employment_type=detail.get("employment_type"),
+                            description=detail.get("description"),
                             description_summary=None,
-                            posted_date=None,
-                            raw={"source": "lokerid", "query_url": url, "via": "json-ld"},
+                            posted_date=detail.get("posted_date"),
+                            raw={
+                                "source": "lokerid",
+                                "query_url": url,
+                                "via": "json-ld",
+                                "detail_fetched": bool(detail.get("description") or detail.get("company") or detail.get("location")),
+                            },
                         )
                     )
+                    self._sleep_delay()
 
             if results:
                 return results
@@ -168,23 +179,30 @@ class LokerIdScraper:
                 if location_node:
                     location = clean_text(location_node.get_text(" ", strip=True))
 
+            detail = self._scrape_detail_page(link)
+
             results.append(
                 normalize_job_payload(
                     source=self.settings.source,
                     scraped_at_iso=scraped_at,
                     role_keyword=role,
                     source_url=link,
-                    title=title,
-                    company=company,
-                    location=location,
-                    salary=None,
-                    employment_type=None,
-                    description=None,
+                    title=detail.get("title") or title,
+                    company=detail.get("company") or company,
+                    location=detail.get("location") or location,
+                    salary=detail.get("salary"),
+                    employment_type=detail.get("employment_type"),
+                    description=detail.get("description"),
                     description_summary=None,
-                    posted_date=None,
-                    raw={"source": "lokerid", "query_url": url},
+                    posted_date=detail.get("posted_date"),
+                    raw={
+                        "source": "lokerid",
+                        "query_url": url,
+                        "detail_fetched": bool(detail.get("description") or detail.get("company") or detail.get("location")),
+                    },
                 )
             )
+            self._sleep_delay()
 
         return results
 
@@ -230,23 +248,31 @@ class LokerIdScraper:
                     continue
                 seen.add(link)
 
+                detail = self._scrape_detail_page(link)
+
                 results.append(
                     normalize_job_payload(
                         source=self.settings.source,
                         scraped_at_iso=scraped_at,
                         role_keyword=role,
                         source_url=link,
-                        title=title,
-                        company=company,
-                        location=location,
-                        salary=salary,
-                        employment_type=job_type,
-                        description=None,
+                        title=detail.get("title") or title,
+                        company=detail.get("company") or company,
+                        location=detail.get("location") or location,
+                        salary=detail.get("salary") or salary,
+                        employment_type=detail.get("employment_type") or job_type,
+                        description=detail.get("description"),
                         description_summary=None,
-                        posted_date=None,
-                        raw={"source": "lokerid", "query_url": query_url, "via": "remix-state"},
+                        posted_date=detail.get("posted_date"),
+                        raw={
+                            "source": "lokerid",
+                            "query_url": query_url,
+                            "via": "remix-state",
+                            "detail_fetched": bool(detail.get("description") or detail.get("company") or detail.get("location")),
+                        },
                     )
                 )
+                self._sleep_delay()
 
             if results:
                 return results
@@ -264,3 +290,124 @@ class LokerIdScraper:
             for value in node:
                 found.extend(self._find_job_like_objects(value))
         return found
+
+    def _scrape_detail_page(self, job_url: str) -> Dict[str, Optional[str]]:
+        detail: Dict[str, Optional[str]] = {
+            "title": None,
+            "company": None,
+            "location": None,
+            "salary": None,
+            "employment_type": None,
+            "description": None,
+            "posted_date": None,
+        }
+
+        try:
+            response = self._http.get(job_url, timeout=max(self.settings.detail_timeout_seconds, 20))
+            response.raise_for_status()
+        except Exception:
+            return detail
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        detail["title"] = self._pick_text(soup, ["h1", ".entry-title", "[class*='title']"])
+        detail["company"] = self._pick_text(soup, [".company", "[class*='company']"])
+        detail["location"] = self._pick_text(soup, [".location", "[class*='location']"])
+        detail["salary"] = self._pick_text(soup, [".salary", "[class*='salary']"])
+        detail["employment_type"] = self._pick_text(soup, [".job-type", "[class*='job-type']", "[class*='employment']"])
+        description_node = (
+            soup.select_one(".entry-content")
+            or soup.select_one(".job-description")
+            or soup.select_one("article")
+        )
+        detail["description"] = (
+            clean_text(description_node.get_text("\n", strip=True)) if description_node else None
+        )
+        detail["posted_date"] = parse_posted_date(
+            self._pick_text(soup, ["time", ".posted-date", "[class*='date']"]),
+            self.settings.timezone_name,
+        )
+
+        json_ld_detail = self._extract_jobposting_json_ld(soup)
+        detail["title"] = detail["title"] or json_ld_detail.get("title")
+        detail["company"] = detail["company"] or json_ld_detail.get("company")
+        detail["location"] = detail["location"] or json_ld_detail.get("location")
+        detail["salary"] = detail["salary"] or json_ld_detail.get("salary")
+        detail["employment_type"] = detail["employment_type"] or json_ld_detail.get("employment_type")
+        detail["description"] = detail["description"] or json_ld_detail.get("description")
+        detail["posted_date"] = detail["posted_date"] or json_ld_detail.get("posted_date")
+
+        return detail
+
+    def _extract_jobposting_json_ld(self, soup: BeautifulSoup) -> Dict[str, Optional[str]]:
+        for script in soup.select("script[type='application/ld+json']"):
+            raw_text = (script.string or script.get_text() or "").strip()
+            if not raw_text:
+                continue
+            try:
+                payload = json.loads(raw_text)
+            except Exception:
+                continue
+
+            objects = payload if isinstance(payload, list) else [payload]
+            for obj in objects:
+                if not isinstance(obj, dict) or obj.get("@type") != "JobPosting":
+                    continue
+
+                company = None
+                hiring_org = obj.get("hiringOrganization")
+                if isinstance(hiring_org, dict):
+                    company = clean_text(str(hiring_org.get("name") or "").strip()) or None
+
+                location = None
+                job_location = obj.get("jobLocation")
+                if isinstance(job_location, dict):
+                    address = job_location.get("address")
+                    if isinstance(address, dict):
+                        location = clean_text(str(address.get("addressLocality") or "").strip()) or None
+
+                salary = None
+                base_salary = obj.get("baseSalary")
+                if isinstance(base_salary, dict):
+                    value = base_salary.get("value")
+                    if isinstance(value, dict):
+                        salary_value = value.get("value")
+                        unit = value.get("unitText")
+                        if salary_value:
+                            salary = clean_text(f"{salary_value} {unit or ''}") or None
+
+                return {
+                    "title": clean_text(str(obj.get("title") or "").strip()) or None,
+                    "company": company,
+                    "location": location,
+                    "salary": salary,
+                    "employment_type": clean_text(str(obj.get("employmentType") or "").strip()) or None,
+                    "description": clean_text(str(obj.get("description") or "").strip()) or None,
+                    "posted_date": parse_posted_date(
+                        str(obj.get("datePosted") or "").strip(),
+                        self.settings.timezone_name,
+                    ),
+                }
+
+        return {
+            "title": None,
+            "company": None,
+            "location": None,
+            "salary": None,
+            "employment_type": None,
+            "description": None,
+            "posted_date": None,
+        }
+
+    def _pick_text(self, soup: BeautifulSoup, selectors: List[str]) -> Optional[str]:
+        for selector in selectors:
+            node = soup.select_one(selector)
+            if node:
+                value = clean_text(node.get_text(" ", strip=True))
+                if value:
+                    return value
+        return None
+
+    def _sleep_delay(self) -> None:
+        min_s = min(self.settings.request_delay_min, self.settings.request_delay_max)
+        max_s = max(self.settings.request_delay_min, self.settings.request_delay_max)
+        time.sleep(random.uniform(min_s, max_s))

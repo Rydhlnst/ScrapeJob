@@ -1,175 +1,204 @@
 "use client"
 
 import Link from "next/link"
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Building2,
+  MapPin,
+  MonitorSmartphone,
+  SearchCheck,
+} from "lucide-react"
 
-import { motion, useReducedMotion } from "framer-motion"
-import { MapPin, Search, Sparkles } from "lucide-react"
-
-import { Container } from "@/components/shared/Container"
+import type { Job } from "@/types"
+import { SiteFrame } from "@/components/shared/SiteShell"
+import { JobSearchBar } from "@/components/public/job-search-bar"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 
-function TrustPill({ value, label }: { value: string; label: string }) {
+function jobInitials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("")
+}
+
+function inferWorkMode(location: string) {
+  const value = location.toLowerCase()
+  if (value.includes("remote")) return "Remote"
+  if (value.includes("hybrid")) return "Hybrid"
+  return "On-site"
+}
+
+export function HeroJobCard({ job }: { job: Job }) {
+  const companyName = job.companyName || "Company undisclosed"
+
   return (
-    <div className="rounded-2xl border border-border bg-card px-4 py-3 shadow-sm">
-      <div className="text-base font-semibold text-foreground">{value}</div>
-      <div className="text-xs text-muted-foreground">{label}</div>
-    </div>
+    <Link
+      href={`/jobs/${job.slug}`}
+      className="block w-full rounded-none border border-slate-200 bg-white p-4 text-left transition-all duration-200 hover:border-slate-950 hover:shadow-[var(--shadow-sm)]"
+    >
+      <div className="flex items-start gap-4">
+        <div className="grid size-11 shrink-0 place-items-center rounded-none bg-sky-50 text-xs font-semibold text-sky-700 border border-slate-100">
+          {jobInitials(companyName)}
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <div className="line-clamp-1 text-sm font-semibold leading-5 text-slate-950">
+                {job.title}
+              </div>
+              <div className="mt-0.5 text-xs font-medium text-slate-500">{companyName}</div>
+            </div>
+          </div>
+
+          <div className="mt-2.5 flex flex-wrap gap-1.5 text-[10px]">
+            <span className="inline-flex items-center gap-1 rounded-none bg-slate-100 px-2 py-1 font-medium text-slate-600">
+              <MapPin className="size-3" />
+              {job.location || "Location not listed"}
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-none bg-slate-100 px-2 py-1 font-medium text-slate-600">
+              <MonitorSmartphone className="size-3" />
+              {inferWorkMode(job.location || "")}
+            </span>
+            {job.jobType ? (
+              <span className="rounded-none bg-sky-50 px-2 py-1 font-medium text-sky-700">
+                {job.jobType}
+              </span>
+            ) : null}
+          </div>
+
+          <div className="mt-2.5 flex items-center justify-between gap-4">
+            <div className="text-xs font-semibold text-slate-950">
+              {job.salaryText || "Salary not listed"}
+            </div>
+            <div className="text-[10px] text-slate-400">{job.sourceName}</div>
+          </div>
+        </div>
+      </div>
+    </Link>
   )
 }
 
-export function HeroSection() {
-  const reduceMotion = useReducedMotion()
-  const baseTransition = reduceMotion ? { duration: 0 } : { duration: 0.55 }
-
+export function HeroSection({
+  totalJobs,
+  totalCategories,
+  totalSources,
+  jobs = [],
+}: {
+  totalJobs: number
+  totalCategories: number
+  totalSources: number
+  jobs?: Job[]
+}) {
   return (
-    <section className="border-b border-border/70 bg-gradient-to-b from-white via-background to-background py-14 md:py-20">
-      <Container>
-        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="max-w-xl">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...baseTransition, delay: reduceMotion ? 0 : 0.02 }}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-[hsl(var(--muted))] px-3 py-1 text-xs font-semibold text-[hsl(var(--primary))]"
-            >
-              <span className="grid size-5 place-items-center rounded-full bg-[hsl(var(--accent))] text-[hsl(var(--dark))]">
-                <Sparkles className="size-3.5" />
-              </span>
-              Best Job Recommendation Platform
-            </motion.div>
+    <section className="border-b border-[var(--brand-shell-strong)] bg-white">
+      <SiteFrame className="border-x-0 bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)]">
+        <div className="border-x border-[var(--brand-shell-strong)] px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+            <div className="max-w-3xl">
+              <h1 className="text-4xl font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--brand-ink)] sm:text-5xl lg:text-[4.4rem]">
+                Start browsing jobs
+                <br />
+                the moment you land.
+              </h1>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={baseTransition}
-              className="mt-4 text-5xl font-semibold tracking-tight text-foreground md:text-6xl lg:text-7xl"
-            >
-              Find Your Next Career Opportunity
-            </motion.h1>
+              <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
+                Search curated roles from multiple sources, compare openings quickly,
+                and preview real job details before you ever leave the homepage.
+              </p>
 
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...baseTransition, delay: reduceMotion ? 0 : 0.08 }}
-              className="mt-5 text-sm leading-relaxed text-muted-foreground md:text-base"
-            >
-              Discover jobs that match your skills, experience, and career goals
-              through tailored recommendations—fast, clean, and trustworthy.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...baseTransition, delay: reduceMotion ? 0 : 0.12 }}
-              className="mt-7 flex flex-wrap gap-3"
-            >
-              <Button
-                asChild
-                className="rounded-2xl bg-[hsl(var(--dark))] text-white hover:bg-[hsl(var(--dark-soft))]"
-              >
-                <Link href="/#features">Get Started Now</Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="rounded-2xl border-border bg-card hover:bg-muted"
-              >
-                <Link href="/jobs">Explore Jobs</Link>
-              </Button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...baseTransition, delay: reduceMotion ? 0 : 0.18 }}
-              className="mt-10 grid grid-cols-3 gap-3"
-            >
-              <TrustPill value="10k+" label="Jobs listed" />
-              <TrustPill value="2k+" label="Companies" />
-              <TrustPill value="95%" label="Match accuracy" />
-            </motion.div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ...baseTransition, delay: reduceMotion ? 0 : 0.12 }}
-            className="relative"
-          >
-            <div className="relative overflow-hidden rounded-[36px] border border-border bg-[hsl(var(--primary))] shadow-sm">
-              <div className="absolute inset-0">
-                <div className="absolute -right-24 -top-24 size-80 rounded-full bg-[hsl(var(--accent))] blur-3xl opacity-70" />
-                <div className="absolute -left-28 -bottom-28 size-96 rounded-full bg-black/25 blur-3xl" />
-                <div className="absolute inset-y-0 right-0 w-[46%] bg-[hsl(var(--accent))]" />
-                <div className="absolute right-[-18%] top-[-20%] size-[520px] rounded-full border border-white/10 bg-white/5" />
+              <div className="mt-8">
+                <JobSearchBar defaultSort="newest" />
               </div>
 
-              <div className="relative p-8 md:p-10">
-                <motion.div
-                  animate={reduceMotion ? undefined : { y: [0, -8, 0] }}
-                  transition={
-                    reduceMotion
-                      ? undefined
-                      : { repeat: Infinity, duration: 6, ease: "easeInOut" }
-                  }
-                  className="mx-auto max-w-md"
+              <div className="mt-5 flex flex-wrap gap-3 text-sm text-slate-600">
+                <Link
+                  href="/jobs?jobType=Full-time"
+                  className="rounded-none border border-slate-200 bg-white px-4 py-2 transition-colors hover:border-slate-300 hover:text-slate-900"
                 >
-                  <Card className="rounded-[28px] border border-white/10 bg-white/95 p-6 shadow-xl backdrop-blur">
-                    <div className="flex items-center gap-3">
-                      <div className="grid size-10 place-items-center rounded-2xl bg-[hsl(var(--accent))] text-[hsl(var(--dark))]">
-                        <Sparkles className="size-5" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-semibold text-foreground">
-                          Job Recommendation
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          Personalized job suggestions
-                        </div>
-                      </div>
-                    </div>
+                  Full-time
+                </Link>
+                <Link
+                  href="/jobs?location=Jakarta"
+                  className="rounded-none border border-slate-200 bg-white px-4 py-2 transition-colors hover:border-slate-300 hover:text-slate-900"
+                >
+                  Jakarta
+                </Link>
+                <Link
+                  href="/jobs?location=Remote"
+                  className="rounded-none border border-slate-200 bg-white px-4 py-2 transition-colors hover:border-slate-300 hover:text-slate-900"
+                >
+                  Remote
+                </Link>
+                <Link
+                  href="/jobs?sort=relevance"
+                  className="rounded-none border border-slate-200 bg-white px-4 py-2 transition-colors hover:border-slate-300 hover:text-slate-900"
+                >
+                  Most relevant
+                </Link>
+              </div>
 
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {["Remote", "Freelance", "Onsite"].map((t) => (
-                        <span
-                          key={t}
-                          className="rounded-full border border-border bg-[hsl(var(--muted))] px-3 py-1 text-xs font-semibold text-muted-foreground"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="mt-5 grid gap-3">
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          className="h-12 rounded-2xl pl-10"
-                          placeholder="Location"
-                          defaultValue="Jakarta, Indonesia"
-                        />
-                      </div>
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          className="h-12 rounded-2xl pl-10"
-                          placeholder="Job role"
-                          defaultValue="UI Designer"
-                        />
-                      </div>
-                      <Button className="h-12 rounded-2xl bg-[hsl(var(--dark))] text-white hover:bg-[hsl(var(--dark-soft))]">
-                        Search Jobs
-                      </Button>
-                    </div>
-                  </Card>
-                </motion.div>
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-slate-500 border-t border-slate-200/60 pt-6">
+                <div className="flex items-center gap-2">
+                  <SearchCheck className="size-4 text-[var(--brand-blue)]" />
+                  <span>
+                    <strong className="font-semibold text-slate-950">{totalJobs}+</strong> lowongan aktif
+                  </span>
+                </div>
+                <div className="hidden size-1 bg-slate-300 sm:block rounded-none" />
+                <div className="flex items-center gap-2">
+                  <BriefcaseBusiness className="size-4 text-[var(--brand-blue)]" />
+                  <span>
+                    <strong className="font-semibold text-slate-950">{totalCategories}</strong> kategori
+                  </span>
+                </div>
+                <div className="hidden size-1 bg-slate-300 sm:block rounded-none" />
+                <div className="flex items-center gap-2">
+                  <Building2 className="size-4 text-[var(--brand-blue)]" />
+                  <span>
+                    <strong className="font-semibold text-slate-950">{totalSources}</strong> sumber web
+                  </span>
+                </div>
               </div>
             </div>
-          </motion.div>
+
+            <div className="flex flex-col gap-4 border border-slate-200 bg-white p-5 shadow-[var(--shadow-sm)] rounded-none">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
+                  Lowongan Terbaru
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-600">
+                  <span className="size-2 bg-sky-600 rounded-none animate-pulse" />
+                  Live sekarang
+                </span>
+              </div>
+              <div className="grid gap-3">
+                {jobs.map((job) => (
+                  <HeroJobCard key={job.id} job={job} />
+                ))}
+                {jobs.length === 0 && (
+                  <div className="py-8 text-center text-xs text-slate-400">
+                    Tidak ada lowongan terbaru saat ini.
+                  </div>
+                )}
+              </div>
+              <div className="mt-2 border-t border-slate-100 pt-4">
+                <Button
+                  asChild
+                  className="h-11 w-full rounded-none bg-slate-950 px-4 text-sm font-semibold text-white hover:bg-slate-800"
+                >
+                  <Link href="/jobs">
+                    Lihat semua lowongan
+                    <ArrowRight className="ml-2 size-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
-      </Container>
+      </SiteFrame>
     </section>
   )
 }

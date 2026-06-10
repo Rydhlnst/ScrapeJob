@@ -1,33 +1,40 @@
-import { Footer } from "@/components/shared/Footer"
 import { CTASection } from "@/components/landing/CTASection"
 import { HeroSection } from "@/components/landing/HeroSection"
-import { HowItWorks } from "@/components/landing/HowItWorks"
 import { PopularCategories } from "@/components/landing/PopularCategories"
 import { TrustedCompanies } from "@/components/landing/TrustedCompanies"
-import { SaasNavbar } from "@/components/shared/SaasNavbar"
+import { Footer } from "@/components/shared/Footer"
+import { Navbar } from "@/components/shared/Navbar"
 import { BenefitsSection } from "@/components/landing/BenefitsSection"
 import { JobListingSection } from "@/components/landing/JobListingSection"
-import { TestimonialsSection } from "@/components/landing/TestimonialsSection"
 import { listJobs } from "@/lib/api/jobs"
 import { listCategories } from "@/lib/api/categories"
+import { mockJobs } from "@/data/mock-jobs"
 
 export default async function HomePage() {
   const [jobsRes, categories] = await Promise.all([
-    listJobs({ page: 1, perPage: 6, sort: "newest" }),
+    listJobs({ page: 1, perPage: 8, sort: "newest" }),
     listCategories(),
   ])
+  const homepageJobs =
+    jobsRes.data.length > 0
+      ? jobsRes.data.slice(0, 8)
+      : mockJobs.filter((job) => job.status === "published").slice(0, 8)
+  const sourcesCount = new Set(homepageJobs.map((job) => job.sourceName)).size
 
   return (
     <div className="min-h-screen bg-background">
-      <SaasNavbar />
+      <Navbar />
       <main>
-        <HeroSection />
-        <TrustedCompanies />
-        <BenefitsSection />
+        <HeroSection
+          totalJobs={jobsRes.total || homepageJobs.length}
+          totalCategories={categories.length}
+          totalSources={sourcesCount}
+          jobs={homepageJobs.slice(0, 3)}
+        />
+        <JobListingSection jobs={homepageJobs} />
         <PopularCategories categories={categories} />
-        <JobListingSection jobs={jobsRes.data} />
-        <HowItWorks />
-        <TestimonialsSection />
+        <BenefitsSection />
+        <TrustedCompanies />
         <CTASection />
       </main>
       <Footer />

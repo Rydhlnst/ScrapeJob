@@ -17,7 +17,8 @@ Monorepo sederhana untuk platform lowongan kerja yang terdiri dari:
 - `app`, `components`, `lib`, `public`: frontend Next.js
 - `backend`: Laravel API dan admin backend
 - `scraper-service`: service Python untuk scraping
-- `docker-compose.yml`: compose file lokal, tapi saat ini belum lengkap untuk frontend/backend
+- `docker-compose.yml`: compose file lokal untuk frontend, backend, queue, scheduler, PostgreSQL, dan Redis
+- `docker-compose.production.yml`: compose file production untuk single VPS
 
 ## Prasyarat
 
@@ -145,7 +146,7 @@ docker run --name scrapejob-redis -p 6379:6379 redis:7
 
 ### 5) Database
 
-Repo ini mendukung beberapa driver Laravel, tetapi contoh env backend saat ini default ke MySQL:
+Repo ini mendukung beberapa driver Laravel. Untuk local manual, contoh env backend saat ini default ke MySQL:
 
 ```env
 DB_CONNECTION=mysql
@@ -167,7 +168,7 @@ DB_USERNAME=postgres
 DB_PASSWORD=password
 ```
 
-> Penting: `docker-compose.yml` saat ini memakai PostgreSQL, tetapi `backend/.env.example` masih memakai MySQL. Pilih salah satu dan samakan konfigurasinya.
+> Catatan: workflow Docker di repo ini memakai PostgreSQL. Workflow manual tetap bisa memakai MySQL atau PostgreSQL selama env backend disesuaikan.
 
 ### 6) Seeder Default Admin
 
@@ -251,6 +252,36 @@ Backend juga punya endpoint terkait scraping:
 - `GET /api/admin/scrape-runs`
 - `POST /api/internal/scraped-jobs/import`
 
+### Opsi C — Scraping terjadwal setiap 8 jam
+
+Scheduler backend sekarang configurable via env berikut:
+
+```env
+SCRAPER_SCHEDULE_ENABLED=true
+SCRAPER_SCHEDULE_CRON="0 */8 * * *"
+SCRAPER_SCHEDULE_TIMEZONE=Asia/Jakarta
+SCRAPER_SCHEDULE_WITHOUT_OVERLAPPING_MINUTES=480
+```
+
+Perilaku scheduler:
+
+- berjalan setiap 8 jam secara default
+- membaca `SCRAPER_ACTIVE_SOURCES`
+- dispatch queue job per source aktif
+- memakai `withoutOverlapping` agar run lama tidak tumpang tindih
+
+Untuk server Linux tradisional, cukup jalankan cron Laravel standar:
+
+```bash
+* * * * * cd /path/to/project/backend && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Kalau memakai Docker Compose, service `scheduler` sudah menjalankan:
+
+```bash
+php artisan schedule:work
+```
+
 ## Urutan Menjalankan Semua Service
 
 Urutan paling aman untuk local development:
@@ -262,75 +293,178 @@ Urutan paling aman untuk local development:
 5. Jalankan frontend Next.js
 6. Jalankan scraper jika ingin ingest data baru
 
+## Menjalankan dengan Docker Compose
+
+Workflow Docker sekarang mencakup:
+
+- `frontend`
+- `backend`
+- `queue`
+- `scheduler`
+- `db`
+- `redis`
+
+Command utama dari root project:
+
+```bash
+pnpm docker:up
+```
+
+Untuk mematikan semua service:
+
+```bash
+pnpm docker:down
+```
+
+Untuk menjalankan scraper manual via container terpisah:
+
+```bash
+pnpm docker:scraper
+```
+
+Catatan workflow Docker:
+
+- backend image sudah membawa PHP, Python, dependency scraper, dan Chromium untuk Playwright
+- service `backend` sekarang memakai Apache dengan document root Laravel `public/`
+- service `backend` health check memakai endpoint `/api/healthz`
+- service `queue` memproses job async
+- service `scheduler` memicu scheduled task termasuk scraping 8 jam sekali
+- frontend build memakai Next.js standalone output
+- frontend build argument untuk `NEXT_PUBLIC_*` disetel saat image dibangun agar URL API tidak salah di bundle Docker
+
 ## Build untuk Production
 
-### Frontend
+Deployment production di repo ini sekarang memakai:
+
+- `docker-compose.production.yml`
+- `.env.production` yang di-copy dari `.env.production.example`
+- manual migration sebagai langkah deploy terpisah
+
+### 1) Siapkan env production
 
 ```bash
-pnpm install
-pnpm build
-pnpm start
+cp .env.production.example .env.production
 ```
 
-### Backend
+Field yang wajib diisi sebelum deploy:
+
+- `NEXT_PUBLIC_API_BASE_URL`
+- `APP_KEY`
+- `APP_URL`
+- `FRONTEND_URL`
+- `SANCTUM_STATEFUL_DOMAINS`
+- `DB_DATABASE`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `POSTGRES_DB`
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `SCRAPER_INTERNAL_API_TOKEN`
+
+Referensi variabel backend murni juga tersedia di:
 
 ```bash
-cd backend
-composer install --no-dev --optimize-autoloader
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan migrate --force
+backend/.env.production.example
 ```
 
-### Scraper
+### 2) Validasi compose production
 
-Untuk server production, jalankan scraper sebagai worker terpisah / cron / container terpisah. Karena scraper memakai browser automation, service ini lebih aman dipisah dari web server utama.
+```bash
+pnpm docker:prod:config
+```
+
+### 3) Build image production
+
+```bash
+pnpm docker:prod:build
+```
+
+### 4) Jalankan service production
+
+```bash
+pnpm docker:prod:up
+```
+
+Service yang aktif di production compose:
+
+- `frontend`
+- `backend`
+- `queue`
+- `scheduler`
+- `db`
+- `redis`
+
+Service opsional:
+
+- `scraper` hanya dijalankan saat memang dibutuhkan:
+
+```bash
+docker compose --env-file .env.production -f docker-compose.production.yml --profile scraper run --rm scraper
+```
+
+### 5) Jalankan migration secara manual
+
+Migration bukan bagian dari startup container production. Jalankan ini setelah stack sehat:
+
+```bash
+docker compose --env-file .env.production -f docker-compose.production.yml run --rm backend php artisan migrate --force
+```
+
+Kalau butuh seed awal di environment baru:
+
+```bash
+docker compose --env-file .env.production -f docker-compose.production.yml run --rm backend php artisan db:seed --force
+```
+
+### 6) Verifikasi setelah deploy
+
+```bash
+docker compose --env-file .env.production -f docker-compose.production.yml ps
+docker compose --env-file .env.production -f docker-compose.production.yml logs backend --tail=100
+docker compose --env-file .env.production -f docker-compose.production.yml logs frontend --tail=100
+```
+
+Checklist minimum:
+
+- frontend merespons di port production yang dipetakan
+- backend `/api/healthz` sehat
+- `GET /api/jobs` merespons sukses
+- halaman `/jobs` berhasil SSR tanpa request ke `127.0.0.1`
+- queue dan scheduler tetap hidup setelah restart stack
 
 ## Rekomendasi Deployment
 
-### Opsi yang direkomendasikan
+### Target yang didukung repo ini sekarang
 
-- Frontend: Vercel atau VPS Node.js
-- Backend: VPS / Laravel-friendly host / container service
-- Database: managed MySQL/PostgreSQL
-- Redis: managed Redis atau container terpisah
-- Scraper: container/job worker terpisah
+- single VPS dengan Docker Compose production
+- frontend dan backend tetap dipisah sebagai service terpisah
+- database PostgreSQL dan Redis berjalan sebagai service internal compose
+- scraper tetap opsional dan tidak ikut boot path utama
 
 ### Skema deployment yang sehat
 
-- Frontend deploy terpisah dari backend
-- Backend expose API via HTTPS
-- Scraper kirim hasil ke backend via `SCRAPER_INTERNAL_API_TOKEN`
-- Queue worker dan scheduler dijalankan sebagai process terpisah
+- frontend membaca API publik dari `NEXT_PUBLIC_API_BASE_URL`
+- frontend SSR memakai `INTERNAL_API_BASE_URL=http://backend`
+- backend memakai Apache, bukan `php artisan serve`
+- queue worker dan scheduler dijalankan sebagai service terpisah
+- migration dijalankan manual, bukan saat container backend start
+- healthcheck production memakai endpoint stateless `/api/healthz`
 
 ### Process production minimum
 
-Backend biasanya butuh process terpisah untuk:
-
-- web app / PHP-FPM
+- web frontend
+- backend web
 - queue worker
 - scheduler
-
-## Status Docker Saat Ini
-
-`docker-compose.yml` belum siap dipakai sebagai source of truth penuh karena:
-
-- service `frontend` melakukan `build: .`, tetapi root project belum punya `Dockerfile`
-- service `backend` melakukan `build: ./backend`, tetapi folder `backend` belum punya `Dockerfile`
-- hanya `scraper-service/Dockerfile` yang saat ini tersedia
-
-Artinya:
-
-- scraper container sudah punya dasar image
-- frontend dan backend masih lebih aman dijalankan manual sampai Dockerfile-nya dibuat
+- PostgreSQL
+- Redis
 
 ## Checklist Verifikasi Lokal
 
 Sebelum dianggap berhasil jalan, cek hal berikut:
 
 - frontend bisa dibuka di `http://localhost:3000`
-- backend health check `http://localhost:8000/up` mengembalikan sukses
+- backend health check `http://localhost:8000/api/healthz` mengembalikan sukses
 - endpoint `GET /api/jobs` bisa diakses
 - login admin berhasil dengan akun seeded
 - queue worker aktif
@@ -338,19 +472,35 @@ Sebelum dianggap berhasil jalan, cek hal berikut:
 - scraper bisa menulis `output/jobs.json`
 - import internal scraper ke backend berhasil
 
+## Checklist Verifikasi Production
+
+Sebelum dianggap siap deploy di VPS, cek hal berikut:
+
+- `pnpm docker:prod:config` lolos tanpa env yang hilang
+- tidak ada URL `localhost` atau `127.0.0.1` untuk komunikasi antar-container production
+- `pnpm docker:prod:build` sukses
+- `pnpm docker:prod:up` menyalakan `frontend`, `backend`, `queue`, `scheduler`, `db`, dan `redis`
+- healthcheck `frontend`, `backend`, `db`, dan `redis` berubah sehat
+- migration manual berhasil saat dijalankan terpisah
+- `GET /api/jobs` sukses setelah deploy
+- halaman `/jobs` sukses dimuat setelah restart stack
+
 ## Temuan Review Singkat
 
 Beberapa hal yang perlu diketahui sebelum deployment:
 
-- `docker-compose.yml` belum sinkron dengan file Docker yang tersedia
-- konfigurasi database belum konsisten antara Docker (`PostgreSQL`) dan env backend example (`MySQL`)
+- workflow Docker lokal dan production sekarang dipisah
+- build frontend Docker sekarang menerima env publik saat build time
+- backend production sekarang berjalan di Apache dan fail fast jika env wajib belum diisi
+- scheduler scraping default sekarang setiap 8 jam dan bisa diubah lewat env
+- konfigurasi database manual dan Docker memang dibedakan: Docker default ke PostgreSQL, local manual bebas disesuaikan
 - README backend masih bawaan Laravel, jadi dokumentasi operasional memang sebaiknya dipusatkan di root README ini
 
 ## Saran Langkah Berikutnya
 
 Kalau mau repo ini lebih siap untuk onboarding/deploy, langkah paling bernilai berikutnya adalah:
 
-1. Tambahkan `Dockerfile` untuk frontend
-2. Tambahkan `Dockerfile` untuk backend
-3. Sinkronkan pilihan database antara `.env.example` dan `docker-compose.yml`
-4. Tambahkan sample deployment untuk VPS atau Vercel + Laravel API
+1. Tambahkan reverse proxy production (`Nginx` / `Traefik`) bila ingin TLS termination dan domain routing dalam stack yang sama
+2. Pindahkan PostgreSQL dan Redis ke service terkelola jika ingin mengurangi beban operasional VPS
+3. Tambahkan monitoring/log shipping untuk queue dan scraping
+4. Tambahkan CI check untuk `docker compose config`, build frontend, dan syntax Laravel

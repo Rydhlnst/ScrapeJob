@@ -11,6 +11,7 @@ use Illuminate\Validation\ValidationException;
 use App\Jobs\ScrapeJobsJob;
 use App\Jobs\SendJobNotificationJob;
 use App\Http\Middleware\EnsureInternalApiToken;
+use App\Services\Scraping\ScraperManager;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
@@ -40,23 +41,19 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (Schedule $schedule): void {
-        $schedule->job(new ScrapeJobsJob('jobstreet'))
-            ->everySixHours()
-            ->timezone('Asia/Jakarta')
-            ->name('scrape-jobstreet-6h')
-            ->withoutOverlapping(60);
+        if ((bool) config('scraper.schedule.enabled', true)) {
+            $schedule->call(function (): void {
+                $scraperManager = app(ScraperManager::class);
 
-        $schedule->job(new ScrapeJobsJob('glints'))
-            ->everySixHours()
-            ->timezone('Asia/Jakarta')
-            ->name('scrape-glints-6h')
-            ->withoutOverlapping(60);
-
-        $schedule->job(new ScrapeJobsJob('kalibrr'))
-            ->cron('0 */12 * * *')
-            ->timezone('Asia/Jakarta')
-            ->name('scrape-kalibrr-12h')
-            ->withoutOverlapping(60);
+                foreach ($scraperManager->activeSources() as $sourceName) {
+                    ScrapeJobsJob::dispatch($sourceName);
+                }
+            })
+                ->cron((string) config('scraper.schedule.cron_expression', '0 */8 * * *'))
+                ->timezone((string) config('scraper.schedule.timezone', 'Asia/Jakarta'))
+                ->name('dispatch-scheduled-scraping')
+                ->withoutOverlapping((int) config('scraper.schedule.without_overlapping_minutes', 480));
+        }
 
         $schedule->job(new SendJobNotificationJob())
             ->dailyAt('07:30')

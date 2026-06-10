@@ -1,20 +1,51 @@
 "use client"
 
-import Link from "next/link"
 import Image from "next/image"
+import Link from "next/link"
+import { Menu } from "lucide-react"
 import { usePathname } from "next/navigation"
 
+import { Button } from "@/components/ui/button"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { SiteFrame } from "@/components/shared/SiteShell"
 import { cn } from "@/lib/utils"
 
-const navItems = [
-  { label: "Jobs", href: "/jobs" },
+const topNavItems = [
+  { label: "Explore", href: "/jobs" },
+  { label: "What's New", href: "/#features" },
+  { label: "Lowonganku Premium", href: "/#employers" },
+]
+
+const categoryItems = [
+  { label: "Development & IT", href: "/jobs?category=it-software" },
+  { label: "AI Service", href: "/#categories" },
+  { label: "Design", href: "/#categories" },
+  { label: "Sales & Marketing", href: "/#categories" },
+  { label: "Customer Support", href: "/#categories" },
+  { label: "More", href: "/#categories" },
 ]
 
 function Logo() {
   return (
-    <Link href="/" className="inline-flex items-center gap-2">
-      <Image src="/logo.png" alt="Lowonganku logo" width={32} height={32} className="h-8 w-8 rounded-md object-cover" />
-      <span className="text-base font-semibold text-[#151515]">Lowongaku</span>
+    <Link href="/" className="flex items-center gap-3" aria-label="Lowonganku home">
+      <div className="flex h-12 w-12 items-center justify-center border-r border-[var(--brand-shell-strong)] pr-3">
+        <Image
+          src="/logo.png"
+          alt="Lowonganku logo"
+          width={28}
+          height={28}
+          className="h-7 w-7 rounded-none object-cover"
+        />
+      </div>
+      <span className="text-lg font-semibold tracking-[-0.03em] text-[var(--brand-ink)]">
+        Lowonganku
+      </span>
     </Link>
   )
 }
@@ -23,59 +54,78 @@ export function Navbar() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-[#F7F8F4]/90 backdrop-blur-md">
-      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 md:px-6">
-        <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-50 w-full border-b border-[var(--brand-shell-strong)] bg-white">
+      <SiteFrame className="bg-white">
+        <div className="flex h-18 items-center justify-between px-4 sm:px-6 lg:px-8">
           <Logo />
-        </div>
 
-        <nav className="hidden items-center justify-center gap-2 lg:flex">
-          {navItems.map((item) => {
-            const active =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname?.startsWith(item.href)
-
-            return (
+          <nav className="hidden items-center gap-8 lg:flex">
+            {topNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={cn(
-                  "rounded-full px-4 py-2 text-sm font-medium text-neutral-600 transition hover:bg-white hover:text-neutral-950",
-                  active && "bg-white text-neutral-950 shadow-sm font-semibold",
-                )}
+                className="text-sm font-medium text-[var(--brand-ink)] transition-colors hover:text-[var(--brand-blue)]"
               >
                 {item.label}
               </Link>
-            )
-          })}
-        </nav>
+            ))}
+            <Button
+              asChild
+              variant="outline"
+              className="h-11 rounded-none border-[var(--brand-shell-strong)] bg-white px-5 text-sm font-medium text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]"
+            >
+              <Link href="/#employers">Find Talent</Link>
+            </Button>
+            <Button
+              asChild
+              className="h-11 rounded-none bg-[var(--brand-blue)] px-5 text-sm font-medium text-white hover:bg-[var(--brand-sky)]"
+            >
+              <Link href="/jobs">Find Work</Link>
+            </Button>
+          </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <div className="rounded-full border bg-white px-4 py-2 text-sm font-semibold text-neutral-600 shadow-sm">
-            12.4K Jobs
-          </div>
-          <Link
-            href="/login"
-            className="rounded-full px-5 py-2 text-sm font-semibold text-neutral-700 hover:bg-white"
-          >
-            Log in
-          </Link>
-          <Link
-            href="/sign-up"
-            className="rounded-full bg-[#151515] px-5 py-2 text-sm font-semibold text-white hover:bg-[#2A2A2A]"
-          >
-            Sign up
-          </Link>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="h-11 w-11 rounded-none border-[var(--brand-shell-strong)] lg:hidden">
+                <Menu className="size-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[320px] border-l-[var(--brand-shell-strong)] bg-white">
+              <SheetHeader>
+                <SheetTitle>Lowonganku</SheetTitle>
+              </SheetHeader>
+              <div className="mt-6 space-y-3">
+                {topNavItems.concat(categoryItems).map((item) => (
+                  <Link
+                    key={`${item.label}-${item.href}`}
+                    href={item.href}
+                    className={cn(
+                      "block border border-[var(--brand-shell-strong)] px-4 py-3 text-sm font-medium text-[var(--brand-ink)]",
+                      pathname?.startsWith(item.href) && "bg-[var(--brand-shell)]",
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
 
-        <button
-          type="button"
-          className="lg:hidden rounded-full border bg-white px-4 py-2 text-sm font-semibold"
-        >
-          Menu
-        </button>
-      </div>
+        <nav className="hidden border-t border-[var(--brand-shell-strong)] px-4 sm:px-6 lg:block lg:px-8">
+          <div className="flex min-h-12 items-center gap-7 overflow-x-auto whitespace-nowrap py-3">
+            {categoryItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="text-sm font-medium text-[var(--brand-ink)] transition-colors hover:text-[var(--brand-blue)]"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      </SiteFrame>
     </header>
   )
 }

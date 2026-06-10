@@ -2,15 +2,27 @@ import type { JobStatus } from "@/types"
 import { Badge } from "@/components/ui/badge"
 
 const map: Record<JobStatus, { label: string; className: string }> = {
-  raw: { label: "Raw", className: "bg-slate-100 text-slate-700 border-slate-200" },
-  draft: { label: "Draft", className: "bg-amber-50 text-amber-700 border-amber-200" },
-  published: { label: "Published", className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  rejected: { label: "Rejected", className: "bg-rose-50 text-rose-700 border-rose-200" },
-  duplicate: { label: "Duplicate", className: "bg-purple-50 text-purple-700 border-purple-200" },
+  raw: { label: "Raw", className: "border-border bg-muted text-muted-foreground" },
+  draft: { label: "Draft", className: "border-border bg-background text-foreground" },
+  published: {
+    label: "Published",
+    className: "border-border bg-accent text-accent-foreground",
+  },
+  rejected: {
+    label: "Rejected",
+    className: "border-border bg-muted text-muted-foreground",
+  },
+  duplicate: {
+    label: "Duplicate",
+    className: "border-border bg-background text-muted-foreground",
+  },
 }
 
 export function JobStatusPill({ status }: { status: JobStatus }) {
   const meta = map[status]
-  return <Badge variant="outline" className={meta.className}>{meta.label}</Badge>
+  return (
+    <Badge variant="outline" className={meta.className}>
+      {meta.label}
+    </Badge>
+  )
 }
-

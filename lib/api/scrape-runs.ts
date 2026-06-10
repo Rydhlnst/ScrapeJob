@@ -10,21 +10,21 @@ export type JobSourceOption = {
 }
 
 export async function listScrapeRuns(): Promise<ScrapeRun[]> {
-  if (!USE_MOCK) {
-    const response = await fetchJson<ApiEnvelope<ScrapeRun[]>>("/api/admin/scrape-runs")
-    return response.data
+  if (USE_MOCK) {
+    return mockScrapeRuns
   }
-  return mockScrapeRuns
+  const response = await fetchJson<ApiEnvelope<ScrapeRun[]>>("/api/admin/scrape-runs")
+  return response.data
 }
 
 export async function listScrapeLogs(scrapeRunId: string): Promise<ScrapeLog[]> {
-  if (!USE_MOCK) {
-    const response = await fetchJson<ApiEnvelope<ScrapeLog[]>>(
-      `/api/admin/scrape-runs/${encodeURIComponent(scrapeRunId)}/logs`,
-    )
-    return response.data
+  if (USE_MOCK) {
+    return mockScrapeLogs.filter((l) => l.scrapeRunId === scrapeRunId)
   }
-  return mockScrapeLogs.filter((l) => l.scrapeRunId === scrapeRunId)
+  const response = await fetchJson<ApiEnvelope<ScrapeLog[]>>(
+    `/api/admin/scrape-runs/${encodeURIComponent(scrapeRunId)}/logs`,
+  )
+  return response.data
 }
 
 export async function listJobSources(): Promise<JobSourceOption[]> {

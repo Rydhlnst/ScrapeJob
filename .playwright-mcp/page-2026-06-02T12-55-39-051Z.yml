@@ -1,0 +1,374 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "Lowonganku home" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - img "Lowonganku logo" [ref=e7]
+            - generic [ref=e8]: Lowonganku
+          - navigation [ref=e9]:
+            - link "Lowongan" [ref=e10] [cursor=pointer]:
+              - /url: /jobs
+            - link "Kategori" [ref=e11] [cursor=pointer]:
+              - /url: /#categories
+            - link "Cara Kerja" [ref=e12] [cursor=pointer]:
+              - /url: /#how
+        - generic [ref=e13]:
+          - generic [ref=e14]: Curated job board
+          - link "Masuk" [ref=e15] [cursor=pointer]:
+            - /url: /login
+          - link "Cari Lowongan" [ref=e16] [cursor=pointer]:
+            - /url: /jobs
+    - main [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - generic [ref=e22]: Jobs board
+            - generic [ref=e23]:
+              - heading "Temukan lowongan dalam layout yang lebih hidup." [level=1] [ref=e24]
+              - paragraph [ref=e25]: Search bar, filter rail, dan job card disusun ulang supaya terasa seperti product board, bukan template daftar biasa.
+            - generic [ref=e26]:
+              - generic [ref=e28]:
+                - generic [ref=e29]:
+                  - img [ref=e30]
+                  - textbox "Posisi / perusahaan / keyword" [ref=e33]
+                - generic [ref=e34]:
+                  - img [ref=e35]
+                  - textbox "Lokasi (kota/provinsi)" [ref=e38]
+                - combobox [ref=e39] [cursor=pointer]:
+                  - img
+                - combobox [ref=e40]
+              - button "Cari" [ref=e41] [cursor=pointer]
+          - generic [ref=e43]:
+            - generic [ref=e44]: Reserved Image Space
+            - generic [ref=e45]: Add board screenshot, team photo, or campaign image
+            - generic [ref=e46]:
+              - generic [ref=e47]:
+                - generic [ref=e48]: Curated filters
+                - generic [ref=e49]: Cleaner grouping for category, job type, and source.
+              - generic [ref=e50]:
+                - generic [ref=e51]: Colorful cards
+                - generic [ref=e52]: Brand-led card palette inspired by the logo colors.
+        - generic [ref=e53]:
+          - generic [ref=e55]:
+            - generic [ref=e57]: Filters
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - generic [ref=e62]: Kategori
+                - 'textbox "Contoh: IT & Software" [ref=e63]'
+                - generic [ref=e64]:
+                  - button "Admin" [ref=e65] [cursor=pointer]
+                  - button "Customer Service" [ref=e66] [cursor=pointer]
+                  - button "Design" [ref=e67] [cursor=pointer]
+                  - button "Finance" [ref=e68] [cursor=pointer]
+                  - button "IT & Software" [ref=e69] [cursor=pointer]
+                  - button "Internship" [ref=e70] [cursor=pointer]
+                  - button "Marketing" [ref=e71] [cursor=pointer]
+                  - button "Sales" [ref=e72] [cursor=pointer]
+              - generic [ref=e73]:
+                - generic [ref=e74]: Tipe kerja
+                - radiogroup [ref=e75]:
+                  - generic [ref=e76] [cursor=pointer]:
+                    - radio "Full-time" [ref=e77]
+                    - radio
+                    - text: Full-time
+                  - generic [ref=e78] [cursor=pointer]:
+                    - radio "Part-time" [ref=e79]
+                    - radio
+                    - text: Part-time
+                  - generic [ref=e80] [cursor=pointer]:
+                    - radio "Contract" [ref=e81]
+                    - radio
+                    - text: Contract
+                  - generic [ref=e82] [cursor=pointer]:
+                    - radio "Freelance" [ref=e83]
+                    - radio
+                    - text: Freelance
+                  - generic [ref=e84] [cursor=pointer]:
+                    - radio "Internship" [ref=e85]
+                    - radio
+                    - text: Internship
+                  - generic [ref=e86] [cursor=pointer]:
+                    - radio "Semua" [checked] [ref=e87]
+                    - radio [checked]
+                    - text: Semua
+              - generic [ref=e90]:
+                - generic [ref=e91]: Sumber
+                - radiogroup [ref=e92]:
+                  - generic [ref=e93] [cursor=pointer]:
+                    - radio "Source Website" [ref=e94]
+                    - radio
+                    - text: Source Website
+                  - generic [ref=e95] [cursor=pointer]:
+                    - radio "Job Aggregator" [ref=e96]
+                    - radio
+                    - text: Job Aggregator
+                  - generic [ref=e97] [cursor=pointer]:
+                    - radio "Semua" [checked] [ref=e98]
+                    - radio [checked]
+                    - text: Semua
+              - generic [ref=e101]:
+                - button "Terapkan" [ref=e102] [cursor=pointer]
+                - button "Reset" [ref=e103] [cursor=pointer]
+          - generic [ref=e104]:
+            - generic [ref=e107]:
+              - generic [ref=e108]: Search Result
+              - generic [ref=e109]: Menampilkan 5 lowongan
+            - generic [ref=e110]:
+              - generic [ref=e111]:
+                - generic [ref=e112]:
+                  - generic [ref=e113]:
+                    - generic [ref=e114]: PF
+                    - button "Save job" [ref=e115] [cursor=pointer]:
+                      - img [ref=e116]
+                  - generic [ref=e118]:
+                    - generic [ref=e119]:
+                      - generic [ref=e120]: full-time
+                      - generic [ref=e121]: IT & Software
+                    - heading "Finance Staff" [level=3] [ref=e122]:
+                      - link "Finance Staff" [ref=e123] [cursor=pointer]:
+                        - /url: /jobs/finance-staff-prima-finance-medan
+                    - generic [ref=e124]: Prima Finance
+                    - generic [ref=e125]:
+                      - img [ref=e126]
+                      - generic [ref=e129]: Medan
+                - generic [ref=e130]:
+                  - paragraph [ref=e131]: Kesempatan berkarier dengan tim profesional dan growth tinggi.
+                  - generic [ref=e132]:
+                    - generic [ref=e133]: Example Source
+                    - generic [ref=e134]: Recently found
+                  - generic [ref=e135]: Rp 6.000.000 - Rp 10.000.000
+                - generic [ref=e136]:
+                  - generic [ref=e137]:
+                    - link "Details" [ref=e138] [cursor=pointer]:
+                      - /url: /jobs/finance-staff-prima-finance-medan
+                    - link "Apply" [ref=e139] [cursor=pointer]:
+                      - /url: https://example.com/jobs/4
+                  - generic [ref=e140]:
+                    - generic [ref=e141]: Open source listing
+                    - img [ref=e142]
+              - generic [ref=e146]:
+                - generic [ref=e147]:
+                  - generic [ref=e148]:
+                    - generic [ref=e149]: LS
+                    - button "Save job" [ref=e150] [cursor=pointer]:
+                      - img [ref=e151]
+                  - generic [ref=e153]:
+                    - generic [ref=e154]:
+                      - generic [ref=e155]: full-time
+                      - generic [ref=e156]: IT & Software
+                    - heading "UI/UX Designer" [level=3] [ref=e157]:
+                      - link "UI/UX Designer" [ref=e158] [cursor=pointer]:
+                        - /url: /jobs/ui-ux-designer-loka-studio-yogyakarta
+                    - generic [ref=e159]: Loka Studio
+                    - generic [ref=e160]:
+                      - img [ref=e161]
+                      - generic [ref=e164]: Yogyakarta
+                - generic [ref=e165]:
+                  - paragraph [ref=e166]: Kesempatan berkarier dengan tim profesional dan growth tinggi.
+                  - generic [ref=e167]:
+                    - generic [ref=e168]: Example Source
+                    - generic [ref=e169]: Recently found
+                  - generic [ref=e170]: Rp 6.000.000 - Rp 10.000.000
+                - generic [ref=e171]:
+                  - generic [ref=e172]:
+                    - link "Details" [ref=e173] [cursor=pointer]:
+                      - /url: /jobs/ui-ux-designer-loka-studio-yogyakarta
+                    - link "Apply" [ref=e174] [cursor=pointer]:
+                      - /url: https://example.com/jobs/3
+                  - generic [ref=e175]:
+                    - generic [ref=e176]: Open source listing
+                    - img [ref=e177]
+              - generic [ref=e181]:
+                - generic [ref=e182]:
+                  - generic [ref=e183]:
+                    - generic [ref=e184]: AR
+                    - button "Save job" [ref=e185] [cursor=pointer]:
+                      - img [ref=e186]
+                  - generic [ref=e188]:
+                    - generic [ref=e189]:
+                      - generic [ref=e190]: full-time
+                      - generic [ref=e191]: IT & Software
+                    - heading "Digital Marketing Specialist" [level=3] [ref=e192]:
+                      - link "Digital Marketing Specialist" [ref=e193] [cursor=pointer]:
+                        - /url: /jobs/digital-marketing-specialist-aroma-retail-surabaya
+                    - generic [ref=e194]: Aroma Retail
+                    - generic [ref=e195]:
+                      - img [ref=e196]
+                      - generic [ref=e199]: Surabaya
+                - generic [ref=e200]:
+                  - paragraph [ref=e201]: Kesempatan berkarier dengan tim profesional dan growth tinggi.
+                  - generic [ref=e202]:
+                    - generic [ref=e203]: Example Source
+                    - generic [ref=e204]: Recently found
+                  - generic [ref=e205]: Rp 6.000.000 - Rp 10.000.000
+                - generic [ref=e206]:
+                  - generic [ref=e207]:
+                    - link "Details" [ref=e208] [cursor=pointer]:
+                      - /url: /jobs/digital-marketing-specialist-aroma-retail-surabaya
+                    - link "Apply" [ref=e209] [cursor=pointer]:
+                      - /url: https://example.com/jobs/2
+                  - generic [ref=e210]:
+                    - generic [ref=e211]: Open source listing
+                    - img [ref=e212]
+              - generic [ref=e216]:
+                - generic [ref=e217]:
+                  - generic [ref=e218]:
+                    - generic [ref=e219]: GD
+                    - button "Save job" [ref=e220] [cursor=pointer]:
+                      - img [ref=e221]
+                  - generic [ref=e223]:
+                    - generic [ref=e224]:
+                      - generic [ref=e225]: full-time
+                      - generic [ref=e226]: IT & Software
+                    - heading "Frontend Next.js Engineer" [level=3] [ref=e227]:
+                      - link "Frontend Next.js Engineer" [ref=e228] [cursor=pointer]:
+                        - /url: /jobs/frontend-next-js-engineer-garuda-digital-bandung
+                    - generic [ref=e229]: Garuda Digital
+                    - generic [ref=e230]:
+                      - img [ref=e231]
+                      - generic [ref=e234]: Bandung
+                - generic [ref=e235]:
+                  - paragraph [ref=e236]: Kesempatan berkarier dengan tim profesional dan growth tinggi.
+                  - generic [ref=e237]:
+                    - generic [ref=e238]: Example Source
+                    - generic [ref=e239]: Recently found
+                  - generic [ref=e240]: Rp 6.000.000 - Rp 10.000.000
+                - generic [ref=e241]:
+                  - generic [ref=e242]:
+                    - link "Details" [ref=e243] [cursor=pointer]:
+                      - /url: /jobs/frontend-next-js-engineer-garuda-digital-bandung
+                    - link "Apply" [ref=e244] [cursor=pointer]:
+                      - /url: https://example.com/jobs/1
+                  - generic [ref=e245]:
+                    - generic [ref=e246]: Open source listing
+                    - img [ref=e247]
+              - generic [ref=e251]:
+                - generic [ref=e252]:
+                  - generic [ref=e253]:
+                    - generic [ref=e254]: NT
+                    - button "Save job" [ref=e255] [cursor=pointer]:
+                      - img [ref=e256]
+                  - generic [ref=e258]:
+                    - generic [ref=e259]:
+                      - generic [ref=e260]: full-time
+                      - generic [ref=e261]: IT & Software
+                    - heading "Backend Laravel Developer" [level=3] [ref=e262]:
+                      - link "Backend Laravel Developer" [ref=e263] [cursor=pointer]:
+                        - /url: /jobs/backend-laravel-developer-nusantara-tech-jakarta
+                    - generic [ref=e264]: Nusantara Tech
+                    - generic [ref=e265]:
+                      - img [ref=e266]
+                      - generic [ref=e269]: Jakarta
+                - generic [ref=e270]:
+                  - paragraph [ref=e271]: Kesempatan berkarier dengan tim profesional dan growth tinggi.
+                  - generic [ref=e272]:
+                    - generic [ref=e273]: Example Source
+                    - generic [ref=e274]: Recently found
+                  - generic [ref=e275]: Rp 6.000.000 - Rp 10.000.000
+                - generic [ref=e276]:
+                  - generic [ref=e277]:
+                    - link "Details" [ref=e278] [cursor=pointer]:
+                      - /url: /jobs/backend-laravel-developer-nusantara-tech-jakarta
+                    - link "Apply" [ref=e279] [cursor=pointer]:
+                      - /url: https://example.com/jobs/0
+                  - generic [ref=e280]:
+                    - generic [ref=e281]: Open source listing
+                    - img [ref=e282]
+            - generic [ref=e287]:
+              - link "Prev" [disabled] [ref=e288] [cursor=pointer]:
+                - /url: /jobs?page=1
+              - generic [ref=e289]: Page 1 / 1
+              - link "Next" [disabled] [ref=e290] [cursor=pointer]:
+                - /url: /jobs?page=1
+    - contentinfo [ref=e291]:
+      - generic [ref=e292]:
+        - generic [ref=e294]:
+          - generic [ref=e295]: Mulai pencarian kerja yang lebih rapi dan cepat.
+          - paragraph [ref=e296]: Temukan lowongan terbaru dari berbagai sumber, bandingkan pilihan, dan lanjutkan ke sumber resmi dengan pengalaman yang lebih jelas.
+          - generic [ref=e297]:
+            - link "Cari lowongan" [ref=e298] [cursor=pointer]:
+              - /url: /jobs
+            - link "Pelajari cara kerja" [ref=e299] [cursor=pointer]:
+              - /url: /#how
+        - generic [ref=e300]:
+          - generic [ref=e301]:
+            - generic [ref=e302]: Lowonganku
+            - generic [ref=e303]: Platform pencarian kerja untuk Indonesia.
+            - paragraph [ref=e304]: "Cari lowongan berdasarkan posisi, lokasi, dan tipe kerja. Fokus ke yang penting: informasi jelas, tampilan bersih, dan proses cepat."
+            - generic [ref=e305]:
+              - button "Website" [ref=e306] [cursor=pointer]:
+                - img
+              - button "Career" [ref=e307] [cursor=pointer]:
+                - img
+              - button "Trust" [ref=e308] [cursor=pointer]:
+                - img
+          - generic [ref=e309]:
+            - generic [ref=e310]:
+              - generic [ref=e311]: Produk
+              - list [ref=e312]:
+                - listitem [ref=e313]:
+                  - link "Lowongan" [ref=e314] [cursor=pointer]:
+                    - /url: /jobs
+                - listitem [ref=e315]:
+                  - link "Perusahaan" [ref=e316] [cursor=pointer]:
+                    - /url: /#companies
+                - listitem [ref=e317]:
+                  - link "Untuk Perusahaan" [ref=e318] [cursor=pointer]:
+                    - /url: /#employers
+            - generic [ref=e319]:
+              - generic [ref=e320]: Resource
+              - list [ref=e321]:
+                - listitem [ref=e322]:
+                  - link "Panduan" [ref=e323] [cursor=pointer]:
+                    - /url: /#how
+                - listitem [ref=e324]:
+                  - link "Tips Karier" [ref=e325] [cursor=pointer]:
+                    - /url: /#insights
+                - listitem [ref=e326]:
+                  - link "Bantuan" [ref=e327] [cursor=pointer]:
+                    - /url: /#faq
+                - listitem [ref=e328]:
+                  - link "Status" [ref=e329] [cursor=pointer]:
+                    - /url: /#status
+            - generic [ref=e330]:
+              - generic [ref=e331]: Perusahaan
+              - list [ref=e332]:
+                - listitem [ref=e333]:
+                  - link "Tentang" [ref=e334] [cursor=pointer]:
+                    - /url: /#company
+                - listitem [ref=e335]:
+                  - link "Karier" [ref=e336] [cursor=pointer]:
+                    - /url: /#company
+                - listitem [ref=e337]:
+                  - link "Kontak" [ref=e338] [cursor=pointer]:
+                    - /url: /#company
+                - listitem [ref=e339]:
+                  - link "Media" [ref=e340] [cursor=pointer]:
+                    - /url: /#company
+            - generic [ref=e341]:
+              - generic [ref=e342]: Legal
+              - list [ref=e343]:
+                - listitem [ref=e344]:
+                  - link "Privasi" [ref=e345] [cursor=pointer]:
+                    - /url: /#legal
+                - listitem [ref=e346]:
+                  - link "Ketentuan" [ref=e347] [cursor=pointer]:
+                    - /url: /#legal
+                - listitem [ref=e348]:
+                  - link "Cookie" [ref=e349] [cursor=pointer]:
+                    - /url: /#legal
+                - listitem [ref=e350]:
+                  - link "Keamanan" [ref=e351] [cursor=pointer]:
+                    - /url: /#legal
+        - generic [ref=e352]:
+          - generic [ref=e353]: © 2026 Lowonganku. Hak cipta dilindungi.
+          - generic [ref=e354]:
+            - link "Privasi" [ref=e355] [cursor=pointer]:
+              - /url: /#legal
+            - link "Ketentuan" [ref=e356] [cursor=pointer]:
+              - /url: /#legal
+            - link "Cookie" [ref=e357] [cursor=pointer]:
+              - /url: /#legal
+  - region "Notifications alt+T"

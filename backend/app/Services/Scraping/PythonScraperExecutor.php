@@ -93,6 +93,7 @@ class PythonScraperExecutor
             'SOURCE' => strtolower($source->name),
             'SEND_TO_LARAVEL' => 'false',
             'SAVE_JSON' => 'true',
+            'JSON_OUTPUT_PATH' => base_path('../scraper-service/output/jobs.json'),
         ];
 
         if ($keyword !== null && trim($keyword) !== '') {

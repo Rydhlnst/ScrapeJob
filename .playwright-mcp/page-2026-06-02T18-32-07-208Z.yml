@@ -1,0 +1,113 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - generic [ref=e8]:
+        - img "Lowonganku logo" [ref=e9]
+        - generic [ref=e10]:
+          - generic [ref=e11]: Lowonganku
+          - generic [ref=e12]: Admin Workspace
+      - generic [ref=e14]:
+        - generic [ref=e15]: Navigation
+        - list [ref=e17]:
+          - listitem [ref=e18]:
+            - link "Dashboard" [ref=e19] [cursor=pointer]:
+              - /url: /admin/dashboard
+              - img [ref=e20]
+              - generic [ref=e25]: Dashboard
+          - listitem [ref=e26]:
+            - link "Jobs" [ref=e27] [cursor=pointer]:
+              - /url: /admin/jobs
+              - img [ref=e28]
+              - generic [ref=e31]: Jobs
+          - listitem [ref=e32]:
+            - link "Scraped Review" [ref=e33] [cursor=pointer]:
+              - /url: /admin/raw-data
+              - img [ref=e34]
+              - generic [ref=e38]: Scraped Review
+          - listitem [ref=e39]:
+            - link "Scrape Runs" [ref=e40] [cursor=pointer]:
+              - /url: /admin/scrape-runs
+              - img [ref=e41]
+              - generic [ref=e44]: Scrape Runs
+          - listitem [ref=e45]:
+            - link "Categories" [ref=e46] [cursor=pointer]:
+              - /url: /admin/categories
+              - img [ref=e47]
+              - generic [ref=e51]: Categories
+          - listitem [ref=e52]:
+            - link "Account" [ref=e53] [cursor=pointer]:
+              - /url: /admin/login
+              - img [ref=e54]
+              - generic [ref=e58]: Account
+      - generic [ref=e60]: Manage jobs from raw ingest to publish in one workspace.
+    - main [ref=e61]:
+      - generic [ref=e63]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - heading "Scraped Jobs Review" [level=1] [ref=e67]
+            - paragraph [ref=e68]: Review, clean, approve, reject, and publish scraped job listings.
+          - generic [ref=e69]:
+            - link "Run Scraper" [ref=e70] [cursor=pointer]:
+              - /url: /admin/scrape-runs
+              - img
+              - text: Run Scraper
+            - link "Refresh Data" [ref=e71] [cursor=pointer]:
+              - /url: /admin/raw-data
+              - img
+              - text: Refresh Data
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - generic [ref=e75]:
+                - generic [ref=e76]:
+                  - text: Pending Jobs
+                  - img [ref=e77]
+                - generic [ref=e82]: "0"
+              - generic [ref=e83]: Waiting for review
+            - generic [ref=e84]:
+              - generic [ref=e85]:
+                - generic [ref=e86]:
+                  - text: Approved Jobs
+                  - img [ref=e87]
+                - generic [ref=e90]: "0"
+              - generic [ref=e91]: Ready to publish
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - generic [ref=e94]:
+                  - text: Rejected Jobs
+                  - img [ref=e95]
+                - generic [ref=e99]: "0"
+              - generic [ref=e100]: Removed from queue
+            - generic [ref=e101]:
+              - generic [ref=e102]:
+                - generic [ref=e103]:
+                  - text: Published Jobs
+                  - img [ref=e104]
+                - generic [ref=e107]: "0"
+              - generic [ref=e108]: Visible to users
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - generic [ref=e112]:
+                - generic [ref=e113]: Review Queue
+                - generic [ref=e114]: Showing 0 of 0 pending jobs
+              - generic [ref=e115]:
+                - generic [ref=e116]:
+                  - img
+                  - textbox "Search job title, company, or location..." [ref=e117]
+                - combobox [ref=e118] [cursor=pointer]:
+                  - generic: All Sources
+                  - img
+                - combobox [ref=e119] [cursor=pointer]:
+                  - generic: Pending
+                  - img
+                - button "Refresh" [ref=e120] [cursor=pointer]:
+                  - img
+                  - text: Refresh
+            - alert [ref=e135]:
+              - img [ref=e136]
+              - generic [ref=e138]: Failed to load scraped jobs
+              - generic [ref=e139]:
+                - generic [ref=e140]: Please try refreshing the data.
+                - button "Retry" [ref=e141] [cursor=pointer]
+  - region "Notifications alt+T"
+  - alert [ref=e134]

@@ -1,0 +1,48 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - img "Lowonganku logo" [ref=e6]
+        - paragraph [ref=e7]: Lowonganku
+      - generic [ref=e8]:
+        - heading "Admin workspace sign in" [level=1] [ref=e9]
+        - paragraph [ref=e10]: Masuk untuk mengelola pipeline scraping, review data, dan publish lowongan.
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]: Email
+          - textbox "Email" [ref=e14]:
+            - /placeholder: your@email.com
+            - text: admin@example.com
+        - generic [ref=e15]:
+          - generic [ref=e16]: Password
+          - textbox "Password" [ref=e17]:
+            - /placeholder: ••••••••
+            - text: password
+        - button "Log in with email" [ref=e18] [cursor=pointer]
+        - paragraph [ref=e20]:
+          - text: User account?
+          - link "Sign in as user" [ref=e21] [cursor=pointer]:
+            - /url: /login
+    - complementary [ref=e22]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - paragraph [ref=e27]: Job Health Overview
+            - img [ref=e28]
+          - generic [ref=e30]:
+            - generic [ref=e31]:
+              - paragraph [ref=e32]: Published
+              - paragraph [ref=e33]: 5.2K
+            - generic [ref=e34]:
+              - paragraph [ref=e35]: Draft
+              - paragraph [ref=e36]: "944"
+            - generic [ref=e37]:
+              - paragraph [ref=e38]: Rejected
+              - paragraph [ref=e39]: "214"
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - paragraph [ref=e42]: Global Sources
+            - img [ref=e43]
+          - paragraph [ref=e48]: Trusted ingestion pipeline with continuous review for Jobstreet, Glints, Loker.id, and more.
+  - region "Notifications alt+T"
+  - alert [ref=e49]

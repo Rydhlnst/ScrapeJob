@@ -31,30 +31,45 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section className="py-14 md:py-20" id="about">
+    <section
+      className="border-b bg-white py-16 md:py-20"
+      id="about"
+      style={{ borderColor: "var(--brand-shell-strong)" }}
+    >
       <Container>
         <SectionHeader
-          title="Real Stories from Our Users"
-          description="See how job seekers discover better opportunities with our platform."
-          align="center"
+          title="What people value most"
+          description="The experience stays structured, clear, and easier to trust."
         />
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {testimonials.map((t) => (
+          {testimonials.map((testimonial) => (
             <Card
-              key={t.name}
-              className="overflow-hidden rounded-3xl border-border bg-card shadow-sm"
+              key={testimonial.name}
+              className="border p-6 shadow-none"
+              style={{
+                borderColor: "var(--brand-shell-strong)",
+                backgroundColor: "var(--brand-shell)",
+              }}
             >
-              <div className="h-36 bg-gradient-to-br from-[hsl(var(--primary))] to-[hsl(var(--primary-dark))]" />
-              <div className="p-6">
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  “{t.quote}”
-                </p>
-                <div className="mt-5">
-                  <div className="text-sm font-semibold text-foreground">
-                    {t.name}
-                  </div>
-                  <div className="text-xs text-muted-foreground">{t.role}</div>
+              <p
+                className="text-sm leading-7"
+                style={{ color: "rgba(23,37,84,0.72)" }}
+              >
+                "{testimonial.quote}"
+              </p>
+              <div className="mt-5">
+                <div
+                  className="text-sm font-semibold"
+                  style={{ color: "var(--brand-ink)" }}
+                >
+                  {testimonial.name}
+                </div>
+                <div
+                  className="text-xs"
+                  style={{ color: "rgba(23,37,84,0.6)" }}
+                >
+                  {testimonial.role}
                 </div>
               </div>
             </Card>
@@ -64,4 +79,3 @@ export function TestimonialsSection() {
     </section>
   )
 }
-

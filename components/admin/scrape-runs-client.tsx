@@ -21,30 +21,6 @@ function toTitleCase(value: string) {
     .join(" ")
 }
 
-const DEFAULT_SOURCES: JobSourceOption[] = [
-  { id: "jobstreet-fallback", name: "Jobstreet", scrapingAllowed: true, isActive: true },
-  { id: "jobstreetexpress-fallback", name: "Jobstreetexpress", scrapingAllowed: true, isActive: true },
-  { id: "glints-fallback", name: "Glints", scrapingAllowed: true, isActive: true },
-  { id: "lokerid-fallback", name: "Lokerid", scrapingAllowed: true, isActive: true },
-  { id: "kalibrr-fallback", name: "Kalibrr", scrapingAllowed: true, isActive: true },
-]
-
-function mergeSourcesWithFallback(apiSources: JobSourceOption[]) {
-  const byName = new Map<string, JobSourceOption>()
-
-  for (const item of apiSources) {
-    byName.set(item.name.toLowerCase(), item)
-  }
-  for (const item of DEFAULT_SOURCES) {
-    const key = item.name.toLowerCase()
-    if (!byName.has(key)) {
-      byName.set(key, item)
-    }
-  }
-
-  return Array.from(byName.values())
-}
-
 export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
   const [runItems, setRunItems] = React.useState<ScrapeRun[]>(runs)
   const [sources, setSources] = React.useState<JobSourceOption[]>([])
@@ -77,18 +53,13 @@ export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
       try {
         const data = await listJobSources()
         if (!alive) return
-        const normalized = mergeSourcesWithFallback(data)
-        setSources(normalized)
-        if (!sourceId && normalized[0]?.id) {
-          setSourceId(normalized[0].id)
+        setSources(data)
+        if (!sourceId && data[0]?.id) {
+          setSourceId(data[0].id)
         }
       } catch {
         if (!alive) return
-        setSources(DEFAULT_SOURCES)
-        if (!sourceId && DEFAULT_SOURCES[0]?.id) {
-          setSourceId(DEFAULT_SOURCES[0].id)
-        }
-        toast.warning("Gagal memuat source API. Menggunakan source fallback.")
+        toast.error("Gagal memuat source scraping.")
       }
     }
 

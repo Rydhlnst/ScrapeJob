@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\UsesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ScrapedJob extends Model
 {
@@ -35,5 +36,10 @@ class ScrapedJob extends Model
             'scraped_at' => 'datetime',
             'raw_json' => 'array',
         ];
+    }
+
+    public function job(): HasOne
+    {
+        return $this->hasOne(Job::class);
     }
 }

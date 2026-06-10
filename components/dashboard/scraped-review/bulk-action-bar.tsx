@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 type Props = {
   selectedCount: number
   busy: boolean
+  publishDisabled: boolean
   onApproveSelected: () => void
   onRejectSelected: () => void
   onPublishSelected: () => void
@@ -13,6 +14,7 @@ type Props = {
 export function BulkActionBar({
   selectedCount,
   busy,
+  publishDisabled,
   onApproveSelected,
   onRejectSelected,
   onPublishSelected,
@@ -29,7 +31,7 @@ export function BulkActionBar({
       <Button size="sm" variant="outline" disabled={busy} onClick={onRejectSelected}>
         Reject Selected
       </Button>
-      <Button size="sm" disabled={busy} onClick={onPublishSelected}>
+      <Button size="sm" disabled={busy || publishDisabled} onClick={onPublishSelected}>
         Publish Selected
       </Button>
       <Button size="sm" variant="ghost" onClick={onClear}>
@@ -38,4 +40,3 @@ export function BulkActionBar({
     </div>
   )
 }
-

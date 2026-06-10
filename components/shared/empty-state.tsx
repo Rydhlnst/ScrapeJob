@@ -26,10 +26,7 @@ export function EmptyState({
         <p className="mt-2 text-sm text-muted-foreground">{description}</p>
       ) : null}
       {actionLabel && onAction ? (
-        <Button
-          className="mt-5 rounded-2xl bg-[hsl(var(--dark))] text-white hover:bg-[hsl(var(--dark-soft))]"
-          onClick={onAction}
-        >
+        <Button className="mt-5 rounded-xl" onClick={onAction}>
           {actionLabel}
         </Button>
       ) : null}

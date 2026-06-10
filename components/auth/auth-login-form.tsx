@@ -95,7 +95,7 @@ export function AuthLoginForm({ role }: { role: "user" | "admin" }) {
       <form.Subscribe
         selector={(state) => [state.isSubmitting]}
         children={([isSubmitting]) => (
-          <Button className="w-full bg-slate-900 text-white hover:bg-slate-800" type="submit" disabled={isSubmitting}>
+          <Button className="h-11 w-full rounded-xl" type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -108,18 +108,18 @@ export function AuthLoginForm({ role }: { role: "user" | "admin" }) {
         )}
       />
 
-      <div className="space-y-2 text-center text-sm text-slate-500">
+      <div className="space-y-2 text-center text-sm text-muted-foreground">
         {role === "admin" ? (
           <p>
             User account?{" "}
-            <Link className="font-medium text-slate-900 hover:underline" href="/login">
+            <Link className="font-medium text-foreground hover:underline" href="/login">
               Sign in as user
             </Link>
           </p>
         ) : (
           <p>
             Admin account?{" "}
-            <Link className="font-medium text-slate-900 hover:underline" href="/admin/login">
+            <Link className="font-medium text-foreground hover:underline" href="/admin/login">
               Sign in as admin
             </Link>
           </p>

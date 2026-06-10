@@ -1,0 +1,42 @@
+FROM node:22-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+FROM base AS deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm config set fetch-retries 5 && \
+    pnpm config set fetch-retry-maxtimeout 120000 && \
+    pnpm install --frozen-lockfile
+
+FROM deps AS builder
+ARG NEXT_PUBLIC_API_BASE_URL=""
+ARG INTERNAL_API_BASE_URL=""
+ARG NEXT_PUBLIC_USE_MOCK="false"
+ARG API_BEARER_TOKEN=""
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+ENV INTERNAL_API_BASE_URL=$INTERNAL_API_BASE_URL
+ENV NEXT_PUBLIC_USE_MOCK=$NEXT_PUBLIC_USE_MOCK
+ENV API_BEARER_TOKEN=$API_BEARER_TOKEN
+ENV NEXT_TELEMETRY_DISABLED=1
+COPY . .
+RUN pnpm build
+
+FROM node:22-alpine AS runner
+WORKDIR /app
+ARG NEXT_PUBLIC_API_BASE_URL=""
+ARG INTERNAL_API_BASE_URL=""
+ARG NEXT_PUBLIC_USE_MOCK="false"
+ARG API_BEARER_TOKEN=""
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+ENV INTERNAL_API_BASE_URL=$INTERNAL_API_BASE_URL
+ENV NEXT_PUBLIC_USE_MOCK=$NEXT_PUBLIC_USE_MOCK
+ENV API_BEARER_TOKEN=$API_BEARER_TOKEN
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+EXPOSE 3000
+CMD ["node", "server.js"]

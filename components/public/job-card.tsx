@@ -1,16 +1,18 @@
 import Link from "next/link"
+import { Bookmark, ExternalLink, MapPin } from "lucide-react"
 
 import type { Job } from "@/types"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { JobStatusPill } from "./job-status-pill"
+import { cn } from "@/lib/utils"
+
 import { categoryColor, jobTypeColor } from "./color-tags"
+import { JobStatusPill } from "./job-status-pill"
 
 function initials(name: string) {
   const parts = name.trim().split(/\s+/).slice(0, 2)
-  return parts.map((p) => p[0]?.toUpperCase()).join("")
+  return parts.map((part) => part[0]?.toUpperCase()).join("")
 }
 
 function hashToIndex(input: string, modulo: number) {
@@ -18,22 +20,41 @@ function hashToIndex(input: string, modulo: number) {
   for (let i = 0; i < input.length; i++) {
     hash = (hash * 31 + input.charCodeAt(i)) | 0
   }
+
   const positive = Math.abs(hash)
   return positive % Math.max(1, modulo)
 }
 
-const avatarPalettes = [
-  "bg-emerald-100 text-emerald-900",
-  "bg-sky-100 text-sky-900",
-  "bg-violet-100 text-violet-900",
-  "bg-rose-100 text-rose-900",
-  "bg-amber-100 text-amber-950",
-  "bg-teal-100 text-teal-900",
+const cardPalettes = [
+  {
+    shell: "bg-[linear-gradient(135deg,#eef6ff_0%,#dff2ff_100%)] border-sky-100",
+    avatar: "bg-white/84 text-sky-700 border border-white/80",
+    meta: "text-sky-700",
+    footer: "bg-white/56",
+  },
+  {
+    shell: "bg-[linear-gradient(135deg,#fff9dc_0%,#fff0bf_100%)] border-amber-100",
+    avatar: "bg-white/84 text-amber-700 border border-white/80",
+    meta: "text-amber-700",
+    footer: "bg-white/58",
+  },
+  {
+    shell: "bg-[linear-gradient(135deg,#eef1ff_0%,#e2e8ff_100%)] border-indigo-100",
+    avatar: "bg-white/84 text-indigo-700 border border-white/80",
+    meta: "text-indigo-700",
+    footer: "bg-white/58",
+  },
+  {
+    shell: "bg-[linear-gradient(135deg,#f6fbff_0%,#ebf4ff_100%)] border-blue-100",
+    avatar: "bg-white/84 text-blue-700 border border-white/80",
+    meta: "text-blue-700",
+    footer: "bg-white/56",
+  },
 ] as const
 
-function companyAvatarClass(companyName: string) {
-  const idx = hashToIndex(companyName.toLowerCase(), avatarPalettes.length)
-  return avatarPalettes[idx]
+function paletteForJob(job: Job) {
+  const key = `${job.companyName ?? ""}-${job.title}-${job.category ?? ""}`.toLowerCase()
+  return cardPalettes[hashToIndex(key, cardPalettes.length)]
 }
 
 export function JobCard({
@@ -48,112 +69,112 @@ export function JobCard({
   className?: string
 }) {
   const compact = variant === "compact"
+  const companyName = job.companyName || "Company undisclosed"
+  const location = job.location || "Remote/On-site not specified"
+  const palette = paletteForJob(job)
 
   return (
     <Card
       className={cn(
-        "group flex h-full flex-col overflow-hidden rounded-2xl bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg",
+        "group flex h-full flex-col overflow-hidden rounded-none border p-0 transition-all duration-200 hover:-translate-y-1 hover:shadow-[var(--shadow-md)]",
+        palette.shell,
         className,
       )}
     >
       <CardHeader className={cn(compact ? "p-5 pb-3" : "p-6 pb-3")}>
         <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              {job.jobType ? (
-                <Badge
-                  variant="outline"
-                  className={cn("font-medium border-0", jobTypeColor(job.jobType))}
-                >
-                  {job.jobType}
-                </Badge>
-              ) : null}
-              {job.category ? (
-                <Badge
-                  variant="outline"
-                  className={cn("font-medium border-0", categoryColor(job.category))}
-                >
-                  {job.category}
-                </Badge>
-              ) : null}
-            </div>
-            <h3
-              className={cn(
-                "mt-3 font-semibold tracking-tight text-foreground",
-                compact ? "text-base leading-snug" : "text-lg leading-snug",
-                "line-clamp-2",
-              )}
-            >
-              <Link href={`/jobs/${job.slug}`}>{job.title}</Link>
-            </h3>
-            <div className="mt-2 flex items-center gap-3">
-              <div
-                className={cn(
-                  "grid size-9 place-items-center rounded-full shadow-sm",
-                  companyAvatarClass(job.companyName),
-                )}
-              >
-                <span className="text-xs font-semibold">
-                  {initials(job.companyName)}
-                </span>
-              </div>
-              <div className="min-w-0">
-                <div className="line-clamp-1 text-sm font-medium text-muted-foreground">
-                  {job.companyName}
-                </div>
-                <div className="line-clamp-1 text-xs text-muted-foreground">
-                  {job.location}
-                </div>
-              </div>
-            </div>
+          <div
+            className={cn(
+              "grid size-11 place-items-center rounded-none text-sm font-semibold shadow-[var(--shadow-sm)]",
+              palette.avatar,
+            )}
+          >
+            {initials(companyName)}
           </div>
-          {showStatus ? <JobStatusPill status={job.status} /> : null}
+          {showStatus ? (
+            <JobStatusPill status={job.status} />
+          ) : (
+            <button
+              type="button"
+              aria-label="Save job"
+              className="grid size-9 place-items-center rounded-none border border-white/90 bg-white/70 text-slate-500 transition-colors hover:text-slate-900"
+            >
+              <Bookmark className="size-4" />
+            </button>
+          )}
+        </div>
+
+        <div className="mt-5 min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            {job.jobType ? (
+              <Badge variant="outline" className={cn("rounded-none font-medium", jobTypeColor(job.jobType))}>
+                {job.jobType}
+              </Badge>
+            ) : null}
+            {job.category ? (
+              <Badge variant="outline" className={cn("rounded-none font-medium", categoryColor(job.category))}>
+                {job.category}
+              </Badge>
+            ) : null}
+          </div>
+
+          <h3
+            className={cn(
+              "mt-4 line-clamp-2 font-semibold tracking-[-0.03em] text-slate-950",
+              compact ? "text-[1.15rem] leading-7" : "text-xl leading-8",
+            )}
+          >
+            <Link href={`/jobs/${job.slug}`} className="transition-opacity hover:opacity-75">
+              {job.title}
+            </Link>
+          </h3>
+
+          <div className="mt-2 text-sm font-medium text-slate-700">{companyName}</div>
+          <div className="mt-1 flex items-center gap-2 text-sm text-slate-600">
+            <MapPin className="size-4" />
+            <span className="line-clamp-1">{location}</span>
+          </div>
         </div>
       </CardHeader>
 
       <CardContent className={cn(compact ? "p-5 pt-0" : "p-6 pt-0")}>
-        <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-          {job.description}
-        </p>
+        <p className="line-clamp-3 text-sm leading-7 text-slate-600">{job.description}</p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <span className="rounded-full bg-[hsl(var(--muted))] px-2.5 py-1">
+        <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-600">
+          <span className="rounded-none border border-white/90 bg-white/74 px-3 py-1.5 font-medium">
             {job.sourceName}
           </span>
-          {job.scrapedAt ? (
-            <span className="rounded-full bg-[hsl(var(--muted))] px-2.5 py-1">
-              {job.scrapedAt}
-            </span>
-          ) : null}
+          <span className="rounded-none border border-white/90 bg-white/62 px-3 py-1.5 font-medium">
+            {job.scrapedAt || "Recently found"}
+          </span>
         </div>
 
-        <div
-          className={cn(
-            "mt-4 text-sm font-semibold",
-            job.salaryText ? "text-[hsl(var(--primary))]" : "text-muted-foreground",
-          )}
-        >
-          {job.salaryText ? job.salaryText : "Gaji: -"}
+        <div className={cn("mt-5 text-sm font-semibold", palette.meta)}>
+          {job.salaryText || "Salary not listed"}
         </div>
       </CardContent>
 
-      <CardFooter className={cn(compact ? "p-5 pt-2" : "p-6 pt-2")}>
-        <div className="grid w-full gap-2">
-          <Button
-            asChild
-            className="w-full rounded-full bg-[hsl(var(--dark))] text-white hover:bg-[hsl(var(--dark-soft))]"
-          >
-            <Link href={`/jobs/${job.slug}`}>Lihat detail</Link>
-          </Button>
+      <CardFooter className={cn("mt-auto grid w-full gap-2", palette.footer, compact ? "p-5" : "p-6")}>
+        <div className="grid w-full grid-cols-2 gap-2">
           <Button
             asChild
             variant="outline"
-            className="w-full rounded-full bg-card hover:bg-muted"
+            className="h-11 rounded-none border-slate-900/16 bg-white/86 font-semibold text-slate-800 hover:bg-white"
+          >
+            <Link href={`/jobs/${job.slug}`}>Details</Link>
+          </Button>
+          <Button
+            asChild
+            className="h-11 rounded-none bg-slate-950 font-semibold text-white hover:bg-slate-800"
           >
             <a href={job.sourceUrl} target="_blank" rel="noreferrer">
-              Lihat sumber
+              Apply
             </a>
           </Button>
+        </div>
+        <div className="flex items-center justify-between text-xs text-slate-500">
+          <span>Open source listing</span>
+          <ExternalLink className="size-3.5" />
         </div>
       </CardFooter>
     </Card>

@@ -1,30 +1,135 @@
 services:
   frontend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+        INTERNAL_API_BASE_URL: http://backend
+        NEXT_PUBLIC_USE_MOCK: "false"
+        API_BEARER_TOKEN: ""
     ports:
       - "3000:3000"
     env_file:
       - ./.env.local
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+      INTERNAL_API_BASE_URL: http://backend
+      NEXT_PUBLIC_USE_MOCK: "false"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000').then((res) => process.exit(res.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
-      - "8000:8000"
+      - "8000:80"
     env_file:
-      - ./backend/.env
+      - ./backend/.env.docker
+    environment:
+      APP_URL: http://localhost:8000
+      FRONTEND_URL: http://localhost:3000
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: job_platform
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SCRAPER_PYTHON_MODE: local
+      SCRAPER_PYTHON_BIN: python3
+      SCRAPER_SCHEDULE_ENABLED: "true"
+      SCRAPER_SCHEDULE_CRON: "0 */8 * * *"
+      RUN_MIGRATIONS: "true"
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1/api/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  queue:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file:
+      - ./backend/.env.docker
+    environment:
+      APP_URL: http://backend
+      FRONTEND_URL: http://frontend:3000
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: job_platform
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SCRAPER_PYTHON_MODE: local
+      SCRAPER_PYTHON_BIN: python3
+      WAIT_FOR_DB: "true"
+    command: ["/var/www/html/docker/start-worker.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file:
+      - ./backend/.env.docker
+    environment:
+      APP_URL: http://backend
+      FRONTEND_URL: http://frontend:3000
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: job_platform
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SCRAPER_PYTHON_MODE: local
+      SCRAPER_PYTHON_BIN: python3
+      SCRAPER_SCHEDULE_ENABLED: "true"
+      SCRAPER_SCHEDULE_CRON: "0 */8 * * *"
+      WAIT_FOR_DB: "true"
+    command: ["/var/www/html/docker/start-scheduler.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   scraper:
-    build: ./scraper-service
+    build:
+      context: ./scraper-service
+      dockerfile: Dockerfile
     image: scrapejob-scraper:local
     env_file:
       - ./scraper-service/.env
+    environment:
+      LARAVEL_API_BASE_URL: http://backend/api
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     profiles:
       - scraper
 
@@ -36,6 +141,11 @@ services:
       POSTGRES_DB: job_platform
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d job_platform"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - pg-data:/var/lib/postgresql/data
 
@@ -43,6 +153,11 @@ services:
     image: redis:7
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pg-data:

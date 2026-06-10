@@ -36,4 +36,4 @@ python app/main.py
 - No private candidate/user profile scraping.
 - Add random delay to avoid aggressive traffic.
 - Keep source attribution (`source_url`, `source`).
-- Imported jobs always `pending` for admin review.
+- Imported jobs are auto-published to Laravel and can appear on the public jobs page immediately.

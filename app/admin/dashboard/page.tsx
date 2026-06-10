@@ -8,11 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 
 const statusTone: Record<string, string> = {
-  published: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
-  draft: "bg-amber-500/15 text-amber-700 dark:text-amber-300",
-  raw: "bg-slate-500/15 text-slate-700 dark:text-slate-300",
-  rejected: "bg-rose-500/15 text-rose-700 dark:text-rose-300",
-  duplicate: "bg-indigo-500/15 text-indigo-700 dark:text-indigo-300",
+  published: "border-border bg-accent text-accent-foreground",
+  draft: "border-border bg-background text-foreground",
+  raw: "border-border bg-muted text-muted-foreground",
+  rejected: "border-border bg-muted text-muted-foreground",
+  duplicate: "border-border bg-background text-muted-foreground",
 }
 
 export default async function AdminDashboardPage() {

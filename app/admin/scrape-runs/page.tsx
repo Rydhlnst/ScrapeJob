@@ -6,7 +6,7 @@ export default function AdminScrapeRunsPage() {
     <div>
       <AdminHeader
         title="Scrape Runs"
-        description="Jalankan scraping manual (mock) dan lihat log status success/failed/duplicate/skipped."
+        description="Jalankan scraping manual dan lihat log status success, partial, failed, duplicate, atau skipped."
       />
       <div>
         <ScrapeRunsClient runs={[]} />

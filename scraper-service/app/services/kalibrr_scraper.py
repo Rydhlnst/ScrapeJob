@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+import random
+import time
 from datetime import datetime
 from typing import Dict, List, Optional
 from urllib.parse import quote_plus
@@ -11,6 +14,7 @@ from bs4 import BeautifulSoup
 from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
 from app.utils.cleaner import clean_text
+from app.utils.date_parser import parse_posted_date
 
 
 class KalibrrScraper:
@@ -94,22 +98,127 @@ class KalibrrScraper:
             if not title:
                 continue
 
+            detail = self._scrape_detail_page(link)
+
             results.append(
                 normalize_job_payload(
                     source=self.settings.source,
                     scraped_at_iso=scraped_at,
                     role_keyword=role,
                     source_url=link,
-                    title=title,
-                    company=company,
-                    location=location,
-                    salary=None,
-                    employment_type=None,
-                    description=None,
+                    title=detail.get("title") or title,
+                    company=detail.get("company") or company,
+                    location=detail.get("location") or location,
+                    salary=detail.get("salary"),
+                    employment_type=detail.get("employment_type"),
+                    description=detail.get("description"),
                     description_summary=None,
-                    posted_date=None,
-                    raw={"source": "kalibrr", "query_url": active_url},
+                    posted_date=detail.get("posted_date"),
+                    raw={
+                        "source": "kalibrr",
+                        "query_url": active_url,
+                        "detail_fetched": bool(detail.get("description") or detail.get("company") or detail.get("location")),
+                    },
                 )
             )
+            self._sleep_delay()
 
         return results
+
+    def _scrape_detail_page(self, job_url: str) -> Dict[str, Optional[str]]:
+        detail: Dict[str, Optional[str]] = {
+            "title": None,
+            "company": None,
+            "location": None,
+            "salary": None,
+            "employment_type": None,
+            "description": None,
+            "posted_date": None,
+        }
+
+        try:
+            response = self._http.get(job_url, timeout=max(self.settings.detail_timeout_seconds, 20))
+            response.raise_for_status()
+        except Exception:
+            return detail
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        detail["title"] = self._pick_text(soup, ["h1", "[class*='title']"])
+        detail["company"] = self._pick_text(soup, ["[class*='company']", "a[href*='/company/']"])
+        detail["location"] = self._pick_text(soup, ["[class*='location']", "[data-testid*='location']"])
+        detail["salary"] = self._pick_text(soup, ["[class*='salary']", "[data-testid*='salary']"])
+        detail["employment_type"] = self._pick_text(soup, ["[class*='job-type']", "[class*='employment']"])
+        description_node = (
+            soup.select_one("[class*='description']")
+            or soup.select_one("[data-testid*='description']")
+            or soup.select_one("article")
+        )
+        detail["description"] = (
+            clean_text(description_node.get_text("\n", strip=True)) if description_node else None
+        )
+        detail["posted_date"] = parse_posted_date(
+            self._pick_text(soup, ["time", "[class*='date']"]),
+            self.settings.timezone_name,
+        )
+
+        for script in soup.select("script[type='application/ld+json']"):
+            raw = (script.string or script.get_text() or "").strip()
+            if not raw:
+                continue
+            try:
+                payload = json.loads(raw)
+            except Exception:
+                continue
+
+            objects = payload if isinstance(payload, list) else [payload]
+            for obj in objects:
+                if not isinstance(obj, dict) or obj.get("@type") != "JobPosting":
+                    continue
+
+                detail["title"] = detail["title"] or clean_text(str(obj.get("title") or "").strip()) or None
+                org = obj.get("hiringOrganization")
+                if not detail["company"] and isinstance(org, dict):
+                    detail["company"] = clean_text(str(org.get("name") or "").strip()) or None
+                if not detail["location"]:
+                    job_loc = obj.get("jobLocation")
+                    if isinstance(job_loc, dict):
+                        address = job_loc.get("address")
+                        if isinstance(address, dict):
+                            detail["location"] = clean_text(str(address.get("addressLocality") or "").strip()) or None
+                detail["employment_type"] = (
+                    detail["employment_type"]
+                    or clean_text(str(obj.get("employmentType") or "").strip())
+                    or None
+                )
+                detail["description"] = detail["description"] or clean_text(str(obj.get("description") or "").strip()) or None
+                detail["posted_date"] = detail["posted_date"] or parse_posted_date(
+                    str(obj.get("datePosted") or "").strip(),
+                    self.settings.timezone_name,
+                )
+
+                if not detail["salary"]:
+                    base_salary = obj.get("baseSalary")
+                    if isinstance(base_salary, dict):
+                        value = base_salary.get("value")
+                        if isinstance(value, dict):
+                            salary_value = value.get("value")
+                            unit = value.get("unitText")
+                            if salary_value:
+                                detail["salary"] = clean_text(f"{salary_value} {unit or ''}") or None
+                break
+
+        return detail
+
+    def _pick_text(self, soup: BeautifulSoup, selectors: List[str]) -> Optional[str]:
+        for selector in selectors:
+            node = soup.select_one(selector)
+            if node:
+                value = clean_text(node.get_text(" ", strip=True))
+                if value:
+                    return value
+        return None
+
+    def _sleep_delay(self) -> None:
+        min_s = min(self.settings.request_delay_min, self.settings.request_delay_max)
+        max_s = max(self.settings.request_delay_min, self.settings.request_delay_max)
+        time.sleep(random.uniform(min_s, max_s))

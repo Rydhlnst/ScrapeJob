@@ -14,20 +14,19 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        "space-y-2",
+        "space-y-3",
         align === "center" ? "text-center" : "text-left",
         className,
       )}
     >
-      <h2 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+      <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl lg:text-[2rem]">
         {title}
       </h2>
       {description ? (
-        <p className="mx-auto max-w-2xl text-sm text-muted-foreground md:text-base">
+        <p className="mx-auto max-w-2xl text-sm leading-7 text-muted-foreground md:text-base">
           {description}
         </p>
       ) : null}
     </div>
   )
 }
-

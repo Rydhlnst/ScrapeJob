@@ -42,7 +42,7 @@ export function AdminSidebar() {
   return (
     <Sidebar variant="inset" collapsible="icon">
       <SidebarHeader className="p-3">
-        <div className="flex items-center gap-3 rounded-xl border border-sidebar-border bg-sidebar-accent/20 px-3 py-3">
+        <div className="flex items-center gap-3 rounded-2xl border border-sidebar-border bg-card px-3 py-3 shadow-[var(--shadow-sm)]">
           <Image src="/logo.png" alt="Lowonganku logo" width={36} height={36} className="h-9 w-9 rounded-lg object-cover" />
           <div>
             <div className="text-sm font-semibold leading-tight">Lowonganku</div>
@@ -67,9 +67,9 @@ export function AdminSidebar() {
                       isActive={active}
                       tooltip={item.label}
                       className={cn(
-                        "h-10 rounded-lg text-sidebar-foreground/90",
-                        "hover:bg-[hsl(var(--sidebar-muted))] hover:text-sidebar-foreground",
-                        "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground data-[active=true]:shadow-sm",
+                        "h-10 rounded-xl text-sidebar-foreground/90",
+                        "hover:bg-muted hover:text-foreground",
+                        "data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:shadow-none",
                       )}
                     >
                       <Link href={item.href}>
@@ -85,7 +85,7 @@ export function AdminSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="p-3">
-        <div className="rounded-lg border border-sidebar-border bg-sidebar-accent/20 px-3 py-3 text-xs text-sidebar-foreground/75">
+        <div className="rounded-2xl border border-sidebar-border bg-card px-3 py-3 text-xs text-sidebar-foreground/75">
           Manage jobs from raw ingest to publish in one workspace.
         </div>
       </SidebarFooter>

@@ -1,5 +1,5 @@
-import { BarChart3, Globe2 } from "lucide-react"
 import Image from "next/image"
+import { BarChart3, Globe2 } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
 
@@ -13,53 +13,63 @@ export function AuthShell({
   children: React.ReactNode
 }) {
   return (
-    <div className="grid min-h-screen bg-slate-50 lg:grid-cols-2">
+    <div className="grid min-h-screen bg-background lg:grid-cols-2">
       <section className="flex items-center justify-center px-4 py-10 sm:px-8">
-        <Card className="w-full max-w-md border-slate-200 bg-white/95 p-6 shadow-lg sm:p-8">
+        <Card className="w-full max-w-md border-border bg-card p-6 shadow-[var(--shadow-md)] sm:p-8">
           <div className="mb-6 flex items-center gap-2">
-            <Image src="/logo.png" alt="Lowonganku logo" width={32} height={32} className="h-8 w-8 rounded-lg object-cover" />
-            <p className="text-sm font-semibold text-slate-700">Lowonganku</p>
+            <Image
+              src="/logo.png"
+              alt="Lowonganku logo"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-lg object-cover"
+            />
+            <p className="text-sm font-semibold text-foreground">Lowonganku</p>
           </div>
           <div className="mb-6">
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{title}</h1>
-            <p className="mt-1 text-sm text-slate-500">{description}</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+              {title}
+            </h1>
+            <p className="mt-1 text-sm leading-7 text-muted-foreground">
+              {description}
+            </p>
           </div>
           {children}
         </Card>
       </section>
 
-      <aside className="relative hidden overflow-hidden border-l bg-gradient-to-b from-white via-slate-50 to-slate-100 lg:block">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.18),transparent_45%),radial-gradient(circle_at_75%_35%,rgba(15,23,42,0.1),transparent_50%)]" />
-        <div className="relative flex h-full items-center justify-center p-12">
+      <aside className="hidden border-l border-border bg-muted/40 lg:block">
+        <div className="flex h-full items-center justify-center p-12">
           <div className="w-full max-w-lg space-y-5">
-            <Card className="rotate-[-5deg] border-slate-200/70 bg-white/90 p-5 shadow-xl backdrop-blur">
+            <Card className="border-border bg-card p-5 shadow-[var(--shadow-sm)]">
               <div className="mb-3 flex items-center justify-between text-sm">
-                <p className="font-medium text-slate-900">Job Health Overview</p>
-                <BarChart3 className="h-4 w-4 text-cyan-600" />
+                <p className="font-medium text-foreground">Job Health Overview</p>
+                <BarChart3 className="h-4 w-4 text-primary" />
               </div>
               <div className="grid grid-cols-3 gap-3 text-xs">
-                <div className="rounded-lg bg-emerald-50 p-3">
-                  <p className="text-emerald-600">Published</p>
-                  <p className="mt-1 text-lg font-semibold text-emerald-700">5.2K</p>
+                <div className="rounded-lg border border-border bg-background p-3">
+                  <p className="text-muted-foreground">Published</p>
+                  <p className="mt-1 text-lg font-semibold text-foreground">5.2K</p>
                 </div>
-                <div className="rounded-lg bg-amber-50 p-3">
-                  <p className="text-amber-600">Draft</p>
-                  <p className="mt-1 text-lg font-semibold text-amber-700">944</p>
+                <div className="rounded-lg border border-border bg-background p-3">
+                  <p className="text-muted-foreground">Draft</p>
+                  <p className="mt-1 text-lg font-semibold text-foreground">944</p>
                 </div>
-                <div className="rounded-lg bg-rose-50 p-3">
-                  <p className="text-rose-600">Rejected</p>
-                  <p className="mt-1 text-lg font-semibold text-rose-700">214</p>
+                <div className="rounded-lg border border-border bg-background p-3">
+                  <p className="text-muted-foreground">Rejected</p>
+                  <p className="mt-1 text-lg font-semibold text-foreground">214</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="rotate-[7deg] border-slate-200/70 bg-white/90 p-5 shadow-xl backdrop-blur">
+            <Card className="border-border bg-card p-5 shadow-[var(--shadow-sm)]">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-slate-900">Global Sources</p>
-                <Globe2 className="h-4 w-4 text-cyan-600" />
+                <p className="text-sm font-medium text-foreground">Global Sources</p>
+                <Globe2 className="h-4 w-4 text-primary" />
               </div>
-              <p className="mt-3 text-xs leading-6 text-slate-500">
-                Trusted ingestion pipeline with continuous review for Jobstreet, Glints, Loker.id, and more.
+              <p className="mt-3 text-xs leading-6 text-muted-foreground">
+                Trusted ingestion pipeline with continuous review for Jobstreet,
+                Glints, Loker.id, and more.
               </p>
             </Card>
           </div>

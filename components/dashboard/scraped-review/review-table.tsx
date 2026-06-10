@@ -16,6 +16,7 @@ export function ReviewTable({
   onToggleAll,
   onToggleRow,
   onAction,
+  canPublish,
 }: ReviewTableProps) {
   return (
     <>
@@ -78,7 +79,12 @@ export function ReviewTable({
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">{scrapedAt}</TableCell>
                   <TableCell className="text-right">
-                    <ReviewRowActions sourceUrl={job.sourceUrl} disabled={busy} onAction={(action) => onAction(job.id, action)} />
+                    <ReviewRowActions
+                      sourceUrl={job.sourceUrl}
+                      disabled={busy}
+                      publishDisabled={!canPublish(job)}
+                      onAction={(action) => onAction(job.id, action)}
+                    />
                   </TableCell>
                 </TableRow>
               )
@@ -111,7 +117,12 @@ export function ReviewTable({
                 </div>
                 <div className="flex items-center justify-between">
                   <Badge className={`rounded-full px-2.5 ${helpers.sourceBadgeClass(job.source)}`}>{job.source}</Badge>
-                  <ReviewRowActions sourceUrl={job.sourceUrl} disabled={busy} onAction={(action) => onAction(job.id, action)} />
+                  <ReviewRowActions
+                    sourceUrl={job.sourceUrl}
+                    disabled={busy}
+                    publishDisabled={!canPublish(job)}
+                    onAction={(action) => onAction(job.id, action)}
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -121,4 +132,3 @@ export function ReviewTable({
     </>
   )
 }
-

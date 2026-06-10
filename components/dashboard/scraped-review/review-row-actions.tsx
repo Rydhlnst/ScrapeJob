@@ -8,10 +8,11 @@ import type { RowAction } from "./types"
 type Props = {
   sourceUrl: string
   disabled: boolean
+  publishDisabled: boolean
   onAction: (action: RowAction) => Promise<void>
 }
 
-export function ReviewRowActions({ sourceUrl, disabled, onAction }: Props) {
+export function ReviewRowActions({ sourceUrl, disabled, publishDisabled, onAction }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,7 +36,7 @@ export function ReviewRowActions({ sourceUrl, disabled, onAction }: Props) {
           <X className="h-4 w-4 text-rose-600" />
           Reject
         </DropdownMenuItem>
-        <DropdownMenuItem disabled={disabled} onClick={() => void onAction("publish")}>
+        <DropdownMenuItem disabled={disabled || publishDisabled} onClick={() => void onAction("publish")}>
           <Send className="h-4 w-4 text-emerald-600" />
           Publish
         </DropdownMenuItem>
@@ -43,4 +44,3 @@ export function ReviewRowActions({ sourceUrl, disabled, onAction }: Props) {
     </DropdownMenu>
   )
 }
-

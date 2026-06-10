@@ -1,0 +1,134 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e51]:
+    - generic [ref=e54]:
+      - generic [ref=e56]:
+        - img "Lowonganku logo" [ref=e57]
+        - generic [ref=e58]:
+          - generic [ref=e59]: Lowonganku
+          - generic [ref=e60]: Admin Workspace
+      - generic [ref=e62]:
+        - generic [ref=e63]: Navigation
+        - list [ref=e65]:
+          - listitem [ref=e66]:
+            - link "Dashboard" [ref=e67] [cursor=pointer]:
+              - /url: /admin/dashboard
+              - img [ref=e68]
+              - generic [ref=e73]: Dashboard
+          - listitem [ref=e74]:
+            - link "Jobs" [ref=e75] [cursor=pointer]:
+              - /url: /admin/jobs
+              - img [ref=e76]
+              - generic [ref=e79]: Jobs
+          - listitem [ref=e80]:
+            - link "Scraped Review" [ref=e81] [cursor=pointer]:
+              - /url: /admin/raw-data
+              - img [ref=e82]
+              - generic [ref=e86]: Scraped Review
+          - listitem [ref=e87]:
+            - link "Scrape Runs" [ref=e88] [cursor=pointer]:
+              - /url: /admin/scrape-runs
+              - img [ref=e89]
+              - generic [ref=e92]: Scrape Runs
+          - listitem [ref=e93]:
+            - link "Categories" [ref=e94] [cursor=pointer]:
+              - /url: /admin/categories
+              - img [ref=e95]
+              - generic [ref=e99]: Categories
+          - listitem [ref=e100]:
+            - link "Account" [ref=e101] [cursor=pointer]:
+              - /url: /admin/login
+              - img [ref=e102]
+              - generic [ref=e106]: Account
+      - generic [ref=e108]: Manage jobs from raw ingest to publish in one workspace.
+    - main [ref=e109]:
+      - generic [ref=e111]:
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - img
+            - textbox "Search jobs, company, or source..." [ref=e115]
+          - generic [ref=e116]:
+            - button "Notifications" [ref=e117] [cursor=pointer]:
+              - img
+            - generic [ref=e119]: AD
+        - generic [ref=e120]:
+          - paragraph [ref=e121]: Admin Dashboard
+          - heading "Good Evening, Admin" [level=1] [ref=e122]
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - generic [ref=e126]: Raw Jobs
+            - generic [ref=e127]: "0"
+          - generic [ref=e128]:
+            - generic [ref=e130]: Draft
+            - generic [ref=e131]: "0"
+          - generic [ref=e132]:
+            - generic [ref=e134]: Published
+            - generic [ref=e135]: "59"
+          - generic [ref=e136]:
+            - generic [ref=e138]: Needs Attention
+            - generic [ref=e139]: "0"
+        - generic [ref=e140]:
+          - generic [ref=e141]:
+            - generic [ref=e142]:
+              - generic [ref=e143]: Recent Jobs
+              - button "See all" [ref=e144] [cursor=pointer]
+            - generic [ref=e145]:
+              - generic [ref=e146]:
+                - generic [ref=e147]:
+                  - paragraph [ref=e148]: Codex Verification Engineer codex-verify-1780423404
+                  - paragraph [ref=e149]: Codex QA Labs
+                - generic [ref=e150]:
+                  - generic [ref=e152]: A1
+                  - generic [ref=e153]: Codex-Verification
+                - generic [ref=e154]: published
+              - generic [ref=e155]:
+                - generic [ref=e156]:
+                  - paragraph [ref=e157]: Master Data Engineer (Analyst)
+                  - paragraph [ref=e158]: Abrihet Teknobalhar Informa
+                - generic [ref=e159]:
+                  - generic [ref=e161]: A2
+                  - generic [ref=e162]: Jobstreet
+                - generic [ref=e163]: published
+              - generic [ref=e164]:
+                - generic [ref=e165]:
+                  - paragraph [ref=e166]: Reliability Engineer / Asset Integrity Engineer (Oil & Gas)
+                  - paragraph [ref=e167]: PT Emmerick Indonesia Jaya
+                - generic [ref=e168]:
+                  - generic [ref=e170]: A3
+                  - generic [ref=e171]: Jobstreet
+                - generic [ref=e172]: published
+              - generic [ref=e173]:
+                - generic [ref=e174]:
+                  - paragraph [ref=e175]: Data Center Engineer
+                  - paragraph [ref=e176]: PT Artha Telekomindo
+                - generic [ref=e177]:
+                  - generic [ref=e179]: A4
+                  - generic [ref=e180]: Jobstreet
+                - generic [ref=e181]: published
+              - generic [ref=e182]:
+                - generic [ref=e183]:
+                  - paragraph [ref=e184]: Data Engineer
+                  - paragraph [ref=e185]: PT Sharing Vision Indonesia
+                - generic [ref=e186]:
+                  - generic [ref=e188]: A5
+                  - generic [ref=e189]: Jobstreet
+                - generic [ref=e190]: published
+          - generic [ref=e191]:
+            - generic [ref=e193]: Quick Schedule
+            - generic [ref=e194]:
+              - generic [ref=e195]:
+                - img [ref=e196]
+                - generic [ref=e198]:
+                  - paragraph [ref=e199]: Scrape quality review
+                  - paragraph [ref=e200]: 09:00 - 10:30 WIB
+              - generic [ref=e201]:
+                - img [ref=e202]
+                - generic [ref=e205]:
+                  - paragraph [ref=e206]: Category cleanup
+                  - paragraph [ref=e207]: 13:00 - 14:00 WIB
+              - generic [ref=e208]:
+                - img [ref=e209]
+                - generic [ref=e212]:
+                  - paragraph [ref=e213]: Publish approved jobs
+                  - paragraph [ref=e214]: 16:00 - 17:00 WIB
+  - region "Notifications alt+T"
+  - alert [ref=e49]

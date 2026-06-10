@@ -9,6 +9,39 @@ use function Knuckles\Scribe\Config\removeStrategies;
 
 // Only the most common configs are shown. See the https://scribe.knuckles.wtf/laravel/reference/config for all.
 
+$hasScribe = enum_exists(AuthIn::class)
+    && class_exists(Defaults::class)
+    && class_exists(Strategies\StaticData::class)
+    && class_exists(Strategies\Responses\ResponseCalls::class)
+    && function_exists('Knuckles\\Scribe\\Config\\configureStrategy')
+    && function_exists('Knuckles\\Scribe\\Config\\removeStrategies');
+
+$metadataStrategies = $hasScribe ? Defaults::METADATA_STRATEGIES : [];
+$headersStrategies = $hasScribe
+    ? [
+        ...Defaults::HEADERS_STRATEGIES,
+        Strategies\StaticData::withSettings(data: [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ]),
+    ]
+    : [];
+$urlParameterStrategies = $hasScribe ? Defaults::URL_PARAMETERS_STRATEGIES : [];
+$queryParameterStrategies = $hasScribe ? Defaults::QUERY_PARAMETERS_STRATEGIES : [];
+$bodyParameterStrategies = $hasScribe ? Defaults::BODY_PARAMETERS_STRATEGIES : [];
+$responseStrategies = $hasScribe
+    ? configureStrategy(
+        Defaults::RESPONSES_STRATEGIES,
+        Strategies\Responses\ResponseCalls::withSettings(
+            only: ['GET *'],
+            config: [
+                'app.debug' => false,
+            ]
+        )
+    )
+    : [];
+$responseFieldStrategies = $hasScribe ? Defaults::RESPONSE_FIELDS_STRATEGIES : [];
+
 return [
     // The HTML <title> for the generated documentation.
     'title' => config('app.name').' API Documentation',
@@ -68,7 +101,7 @@ return [
 
     'laravel' => [
         // Whether to automatically create a docs route for you to view your generated docs. You can still set up routing manually.
-        'add_routes' => true,
+        'add_routes' => $hasScribe,
 
         // URL path to use for the docs endpoint (if `add_routes` is true).
         // By default, `/docs` opens the HTML page, `/docs.postman` opens the Postman collection, and `/docs.openapi` the OpenAPI spec.
@@ -112,7 +145,7 @@ return [
         'default' => false,
 
         // Where is the auth value meant to be sent in a request?
-        'in' => AuthIn::BEARER->value,
+        'in' => $hasScribe ? AuthIn::BEARER->value : 'bearer',
 
         // The name of the auth parameter (e.g. token, key, apiKey) or header (e.g. Authorization, Api-Key).
         'name' => 'key',
@@ -214,36 +247,23 @@ return [
     // Use removeStrategies() to remove an included strategy.
     'strategies' => [
         'metadata' => [
-            ...Defaults::METADATA_STRATEGIES,
+            ...$metadataStrategies,
         ],
         'headers' => [
-            ...Defaults::HEADERS_STRATEGIES,
-            Strategies\StaticData::withSettings(data: [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ]),
+            ...$headersStrategies,
         ],
         'urlParameters' => [
-            ...Defaults::URL_PARAMETERS_STRATEGIES,
+            ...$urlParameterStrategies,
         ],
         'queryParameters' => [
-            ...Defaults::QUERY_PARAMETERS_STRATEGIES,
+            ...$queryParameterStrategies,
         ],
         'bodyParameters' => [
-            ...Defaults::BODY_PARAMETERS_STRATEGIES,
+            ...$bodyParameterStrategies,
         ],
-        'responses' => configureStrategy(
-            Defaults::RESPONSES_STRATEGIES,
-            Strategies\Responses\ResponseCalls::withSettings(
-                only: ['GET *'],
-                // Recommended: disable debug mode in response calls to avoid error stack traces in responses
-                config: [
-                    'app.debug' => false,
-                ]
-            )
-        ),
+        'responses' => $responseStrategies,
         'responseFields' => [
-            ...Defaults::RESPONSE_FIELDS_STRATEGIES,
+            ...$responseFieldStrategies,
         ],
     ],
 
