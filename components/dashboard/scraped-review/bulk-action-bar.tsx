@@ -1,3 +1,4 @@
+import { Sparkles } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
@@ -8,6 +9,7 @@ type Props = {
   onApproveSelected: () => void
   onRejectSelected: () => void
   onPublishSelected: () => void
+  onCleanAiSelected: () => void
   onClear: () => void
 }
 
@@ -18,6 +20,7 @@ export function BulkActionBar({
   onApproveSelected,
   onRejectSelected,
   onPublishSelected,
+  onCleanAiSelected,
   onClear,
 }: Props) {
   if (selectedCount <= 0) return null
@@ -25,6 +28,10 @@ export function BulkActionBar({
   return (
     <div className="sticky top-2 z-10 flex flex-wrap items-center gap-2 rounded-xl border border-border/70 bg-card p-3 shadow-sm">
       <Badge variant="secondary">{selectedCount} selected</Badge>
+      <Button size="sm" variant="outline" disabled={busy} onClick={onCleanAiSelected} className="gap-1.5 text-sky-700 border-sky-100 hover:bg-sky-50/50">
+        <Sparkles className="h-3.5 w-3.5 text-sky-600" />
+        Clean with AI
+      </Button>
       <Button size="sm" variant="outline" disabled={busy} onClick={onApproveSelected}>
         Approve Selected
       </Button>

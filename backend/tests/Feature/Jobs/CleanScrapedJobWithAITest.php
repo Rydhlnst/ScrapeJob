@@ -85,6 +85,8 @@ class CleanScrapedJobWithAITest extends TestCase
         $this->assertSame('Full-time', $scrapedJob->employment_type);
         $this->assertSame('<p>Clean Description</p>', $scrapedJob->description);
         $this->assertSame('Clean summary description', $scrapedJob->description_summary);
+        $this->assertSame('drafted_ai', $scrapedJob->draft_status);
+        $this->assertNull($scrapedJob->fail_reason);
     }
 
     public function test_job_throws_exception_on_api_error(): void
@@ -114,5 +116,71 @@ class CleanScrapedJobWithAITest extends TestCase
 
         $this->expectException(\RuntimeException::class);
         CleanScrapedJobWithAI::dispatchSync($scrapedJob);
+    }
+
+    public function test_job_exits_cleanly_on_insufficient_credit_error(): void
+    {
+        config([
+            'services.ai_cleanup.enabled' => true,
+            'services.ai_cleanup.url' => 'http://localhost:3000/api/internal/clean-job',
+            'services.ai_cleanup.token' => 'test-token',
+        ]);
+
+        Http::fake([
+            'http://localhost:3000/api/internal/clean-job' => Http::response([
+                'success' => false,
+                'error' => 'Billing limit reached',
+                'code' => 'INSUFFICIENT_CREDIT'
+            ], 402)
+        ]);
+
+        $scrapedJob = ScrapedJob::query()->create([
+            'external_id' => 'job-test-credit-limit',
+            'source' => 'test_source',
+            'source_url' => 'https://example.com/jobs/4',
+            'title' => 'Raw Title',
+            'company' => 'Raw Company',
+            'location' => 'Raw Location',
+            'status' => 'pending',
+        ]);
+
+        // Should not throw an exception
+        CleanScrapedJobWithAI::dispatchSync($scrapedJob);
+
+        $this->assertSame('drafted_raw', $scrapedJob->fresh()->draft_status);
+        $this->assertSame('Raw Title', $scrapedJob->fresh()->title);
+        $this->assertSame('AI quota limit or credits exceeded. Processing paused.', $scrapedJob->fresh()->fail_reason);
+    }
+
+    public function test_job_records_fail_reason_on_exception(): void
+    {
+        config([
+            'services.ai_cleanup.enabled' => true,
+            'services.ai_cleanup.url' => 'http://localhost:3000/api/internal/clean-job',
+            'services.ai_cleanup.token' => 'test-token',
+        ]);
+
+        Http::fake([
+            'http://localhost:3000/api/internal/clean-job' => Http::response(null, 500)
+        ]);
+
+        $scrapedJob = ScrapedJob::query()->create([
+            'external_id' => 'job-test-error-log',
+            'source' => 'test_source',
+            'source_url' => 'https://example.com/jobs/5',
+            'title' => 'Raw Title',
+            'company' => 'Raw Company',
+            'location' => 'Raw Location',
+            'status' => 'pending',
+        ]);
+
+        try {
+            CleanScrapedJobWithAI::dispatchSync($scrapedJob);
+            $this->fail("Expected RuntimeException was not thrown");
+        } catch (\RuntimeException $e) {
+            $this->assertSame('AI Cleanup API returned error status: 500', $e->getMessage());
+        }
+
+        $this->assertSame('AI Cleanup API returned error status: 500', $scrapedJob->fresh()->fail_reason);
     }
 }

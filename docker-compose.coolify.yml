@@ -1,0 +1,177 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${SERVICE_FQDN_BACKEND}
+        INTERNAL_API_BASE_URL: http://backend
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: ${SERVICE_FQDN_BACKEND}
+      INTERNAL_API_BASE_URL: http://backend
+      NEXT_PUBLIC_USE_MOCK: "false"
+      API_BEARER_TOKEN: ${API_BEARER_TOKEN:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000').then((res) => process.exit(res.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      APP_NAME: ${APP_NAME:-Job Loker API}
+      APP_ENV: production
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: "false"
+      APP_URL: ${SERVICE_FQDN_BACKEND}
+      FRONTEND_URL: ${SERVICE_FQDN_FRONTEND}
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB:-job_platform}
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      REDIS_CLIENT: phredis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: null
+      SCRAPER_ACTIVE_SOURCES: glints,jobstreet
+      SCRAPER_SCHEDULE_ENABLED: "true"
+      SCRAPER_SCHEDULE_CRON: "0 */8 * * *"
+      SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
+      SCRAPER_PYTHON_MODE: local
+      SCRAPER_PYTHON_BIN: python3
+      WAIT_FOR_DB: "true"
+      ENABLE_LARAVEL_CACHE_WARMUP: "true"
+      RUN_MIGRATIONS: "false"
+      AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
+      AI_CLEANUP_URL: ${SERVICE_FQDN_FRONTEND}/api/internal/clean-job
+      SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1/api/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  queue:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    user: www-data
+    environment:
+      APP_NAME: ${APP_NAME:-Job Loker API}
+      APP_ENV: production
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: "false"
+      APP_URL: ${SERVICE_FQDN_BACKEND}
+      FRONTEND_URL: ${SERVICE_FQDN_FRONTEND}
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB:-job_platform}
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      REDIS_CLIENT: phredis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: null
+      SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
+      SCRAPER_PYTHON_MODE: local
+      SCRAPER_PYTHON_BIN: python3
+      QUEUE_TRIES: ${QUEUE_TRIES:-3}
+      QUEUE_TIMEOUT: ${QUEUE_TIMEOUT:-900}
+      WAIT_FOR_DB: "true"
+      AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
+      AI_CLEANUP_URL: ${SERVICE_FQDN_FRONTEND}/api/internal/clean-job
+    command: ["/var/www/html/docker/start-worker.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    user: www-data
+    environment:
+      APP_NAME: ${APP_NAME:-Job Loker API}
+      APP_ENV: production
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: "false"
+      APP_URL: ${SERVICE_FQDN_BACKEND}
+      FRONTEND_URL: ${SERVICE_FQDN_FRONTEND}
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB:-job_platform}
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      REDIS_CLIENT: phredis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: null
+      SCRAPER_SCHEDULE_ENABLED: "true"
+      SCRAPER_SCHEDULE_CRON: "0 */8 * * *"
+      SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
+      SCRAPER_PYTHON_MODE: local
+      SCRAPER_PYTHON_BIN: python3
+      WAIT_FOR_DB: "true"
+      AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
+      AI_CLEANUP_URL: ${SERVICE_FQDN_FRONTEND}/api/internal/clean-job
+    command: ["/var/www/html/docker/start-scheduler.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-job_platform}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-job_platform}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+
+volumes:
+  pg-data:
+  redis-data:

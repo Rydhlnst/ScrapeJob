@@ -45,14 +45,16 @@ class JobstreetScraper:
             self.scraped_at_iso = datetime.utcnow().isoformat(timespec="seconds") + "Z"
         self._playwright = None
         self._http = requests.Session()
+        from app.utils.http_helper import get_random_user_agent
         self._http.headers.update({
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/125.0.0.0 Safari/537.36"
-            ),
+            "User-Agent": get_random_user_agent(),
             "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
         })
+        if settings.proxy:
+            self._http.proxies.update({
+                "http": settings.proxy,
+                "https": settings.proxy,
+            })
 
     # ------------------------------------------------------------------ #
     # Public entry point
@@ -172,7 +174,8 @@ class JobstreetScraper:
         ]
 
         html: Optional[str] = None
-        page_obj: Page = browser.new_page()
+        from app.utils.http_helper import get_random_user_agent
+        page_obj: Page = browser.new_page(user_agent=get_random_user_agent())
         try:
             for candidate_url in candidate_urls:
                 try:
@@ -351,7 +354,8 @@ class JobstreetScraper:
             "description": None,
         }
 
-        page_obj: Page = browser.new_page()
+        from app.utils.http_helper import get_random_user_agent
+        page_obj: Page = browser.new_page(user_agent=get_random_user_agent())
         try:
             page_obj.goto(source_url, wait_until="domcontentloaded", timeout=self.settings.detail_timeout_seconds * 1000)
             try:
@@ -424,17 +428,20 @@ class JobstreetScraper:
 
         self.logger.info("Launching Playwright Chromium browser")
         try:
-            browser = pw.chromium.launch(
-                headless=headless_enabled,
-                args=[
+            launch_args = {
+                "headless": headless_enabled,
+                "args": [
                     "--disable-blink-features=AutomationControlled",
                     "--no-sandbox",
                     "--disable-dev-shm-usage",
                     "--disable-gpu",
                     "--window-size=1920,1080",
                     "--lang=id-ID",
-                ],
-            )
+                ]
+            }
+            if self.settings.proxy:
+                launch_args["proxy"] = {"server": self.settings.proxy}
+            browser = pw.chromium.launch(**launch_args)
             self.logger.info("Playwright Chromium launched successfully")
             return browser
         except Exception as exc:

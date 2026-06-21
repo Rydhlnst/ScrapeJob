@@ -29,25 +29,27 @@ export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
   const [logs, setLogs] = React.useState<ScrapeLog[]>([])
   const [loading, setLoading] = React.useState(false)
   const [isRunningScrape, setIsRunningScrape] = React.useState(false)
+  const [isRefreshing, setIsRefreshing] = React.useState(false)
   const [keyword, setKeyword] = React.useState("")
   const [location, setLocation] = React.useState("")
 
+  const loadRuns = React.useCallback(async () => {
+    setIsRefreshing(true)
+    try {
+      const runData = await listScrapeRuns()
+      setRunItems(runData)
+      if (!selectedRunId && runData[0]?.id) {
+        setSelectedRunId(runData[0].id)
+      }
+    } catch {
+      toast.error("Gagal memuat data scrape runs.")
+    } finally {
+      setIsRefreshing(false)
+    }
+  }, [selectedRunId])
+
   React.useEffect(() => {
     let alive = true
-
-    async function loadRuns() {
-      try {
-        const runData = await listScrapeRuns()
-        if (!alive) return
-        setRunItems(runData)
-        if (!selectedRunId && runData[0]?.id) {
-          setSelectedRunId(runData[0].id)
-        }
-      } catch {
-        if (!alive) return
-        toast.error("Gagal memuat data scrape runs.")
-      }
-    }
 
     async function loadSources() {
       try {
@@ -68,7 +70,7 @@ export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
     return () => {
       alive = false
     }
-  }, [])
+  }, [loadRuns])
 
   React.useEffect(() => {
     let alive = true
@@ -156,7 +158,7 @@ export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
               )
               setRunItems((prev) => [newRun, ...prev])
               setSelectedRunId(newRun.id)
-              toast.success("Scraping berhasil.", { id: toastId })
+              toast.success("Scraping dimulai di background.", { id: toastId })
             } catch (error) {
               const message =
                 error instanceof Error ? error.message : "Gagal menjalankan scrape."
@@ -178,7 +180,20 @@ export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
       </div>
 
       <div className="space-y-3">
-        <div className="text-sm font-semibold text-slate-900">Scrape Runs</div>
+        <div className="flex items-center justify-between">
+          <div className="text-sm font-semibold text-slate-900">Scrape Runs</div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadRuns}
+            disabled={isRefreshing}
+          >
+            {isRefreshing ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
+            Refresh
+          </Button>
+        </div>
         <ScrapeRunTable
           runs={runItems}
           selectedId={selectedRunId}

@@ -67,9 +67,14 @@ Route::prefix('admin')
         Route::get('/scrape-runs/{id}/logs', [ScrapeRunController::class, 'logs'])->middleware('permission:view scrape logs');
 
         Route::get('/scraped-jobs', [AdminScrapedJobController::class, 'index'])->middleware('permission:view jobs');
+        Route::post('/scraped-jobs/bulk-clean-ai', [AdminScrapedJobController::class, 'bulkCleanAi'])->middleware('permission:edit jobs');
+        Route::post('/scraped-jobs/bulk-approve', [AdminScrapedJobController::class, 'bulkApprove'])->middleware('permission:edit jobs');
+        Route::post('/scraped-jobs/bulk-reject', [AdminScrapedJobController::class, 'bulkReject'])->middleware('permission:edit jobs');
+        Route::post('/scraped-jobs/bulk-publish', [AdminScrapedJobController::class, 'bulkPublish'])->middleware('permission:publish jobs');
         Route::get('/scraped-jobs/{scrapedJob}', [AdminScrapedJobController::class, 'show'])->middleware('permission:view jobs');
         Route::patch('/scraped-jobs/{scrapedJob}', [AdminScrapedJobController::class, 'update'])->middleware('permission:edit jobs');
         Route::patch('/scraped-jobs/{scrapedJob}/approve', [AdminScrapedJobController::class, 'approve'])->middleware('permission:edit jobs');
         Route::patch('/scraped-jobs/{scrapedJob}/reject', [AdminScrapedJobController::class, 'reject'])->middleware('permission:edit jobs');
         Route::post('/scraped-jobs/{scrapedJob}/publish', [AdminScrapedJobController::class, 'publish'])->middleware('permission:publish jobs');
+        Route::post('/scraped-jobs/{scrapedJob}/clean-ai', [AdminScrapedJobController::class, 'cleanAi'])->middleware('permission:edit jobs');
     });

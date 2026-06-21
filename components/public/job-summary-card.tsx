@@ -48,7 +48,7 @@ export function JobSummaryCard({ job }: { job: Job }) {
         <Separator />
 
         {hasSourceUrl ? (
-          <Button asChild className="w-full rounded-2xl bg-slate-950 text-white hover:bg-slate-800">
+          <Button asChild className="w-full rounded-2xl bg-blue-600 text-white hover:bg-blue-700">
             <a href={job.sourceUrl} target="_blank" rel="noreferrer">
               Lihat Sumber Lowongan
             </a>

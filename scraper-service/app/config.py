@@ -54,6 +54,7 @@ class Settings:
     laravel_import_path: str
     laravel_internal_api_token: str
     timezone_name: str
+    proxy: Optional[str]
 
     @property
     def laravel_import_url(self) -> str:
@@ -86,4 +87,5 @@ def get_settings() -> Settings:
         laravel_import_path=os.getenv("LARAVEL_IMPORT_PATH", "/internal/scraped-jobs/import").strip(),
         laravel_internal_api_token=os.getenv("LARAVEL_INTERNAL_API_TOKEN", "").strip(),
         timezone_name=os.getenv("SCRAPER_TIMEZONE", "Asia/Jakarta").strip(),
+        proxy=(os.getenv("SCRAPER_PROXY") or "").strip() or None,
     )

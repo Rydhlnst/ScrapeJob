@@ -29,5 +29,9 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('scrape-run', function (Request $request) {
             return Limit::perMinute(3)->by((string) optional($request->user())->id ?: $request->ip());
         });
+
+        RateLimiter::for('ai-cleanup', function (object $job) {
+            return Limit::perMinute(60);
+        });
     }
 }

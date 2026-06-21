@@ -24,11 +24,11 @@ const topNavItems = [
 
 const categoryItems = [
   { label: "Development & IT", href: "/jobs?category=it-software" },
-  { label: "AI Service", href: "/#categories" },
-  { label: "Design", href: "/#categories" },
-  { label: "Sales & Marketing", href: "/#categories" },
-  { label: "Customer Support", href: "/#categories" },
-  { label: "More", href: "/#categories" },
+  { label: "Marketing", href: "/jobs?category=marketing" },
+  { label: "Design", href: "/jobs?category=design" },
+  { label: "Sales", href: "/jobs?category=sales" },
+  { label: "Customer Support", href: "/jobs?category=customer-service" },
+  { label: "More", href: "/jobs" },
 ]
 
 function Logo() {

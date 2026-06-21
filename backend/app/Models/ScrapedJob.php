@@ -26,6 +26,8 @@ class ScrapedJob extends Model
         'posted_date',
         'scraped_at',
         'status',
+        'draft_status',
+        'fail_reason',
         'raw_json',
     ];
 

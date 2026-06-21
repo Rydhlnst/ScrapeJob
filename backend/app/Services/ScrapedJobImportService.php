@@ -28,7 +28,7 @@ class ScrapedJobImportService
             foreach ($jobs as $job) {
                 try {
                     $externalId = (string) ($job['external_job_id'] ?? '');
-                    $sourceUrl = (string) ($job['source_url'] ?? '');
+                    $sourceUrl = $this->normalizeUrl((string) ($job['source_url'] ?? ''));
                     $title = (string) ($job['title'] ?? '');
                     $company = (string) ($job['company_name'] ?? '');
                     $location = (string) ($job['location'] ?? '');
@@ -79,6 +79,25 @@ class ScrapedJobImportService
         return $summary;
     }
 
+    private function normalizeUrl(string $url): string
+    {
+        $parts = parse_url($url);
+        if (!$parts) {
+            return $url;
+        }
+
+        $scheme = isset($parts['scheme']) ? strtolower($parts['scheme']) : 'http';
+        $host = isset($parts['host']) ? strtolower($parts['host']) : '';
+        $port = isset($parts['port']) ? ':' . $parts['port'] : '';
+        $path = isset($parts['path']) ? $parts['path'] : '';
+
+        // Trim trailing slashes from path
+        $path = rtrim($path, '/');
+
+        // Reconstruct URL (ignoring query and fragment)
+        return $scheme . '://' . $host . $port . $path;
+    }
+
     private function toScrapedJobPayload(array $job, string $source, Carbon $scrapedAtCarbon): array
     {
         $salaryMin = isset($job['salary_min']) ? (int) $job['salary_min'] : null;
@@ -94,7 +113,7 @@ class ScrapedJobImportService
         return [
             'external_id' => (string) ($job['external_job_id'] ?? ''),
             'source' => $source,
-            'source_url' => (string) ($job['source_url'] ?? ''),
+            'source_url' => $this->normalizeUrl((string) ($job['source_url'] ?? '')),
             'role_keyword' => null,
             'title' => (string) ($job['title'] ?? ''),
             'company' => (string) ($job['company_name'] ?? ''),

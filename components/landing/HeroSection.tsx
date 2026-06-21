@@ -169,10 +169,6 @@ export function HeroSection({
                 <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
                   Lowongan Terbaru
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-600">
-                  <span className="size-2 bg-sky-600 rounded-none animate-pulse" />
-                  Live sekarang
-                </span>
               </div>
               <div className="grid gap-3">
                 {jobs.map((job) => (
@@ -187,7 +183,7 @@ export function HeroSection({
               <div className="mt-2 border-t border-slate-100 pt-4">
                 <Button
                   asChild
-                  className="h-11 w-full rounded-none bg-slate-950 px-4 text-sm font-semibold text-white hover:bg-slate-800"
+                  className="h-11 w-full rounded-none bg-blue-600 px-4 text-sm font-semibold text-white hover:bg-blue-700"
                 >
                   <Link href="/jobs">
                     Lihat semua lowongan

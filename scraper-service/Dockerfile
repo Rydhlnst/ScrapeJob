@@ -7,8 +7,5 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 COPY . /app
 
-# Ensure Chromium browser is available in image
-RUN python -m playwright install chromium
-
 CMD ["python", "app/main.py"]
 

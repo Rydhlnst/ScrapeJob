@@ -51,10 +51,26 @@ export function ReviewTable({
                   </TableCell>
                   <TableCell className="max-w-[420px]">
                     <div className="space-y-1">
-                      <p className="truncate text-sm font-semibold text-foreground">{title}</p>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <p className="truncate text-sm font-semibold text-foreground max-w-[280px]">{title}</p>
+                        {job.draftStatus === "drafted_ai" ? (
+                          <Badge variant="outline" className="rounded-none bg-sky-50 text-[10px] font-semibold text-sky-700 border-sky-100 px-1.5 py-0.5 shrink-0">
+                            Drafted by AI
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="rounded-none bg-slate-100 text-[10px] font-semibold text-slate-600 border-slate-200 px-1.5 py-0.5 shrink-0">
+                            Drafted Raw
+                          </Badge>
+                        )}
+                      </div>
                       <p className="text-xs text-muted-foreground">
                         {job.employmentType ?? "Not specified"} • Scraped {scrapedAt}
                       </p>
+                      {job.failReason && (
+                        <p className="text-[11px] font-medium text-red-500 leading-tight mt-0.5">
+                          Gagal AI: {job.failReason}
+                        </p>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -103,9 +119,25 @@ export function ReviewTable({
               <CardContent className="space-y-3 p-4">
                 <div className="flex items-start gap-3">
                   <Checkbox checked={checked} onCheckedChange={(value) => onToggleRow(job.id, Boolean(value))} />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold">{title}</p>
+                  <div className="min-w-0 flex-1 space-y-0.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <p className="truncate text-sm font-semibold max-w-[150px]">{title}</p>
+                      {job.draftStatus === "drafted_ai" ? (
+                        <Badge variant="outline" className="rounded-none bg-sky-50 text-[9px] font-medium text-sky-700 border-sky-100 px-1 py-0 shrink-0">
+                          AI
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="rounded-none bg-slate-100 text-[9px] font-medium text-slate-600 border-slate-200 px-1 py-0 shrink-0">
+                          Raw
+                        </Badge>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground">{job.company || "Unknown company"}</p>
+                    {job.failReason && (
+                      <p className="text-[10px] font-medium text-red-500 leading-tight mt-0.5">
+                        Gagal AI: {job.failReason}
+                      </p>
+                    )}
                   </div>
                   <Badge className={`rounded-full px-2.5 ${helpers.statusBadgeClass(job.status)}`}>
                     {helpers.statusLabel(job.status)}

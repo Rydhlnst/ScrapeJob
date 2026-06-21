@@ -26,14 +26,16 @@ class JobstreetExpressScraper:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
         self._http = requests.Session()
+        from app.utils.http_helper import get_random_user_agent
         self._http.headers.update({
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/125.0.0.0 Safari/537.36"
-            ),
+            "User-Agent": get_random_user_agent(),
             "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
         })
+        if self.settings.proxy:
+            self._http.proxies.update({
+                "http": self.settings.proxy,
+                "https": self.settings.proxy,
+            })
 
     def scrape(self) -> List[Dict]:
         try:

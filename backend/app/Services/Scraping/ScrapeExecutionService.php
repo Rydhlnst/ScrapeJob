@@ -18,10 +18,10 @@ class ScrapeExecutionService
     /**
      * @return array<int, ScrapeRun>
      */
-    public function runBySourceName(?string $sourceName = null, ?int $createdBy = null, ?string $keyword = null, ?string $location = null): array
+    public function runBySourceName(?string $sourceName = null, ?int $createdBy = null, ?string $keyword = null, ?string $location = null, ?ScrapeRun $run = null): array
     {
         if ($sourceName !== null && trim($sourceName) !== '') {
-            return [$this->runSingle($this->resolveSource($sourceName), $createdBy, $keyword, $location)];
+            return [$this->runSingle($this->resolveSource($sourceName), $createdBy, $keyword, $location, $run)];
         }
 
         $runs = [];
@@ -33,19 +33,26 @@ class ScrapeExecutionService
         return $runs;
     }
 
-    public function runSingle(JobSource $source, ?int $createdBy = null, ?string $keyword = null, ?string $location = null): ScrapeRun
+    public function runSingle(JobSource $source, ?int $createdBy = null, ?string $keyword = null, ?string $location = null, ?ScrapeRun $run = null): ScrapeRun
     {
         if (! $source->scraping_allowed) {
             throw new \InvalidArgumentException('Scraping is not allowed for this source.');
         }
 
-        $run = ScrapeRun::query()->create([
-            'job_source_id' => $source->exists ? $source->id : null,
-            'source_name' => $source->name,
-            'status' => 'running',
-            'started_at' => now(),
-            'created_by' => $createdBy,
-        ]);
+        if ($run) {
+            $run->update([
+                'status' => 'running',
+                'started_at' => now(),
+            ]);
+        } else {
+            $run = ScrapeRun::query()->create([
+                'job_source_id' => $source->exists ? $source->id : null,
+                'source_name' => $source->name,
+                'status' => 'running',
+                'started_at' => now(),
+                'created_by' => $createdBy,
+            ]);
+        }
 
         try {
             if (! (bool) config('scraper.use_python_executor', true)) {

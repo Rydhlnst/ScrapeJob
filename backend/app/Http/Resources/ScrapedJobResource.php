@@ -25,6 +25,8 @@ class ScrapedJobResource extends JsonResource
             'postedDate' => optional($this->posted_date)->toDateString(),
             'scrapedAt' => optional($this->scraped_at)->toIso8601String(),
             'status' => $this->status,
+            'draftStatus' => $this->draft_status,
+            'failReason' => $this->fail_reason,
             'raw' => $this->raw_json,
             'createdAt' => optional($this->created_at)->toIso8601String(),
             'updatedAt' => optional($this->updated_at)->toIso8601String(),

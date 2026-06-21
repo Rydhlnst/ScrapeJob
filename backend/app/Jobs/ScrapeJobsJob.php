@@ -22,10 +22,11 @@ class ScrapeJobsJob implements ShouldQueue
         public readonly ?int $createdBy = null,
         public readonly ?string $keyword = null,
         public readonly ?string $location = null,
+        public readonly ?\App\Models\ScrapeRun $scrapeRun = null,
     ) {}
 
     public function handle(ScrapeExecutionService $executionService): void
     {
-        $executionService->runBySourceName($this->source, $this->createdBy, $this->keyword, $this->location);
+        $executionService->runBySourceName($this->source, $this->createdBy, $this->keyword, $this->location, $this->scrapeRun);
     }
 }

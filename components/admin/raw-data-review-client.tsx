@@ -19,6 +19,11 @@ import { getScrapedJobs } from "@/src/features/admin/scraped-jobs/api/get-scrape
 import { approveScrapedJob } from "@/src/features/admin/scraped-jobs/api/approve-scraped-job"
 import { publishScrapedJob } from "@/src/features/admin/scraped-jobs/api/publish-scraped-job"
 import { rejectScrapedJob } from "@/src/features/admin/scraped-jobs/api/reject-scraped-job"
+import { cleanScrapedJobWithAi } from "@/src/features/admin/scraped-jobs/api/clean-scraped-job"
+import { bulkCleanScrapedJobsWithAi } from "@/src/features/admin/scraped-jobs/api/bulk-clean-scraped-jobs"
+import { bulkApproveScrapedJobs } from "@/src/features/admin/scraped-jobs/api/bulk-approve-scraped-jobs"
+import { bulkRejectScrapedJobs } from "@/src/features/admin/scraped-jobs/api/bulk-reject-scraped-jobs"
+import { bulkPublishScrapedJobs } from "@/src/features/admin/scraped-jobs/api/bulk-publish-scraped-jobs"
 import { BulkActionBar } from "@/components/dashboard/scraped-review/bulk-action-bar"
 import { ReviewEmptyState } from "@/components/dashboard/scraped-review/empty-state"
 import { ReviewErrorState } from "@/components/dashboard/scraped-review/error-state"
@@ -190,6 +195,7 @@ export function RawDataReviewClient() {
       if (action === "approve") await approveScrapedJob(id)
       if (action === "reject") await rejectScrapedJob(id)
       if (action === "publish") await publishScrapedJob(id)
+      if (action === "clean_ai") await cleanScrapedJobWithAi(id)
       const targetPage = jobs.length === 1 && page > 1 ? page - 1 : page
       await Promise.all([refresh(targetPage), refreshStats()])
       toast.success("Action completed.")
@@ -204,10 +210,14 @@ export function RawDataReviewClient() {
     if (!selected.length) return
     setBusyId("__batch__")
     try {
-      for (const id of selected) {
-        if (action === "approve") await approveScrapedJob(id)
-        if (action === "reject") await rejectScrapedJob(id)
-        if (action === "publish") await publishScrapedJob(id)
+      if (action === "clean_ai") {
+        await bulkCleanScrapedJobsWithAi(selected)
+      } else if (action === "approve") {
+        await bulkApproveScrapedJobs(selected)
+      } else if (action === "reject") {
+        await bulkRejectScrapedJobs(selected)
+      } else if (action === "publish") {
+        await bulkPublishScrapedJobs(selected)
       }
       await Promise.all([refresh(page), refreshStats()])
       toast.success(`Bulk ${action} completed.`)
@@ -265,6 +275,7 @@ export function RawDataReviewClient() {
             onApproveSelected={() => void runBulkAction("approve")}
             onRejectSelected={() => void runBulkAction("reject")}
             onPublishSelected={() => void runBulkAction("publish")}
+            onCleanAiSelected={() => void runBulkAction("clean_ai")}
             onClear={() => setSelected([])}
           />
 

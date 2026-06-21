@@ -36,4 +36,6 @@ export type ScrapedJob = {
   postedDate: string | null
   scrapedAt: string
   status: ScrapedJobStatus
+  draftStatus?: "drafted_raw" | "drafted_ai"
+  failReason?: string | null
 }

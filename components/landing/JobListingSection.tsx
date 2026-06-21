@@ -295,7 +295,7 @@ export function JobListingSection({ jobs }: { jobs: Job[] }) {
                     {selectedJob.title}
                   </h3>
                 </div>
-                <div className="grid size-12 place-items-center rounded-none bg-slate-950 text-sm font-semibold text-white">
+                <div className="grid size-12 place-items-center rounded-none bg-sky-50 text-sm font-semibold text-sky-700">
                   {jobInitials(companyName)}
                 </div>
               </div>
@@ -366,7 +366,7 @@ export function JobListingSection({ jobs }: { jobs: Job[] }) {
               </div>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Button asChild className="h-12 flex-1 rounded-none bg-slate-950 font-semibold text-white hover:bg-slate-800">
+                <Button asChild className="h-12 flex-1 rounded-none bg-blue-600 font-semibold text-white hover:bg-blue-700">
                   <a href={selectedJob.sourceUrl} target="_blank" rel="noreferrer">
                     Apply on source
                   </a>

@@ -7,7 +7,7 @@ export type ReviewStats = {
   published: number
 }
 
-export type RowAction = "approve" | "reject" | "publish"
+export type RowAction = "approve" | "reject" | "publish" | "clean_ai"
 
 export type ReviewTableHelpers = {
   cleanJobTitle: (value: string) => string

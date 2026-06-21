@@ -96,12 +96,23 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: any) {
     console.error("AI Cleanup Error:", error)
+    const errMsg = String(error?.message || "").toLowerCase()
+    const isQuotaError =
+      errMsg.includes("quota") ||
+      errMsg.includes("credit") ||
+      errMsg.includes("balance") ||
+      errMsg.includes("insufficient") ||
+      errMsg.includes("limit") ||
+      error?.status === 429 ||
+      error?.status === 402
+
     return NextResponse.json(
       {
         success: false,
         error: error.message || "Failed to process job details with AI",
+        code: isQuotaError ? "INSUFFICIENT_CREDIT" : "AI_ERROR",
       },
-      { status: 500 }
+      { status: isQuotaError ? 402 : 500 }
     )
   }
 }

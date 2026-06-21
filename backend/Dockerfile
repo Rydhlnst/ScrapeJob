@@ -40,6 +40,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     /etc/apache2/conf-available/*.conf \
  && rm -rf /var/lib/apt/lists/*
 
+RUN echo "post_max_size = 64M" >> /usr/local/etc/php/conf.d/docker-php-limits.ini \
+ && echo "upload_max_filesize = 64M" >> /usr/local/etc/php/conf.d/docker-php-limits.ini \
+ && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/docker-php-limits.ini
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
@@ -56,6 +60,9 @@ COPY scraper-service/ /var/www/scraper-service/
 
 RUN rm -f bootstrap/cache/*.php
 RUN php artisan package:discover --ansi
+
+RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache /var/www/scraper-service/output/logs \
+ && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/scraper-service/output
 
 RUN chmod +x /var/www/html/docker/entrypoint.sh
 RUN chmod +x /var/www/html/docker/start-worker.sh /var/www/html/docker/start-scheduler.sh

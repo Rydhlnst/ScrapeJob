@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Check, ExternalLink, MoreHorizontal, Send, X } from "lucide-react"
+import { Check, ExternalLink, MoreHorizontal, Send, Sparkles, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -27,6 +27,10 @@ export function ReviewRowActions({ sourceUrl, disabled, publishDisabled, onActio
             <ExternalLink className="h-4 w-4" />
             View Source
           </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem disabled={disabled} onClick={() => void onAction("clean_ai")}>
+          <Sparkles className="h-4 w-4 text-sky-600" />
+          Clean with AI
         </DropdownMenuItem>
         <DropdownMenuItem disabled={disabled} onClick={() => void onAction("approve")}>
           <Check className="h-4 w-4 text-blue-600" />

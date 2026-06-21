@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\RateLimited;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -34,7 +35,19 @@ class CleanScrapedJobWithAI implements ShouldQueue
      */
     public function __construct(
         public readonly ScrapedJob $scrapedJob
-    ) {}
+    ) {
+        $this->queue = 'ai-cleanup';
+    }
+
+    /**
+     * Get the middleware the job should pass through.
+     *
+     * @return array<int, object>
+     */
+    public function middleware(): array
+    {
+        return [new RateLimited('ai-cleanup')];
+    }
 
     /**
      * Execute the job.
@@ -69,15 +82,36 @@ class CleanScrapedJobWithAI implements ShouldQueue
                 ->timeout(60) // AI request might take some time
                 ->post($url, $payload);
 
-            if ($response->failed()) {
-                Log::error("AI cleanup API returned error status {$response->status()} for job ID: {$this->scrapedJob->id}. Body: {$response->body()}");
-                throw new \RuntimeException("AI Cleanup API returned error: " . $response->status());
+            $responseData = null;
+            try {
+                $responseData = $response->json();
+            } catch (\Throwable $e) {
+                // ignore
             }
 
-            $responseData = $response->json();
-            if (! isset($responseData['success']) || ! $responseData['success'] || ! isset($responseData['data'])) {
+            if ($response->status() === 402 ||
+                $response->status() === 429 ||
+                (is_array($responseData) && isset($responseData['code']) && $responseData['code'] === 'INSUFFICIENT_CREDIT') ||
+                (is_array($responseData) && isset($responseData['error']) && str_contains(strtolower($responseData['error']), 'quota')) ||
+                (is_array($responseData) && isset($responseData['error']) && str_contains(strtolower($responseData['error']), 'credit'))
+            ) {
+                $warning = "AI cleanup stopped for job ID: {$this->scrapedJob->id} due to Insufficient Credits or usage limits. Leaving it as Drafted Raw.";
+                Log::warning($warning);
+                $this->scrapedJob->update([
+                    'draft_status' => 'drafted_raw',
+                    'fail_reason' => 'AI quota limit or credits exceeded. Processing paused.'
+                ]);
+                return;
+            }
+
+            if ($response->failed()) {
+                Log::error("AI cleanup API returned error status {$response->status()} for job ID: {$this->scrapedJob->id}. Body: {$response->body()}");
+                throw new \RuntimeException("AI Cleanup API returned error status: " . $response->status());
+            }
+
+            if (! is_array($responseData) || ! isset($responseData['success']) || ! $responseData['success'] || ! isset($responseData['data'])) {
                 Log::error("AI cleanup API returned invalid format for job ID: {$this->scrapedJob->id}. Body: {$response->body()}");
-                throw new \RuntimeException("AI Cleanup API returned invalid payload");
+                throw new \RuntimeException("AI Cleanup API returned invalid payload format");
             }
 
             // 4. Update the ScrapedJob model with cleaned data
@@ -91,11 +125,16 @@ class CleanScrapedJobWithAI implements ShouldQueue
                 'employment_type' => $cleaned['employment_type'] ?? $this->scrapedJob->employment_type,
                 'description' => $cleaned['description'] ?? $this->scrapedJob->description,
                 'description_summary' => $cleaned['description_summary'] ?? $this->scrapedJob->description_summary,
+                'draft_status' => 'drafted_ai',
+                'fail_reason' => null,
             ]);
 
             Log::info("Successfully cleaned scraped job ID: {$this->scrapedJob->id} using AI.");
 
         } catch (\Throwable $exception) {
+            $this->scrapedJob->update([
+                'fail_reason' => $exception->getMessage(),
+            ]);
             Log::error("Failed AI cleanup for scraped job ID: {$this->scrapedJob->id}. Exception: {$exception->getMessage()}");
             throw $exception;
         }

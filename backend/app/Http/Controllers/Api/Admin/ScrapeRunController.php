@@ -67,22 +67,26 @@ class ScrapeRunController extends Controller
         }
 
         try {
-            $runs = $this->executionService->runBySourceName(
+            $scrapeRun = ScrapeRun::query()->create([
+                'job_source_id' => $source ? $source->id : null,
+                'source_name' => $source ? $source->name : $sourceName,
+                'status' => 'pending',
+                'started_at' => now(),
+                'created_by' => optional($request->user())->id,
+            ]);
+
+            \App\Jobs\ScrapeJobsJob::dispatch(
                 $sourceName,
                 optional($request->user())->id,
                 $keyword,
-                $location
+                $location,
+                $scrapeRun
             );
-            $scrapeRun = $runs[0] ?? null;
         } catch (\Throwable $exception) {
-            return ApiResponse::error('Scrape run failed: '.$exception->getMessage(), 500);
+            return ApiResponse::error('Failed to trigger scrape run: '.$exception->getMessage(), 500);
         }
 
-        if (! $scrapeRun) {
-            return ApiResponse::error('Scrape run failed to start.', 500);
-        }
-
-        return ApiResponse::success(new ScrapeRunResource($scrapeRun->load(['jobSource', 'creator'])), 'Scrape run triggered successfully');
+        return ApiResponse::success(new ScrapeRunResource($scrapeRun->refresh()->load(['jobSource', 'creator'])), 'Scrape run triggered successfully');
     }
 
     public function show(string $id)

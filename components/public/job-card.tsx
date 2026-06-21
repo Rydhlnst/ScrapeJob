@@ -165,7 +165,7 @@ export function JobCard({
           </Button>
           <Button
             asChild
-            className="h-11 rounded-none bg-slate-950 font-semibold text-white hover:bg-slate-800"
+            className="h-11 rounded-none bg-blue-600 font-semibold text-white hover:bg-blue-700"
           >
             <a href={job.sourceUrl} target="_blank" rel="noreferrer">
               Apply

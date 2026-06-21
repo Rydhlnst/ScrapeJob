@@ -141,7 +141,7 @@ export function JobSearchBar({
         </div>
       </div>
       <Button
-        className="h-[60px] rounded-none bg-slate-950 px-8 text-sm font-semibold text-white hover:bg-slate-800"
+        className="h-[60px] rounded-none bg-blue-600 px-8 text-sm font-semibold text-white hover:bg-blue-700"
         onClick={() => submit()}
       >
         Cari
