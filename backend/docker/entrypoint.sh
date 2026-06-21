@@ -91,8 +91,10 @@ if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
   php artisan migrate --force
 fi
 
-# Ensure storage symbolic link exists
-php artisan storage:link --relative --force || php artisan storage:link --force || true
+# Ensure storage symbolic link exists (only run as root to avoid permission errors in worker/scheduler)
+if [ "$(id -u)" = "0" ]; then
+  php artisan storage:link --relative --force || php artisan storage:link --force || true
+fi
 
 if [ "${APP_ENV:-production}" = "production" ] && [ "${ENABLE_LARAVEL_CACHE_WARMUP:-true}" = "true" ]; then
   rm -f bootstrap/cache/*.php
