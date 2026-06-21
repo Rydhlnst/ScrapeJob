@@ -54,9 +54,13 @@ Buka tab **Environment Variables** di dashboard project Coolify Anda, lalu tamba
 | `POSTGRES_USER` | Runtime | Username PostgreSQL | `scrapejob` |
 | `POSTGRES_PASSWORD`| Runtime | Password PostgreSQL | `password_aman_anda` |
 | `SCRAPER_INTERNAL_API_TOKEN` | Build & Runtime | Token komunikasi Laravel & Scraper | `token_random_panjang_dan_aman` |
-| `DEEPSEEK_API_KEY` | Build & Runtime | API Key DeepSeek untuk AI cleanup | `sk-deepseek-...` |
 | `SANCTUM_STATEFUL_DOMAINS` | Runtime | Domain frontend tanpa protokol | `jobs.example.com` |
 | `AI_CLEANUP_ENABLED` | Runtime | Aktifkan pembersihan data lowongan otomatis | `true` |
+| `AI_PROVIDER` | Runtime | Pilihan Provider AI (`deepseek` atau `ollama`) | `deepseek` atau `ollama` |
+| `DEEPSEEK_API_KEY` | Runtime | API Key DeepSeek (jika `AI_PROVIDER=deepseek`) | `sk-deepseek-...` |
+| `OLLAMA_BASE_URL` | Runtime | URL Endpoint API Ollama (jika `AI_PROVIDER=ollama`) | `http://vps-ip:11434/v1` atau URL Cloud |
+| `OLLAMA_API_KEY` | Runtime | API Key Ollama (jika diperlukan) | `ollama` (default jika kosong) |
+| `OLLAMA_MODEL` | Runtime | Nama Model Ollama yang akan digunakan | `llama3` atau `mistral` |
 
 *Catatan: Anda dapat membuat `APP_KEY` secara lokal terlebih dahulu dengan menjalankan perintah `php artisan key:generate --show` di komputer lokal Anda.*
 

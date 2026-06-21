@@ -1,5 +1,6 @@
 import { generateObject } from "ai"
 import { deepseek } from "@ai-sdk/deepseek"
+import { createOpenAI } from "@ai-sdk/openai"
 import { z } from "zod"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -63,17 +64,30 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 3. Setup Deepseek Model configuration
-    const apiKey = process.env.DEEPSEEK_API_KEY
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "Configuration Error: DEEPSEEK_API_KEY is not set on the server" },
-        { status: 500 }
-      )
-    }
+    // 3. Setup Model configuration (Deepseek or Ollama)
+    const aiProvider = (process.env.AI_PROVIDER || "deepseek").toLowerCase()
+    let model
 
-    // Initialize deepseek provider with api key explicitly or let it load from env
-    const model = deepseek("deepseek-chat")
+    if (aiProvider === "ollama") {
+      const ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1"
+      const ollamaApiKey = process.env.OLLAMA_API_KEY || "ollama"
+      const ollamaModel = process.env.OLLAMA_MODEL || "llama3"
+
+      const ollama = createOpenAI({
+        baseURL: ollamaBaseUrl,
+        apiKey: ollamaApiKey,
+      })
+      model = ollama(ollamaModel)
+    } else {
+      const apiKey = process.env.DEEPSEEK_API_KEY
+      if (!apiKey) {
+        return NextResponse.json(
+          { error: "Configuration Error: DEEPSEEK_API_KEY is not set on the server" },
+          { status: 500 }
+        )
+      }
+      model = deepseek("deepseek-chat")
+    }
 
     // 4. Generate structured object via Vercel AI SDK
     const result = await generateObject({
