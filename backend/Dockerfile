@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip \
     unzip \
     zip \
- && docker-php-ext-install bcmath pcntl pdo_mysql pdo_pgsql \
+ && docker-php-ext-install bcmath pcntl pdo_mysql pdo_pgsql intl \
  && pecl install redis \
  && docker-php-ext-enable redis \
  && a2enmod rewrite headers \
