@@ -17,3 +17,18 @@ scraper-service/.venv
 scraper-service/output
 output
 *.log
+
+# Env files — secrets must not leak into image layers
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+!backend/.env.docker
+
+# Local dev & docs
+DESIGN.md
+README.md
+COOLIFY_DEPLOYMENT.md
+SCRAPING_PIPELINE_ARCHITECTURE.md

@@ -6,12 +6,16 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_BASE_URL: ${SERVICE_FQDN_BACKEND}
-        INTERNAL_API_BASE_URL: http://backend
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+        INTERNAL_API_BASE_URL: ${INTERNAL_API_BASE_URL:-http://backend}
+        NEXT_PUBLIC_USE_MOCK: ${NEXT_PUBLIC_USE_MOCK:-false}
+        API_BEARER_TOKEN: ${API_BEARER_TOKEN:-}
+        DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+        SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN:-}
     environment:
-      NEXT_PUBLIC_API_BASE_URL: ${SERVICE_FQDN_BACKEND}
-      INTERNAL_API_BASE_URL: http://backend
-      NEXT_PUBLIC_USE_MOCK: "false"
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+      INTERNAL_API_BASE_URL: ${INTERNAL_API_BASE_URL:-http://backend}
+      NEXT_PUBLIC_USE_MOCK: ${NEXT_PUBLIC_USE_MOCK:-false}
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-}
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
       SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN:-}
@@ -19,13 +23,16 @@ services:
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
       OLLAMA_API_KEY: ${OLLAMA_API_KEY:-}
       OLLAMA_MODEL: ${OLLAMA_MODEL:-}
+    depends_on:
+      backend:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/logo.svg || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 20s
+      start_period: 60s
 
   backend:
     build:
@@ -36,30 +43,37 @@ services:
       APP_ENV: production
       APP_KEY: ${APP_KEY}
       APP_DEBUG: "false"
-      APP_URL: ${SERVICE_FQDN_BACKEND}
-      FRONTEND_URL: ${SERVICE_FQDN_FRONTEND}
+      APP_URL: ${APP_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
       DB_CONNECTION: pgsql
       DB_HOST: db
       DB_PORT: 5432
       DB_DATABASE: ${POSTGRES_DB:-job_platform}
       DB_USERNAME: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       REDIS_CLIENT: phpredis
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD:-}
-      SCRAPER_ACTIVE_SOURCES: glints,jobstreet
+      SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS}
+      SESSION_DRIVER: ${SESSION_DRIVER:-database}
+      SESSION_DOMAIN: ${SESSION_DOMAIN:-}
+      CACHE_STORE: ${CACHE_STORE:-database}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
+      SCRAPER_ACTIVE_SOURCES: ${SCRAPER_ACTIVE_SOURCES:-glints,jobstreet}
       SCRAPER_SCHEDULE_ENABLED: "true"
-      SCRAPER_SCHEDULE_CRON: "0 */8 * * *"
+      SCRAPER_SCHEDULE_CRON: ${SCRAPER_SCHEDULE_CRON:-0 */8 * * *}
+      SCRAPER_SCHEDULE_TIMEZONE: ${SCRAPER_SCHEDULE_TIMEZONE:-Asia/Jakarta}
       SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
       SCRAPER_PYTHON_MODE: local
       SCRAPER_PYTHON_BIN: python3
       WAIT_FOR_DB: "true"
       ENABLE_LARAVEL_CACHE_WARMUP: "true"
-      RUN_MIGRATIONS: "false"
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-false}
       AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
-      AI_CLEANUP_URL: ${SERVICE_FQDN_FRONTEND}/api/internal/clean-job
-      SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS}
+      AI_CLEANUP_URL: ${FRONTEND_URL}/api/internal/clean-job
+      LOG_CHANNEL: ${LOG_CHANNEL:-stack}
+      LOG_LEVEL: ${LOG_LEVEL:-warning}
     depends_on:
       db:
         condition: service_healthy
@@ -71,7 +85,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 20s
+      start_period: 60s
 
   queue:
     build:
@@ -83,31 +97,38 @@ services:
       APP_ENV: production
       APP_KEY: ${APP_KEY}
       APP_DEBUG: "false"
-      APP_URL: ${SERVICE_FQDN_BACKEND}
-      FRONTEND_URL: ${SERVICE_FQDN_FRONTEND}
+      APP_URL: ${APP_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
       DB_CONNECTION: pgsql
       DB_HOST: db
       DB_PORT: 5432
       DB_DATABASE: ${POSTGRES_DB:-job_platform}
       DB_USERNAME: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       REDIS_CLIENT: phpredis
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      SESSION_DRIVER: ${SESSION_DRIVER:-database}
+      CACHE_STORE: ${CACHE_STORE:-database}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
+      QUEUE_TRIES: ${QUEUE_TRIES:-3}
+      QUEUE_TIMEOUT: ${QUEUE_TIMEOUT:-900}
       SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
       SCRAPER_PYTHON_MODE: local
       SCRAPER_PYTHON_BIN: python3
-      QUEUE_TRIES: ${QUEUE_TRIES:-3}
-      QUEUE_TIMEOUT: ${QUEUE_TIMEOUT:-900}
       WAIT_FOR_DB: "true"
       AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
-      AI_CLEANUP_URL: ${SERVICE_FQDN_FRONTEND}/api/internal/clean-job
+      AI_CLEANUP_URL: ${FRONTEND_URL}/api/internal/clean-job
+      LOG_CHANNEL: ${LOG_CHANNEL:-stack}
+      LOG_LEVEL: ${LOG_LEVEL:-warning}
     command: ["/var/www/html/docker/start-worker.sh"]
     depends_on:
       db:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      backend:
         condition: service_healthy
     restart: unless-stopped
 
@@ -121,31 +142,39 @@ services:
       APP_ENV: production
       APP_KEY: ${APP_KEY}
       APP_DEBUG: "false"
-      APP_URL: ${SERVICE_FQDN_BACKEND}
-      FRONTEND_URL: ${SERVICE_FQDN_FRONTEND}
+      APP_URL: ${APP_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
       DB_CONNECTION: pgsql
       DB_HOST: db
       DB_PORT: 5432
       DB_DATABASE: ${POSTGRES_DB:-job_platform}
       DB_USERNAME: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       REDIS_CLIENT: phpredis
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      SESSION_DRIVER: ${SESSION_DRIVER:-database}
+      CACHE_STORE: ${CACHE_STORE:-database}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
       SCRAPER_SCHEDULE_ENABLED: "true"
-      SCRAPER_SCHEDULE_CRON: "0 */8 * * *"
+      SCRAPER_SCHEDULE_CRON: ${SCRAPER_SCHEDULE_CRON:-0 */8 * * *}
+      SCRAPER_SCHEDULE_TIMEZONE: ${SCRAPER_SCHEDULE_TIMEZONE:-Asia/Jakarta}
       SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
       SCRAPER_PYTHON_MODE: local
       SCRAPER_PYTHON_BIN: python3
       WAIT_FOR_DB: "true"
       AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
-      AI_CLEANUP_URL: ${SERVICE_FQDN_FRONTEND}/api/internal/clean-job
+      AI_CLEANUP_URL: ${FRONTEND_URL}/api/internal/clean-job
+      LOG_CHANNEL: ${LOG_CHANNEL:-stack}
+      LOG_LEVEL: ${LOG_LEVEL:-warning}
     command: ["/var/www/html/docker/start-scheduler.sh"]
     depends_on:
       db:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      backend:
         condition: service_healthy
     restart: unless-stopped
 
@@ -154,24 +183,26 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-job_platform}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-job_platform}"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
     restart: unless-stopped
     volumes:
       - pg-data:/var/lib/postgresql/data
 
   redis:
-    image: redis:7
+    image: redis:7-alpine
     command: ["redis-server", "--appendonly", "yes"]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
     restart: unless-stopped
     volumes:
       - redis-data:/data

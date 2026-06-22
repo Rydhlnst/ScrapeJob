@@ -9,8 +9,12 @@ const nextConfig = {
         hostname: "localhost",
       },
       {
+        protocol: "http",
+        hostname: "**",
+      },
+      {
         protocol: "https",
-        hostname: "example.com",
+        hostname: "**",
       },
     ],
   },
