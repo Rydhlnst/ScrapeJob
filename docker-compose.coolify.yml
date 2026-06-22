@@ -44,10 +44,10 @@ services:
       DB_DATABASE: ${POSTGRES_DB:-job_platform}
       DB_USERNAME: ${POSTGRES_USER:-postgres}
       DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      REDIS_CLIENT: phredis
+      REDIS_CLIENT: phpredis
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: null
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
       SCRAPER_ACTIVE_SOURCES: glints,jobstreet
       SCRAPER_SCHEDULE_ENABLED: "true"
       SCRAPER_SCHEDULE_CRON: "0 */8 * * *"
@@ -91,10 +91,10 @@ services:
       DB_DATABASE: ${POSTGRES_DB:-job_platform}
       DB_USERNAME: ${POSTGRES_USER:-postgres}
       DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      REDIS_CLIENT: phredis
+      REDIS_CLIENT: phpredis
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: null
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
       SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
       SCRAPER_PYTHON_MODE: local
       SCRAPER_PYTHON_BIN: python3
@@ -129,10 +129,10 @@ services:
       DB_DATABASE: ${POSTGRES_DB:-job_platform}
       DB_USERNAME: ${POSTGRES_USER:-postgres}
       DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      REDIS_CLIENT: phredis
+      REDIS_CLIENT: phpredis
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: null
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
       SCRAPER_SCHEDULE_ENABLED: "true"
       SCRAPER_SCHEDULE_CRON: "0 */8 * * *"
       SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
