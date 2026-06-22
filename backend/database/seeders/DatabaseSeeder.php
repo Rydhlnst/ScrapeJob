@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             CategorySeeder::class,
             LocationSeeder::class,
+            JobSourceSeeder::class,
         ]);
 
         if (! app()->isProduction()) {
