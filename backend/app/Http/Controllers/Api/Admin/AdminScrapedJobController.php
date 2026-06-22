@@ -97,8 +97,12 @@ class AdminScrapedJobController extends Controller
 
     public function cleanAi(ScrapedJob $scrapedJob)
     {
-        CleanScrapedJobWithAI::dispatchSync($scrapedJob);
-        return ApiResponse::success(new ScrapedJobResource($scrapedJob->refresh()), 'Scraped job processed with AI successfully');
+        try {
+            CleanScrapedJobWithAI::dispatchSync($scrapedJob);
+            return ApiResponse::success(new ScrapedJobResource($scrapedJob->refresh()), 'Scraped job processed with AI successfully');
+        } catch (\Throwable $e) {
+            return ApiResponse::error($e->getMessage(), 500);
+        }
     }
 
     public function bulkCleanAi(Request $request)

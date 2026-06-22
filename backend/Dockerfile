@@ -58,6 +58,8 @@ RUN pip3 install --break-system-packages --no-cache-dir -r /tmp/requirements.txt
 COPY backend/ ./
 COPY scraper-service/ /var/www/scraper-service/
 
+RUN composer dump-autoload --optimize --no-dev
+
 RUN rm -f bootstrap/cache/*.php
 RUN php artisan package:discover --ansi
 
