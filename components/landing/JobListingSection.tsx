@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 
 import type { Job } from "@/types"
+import type { LandingFeaturedJobsContent } from "@/types/landing-content"
 import { Container } from "@/components/shared/Container"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -217,7 +218,13 @@ function HomepageJobCard({
   )
 }
 
-export function JobListingSection({ jobs }: { jobs: Job[] }) {
+export function JobListingSection({
+  jobs,
+  content,
+}: {
+  jobs: Job[]
+  content: LandingFeaturedJobsContent
+}) {
   const [selectedJobId, setSelectedJobId] = useState(jobs[0]?.id ?? "")
 
   useEffect(() => {
@@ -226,7 +233,18 @@ export function JobListingSection({ jobs }: { jobs: Job[] }) {
 
   const selectedJob = jobs.find((job) => job.id === selectedJobId) ?? jobs[0]
 
-  if (!selectedJob) return null
+  if (!selectedJob) {
+    return (
+      <section className="border-b border-[var(--brand-shell-strong)] bg-[#f8fbff] py-10 lg:py-12" id="jobs">
+        <Container>
+          <div className="rounded-none border border-slate-200 bg-white p-8 text-center shadow-[var(--shadow-sm)]">
+            <div className="text-lg font-semibold text-slate-950">{content.title}</div>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-slate-600">{content.emptyState}</p>
+          </div>
+        </Container>
+      </section>
+    )
+  }
 
   const companyName = selectedJob.companyName || "Company undisclosed"
   const parsed = splitDescription(selectedJob.description || "")
@@ -241,11 +259,10 @@ export function JobListingSection({ jobs }: { jobs: Job[] }) {
               Browse jobs now
             </div>
             <h2 className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-slate-950 md:text-4xl">
-              Browse listings and preview the role without leaving the homepage.
+              {content.title}
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 md:text-base">
-              Compare recent openings, inspect salary and work setup, then open the full listing only when
-              the role looks relevant.
+              {content.description}
             </p>
           </div>
 
@@ -266,7 +283,7 @@ export function JobListingSection({ jobs }: { jobs: Job[] }) {
             <div className="mb-4 flex items-center justify-between">
               <div className="text-sm font-semibold text-slate-950">{jobs.length} visible jobs</div>
               <div className="text-xs uppercase tracking-[0.14em] text-slate-500">
-                Newest first
+                {content.rules.sort}
               </div>
             </div>
 

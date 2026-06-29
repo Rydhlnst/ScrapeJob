@@ -10,10 +10,10 @@ import { SiFigma } from "@react-icons/all-files/si/SiFigma"
 import { SiNotion } from "@react-icons/all-files/si/SiNotion"
 import { SiStripe } from "@react-icons/all-files/si/SiStripe"
 
-import { companies } from "@/constants/companies"
 import { Container } from "@/components/shared/Container"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import { Card } from "@/components/ui/card"
+import type { LandingTrustedCompaniesContent } from "@/types/landing-content"
 
 const companyIcons = {
   airbnb: FaAirbnb,
@@ -55,11 +55,11 @@ function CompanyChip({
   )
 }
 
-export function TrustedCompanies() {
+export function TrustedCompanies({ content }: { content: LandingTrustedCompaniesContent }) {
   const reduceMotion = useReducedMotion()
   const [paused, setPaused] = useState(false)
 
-  const items = useMemo(() => companies, [])
+  const items = useMemo(() => content.items, [content.items])
   const displayItems = useMemo(
     () => (reduceMotion ? items : [...items, ...items]),
     [items, reduceMotion]
@@ -97,15 +97,15 @@ export function TrustedCompanies() {
         <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <div className="max-w-lg">
             <SectionHeader
-              title="Companies and sources visitors expect to see on a job platform"
+              title={content.title}
               description="Keep the marketplace feeling credible with recognizable hiring brands and familiar job-source patterns."
             />
           </div>
 
           <div
             className="overflow-hidden border border-[var(--brand-shell-strong)] bg-[var(--brand-shell)] px-6 py-6"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
           >
             <div className="grid gap-0 md:grid-cols-2">
               <div className="border border-[var(--brand-shell-strong)] bg-white p-8">

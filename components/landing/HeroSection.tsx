@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 
 import type { Job } from "@/types"
+import type { LandingHeroContent } from "@/types/landing-content"
 import { SiteFrame } from "@/components/shared/SiteShell"
 import { JobSearchBar } from "@/components/public/job-search-bar"
 import { Button } from "@/components/ui/button"
@@ -85,11 +86,13 @@ export function HeroSection({
   totalJobs,
   totalCategories,
   totalSources,
+  content,
   jobs = [],
 }: {
   totalJobs: number
   totalCategories: number
   totalSources: number
+  content: LandingHeroContent
   jobs?: Job[]
 }) {
   return (
@@ -99,45 +102,46 @@ export function HeroSection({
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
             <div className="max-w-3xl">
               <h1 className="text-4xl font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--brand-ink)] sm:text-5xl lg:text-[4.4rem]">
-                Start browsing jobs
-                <br />
-                the moment you land.
+                {content.title}
               </h1>
 
               <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
-                Search curated roles from multiple sources, compare openings quickly,
-                and preview real job details before you ever leave the homepage.
+                {content.description}
               </p>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Button
+                  asChild
+                  className="h-11 rounded-none bg-[var(--brand-blue)] px-5 text-sm font-semibold text-white hover:bg-[var(--brand-sky)]"
+                >
+                  <Link href={content.primaryCta.href}>
+                    {content.primaryCta.label}
+                    <ArrowRight className="ml-2 size-4" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="h-11 rounded-none border-[var(--brand-shell-strong)] bg-white px-5 text-sm font-semibold text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]"
+                >
+                  <Link href={content.secondaryCta.href}>{content.secondaryCta.label}</Link>
+                </Button>
+              </div>
 
               <div className="mt-8">
                 <JobSearchBar defaultSort="newest" />
               </div>
 
               <div className="mt-5 flex flex-wrap gap-3 text-sm text-slate-600">
-                <Link
-                  href="/jobs?jobType=Full-time"
-                  className="rounded-none border border-slate-200 bg-white px-4 py-2 transition-colors hover:border-slate-300 hover:text-slate-900"
-                >
-                  Full-time
-                </Link>
-                <Link
-                  href="/jobs?location=Jakarta"
-                  className="rounded-none border border-slate-200 bg-white px-4 py-2 transition-colors hover:border-slate-300 hover:text-slate-900"
-                >
-                  Jakarta
-                </Link>
-                <Link
-                  href="/jobs?location=Remote"
-                  className="rounded-none border border-slate-200 bg-white px-4 py-2 transition-colors hover:border-slate-300 hover:text-slate-900"
-                >
-                  Remote
-                </Link>
-                <Link
-                  href="/jobs?sort=relevance"
-                  className="rounded-none border border-slate-200 bg-white px-4 py-2 transition-colors hover:border-slate-300 hover:text-slate-900"
-                >
-                  Most relevant
-                </Link>
+                {content.quickLinks.map((link) => (
+                  <Link
+                    key={`${link.label}-${link.href}`}
+                    href={link.href}
+                    className="rounded-none border border-slate-200 bg-white px-4 py-2 transition-colors hover:border-slate-300 hover:text-slate-900"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               </div>
 
               <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-slate-500 border-t border-slate-200/60 pt-6">

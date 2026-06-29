@@ -41,7 +41,7 @@ export function JobsTable({
           </Button>
         </div>
       </div>
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="border border-slate-200 bg-white shadow-none">
         <Table>
           <TableHeader>
             <TableRow>
@@ -74,7 +74,7 @@ export function JobsTable({
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="ghost">
+                      <Button size="icon" variant="ghost" className="rounded-none">
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -133,4 +133,3 @@ export function JobsTable({
     </div>
   )
 }
-

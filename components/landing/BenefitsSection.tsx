@@ -4,29 +4,11 @@ import { Container } from "@/components/shared/Container"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import type { LandingBenefitsContent } from "@/types/landing-content"
 
-const benefits = [
-  {
-    icon: SearchCheck,
-    title: "Pencarian lebih fokus",
-    description:
-      "Cari lowongan dari banyak sumber dengan hasil yang lebih cepat dibaca dan lebih mudah dibandingkan.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Sumber lebih jelas",
-    description:
-      "Lanjutkan ke sumber resmi lowongan tanpa bingung dengan tampilan yang terlalu ramai atau tidak konsisten.",
-  },
-  {
-    icon: CheckCircle2,
-    title: "Filter yang membantu",
-    description:
-      "Gunakan filter inti seperti kategori, lokasi, dan tipe kerja untuk mempersempit pilihan dengan cepat.",
-  },
-]
+const benefitIcons = [SearchCheck, ShieldCheck, CheckCircle2]
 
-export function BenefitsSection() {
+export function BenefitsSection({ content }: { content: LandingBenefitsContent }) {
   return (
     <section
       className="border-b py-16 md:py-20"
@@ -39,7 +21,7 @@ export function BenefitsSection() {
       <Container>
         <div className="max-w-4xl">
           <SectionHeader
-            title="A cleaner way to compare jobs from different sources"
+            title={content.title}
             description="The homepage now shows the product experience first, so visitors can search, browse, and evaluate roles immediately."
           />
         </div>
@@ -51,39 +33,43 @@ export function BenefitsSection() {
             backgroundColor: "var(--brand-shell-strong)",
           }}
         >
-          {benefits.map((benefit, index) => (
-            <Card
-              key={benefit.title + index}
-              className="rounded-none border-0 bg-white p-8 shadow-none"
-            >
-              <div className="flex items-start gap-4">
-                <div
-                  className="grid size-12 place-items-center border"
-                  style={{
-                    borderColor: "var(--brand-shell-strong)",
-                    backgroundColor: "var(--brand-shell)",
-                    color: "var(--brand-blue)",
-                  }}
-                >
-                  <benefit.icon className="size-5" />
-                </div>
-                <div className="min-w-0">
+          {content.items.map((benefit, index) => {
+            const Icon = benefitIcons[index] ?? CheckCircle2
+
+            return (
+              <Card
+                key={benefit.title + index}
+                className="rounded-none border-0 bg-white p-8 shadow-none"
+              >
+                <div className="flex items-start gap-4">
                   <div
-                    className="text-[1.75rem] font-medium tracking-[-0.04em]"
-                    style={{ color: "var(--brand-ink)" }}
+                    className="grid size-12 place-items-center border"
+                    style={{
+                      borderColor: "var(--brand-shell-strong)",
+                      backgroundColor: "var(--brand-shell)",
+                      color: "var(--brand-blue)",
+                    }}
                   >
-                    {benefit.title}
+                    <Icon className="size-5" />
                   </div>
-                  <p
-                    className="mt-3 max-w-xl text-sm leading-7"
-                    style={{ color: "rgba(23,37,84,0.72)" }}
-                  >
-                    {benefit.description}
-                  </p>
+                  <div className="min-w-0">
+                    <div
+                      className="text-[1.75rem] font-medium tracking-[-0.04em]"
+                      style={{ color: "var(--brand-ink)" }}
+                    >
+                      {benefit.title}
+                    </div>
+                    <p
+                      className="mt-3 max-w-xl text-sm leading-7"
+                      style={{ color: "rgba(23,37,84,0.72)" }}
+                    >
+                      {benefit.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            )
+          })}
         </div>
 
         <div

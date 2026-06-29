@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import {
   Briefcase,
   CircleUserRound,
+  FilePenLine,
   Database,
   LayoutDashboard,
   Layers,
@@ -29,6 +30,7 @@ import {
 
 const nav = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/content", label: "Landing CMS", icon: FilePenLine },
   { href: "/admin/jobs", label: "Jobs", icon: Briefcase },
   { href: "/admin/raw-data", label: "Scraped Review", icon: Database },
   { href: "/admin/scrape-runs", label: "Scrape Runs", icon: ListChecks },
@@ -41,19 +43,18 @@ export function AdminSidebar() {
 
   return (
     <Sidebar variant="inset" collapsible="icon">
-      <SidebarHeader className="p-3">
-        <div className="flex items-center gap-3 rounded-2xl border border-sidebar-border bg-card px-3 py-3 shadow-[var(--shadow-sm)]">
-          <Image src="/logo.png" alt="Lowonganku logo" width={36} height={36} className="h-9 w-9 rounded-lg object-cover" />
+      <SidebarHeader className="border-b border-sidebar-border p-3">
+        <div className="flex items-center gap-3 border border-sidebar-border bg-card px-3 py-3">
+          <Image src="/logo.png" alt="Lowonganku logo" width={36} height={36} className="h-9 w-9 rounded-none object-cover" />
           <div>
             <div className="text-sm font-semibold leading-tight">Lowonganku</div>
             <div className="text-xs text-sidebar-foreground/70">Admin Workspace</div>
           </div>
         </div>
       </SidebarHeader>
-      <SidebarSeparator />
       <SidebarContent>
-        <SidebarGroup className="pt-2">
-          <SidebarGroupLabel className="text-[11px] uppercase tracking-[0.08em] text-sidebar-foreground/55">
+        <SidebarGroup className="pt-3">
+          <SidebarGroupLabel className="text-[11px] uppercase tracking-[0.14em] text-sidebar-foreground/55">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -67,9 +68,9 @@ export function AdminSidebar() {
                       isActive={active}
                       tooltip={item.label}
                       className={cn(
-                        "h-10 rounded-xl text-sidebar-foreground/90",
-                        "hover:bg-muted hover:text-foreground",
-                        "data-[active=true]:bg-accent data-[active=true]:text-accent-foreground data-[active=true]:shadow-none",
+                        "h-10 rounded-none border border-transparent text-sidebar-foreground/90",
+                        "hover:border-sidebar-border hover:bg-card hover:text-foreground",
+                        "data-[active=true]:border-sidebar-border data-[active=true]:bg-card data-[active=true]:text-foreground data-[active=true]:shadow-none",
                       )}
                     >
                       <Link href={item.href}>
@@ -84,9 +85,10 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarSeparator />
       <SidebarFooter className="p-3">
-        <div className="rounded-2xl border border-sidebar-border bg-card px-3 py-3 text-xs text-sidebar-foreground/75">
-          Manage jobs from raw ingest to publish in one workspace.
+        <div className="border border-sidebar-border bg-card px-3 py-3 text-xs leading-6 text-sidebar-foreground/75">
+          Manage jobs, scraper output, and landing content in one workspace.
         </div>
       </SidebarFooter>
     </Sidebar>

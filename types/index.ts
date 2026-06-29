@@ -73,6 +73,24 @@ export type JobStats = {
 }
 
 export type {
+  AdminDashboardActivityItem,
+  AdminDashboardQueueItem,
+  AdminDashboardSummary,
+  AdminLandingPageContentRecord,
+  FeaturedJobsRules,
+  LandingBenefitItem,
+  LandingBenefitsContent,
+  LandingCompanyItem,
+  LandingContentStatus,
+  LandingCtaContent,
+  LandingFeaturedJobsContent,
+  LandingHeroContent,
+  LandingLink,
+  LandingPageContent,
+  LandingTrustedCompaniesContent,
+} from "./landing-content"
+
+export type {
   Job as PipelineJob,
   ScrapedJob as PipelineScrapedJob,
   ScrapedJobStatus,

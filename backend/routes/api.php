@@ -4,11 +4,13 @@ use App\Http\Controllers\Api\Admin\CategoryController as AdminCategoryController
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Api\Admin\JobSourceController as AdminJobSourceController;
+use App\Http\Controllers\Api\Admin\LandingPageContentController as AdminLandingPageContentController;
 use App\Http\Controllers\Api\Admin\AdminScrapedJobController;
 use App\Http\Controllers\Api\Admin\ScrapeRunController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
 use App\Http\Controllers\Api\Public\JobController as PublicJobController;
+use App\Http\Controllers\Api\Public\LandingPageContentController as PublicLandingPageContentController;
 use App\Http\Controllers\Api\Public\LocationController as PublicLocationController;
 use App\Http\Controllers\Api\Public\ScraperController as PublicScraperController;
 use App\Http\Controllers\Api\ScrapedJobImportController;
@@ -40,11 +42,15 @@ Route::post('/scraper/run', [PublicScraperController::class, 'trigger'])->middle
 Route::get('/scraper/logs', [PublicScraperController::class, 'logs']);
 Route::get('/categories', [PublicCategoryController::class, 'index']);
 Route::get('/locations', [PublicLocationController::class, 'index']);
+Route::get('/landing-page-content', [PublicLandingPageContentController::class, 'show']);
 
 Route::prefix('admin')
     ->middleware(['auth:sanctum'])
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('permission:view dashboard');
+        Route::get('/landing-page-content', [AdminLandingPageContentController::class, 'show'])->middleware('permission:manage site content');
+        Route::put('/landing-page-content', [AdminLandingPageContentController::class, 'update'])->middleware('permission:manage site content');
+        Route::post('/landing-page-content/publish', [AdminLandingPageContentController::class, 'publish'])->middleware('permission:manage site content');
 
         Route::apiResource('/jobs', AdminJobController::class)
             ->middlewareFor(['index', 'show'], 'permission:view jobs')

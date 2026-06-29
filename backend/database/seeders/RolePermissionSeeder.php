@@ -21,6 +21,7 @@ class RolePermissionSeeder extends Seeder
             'view raw data',
             'manage categories',
             'manage sources',
+            'manage site content',
             'run scraping',
             'view scrape logs',
         ];
@@ -46,6 +47,7 @@ class RolePermissionSeeder extends Seeder
             'view raw data',
             'manage categories',
             'manage sources',
+            'manage site content',
             'run scraping',
             'view scrape logs',
         ]);
@@ -58,6 +60,7 @@ class RolePermissionSeeder extends Seeder
             'publish jobs',
             'reject jobs',
             'view raw data',
+            'manage site content',
         ]);
     }
 }
