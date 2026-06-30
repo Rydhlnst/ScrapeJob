@@ -15,6 +15,11 @@ export const metadata: Metadata = {
   title: "Lowonganku - Temukan Lowongan Kerja Terbaru",
   description:
     "Lowonganku membantu mencari lowongan kerja terpercaya dari berbagai sumber dalam satu tempat.",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
