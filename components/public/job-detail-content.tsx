@@ -20,7 +20,7 @@ export function JobDetailContent({ job }: { job: Job }) {
   return (
     <Card className="rounded-[30px] border border-white/80 bg-white/82 p-7 shadow-[var(--shadow-md)]">
       <div className="inline-flex w-fit rounded-full border border-sky-100 bg-sky-50 px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-sky-700 uppercase">
-        Job detail
+        Detail lowongan
       </div>
 
       <h1 className="mt-5 text-3xl font-semibold tracking-[-0.04em] text-[var(--brand-ink)] md:text-4xl">
@@ -43,7 +43,7 @@ export function JobDetailContent({ job }: { job: Job }) {
           </Badge>
         ) : null}
         <Badge variant="outline" className="rounded-full border-amber-100 bg-amber-50 text-amber-700">
-          {job.salaryText || "Gaji tidak dicantumkan"}
+          {job.salaryText || "Gaji tidak disebutkan"}
         </Badge>
         <Badge variant="outline" className="rounded-full border-white bg-white text-slate-600">
           Sumber: {job.sourceName}
@@ -57,7 +57,7 @@ export function JobDetailContent({ job }: { job: Job }) {
           <div className="whitespace-pre-wrap text-slate-700">{description}</div>
         ) : (
           <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-slate-600">
-            No job description.
+            Deskripsi lowongan tidak tersedia.
           </div>
         )}
       </Section>

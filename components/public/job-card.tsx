@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Bookmark, ExternalLink, MapPin } from "lucide-react"
+import { Bookmark, MapPin } from "lucide-react"
 
 import type { Job } from "@/types"
 import { Badge } from "@/components/ui/badge"
@@ -154,28 +154,21 @@ export function JobCard({
         </div>
       </CardContent>
 
-      <CardFooter className={cn("mt-auto grid w-full gap-2", palette.footer, compact ? "p-5" : "p-6")}>
-        <div className="grid w-full grid-cols-2 gap-2">
-          <Button
-            asChild
-            variant="outline"
-            className="h-11 rounded-none border-slate-900/16 bg-white/86 font-semibold text-slate-800 hover:bg-white"
-          >
-            <Link href={`/jobs/${job.slug}`}>Details</Link>
-          </Button>
-          <Button
-            asChild
-            className="h-11 rounded-none bg-blue-600 font-semibold text-white hover:bg-blue-700"
-          >
-            <a href={job.sourceUrl} target="_blank" rel="noreferrer">
-              Apply
-            </a>
-          </Button>
-        </div>
-        <div className="flex items-center justify-between text-xs text-slate-500">
-          <span>Open source listing</span>
-          <ExternalLink className="size-3.5" />
-        </div>
+      <CardFooter className={cn("mt-auto flex w-full flex-col items-center gap-3", palette.footer, compact ? "p-5" : "p-6")}>
+        <Button
+          asChild
+          className="h-11 w-full rounded-none bg-blue-600 font-semibold text-white hover:bg-blue-700"
+        >
+          <a href={job.sourceUrl} target="_blank" rel="noreferrer">
+            Apply on source
+          </a>
+        </Button>
+        <Link
+          href={`/jobs/${job.slug}`}
+          className="text-sm font-medium text-slate-700 underline-offset-2 hover:underline"
+        >
+          Open full detail
+        </Link>
       </CardFooter>
     </Card>
   )

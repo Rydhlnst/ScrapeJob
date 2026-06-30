@@ -55,7 +55,7 @@ export function JobSummaryCard({ job }: { job: Job }) {
           </Button>
         ) : (
           <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-            Source detail is not available for this job.
+            Sumber lowongan tidak tersedia.
           </div>
         )}
 
