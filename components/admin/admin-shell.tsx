@@ -9,5 +9,5 @@ export function AdminShell({
   children: ReactNode
   className?: string
 }) {
-  return <div className={cn("space-y-6", className)}>{children}</div>
+  return <div className={cn("mx-auto flex w-full max-w-[1440px] flex-col gap-6", className)}>{children}</div>
 }

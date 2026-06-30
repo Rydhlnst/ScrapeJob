@@ -125,7 +125,7 @@ export function normalizeLandingPageContent(
       ...content.trustedCompanies,
       items:
         content.trustedCompanies?.items?.filter(
-          (item) => item?.id && item?.name && item?.href && item?.brandColor,
+          (item) => item?.id && item?.name && item?.url && item?.brandColor,
         ) ?? base.trustedCompanies.items,
     },
     cta: {

@@ -23,16 +23,16 @@ export function AdminListRow({
     <Link
       href={href}
       className={cn(
-        "flex flex-col gap-3 border border-border bg-card p-4 transition-colors hover:border-foreground/20 hover:bg-muted/40 md:flex-row md:items-center md:justify-between",
+        "flex flex-col gap-3 border border-[var(--brand-shell-strong)] bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] p-4 transition-colors hover:border-sky-200 hover:bg-sky-50/60 md:flex-row md:items-center md:justify-between",
         className,
       )}
     >
       <div className="min-w-0 space-y-1">
-        <div className="truncate text-sm font-semibold text-foreground">{title}</div>
-        {description ? <div className="text-sm text-muted-foreground">{description}</div> : null}
+        <div className="truncate text-sm font-semibold text-[var(--brand-ink)]">{title}</div>
+        {description ? <div className="text-sm text-slate-600">{description}</div> : null}
       </div>
       <div className="flex items-center gap-3">
-        {meta ? <div className="text-xs text-muted-foreground">{meta}</div> : null}
+        {meta ? <div className="text-xs text-slate-500">{meta}</div> : null}
         <AdminStatusBadge status={status} />
         <ArrowUpRight className="size-4 text-muted-foreground" />
       </div>
