@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   frontend:
     build:
@@ -71,7 +69,7 @@ services:
       ENABLE_LARAVEL_CACHE_WARMUP: "true"
       RUN_MIGRATIONS: ${RUN_MIGRATIONS:-false}
       AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
-      AI_CLEANUP_URL: ${FRONTEND_URL}/api/internal/clean-job
+      AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
       LOG_CHANNEL: ${LOG_CHANNEL:-stack}
       LOG_LEVEL: ${LOG_LEVEL:-warning}
     depends_on:
@@ -119,7 +117,7 @@ services:
       SCRAPER_PYTHON_BIN: python3
       WAIT_FOR_DB: "true"
       AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
-      AI_CLEANUP_URL: ${FRONTEND_URL}/api/internal/clean-job
+      AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
       LOG_CHANNEL: ${LOG_CHANNEL:-stack}
       LOG_LEVEL: ${LOG_LEVEL:-warning}
     command: ["/var/www/html/docker/start-worker.sh"]
@@ -165,7 +163,7 @@ services:
       SCRAPER_PYTHON_BIN: python3
       WAIT_FOR_DB: "true"
       AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
-      AI_CLEANUP_URL: ${FRONTEND_URL}/api/internal/clean-job
+      AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
       LOG_CHANNEL: ${LOG_CHANNEL:-stack}
       LOG_LEVEL: ${LOG_LEVEL:-warning}
     command: ["/var/www/html/docker/start-scheduler.sh"]

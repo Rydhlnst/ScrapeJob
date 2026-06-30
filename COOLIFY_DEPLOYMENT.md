@@ -1,138 +1,75 @@
-# Coolify Deployment Guide
+# Coolify Full-Stack VPS Deployment
 
-This repo deploys on Coolify as a single **Docker Compose** resource using `docker-compose.coolify.yml`.
+This repository is intended to run on a VPS through one Coolify Docker Compose resource.
 
-Services:
-- `frontend` — Next.js app (public)
-- `backend` — Laravel API (public)
-- `queue` — Laravel queue worker (internal)
-- `scheduler` — Laravel task scheduler (internal)
-- `db` — PostgreSQL 16 (internal)
-- `redis` — Redis 7 (internal)
+Stack:
+- `frontend` - Next.js public app
+- `backend` - Laravel API public app
+- `queue` - Laravel queue worker
+- `scheduler` - Laravel scheduler
+- `db` - PostgreSQL 16
+- `redis` - Redis 7
 
----
+Compose file:
+- `docker-compose.coolify.yml`
+
+Environment template:
+- `.env.coolify.example`
 
 ## 1. Create the Coolify Resource
 
-1. In Coolify, create a new **Docker Compose** resource.
-2. Connect this repository and select the target branch.
-3. Set **Compose File Path** to `./docker-compose.coolify.yml`.
-4. Save the resource so Coolify detects all six services.
+1. In Coolify, create a new `Docker Compose` resource.
+2. Connect this repository and branch.
+3. Set `Compose File Path` to `docker-compose.coolify.yml`.
+4. Add all environment variables from `.env.coolify.example` into the Coolify environment panel.
 
----
+## 2. Domains
 
-## 2. Configure Domains
+Public services only:
+- `frontend` -> `https://jobs.yourdomain.com`
+- `backend` -> `https://api.yourdomain.com`
 
-Set domains only on the public services:
+Internal-only services:
+- `queue`
+- `scheduler`
+- `db`
+- `redis`
 
-| Service    | Domain (example)              |
-|------------|-------------------------------|
-| `frontend` | `https://jobs.yourdomain.com` |
-| `backend`  | `https://api.yourdomain.com`  |
+Do not assign public domains to the internal services.
 
-Leave `queue`, `scheduler`, `db`, and `redis` **without** a public domain.
+## 3. Required Values
 
----
-
-## 3. Configure Environment Variables
-
-Add these variables in the Coolify environment variable panel for the Docker Compose resource.
-
-### Required
+Set these before first deploy:
 
 ```env
-# === FRONTEND URLS (must be set explicitly — used at build time!) ===
 NEXT_PUBLIC_API_BASE_URL=https://api.yourdomain.com
-INTERNAL_API_BASE_URL=http://backend
-NEXT_PUBLIC_USE_MOCK=false
-
-# === BACKEND APP ===
-APP_NAME=Job Loker API
-APP_ENV=production
-APP_KEY=base64:GENERATE_THIS_WITH_php_artisan_key_generate
-APP_DEBUG=false
 APP_URL=https://api.yourdomain.com
 FRONTEND_URL=https://jobs.yourdomain.com
-
-# === DATABASE ===
-POSTGRES_DB=job_platform
-POSTGRES_USER=scrapejob
-POSTGRES_PASSWORD=CHANGE_ME_USE_STRONG_PASSWORD
-
-# === SESSIONS / CORS ===
-SANCTUM_STATEFUL_DOMAINS=jobs.yourdomain.com
 SESSION_DOMAIN=.yourdomain.com
-
-# === REDIS ===
-REDIS_PASSWORD=
-
-# === SCRAPER ===
-SCRAPER_INTERNAL_API_TOKEN=GENERATE_LONG_RANDOM_TOKEN_min_32_chars
-SCRAPER_ACTIVE_SOURCES=glints,jobstreet
-SCRAPER_SCHEDULE_ENABLED=true
-SCRAPER_SCHEDULE_CRON=0 */8 * * *
-SCRAPER_SCHEDULE_TIMEZONE=Asia/Jakarta
-
-# === AI CLEANUP ===
-AI_CLEANUP_ENABLED=true
-AI_PROVIDER=deepseek
-DEEPSEEK_API_KEY=YOUR_DEEPSEEK_API_KEY
-
-# === OPTIONAL — Ollama (if AI_PROVIDER=ollama) ===
-OLLAMA_BASE_URL=
-OLLAMA_API_KEY=
-OLLAMA_MODEL=
-
-# === OPTIONAL — Queue tuning ===
-API_BEARER_TOKEN=
-QUEUE_TRIES=3
-QUEUE_TIMEOUT=900
-LOG_LEVEL=warning
-```
-
-### Notes
-
-> **`APP_KEY`** — generate with: `php artisan key:generate --show`
->
-> **`SCRAPER_INTERNAL_API_TOKEN`** — must be identical for `frontend`, `backend`, `queue`, and `scheduler`.
->
-> **`REDIS_PASSWORD`** — leave empty if you're not securing the Redis container with a password.
->
-> **`NEXT_PUBLIC_API_BASE_URL`** — this is baked into the Next.js build. Must match the exact public URL of your backend.
-
----
-
-## 4. First Deploy
-
-### Step 1 — Enable Migrations for First Deploy
-
-Add this variable **only for the first deploy**, then set it back to `false`:
-
-```env
+SANCTUM_STATEFUL_DOMAINS=jobs.yourdomain.com
+APP_KEY=base64:GENERATE_WITH_php_artisan_key_generate_show
+POSTGRES_PASSWORD=use-a-strong-password
+SCRAPER_INTERNAL_API_TOKEN=use-a-long-random-token
+DEEPSEEK_API_KEY=your-deepseek-api-key
 RUN_MIGRATIONS=true
 ```
 
-### Step 2 — Deploy
+Notes:
+- `NEXT_PUBLIC_API_BASE_URL` is build-time. Changing it requires rebuild/redeploy.
+- `AI_CLEANUP_URL` should stay internal: `http://frontend:3000/api/internal/clean-job`.
+- `SCRAPER_INTERNAL_API_TOKEN` must match across frontend, backend, queue, and scheduler.
 
-1. Save all environment variables.
-2. Click **Deploy**.
-3. Wait until all 6 services are **Running** and healthy.
+## 4. First Deploy
 
-### Step 3 — Disable Auto-Migration
+1. Save env vars in Coolify.
+2. Deploy the stack.
+3. Wait until `frontend`, `backend`, `db`, and `redis` are healthy.
+4. After first successful deploy, change `RUN_MIGRATIONS=false`.
+5. Redeploy once after that change.
 
-After the first deploy succeeds, set:
+## 5. First-Time Seed
 
-```env
-RUN_MIGRATIONS=false
-```
-
-Then redeploy (or just leave it — subsequent deploys will skip migration automatically).
-
----
-
-## 5. Seed the Database (First Time Only)
-
-After the stack is healthy, open the **`backend`** terminal in Coolify and run:
+Open the `backend` terminal in Coolify and run:
 
 ```bash
 php artisan migrate --force
@@ -140,58 +77,42 @@ php artisan db:seed --class=RolePermissionSeeder --force
 php artisan db:seed --class=AdminUserSeeder --force
 ```
 
-Default admin credentials after seeding:
-- **Email:** `admin@example.com`
-- **Password:** `password`
+Default seeded admin:
+- Email: `admin@example.com`
+- Password: `password`
 
-> Change the admin password immediately after first login.
+Change the password immediately.
 
----
+## 6. Verify
 
-## 6. Verify the Deployment
+Check:
+- `https://jobs.yourdomain.com`
+- `https://api.yourdomain.com/api/healthz`
+- Admin login from frontend
+- `queue` stays running
+- `scheduler` stays running
 
-Check each item:
+## 7. Deploy Updates
 
-- [ ] `https://jobs.yourdomain.com` loads correctly
-- [ ] `https://api.yourdomain.com/api/healthz` returns HTTP `200`
-- [ ] Admin login works from the frontend
-- [ ] `queue` container stays running (check Coolify logs)
-- [ ] `scheduler` container stays running (check Coolify logs)
-- [ ] AI cleanup endpoint returns `403` without token, `200` with correct token
+For normal redeploys:
+1. Keep `RUN_MIGRATIONS=false`.
+2. If schema changed, temporarily set `RUN_MIGRATIONS=true` or run `php artisan migrate --force` manually.
+3. Redeploy.
 
----
+## 8. Troubleshooting
 
-## 7. Subsequent Deploys
+Frontend cannot call API:
+- Check `NEXT_PUBLIC_API_BASE_URL`.
+- Rebuild after changing it.
 
-For all future deploys after the first:
+Backend unhealthy:
+- Check `APP_KEY`.
+- Check Postgres credentials.
+- Check Coolify backend logs.
 
-1. Ensure `RUN_MIGRATIONS=false` (default).
-2. If you have schema changes, either:
-   - Set `RUN_MIGRATIONS=true` temporarily, or
-   - Run `php artisan migrate --force` manually from the Coolify terminal.
-3. Click **Redeploy** in Coolify.
+Queue or scheduler restarting:
+- Usually backend is unhealthy or DB/Redis env is wrong.
 
----
-
-## Troubleshooting
-
-### Frontend can't reach API
-
-- Confirm `NEXT_PUBLIC_API_BASE_URL` is set to the **exact** backend public URL (with `https://`, no trailing slash).
-- This value is baked at **build time** — changing it requires a **rebuild**.
-
-### Backend fails to start (unhealthy)
-
-- Check `APP_KEY` is set and valid.
-- Ensure `POSTGRES_PASSWORD` matches between `backend` and `db`.
-- Check Coolify logs for the `backend` container.
-
-### Queue/Scheduler keeps restarting
-
-- They wait for `backend` to be healthy first. If `backend` is unhealthy, they won't start.
-- Ensure `REDIS_PASSWORD` is consistent — empty string if Redis has no auth.
-
-### Database connection refused
-
-- `DB_HOST` should be `db` (the compose service name) — this is hardcoded in the compose file.
-- Ensure `POSTGRES_USER` and `POSTGRES_PASSWORD` match exactly.
+AI cleanup failing:
+- Keep `AI_CLEANUP_URL=http://frontend:3000/api/internal/clean-job`.
+- Check `SCRAPER_INTERNAL_API_TOKEN` matches.

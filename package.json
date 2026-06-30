@@ -14,7 +14,8 @@
     "docker:prod:config": "docker compose --env-file .env.production -f docker-compose.production.yml config",
     "docker:prod:build": "docker compose --env-file .env.production -f docker-compose.production.yml build",
     "docker:prod:up": "docker compose --env-file .env.production -f docker-compose.production.yml up -d",
-    "docker:prod:down": "docker compose --env-file .env.production -f docker-compose.production.yml down"
+    "docker:prod:down": "docker compose --env-file .env.production -f docker-compose.production.yml down",
+    "docker:coolify:config": "docker compose --env-file .env.coolify.example -f docker-compose.coolify.yml config"
   },
   "dependencies": {
     "@ai-sdk/deepseek": "^2.0.35",
