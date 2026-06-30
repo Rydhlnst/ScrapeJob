@@ -10,7 +10,6 @@ import { listJobs } from "@/lib/api/jobs"
 import { listCategories } from "@/lib/api/categories"
 import { getPublicLandingPageContent } from "@/lib/api/landing-page-content"
 import { normalizeLandingPageContent } from "@/lib/landing-page-content"
-import { mockJobs } from "@/data/mock-jobs"
 
 export default async function HomePage() {
   const content = normalizeLandingPageContent(await getPublicLandingPageContent())
@@ -24,12 +23,7 @@ export default async function HomePage() {
     }),
     listCategories(),
   ])
-  const homepageJobs =
-    jobsRes.data.length > 0
-      ? jobsRes.data.slice(0, content.featuredJobs.rules.limit)
-      : mockJobs
-          .filter((job) => job.status === "published")
-          .slice(0, content.featuredJobs.rules.limit)
+  const homepageJobs = jobsRes.data.slice(0, content.featuredJobs.rules.limit)
   const sourcesCount = new Set(homepageJobs.map((job) => job.sourceName)).size
 
   return (

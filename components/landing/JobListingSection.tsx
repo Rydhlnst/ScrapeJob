@@ -382,19 +382,18 @@ export function JobListingSection({
                 ))}
               </div>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <Button asChild className="h-12 flex-1 rounded-none bg-blue-600 font-semibold text-white hover:bg-blue-700">
+              <div className="mt-6 flex flex-col items-center gap-3">
+                <Button asChild className="h-12 w-full rounded-none bg-blue-600 font-semibold text-white hover:bg-blue-700">
                   <a href={selectedJob.sourceUrl} target="_blank" rel="noreferrer">
                     Apply on source
                   </a>
                 </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-12 flex-1 rounded-none border-slate-200 bg-white font-semibold text-slate-800 hover:bg-slate-50"
+                <Link
+                  href={`/jobs/${selectedJob.slug}`}
+                  className="text-sm font-medium text-slate-700 underline-offset-2 hover:underline"
                 >
-                  <Link href={`/jobs/${selectedJob.slug}`}>Open full detail</Link>
-                </Button>
+                  Open full detail
+                </Link>
               </div>
             </div>
           </div>
