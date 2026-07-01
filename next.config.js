@@ -2,6 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  experimental: {
+    cpus: 2,
+    staticGenerationMaxConcurrency: 2,
+    webpackMemoryOptimizations: true,
+  },
   images: {
     remotePatterns: [
       {
