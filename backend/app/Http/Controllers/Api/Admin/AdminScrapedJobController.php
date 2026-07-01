@@ -99,7 +99,13 @@ class AdminScrapedJobController extends Controller
     {
         try {
             CleanScrapedJobWithAI::dispatchSync($scrapedJob);
-            return ApiResponse::success(new ScrapedJobResource($scrapedJob->refresh()), 'Scraped job processed with AI successfully');
+            $scrapedJob->refresh();
+
+            if ($scrapedJob->draft_status !== 'drafted_ai' && $scrapedJob->fail_reason) {
+                return ApiResponse::error($scrapedJob->fail_reason, 422);
+            }
+
+            return ApiResponse::success(new ScrapedJobResource($scrapedJob), 'Scraped job processed with AI successfully');
         } catch (\Throwable $e) {
             return ApiResponse::error($e->getMessage(), 500);
         }

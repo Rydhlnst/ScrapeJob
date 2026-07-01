@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api\Public;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\JobResource;
-use App\Models\Category;
 use App\Models\Job;
 use App\Support\ApiResponse;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class JobController extends Controller
 {
@@ -100,15 +100,22 @@ class JobController extends Controller
             ->when($request->filled('location'), fn ($query) => $query->where('location', 'like', '%'.$request->string('location').'%'))
             ->when($request->filled('category'), function ($query) use ($request) {
                 $category = $request->string('category')->value();
+                $isUuid = Str::isUuid($category);
 
-                $query->where(function (Builder $sub) use ($category): void {
-                    $sub->where('category_id', $category)
-                        ->orWhereHas('category', function (Builder $categoryQuery) use ($category): void {
-                            $categoryQuery
-                                ->where('id', $category)
-                                ->orWhere('slug', $category)
-                                ->orWhere('name', 'like', "%{$category}%");
-                        });
+                $query->where(function (Builder $sub) use ($category, $isUuid): void {
+                    if ($isUuid) {
+                        $sub->where('category_id', $category);
+                    }
+
+                    $sub->orWhereHas('category', function (Builder $categoryQuery) use ($category, $isUuid): void {
+                        if ($isUuid) {
+                            $categoryQuery->where('id', $category);
+                        }
+
+                        $categoryQuery
+                            ->orWhere('slug', $category)
+                            ->orWhere('name', 'like', "%{$category}%");
+                    });
                 });
             })
             ->when($request->filled('job_type') || $request->filled('jobType'), function ($query) use ($request) {
@@ -146,7 +153,11 @@ class JobController extends Controller
             ->where('status', 'published')
             ->where('is_active', true)
             ->where(function (Builder $query) use ($identifier): void {
-                $query->where('slug', $identifier)->orWhere('id', $identifier);
+                $query->where('slug', $identifier);
+
+                if (Str::isUuid($identifier)) {
+                    $query->orWhere('id', $identifier);
+                }
             })
             ->firstOrFail();
 

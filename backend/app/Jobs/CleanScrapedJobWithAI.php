@@ -107,15 +107,24 @@ class CleanScrapedJobWithAI implements ShouldQueue
             if ($response->failed()) {
                 $errorMsg = is_array($responseData) && isset($responseData['error']) ? $responseData['error'] : null;
                 $errorMsg ??= is_array($responseData) && isset($responseData['message']) ? $responseData['message'] : null;
-                $errorMsg ??= $response->body() ?: "status " . $response->status();
+                $errorMsg ??= $response->body() ?: 'status '.$response->status();
+
+                if ($this->shouldSoftFail($response->status(), $errorMsg)) {
+                    Log::warning("AI cleanup soft-failed for job ID: {$this->scrapedJob->id}. Status: {$response->status()}. Error: {$errorMsg}");
+                    $this->scrapedJob->update([
+                        'draft_status' => 'drafted_raw',
+                        'fail_reason' => $errorMsg,
+                    ]);
+                    return;
+                }
 
                 Log::error("AI cleanup API returned error status {$response->status()} for job ID: {$this->scrapedJob->id}. Body: {$response->body()}");
-                throw new \RuntimeException("AI Cleanup: " . $errorMsg);
+                throw new \RuntimeException('AI Cleanup: '.$errorMsg);
             }
 
             if (! is_array($responseData) || ! isset($responseData['success']) || ! $responseData['success'] || ! isset($responseData['data'])) {
                 Log::error("AI cleanup API returned invalid format for job ID: {$this->scrapedJob->id}. Body: {$response->body()}");
-                throw new \RuntimeException("AI Cleanup API returned invalid payload format");
+                throw new \RuntimeException('AI Cleanup API returned invalid payload format');
             }
 
             // 4. Update the ScrapedJob model with cleaned data
@@ -142,5 +151,20 @@ class CleanScrapedJobWithAI implements ShouldQueue
             Log::error("Failed AI cleanup for scraped job ID: {$this->scrapedJob->id}. Exception: {$exception->getMessage()}");
             throw $exception;
         }
+    }
+
+    private function shouldSoftFail(int $status, ?string $errorMsg): bool
+    {
+        if (in_array($status, [400, 401, 403, 404, 422], true)) {
+            return true;
+        }
+
+        $message = strtolower((string) $errorMsg);
+
+        return str_contains($message, '/api/responses') ||
+            str_contains($message, 'not found') ||
+            str_contains($message, 'configuration error') ||
+            str_contains($message, 'deepseek_api_key') ||
+            str_contains($message, 'unauthorized');
     }
 }

@@ -130,21 +130,19 @@ export async function listJobs(query: JobsQuery = {}): Promise<Paginated<Job>> {
   if (query.keyword) params.set("keyword", query.keyword)
   if (query.location) params.set("location", query.location)
   if (query.category) params.set("category", query.category)
-  if (query.jobType) params.set("job_type", query.jobType)
+  if (query.jobType) params.set(query.admin ? "jobType" : "job_type", query.jobType)
   if (query.workArrangement) params.set("work_arrangement", query.workArrangement)
   if (query.source) params.set("source", query.source)
   if (query.page) params.set("page", String(query.page))
-  if (query.perPage) params.set("limit", String(query.perPage))
-  if (query.sort) {
-    params.set("sort", query.sort)
-  }
+  if (query.perPage) params.set(query.admin ? "perPage" : "limit", String(query.perPage))
+  if (query.sort) params.set("sort", query.sort)
+  if (query.status) params.set("status", query.status)
 
-  const response = await fetchJson<ApiEnvelope<ApiJob[]>>(
-    `/api/jobs?${params.toString()}`,
-  )
+  const endpoint = query.admin ? "/api/admin/jobs" : "/api/jobs"
+  const response = await fetchJson<ApiEnvelope<ApiJob[]>>(`${endpoint}?${params.toString()}`)
 
   const normalized = response.data.map((job) =>
-    normalizeJob(job, "published"),
+    normalizeJob(job, query.admin ? (job.status ?? "draft") : "published"),
   )
 
   return {

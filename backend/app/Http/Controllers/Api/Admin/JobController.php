@@ -14,6 +14,7 @@ use App\Services\Jobs\JobPublishingService;
 use App\Support\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 class JobController extends Controller
@@ -92,7 +93,26 @@ class JobController extends Controller
             })
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
             ->when($request->filled('location'), fn ($query) => $query->where('location', 'like', '%'.$request->string('location').'%'))
-            ->when($request->filled('category'), fn ($query) => $query->where('category_id', $request->string('category')))
+            ->when($request->filled('category'), function ($query) use ($request) {
+                $category = $request->string('category')->value();
+                $isUuid = Str::isUuid($category);
+
+                $query->where(function ($sub) use ($category, $isUuid) {
+                    if ($isUuid) {
+                        $sub->where('category_id', $category);
+                    }
+
+                    $sub->orWhereHas('category', function ($categoryQuery) use ($category, $isUuid) {
+                        if ($isUuid) {
+                            $categoryQuery->where('id', $category);
+                        }
+
+                        $categoryQuery
+                            ->orWhere('slug', $category)
+                            ->orWhere('name', 'like', "%{$category}%");
+                    });
+                });
+            })
             ->when($request->filled('jobType'), fn ($query) => $query->where('job_type', $request->string('jobType')))
             ->when($request->filled('source'), fn ($query) => $query->where('source_name', $request->string('source')))
             ->when($request->filled('sort'), function ($query) use ($request) {
