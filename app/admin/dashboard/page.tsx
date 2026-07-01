@@ -1,3 +1,6 @@
+"use client"
+
+import * as React from "react"
 import Link from "next/link"
 import {
   AlertTriangle,
@@ -18,9 +21,55 @@ import { AdminStatusBadge } from "@/components/admin/admin-status-badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { getAdminDashboardSummary } from "@/lib/api/admin-dashboard"
+import type { AdminDashboardSummary } from "@/types/landing-content"
 
-export default async function AdminDashboardPage() {
-  const summary = await getAdminDashboardSummary()
+export default function AdminDashboardPage() {
+  const [summary, setSummary] = React.useState<AdminDashboardSummary | null>(null)
+  const [error, setError] = React.useState<string | null>(null)
+
+  React.useEffect(() => {
+    let active = true
+
+    getAdminDashboardSummary()
+      .then((data) => {
+        if (active) {
+          setSummary(data)
+        }
+      })
+      .catch((err) => {
+        if (active) {
+          setError(err instanceof Error ? err.message : "Failed to load dashboard")
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  if (error) {
+    return (
+      <AdminShell>
+        <section className="border border-red-200 bg-red-50 p-5 text-sm text-red-700 shadow-[var(--shadow-sm)]">
+          <div className="text-lg font-semibold text-red-800">Dashboard failed to load</div>
+          <p className="mt-2">{error}</p>
+          <Button className="mt-4 rounded-none" onClick={() => window.location.reload()}>
+            Reload
+          </Button>
+        </section>
+      </AdminShell>
+    )
+  }
+
+  if (!summary) {
+    return (
+      <AdminShell>
+        <section className="border border-[var(--brand-shell-strong)] bg-white p-5 text-sm text-slate-600 shadow-[var(--shadow-sm)]">
+          Loading dashboard...
+        </section>
+      </AdminShell>
+    )
+  }
 
   return (
     <AdminShell>
