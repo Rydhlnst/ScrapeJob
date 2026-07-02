@@ -1,0 +1,41 @@
+services:
+  scheduler:
+    image: scrapejob-backend:coolify
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    user: www-data
+    environment:
+      APP_NAME: ${APP_NAME:-Job Loker API}
+      APP_ENV: production
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: "false"
+      APP_URL: ${APP_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      DB_CONNECTION: ${DB_CONNECTION:-pgsql}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_CLIENT: ${REDIS_CLIENT:-phpredis}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      SESSION_DRIVER: ${SESSION_DRIVER:-database}
+      SESSION_DOMAIN: ${SESSION_DOMAIN:-}
+      CACHE_STORE: ${CACHE_STORE:-database}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
+      SCRAPER_SCHEDULE_ENABLED: ${SCRAPER_SCHEDULE_ENABLED:-true}
+      SCRAPER_SCHEDULE_CRON: ${SCRAPER_SCHEDULE_CRON:-0 */8 * * *}
+      SCRAPER_SCHEDULE_TIMEZONE: ${SCRAPER_SCHEDULE_TIMEZONE:-Asia/Jakarta}
+      SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
+      SCRAPER_PYTHON_MODE: ${SCRAPER_PYTHON_MODE:-local}
+      SCRAPER_PYTHON_BIN: ${SCRAPER_PYTHON_BIN:-python3}
+      WAIT_FOR_DB: "true"
+      ENABLE_LARAVEL_CACHE_WARMUP: ${ENABLE_LARAVEL_CACHE_WARMUP:-true}
+      LOG_CHANNEL: ${LOG_CHANNEL:-stack}
+      LOG_STACK: ${LOG_STACK:-single}
+      LOG_LEVEL: ${LOG_LEVEL:-warning}
+    command: ["/var/www/html/docker/start-scheduler.sh"]
+    restart: unless-stopped

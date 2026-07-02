@@ -1,118 +1,192 @@
-# Coolify Full-Stack VPS Deployment
+# Coolify Split Deployment
 
-This repository is intended to run on a VPS through one Coolify Docker Compose resource.
+This repository can be deployed to Coolify as 4 smaller Docker Compose resources instead of one heavy stack.
 
-Stack:
-- `frontend` - Next.js public app
-- `backend` - Laravel API public app
-- `queue` - Laravel queue worker
-- `scheduler` - Laravel scheduler
-- `db` - PostgreSQL 16
-- `redis` - Redis 7
+Resources:
+- `web` -> `frontend` + `backend`
+- `queue` -> Laravel worker
+- `scheduler` -> Laravel scheduler
+- `infra` -> PostgreSQL + Redis
 
-Compose file:
+Compose files:
+- `docker-compose.coolify.web.yml`
+- `docker-compose.coolify.queue.yml`
+- `docker-compose.coolify.scheduler.yml`
+- `docker-compose.coolify.infra.yml`
+
+Legacy all-in-one file:
 - `docker-compose.coolify.yml`
 
-Environment template:
-- `.env.coolify.example`
+## 1. Create Resources
 
-## 1. Create the Coolify Resource
+Create 4 Coolify Docker Compose resources from the same repository and branch.
 
-1. In Coolify, create a new `Docker Compose` resource.
-2. Connect this repository and branch.
-3. Set `Compose File Path` to `docker-compose.coolify.yml`.
-4. Add all environment variables from `.env.coolify.example` into the Coolify environment panel.
+1. `infra`
+   - Compose file: `docker-compose.coolify.infra.yml`
+2. `web`
+   - Compose file: `docker-compose.coolify.web.yml`
+3. `queue`
+   - Compose file: `docker-compose.coolify.queue.yml`
+4. `scheduler`
+   - Compose file: `docker-compose.coolify.scheduler.yml`
+
+Use repo-relative paths in Coolify.
+Do not prefix the compose file path with `/`.
 
 ## 2. Domains
 
-Public services only:
+Public domains:
 - `frontend` -> `https://jobs.yourdomain.com`
 - `backend` -> `https://api.yourdomain.com`
 
-Internal-only services:
+No public domains:
 - `queue`
 - `scheduler`
 - `db`
 - `redis`
 
-Do not assign public domains to the internal services.
+## 3. Recommended Order
 
-## 3. Required Values
+1. Deploy `infra`
+2. Deploy `web`
+3. Run migrations and seeders in `backend`
+4. Deploy `queue`
+5. Deploy `scheduler`
 
-Set these before first deploy:
+## 4. Shared Environment
+
+Use the same core application values across `web`, `queue`, and `scheduler`:
+
+```env
+APP_NAME=Job Loker API
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:GENERATE_WITH_php_artisan_key_generate_show
+APP_URL=https://api.yourdomain.com
+FRONTEND_URL=https://jobs.yourdomain.com
+SESSION_DRIVER=database
+SESSION_DOMAIN=.yourdomain.com
+SANCTUM_STATEFUL_DOMAINS=jobs.yourdomain.com
+CACHE_STORE=database
+QUEUE_CONNECTION=database
+SCRAPER_INTERNAL_API_TOKEN=use-a-long-random-token
+SCRAPER_PYTHON_MODE=local
+SCRAPER_PYTHON_BIN=python3
+LOG_CHANNEL=stack
+LOG_STACK=single
+LOG_LEVEL=warning
+ENABLE_LARAVEL_CACHE_WARMUP=true
+```
+
+## 5. Database and Redis After Split
+
+Because resources are split, `DB_HOST=db` and `REDIS_HOST=redis` only work if Coolify provides cross-resource hostnames for those resource names in your environment.
+
+Set these values in `web`, `queue`, and `scheduler` to the hostnames exposed by your `infra` resource:
+
+```env
+DB_CONNECTION=pgsql
+DB_HOST=<infra-postgres-host>
+DB_PORT=5432
+DB_DATABASE=job_platform
+DB_USERNAME=postgres
+DB_PASSWORD=your-password
+
+REDIS_CLIENT=phpredis
+REDIS_HOST=<infra-redis-host>
+REDIS_PORT=6379
+REDIS_PASSWORD=
+```
+
+Use the actual service hostname shown by Coolify for the Postgres and Redis resource.
+
+## 6. Web Resource Variables
+
+Required for `docker-compose.coolify.web.yml`:
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=https://api.yourdomain.com
-APP_URL=https://api.yourdomain.com
-FRONTEND_URL=https://jobs.yourdomain.com
-SESSION_DOMAIN=.yourdomain.com
-SANCTUM_STATEFUL_DOMAINS=jobs.yourdomain.com
-APP_KEY=base64:GENERATE_WITH_php_artisan_key_generate_show
-POSTGRES_PASSWORD=use-a-strong-password
-SCRAPER_INTERNAL_API_TOKEN=use-a-long-random-token
-DEEPSEEK_API_KEY=your-deepseek-api-key
+INTERNAL_API_BASE_URL=http://backend
+NEXT_PUBLIC_USE_MOCK=false
 RUN_MIGRATIONS=true
+AI_CLEANUP_ENABLED=false
+AI_CLEANUP_URL=http://frontend:3000/api/internal/clean-job
 ```
 
 Notes:
-- `NEXT_PUBLIC_API_BASE_URL` is build-time. Changing it requires rebuild/redeploy.
-- `AI_CLEANUP_URL` should stay internal: `http://frontend:3000/api/internal/clean-job`.
-- `SCRAPER_INTERNAL_API_TOKEN` must match across frontend, backend, queue, and scheduler.
+- `NEXT_PUBLIC_API_BASE_URL` is build-time. Rebuild/redeploy after changing it.
+- Keep `RUN_MIGRATIONS=true` only for first deploy or schema changes.
+- After successful migration, set `RUN_MIGRATIONS=false` and redeploy `web`.
 
-## 4. First Deploy
+## 7. Queue Resource Variables
 
-1. Save env vars in Coolify.
-2. Deploy the stack.
-3. Wait until `frontend`, `backend`, `db`, and `redis` are healthy.
-4. After first successful deploy, change `RUN_MIGRATIONS=false`.
-5. Redeploy once after that change.
+Required for `docker-compose.coolify.queue.yml`:
 
-## 5. First-Time Seed
+```env
+QUEUE_TRIES=3
+QUEUE_TIMEOUT=900
+AI_CLEANUP_ENABLED=false
+AI_CLEANUP_URL=https://jobs.yourdomain.com/api/internal/clean-job
+```
 
-Open the `backend` terminal in Coolify and run:
+Notes:
+- When `queue` is split from `web`, it cannot reach `http://frontend:3000`.
+- Use the public frontend URL for `AI_CLEANUP_URL` if AI cleanup stays enabled.
+- If AI cleanup is not needed yet, keep `AI_CLEANUP_ENABLED=false`.
+
+## 8. Scheduler Resource Variables
+
+Required for `docker-compose.coolify.scheduler.yml`:
+
+```env
+SCRAPER_SCHEDULE_ENABLED=true
+SCRAPER_SCHEDULE_CRON=0 */8 * * *
+SCRAPER_SCHEDULE_TIMEZONE=Asia/Jakarta
+```
+
+## 9. Infra Resource Variables
+
+Required for `docker-compose.coolify.infra.yml`:
+
+```env
+POSTGRES_DB=job_platform
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=use-a-strong-password
+```
+
+## 10. First-Time Setup
+
+After `web` is healthy, open the `backend` terminal and run:
 
 ```bash
 php artisan migrate --force
 php artisan db:seed --class=RolePermissionSeeder --force
 php artisan db:seed --class=AdminUserSeeder --force
+php artisan optimize:clear
 ```
 
-Default seeded admin:
-- Email: `admin@example.com`
-- Password: `password`
+Then set:
 
-Change the password immediately.
+```env
+RUN_MIGRATIONS=false
+```
 
-## 6. Verify
+and redeploy `web`.
+
+## 11. Verification
 
 Check:
-- `https://jobs.yourdomain.com`
-- `https://api.yourdomain.com/api/healthz`
-- Admin login from frontend
+- frontend homepage works
+- `https://api.yourdomain.com/api/healthz` returns success
+- admin login works
 - `queue` stays running
 - `scheduler` stays running
 
-## 7. Deploy Updates
+## 12. Why Split
 
-For normal redeploys:
-1. Keep `RUN_MIGRATIONS=false`.
-2. If schema changed, temporarily set `RUN_MIGRATIONS=true` or run `php artisan migrate --force` manually.
-3. Redeploy.
-
-## 8. Troubleshooting
-
-Frontend cannot call API:
-- Check `NEXT_PUBLIC_API_BASE_URL`.
-- Rebuild after changing it.
-
-Backend unhealthy:
-- Check `APP_KEY`.
-- Check Postgres credentials.
-- Check Coolify backend logs.
-
-Queue or scheduler restarting:
-- Usually backend is unhealthy or DB/Redis env is wrong.
-
-AI cleanup failing:
-- Keep `AI_CLEANUP_URL=http://frontend:3000/api/internal/clean-job`.
-- Check `SCRAPER_INTERNAL_API_TOKEN` matches.
+Benefits:
+- smaller deployments
+- easier rollback
+- worker crashes do not restart web
+- clearer logs per workload
+- lower resource spikes during deploy

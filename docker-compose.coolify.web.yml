@@ -1,0 +1,94 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+        INTERNAL_API_BASE_URL: ${INTERNAL_API_BASE_URL:-http://backend}
+        NEXT_PUBLIC_USE_MOCK: ${NEXT_PUBLIC_USE_MOCK:-false}
+        API_BEARER_TOKEN: ${API_BEARER_TOKEN:-}
+        DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+        SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN:-}
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+      INTERNAL_API_BASE_URL: ${INTERNAL_API_BASE_URL:-http://backend}
+      NEXT_PUBLIC_USE_MOCK: ${NEXT_PUBLIC_USE_MOCK:-false}
+      API_BEARER_TOKEN: ${API_BEARER_TOKEN:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN:-}
+      AI_PROVIDER: ${AI_PROVIDER:-deepseek}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
+      OLLAMA_API_KEY: ${OLLAMA_API_KEY:-}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-}
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/logo.svg || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  backend:
+    image: scrapejob-backend:coolify
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      APP_NAME: ${APP_NAME:-Job Loker API}
+      APP_ENV: production
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: "false"
+      APP_URL: ${APP_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      DB_CONNECTION: ${DB_CONNECTION:-pgsql}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_CLIENT: ${REDIS_CLIENT:-phpredis}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS}
+      SESSION_DRIVER: ${SESSION_DRIVER:-database}
+      SESSION_DOMAIN: ${SESSION_DOMAIN:-}
+      CACHE_STORE: ${CACHE_STORE:-database}
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
+      SCRAPER_ACTIVE_SOURCES: ${SCRAPER_ACTIVE_SOURCES:-glints,jobstreet}
+      SCRAPER_SCHEDULE_ENABLED: ${SCRAPER_SCHEDULE_ENABLED:-true}
+      SCRAPER_SCHEDULE_CRON: ${SCRAPER_SCHEDULE_CRON:-0 */8 * * *}
+      SCRAPER_SCHEDULE_TIMEZONE: ${SCRAPER_SCHEDULE_TIMEZONE:-Asia/Jakarta}
+      SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
+      SCRAPER_PYTHON_MODE: ${SCRAPER_PYTHON_MODE:-local}
+      SCRAPER_PYTHON_BIN: ${SCRAPER_PYTHON_BIN:-python3}
+      WAIT_FOR_DB: "true"
+      ENABLE_LARAVEL_CACHE_WARMUP: ${ENABLE_LARAVEL_CACHE_WARMUP:-true}
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-false}
+      AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
+      AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
+      LOG_CHANNEL: ${LOG_CHANNEL:-stack}
+      LOG_STACK: ${LOG_STACK:-single}
+      LOG_LEVEL: ${LOG_LEVEL:-warning}
+      BCRYPT_ROUNDS: ${BCRYPT_ROUNDS:-12}
+      MAIL_MAILER: ${MAIL_MAILER:-log}
+      MAIL_SCHEME: ${MAIL_SCHEME:-null}
+      MAIL_HOST: ${MAIL_HOST:-smtp.example.com}
+      MAIL_PORT: ${MAIL_PORT:-2525}
+      MAIL_USERNAME: ${MAIL_USERNAME:-null}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-null}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-hello@example.com}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-Job Loker API}
+      NODE_PATH: ${NODE_PATH:-node}
+      PUPPETEER_TIMEOUT: ${PUPPETEER_TIMEOUT:-120}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1/api/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
