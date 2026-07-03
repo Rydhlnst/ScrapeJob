@@ -175,15 +175,17 @@ export function LandingContentEditor({
       </section>
 
       <Tabs defaultValue="hero" className="space-y-4">
-        <TabsList className="grid h-auto w-full grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-          <TabsTrigger value="hero">Hero</TabsTrigger>
-          <TabsTrigger value="featured">Featured Jobs</TabsTrigger>
-          <TabsTrigger value="benefits">Benefits</TabsTrigger>
-          <TabsTrigger value="companies">Companies</TabsTrigger>
-          <TabsTrigger value="cta">CTA</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto border border-[var(--brand-shell-strong)] bg-white shadow-[var(--shadow-sm)]">
+          <TabsList className="h-auto min-w-max gap-2 rounded-none bg-transparent p-2">
+            <TabsTrigger value="hero" className="h-11 flex-none rounded-none border border-transparent px-5 text-xs font-semibold uppercase tracking-[0.14em] data-active:border-[var(--brand-shell-strong)] data-active:bg-[var(--brand-shell)] data-active:text-[var(--brand-ink)]">Hero</TabsTrigger>
+            <TabsTrigger value="featured" className="h-11 flex-none rounded-none border border-transparent px-5 text-xs font-semibold uppercase tracking-[0.14em] data-active:border-[var(--brand-shell-strong)] data-active:bg-[var(--brand-shell)] data-active:text-[var(--brand-ink)]">Featured Jobs</TabsTrigger>
+            <TabsTrigger value="benefits" className="h-11 flex-none rounded-none border border-transparent px-5 text-xs font-semibold uppercase tracking-[0.14em] data-active:border-[var(--brand-shell-strong)] data-active:bg-[var(--brand-shell)] data-active:text-[var(--brand-ink)]">Benefits</TabsTrigger>
+            <TabsTrigger value="companies" className="h-11 flex-none rounded-none border border-transparent px-5 text-xs font-semibold uppercase tracking-[0.14em] data-active:border-[var(--brand-shell-strong)] data-active:bg-[var(--brand-shell)] data-active:text-[var(--brand-ink)]">Companies</TabsTrigger>
+            <TabsTrigger value="cta" className="h-11 flex-none rounded-none border border-transparent px-5 text-xs font-semibold uppercase tracking-[0.14em] data-active:border-[var(--brand-shell-strong)] data-active:bg-[var(--brand-shell)] data-active:text-[var(--brand-ink)]">CTA</TabsTrigger>
+          </TabsList>
+        </div>
 
-        <TabsContent value="hero">
+        <TabsContent value="hero" className="w-full">
           <AdminEditorSectionCard
             title="Hero"
             description="Main headline, supporting copy, primary actions, and quick links."
@@ -225,7 +227,7 @@ export function LandingContentEditor({
           </AdminEditorSectionCard>
         </TabsContent>
 
-        <TabsContent value="featured">
+        <TabsContent value="featured" className="w-full">
           <AdminEditorSectionCard
             title="Featured jobs"
             description="Section copy plus query rules for the jobs pulled into the homepage."
@@ -258,7 +260,7 @@ export function LandingContentEditor({
           </AdminEditorSectionCard>
         </TabsContent>
 
-        <TabsContent value="benefits">
+        <TabsContent value="benefits" className="w-full">
           <AdminEditorSectionCard
             title="Benefits"
             description="Structured benefits cards shown after the featured jobs section."
@@ -281,7 +283,7 @@ export function LandingContentEditor({
           </AdminEditorSectionCard>
         </TabsContent>
 
-        <TabsContent value="companies">
+        <TabsContent value="companies" className="w-full">
           <AdminEditorSectionCard
             title="Trusted companies"
             description="Structured company strip for the credibility section."
@@ -310,7 +312,7 @@ export function LandingContentEditor({
           </AdminEditorSectionCard>
         </TabsContent>
 
-        <TabsContent value="cta">
+        <TabsContent value="cta" className="w-full">
           <AdminEditorSectionCard
             title="CTA"
             description="Closing call-to-action that anchors the bottom of the landing page."

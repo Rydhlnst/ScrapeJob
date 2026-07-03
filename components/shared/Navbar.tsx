@@ -2,7 +2,19 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Menu } from "lucide-react"
+import {
+  BriefcaseBusiness,
+  Crown,
+  FolderKanban,
+  LayoutGrid,
+  Menu,
+  Megaphone,
+  MonitorSmartphone,
+  MoveRight,
+  Palette,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react"
 import { usePathname } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -17,18 +29,18 @@ import { SiteFrame } from "@/components/shared/SiteShell"
 import { cn } from "@/lib/utils"
 
 const topNavItems = [
-  { label: "Explore", href: "/jobs" },
-  { label: "What's New", href: "/#features" },
-  { label: "Lowonganku Premium", href: "/#employers" },
+  { label: "Explore", href: "/jobs", icon: BriefcaseBusiness },
+  { label: "What's New", href: "/#features", icon: Sparkles },
+  { label: "Lowonganku Premium", href: "/#employers", icon: Crown },
 ]
 
 const categoryItems = [
-  { label: "Development & IT", href: "/jobs?category=it-software" },
-  { label: "Marketing", href: "/jobs?category=marketing" },
-  { label: "Design", href: "/jobs?category=design" },
-  { label: "Sales", href: "/jobs?category=sales" },
-  { label: "Customer Support", href: "/jobs?category=customer-service" },
-  { label: "More", href: "/jobs" },
+  { label: "Development & IT", href: "/jobs?category=it-software", icon: MonitorSmartphone },
+  { label: "Marketing", href: "/jobs?category=marketing", icon: Megaphone },
+  { label: "Design", href: "/jobs?category=design", icon: Palette },
+  { label: "Sales", href: "/jobs?category=sales", icon: MoveRight },
+  { label: "Customer Support", href: "/jobs?category=customer-service", icon: ShieldCheck },
+  { label: "More", href: "/jobs", icon: LayoutGrid },
 ]
 
 function Logo() {
@@ -90,23 +102,55 @@ export function Navbar() {
                 <Menu className="size-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[320px] border-l-[var(--brand-shell-strong)] bg-white">
-              <SheetHeader>
-                <SheetTitle>Lowonganku</SheetTitle>
+            <SheetContent
+              side="right"
+              className="inset-0 h-svh w-screen max-w-none border-0 bg-[linear-gradient(180deg,#ffffff_0%,#f5f9ff_100%)] p-0"
+            >
+              <SheetHeader className="border-b border-[var(--brand-shell-strong)] px-6 py-5">
+                <SheetTitle className="flex items-center gap-2 text-[var(--brand-ink)]">
+                  <FolderKanban className="size-5 text-[var(--brand-blue)]" />
+                  Lowonganku
+                </SheetTitle>
               </SheetHeader>
-              <div className="mt-6 space-y-3">
-                {topNavItems.concat(categoryItems).map((item) => (
-                  <Link
-                    key={`${item.label}-${item.href}`}
-                    href={item.href}
-                    className={cn(
-                      "block border border-[var(--brand-shell-strong)] px-4 py-3 text-sm font-medium text-[var(--brand-ink)]",
-                      pathname?.startsWith(item.href) && "bg-[var(--brand-shell)]",
-                    )}
+
+              <div className="flex flex-1 flex-col overflow-auto px-6 py-6">
+                <div className="space-y-3">
+                  {topNavItems.concat(categoryItems).map((item) => {
+                    const Icon = item.icon
+
+                    return (
+                      <Link
+                        key={`${item.label}-${item.href}`}
+                        href={item.href}
+                        className={cn(
+                          "flex items-center gap-3 rounded-2xl border border-[var(--brand-shell-strong)] bg-white px-4 py-4 text-sm font-medium text-[var(--brand-ink)] shadow-[var(--shadow-sm)] transition-all hover:border-[var(--brand-blue)] hover:bg-[var(--brand-shell)]",
+                          pathname?.startsWith(item.href) && "border-[var(--brand-blue)] bg-[var(--brand-shell)]",
+                        )}
+                      >
+                        <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-[var(--brand-shell-strong)] bg-sky-50 text-[var(--brand-blue)]">
+                          <Icon className="size-4" />
+                        </span>
+                        <span className="flex-1">{item.label}</span>
+                      </Link>
+                    )
+                  })}
+                </div>
+
+                <div className="mt-auto grid gap-3 pt-6">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-12 rounded-2xl border-[var(--brand-shell-strong)] bg-white text-sm font-medium text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]"
                   >
-                    {item.label}
-                  </Link>
-                ))}
+                    <Link href="/#employers">Find Talent</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    className="h-12 rounded-2xl bg-[var(--brand-blue)] text-sm font-medium text-white hover:bg-[var(--brand-sky)]"
+                  >
+                    <Link href="/jobs">Find Work</Link>
+                  </Button>
+                </div>
               </div>
             </SheetContent>
           </Sheet>

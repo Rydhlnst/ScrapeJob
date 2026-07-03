@@ -184,7 +184,12 @@
   .admin-modern [data-slot="button"][data-variant="default"] {
     background: linear-gradient(135deg, var(--brand-blue), var(--brand-sky));
     border: 1px solid transparent;
+    color: #fff;
     box-shadow: var(--shadow-sm);
+  }
+
+  .admin-modern [data-slot="button"][data-variant="default"] a {
+    color: inherit;
   }
 
   .admin-modern [data-slot="button"][data-variant="outline"] {

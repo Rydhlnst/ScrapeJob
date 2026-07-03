@@ -12,6 +12,7 @@ import {
   Layers,
 } from "lucide-react"
 
+import { useAdminLanguage } from "@/components/admin/admin-language"
 import { AdminListRow } from "@/components/admin/admin-list-row"
 import { AdminQueuePanel } from "@/components/admin/admin-queue-panel"
 import { AdminSectionHeader } from "@/components/admin/admin-section-header"
@@ -23,9 +24,130 @@ import { Input } from "@/components/ui/input"
 import { getAdminDashboardSummary } from "@/lib/api/admin-dashboard"
 import type { AdminDashboardSummary } from "@/types/landing-content"
 
+const copy = {
+  en: {
+    failedTitle: "Dashboard failed to load",
+    reload: "Reload",
+    loading: "Loading dashboard...",
+    eyebrow: "Admin workspace",
+    heroTitle: "Keep jobs and landing content moving.",
+    heroDescription: "Review raw jobs, publish ready listings, and update the public landing page from one squared workspace.",
+    searchPlaceholder: "Search UI placeholder",
+    reviewJobs: "Review jobs",
+    editCms: "Edit landing CMS",
+    scraperRuns: "Scraper runs",
+    landingCms: "Landing CMS",
+    landingTitle: "Landing page content is controlled from the dashboard.",
+    landingDescription: "Edit hero copy, featured job rules, benefits, trusted companies, and CTA blocks with the same squared visual language as the public landing page.",
+    openCms: "Open CMS editor",
+    previewLanding: "Preview landing page",
+    contentStatus: "Content status",
+    draftReady: "Draft changes are ready",
+    publishedSync: "Published content is in sync",
+    status: "Status",
+    lastUpdate: "Last update",
+    noUpdate: "No update yet",
+    lastPublish: "Last publish",
+    notPublished: "Not published",
+    needsReview: "Needs review",
+    needsReviewHint: "Raw jobs waiting for cleanup and approval.",
+    readyToPublish: "Ready to publish",
+    readyToPublishHint: "Drafted jobs that need a final publishing pass.",
+    publishedJobs: "Published jobs",
+    needsAttention: "Needs attention",
+    needsAttentionHint: "Rejected or duplicate jobs that still need operator attention.",
+    queueNeedsReviewTitle: "Needs review",
+    queueNeedsReviewDescription: "Fresh raw jobs that should be cleaned up first.",
+    openReviewQueue: "Open review queue",
+    noRawJobs: "No raw jobs are waiting right now.",
+    queueReadyTitle: "Ready to publish",
+    queueReadyDescription: "Drafted jobs that look close to ready.",
+    openJobDrafts: "Open job drafts",
+    noDraftReady: "No draft jobs are ready to publish yet.",
+    landingContentTitle: "Landing content",
+    landingContentDescription: "CMS status for the public landing page.",
+    openContentEditor: "Open content editor",
+    waitingToPublish: "Draft changes are waiting to be published.",
+    landingPageContent: "Landing page content",
+    currentlyInSync: "Published content is currently in sync.",
+    publishedPrefix: "Published",
+    noPublishedYet: "No published content yet",
+    recentActivityTitle: "Recent activity",
+    recentActivityDescription: "Latest job and content changes across the workspace.",
+    viewAll: "View all",
+    catalogCoverage: "Catalog coverage",
+    categoriesSuffix: "categories",
+    sourcesTrackedPrefix: "Sources currently tracked:",
+    sourcesTrackedSuffix: "Use this count to keep the public taxonomy and landing page messaging aligned.",
+    opsTitle: "Content + jobs ops",
+    opsHeading: "One workspace for review, publish, and homepage control",
+    opsDescription: "The dashboard now stays focused on the next operational action instead of full reporting. Use the queues above to decide what moves first.",
+  },
+  id: {
+    failedTitle: "Dashboard gagal dimuat",
+    reload: "Muat ulang",
+    loading: "Memuat dashboard...",
+    eyebrow: "Ruang admin",
+    heroTitle: "Jaga lowongan dan konten landing tetap bergerak.",
+    heroDescription: "Tinjau lowongan mentah, publikasikan listing yang siap, dan perbarui landing page publik dari satu workspace yang rapi.",
+    searchPlaceholder: "Placeholder pencarian UI",
+    reviewJobs: "Review lowongan",
+    editCms: "Edit CMS landing",
+    scraperRuns: "Proses scraper",
+    landingCms: "CMS Landing",
+    landingTitle: "Konten landing page dikendalikan dari dashboard.",
+    landingDescription: "Edit copy hero, aturan featured jobs, benefit, perusahaan terpercaya, dan blok CTA dengan bahasa visual yang sama seperti landing page publik.",
+    openCms: "Buka editor CMS",
+    previewLanding: "Preview landing page",
+    contentStatus: "Status konten",
+    draftReady: "Perubahan draft siap",
+    publishedSync: "Konten terbit sinkron",
+    status: "Status",
+    lastUpdate: "Update terakhir",
+    noUpdate: "Belum ada update",
+    lastPublish: "Publish terakhir",
+    notPublished: "Belum dipublikasikan",
+    needsReview: "Perlu direview",
+    needsReviewHint: "Lowongan mentah yang menunggu dibersihkan dan disetujui.",
+    readyToPublish: "Siap publish",
+    readyToPublishHint: "Lowongan draft yang butuh tahap publish terakhir.",
+    publishedJobs: "Lowongan terbit",
+    needsAttention: "Perlu perhatian",
+    needsAttentionHint: "Lowongan reject atau duplikat yang masih perlu perhatian operator.",
+    queueNeedsReviewTitle: "Perlu direview",
+    queueNeedsReviewDescription: "Lowongan mentah terbaru yang perlu dibersihkan lebih dulu.",
+    openReviewQueue: "Buka antrean review",
+    noRawJobs: "Tidak ada lowongan mentah yang menunggu sekarang.",
+    queueReadyTitle: "Siap publish",
+    queueReadyDescription: "Lowongan draft yang sudah hampir siap tayang.",
+    openJobDrafts: "Buka draft lowongan",
+    noDraftReady: "Belum ada draft lowongan yang siap dipublikasikan.",
+    landingContentTitle: "Konten landing",
+    landingContentDescription: "Status CMS untuk landing page publik.",
+    openContentEditor: "Buka editor konten",
+    waitingToPublish: "Perubahan draft sedang menunggu dipublikasikan.",
+    landingPageContent: "Konten landing page",
+    currentlyInSync: "Konten terbit sedang sinkron.",
+    publishedPrefix: "Dipublikasikan",
+    noPublishedYet: "Belum ada konten terbit",
+    recentActivityTitle: "Aktivitas terbaru",
+    recentActivityDescription: "Perubahan lowongan dan konten terbaru di seluruh workspace.",
+    viewAll: "Lihat semua",
+    catalogCoverage: "Cakupan katalog",
+    categoriesSuffix: "kategori",
+    sourcesTrackedPrefix: "Sumber yang sedang dilacak:",
+    sourcesTrackedSuffix: "Gunakan jumlah ini agar taksonomi publik dan pesan landing page tetap selaras.",
+    opsTitle: "Operasional konten + lowongan",
+    opsHeading: "Satu workspace untuk review, publish, dan kontrol homepage",
+    opsDescription: "Dashboard sekarang fokus ke tindakan operasional berikutnya, bukan laporan penuh. Gunakan antrean di atas untuk menentukan prioritas berikutnya.",
+  },
+} as const
+
 export default function AdminDashboardPage() {
   const [summary, setSummary] = React.useState<AdminDashboardSummary | null>(null)
   const [error, setError] = React.useState<string | null>(null)
+  const { language } = useAdminLanguage()
+  const t = copy[language]
 
   React.useEffect(() => {
     let active = true
@@ -51,10 +173,10 @@ export default function AdminDashboardPage() {
     return (
       <AdminShell>
         <section className="border border-red-200 bg-red-50 p-5 text-sm text-red-700 shadow-[var(--shadow-sm)]">
-          <div className="text-lg font-semibold text-red-800">Dashboard failed to load</div>
+          <div className="text-lg font-semibold text-red-800">{t.failedTitle}</div>
           <p className="mt-2">{error}</p>
           <Button className="mt-4 rounded-none" onClick={() => window.location.reload()}>
-            Reload
+            {t.reload}
           </Button>
         </section>
       </AdminShell>
@@ -65,7 +187,7 @@ export default function AdminDashboardPage() {
     return (
       <AdminShell>
         <section className="border border-[var(--brand-shell-strong)] bg-white p-5 text-sm text-slate-600 shadow-[var(--shadow-sm)]">
-          Loading dashboard...
+          {t.loading}
         </section>
       </AdminShell>
     )
@@ -76,26 +198,26 @@ export default function AdminDashboardPage() {
       <section className="border border-[var(--brand-shell-strong)] bg-[linear-gradient(135deg,#ffffff_0%,#f5f9ff_60%,#eef6ff_100%)] p-4 shadow-[var(--shadow-md)] md:p-5">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <AdminSectionHeader
-            eyebrow="Admin workspace"
-            title="Keep jobs and landing content moving."
-            description="Review raw jobs, publish ready listings, and update the public landing page from one squared workspace."
+            eyebrow={t.eyebrow}
+            title={t.heroTitle}
+            description={t.heroDescription}
           />
           <div className="flex flex-col gap-3 sm:flex-row">
             <div className="relative min-w-0 sm:min-w-[260px]">
               <Input
                 readOnly
-                value="Search UI placeholder"
+                value={t.searchPlaceholder}
                 className="h-11 rounded-none border border-border bg-background text-muted-foreground"
               />
             </div>
             <Button asChild className="h-11 rounded-none">
-              <Link href="/admin/raw-data">Review jobs</Link>
+              <Link href="/admin/raw-data">{t.reviewJobs}</Link>
             </Button>
             <Button asChild variant="outline" className="h-11 rounded-none">
-              <Link href="/admin/content">Edit landing CMS</Link>
+              <Link href="/admin/content">{t.editCms}</Link>
             </Button>
             <Button asChild variant="outline" className="h-11 rounded-none">
-              <Link href="/admin/scrape-runs">Scraper runs</Link>
+              <Link href="/admin/scrape-runs">{t.scraperRuns}</Link>
             </Button>
           </div>
         </div>
@@ -107,23 +229,23 @@ export default function AdminDashboardPage() {
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 border border-sky-100 bg-sky-50 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.16em] text-sky-700">
                 <FilePenLine className="size-3.5" />
-                Landing CMS
+                {t.landingCms}
               </div>
               <div>
                 <h2 className="text-2xl font-semibold tracking-[-0.04em] text-[var(--brand-ink)]">
-                  Landing page content is controlled from the dashboard.
+                  {t.landingTitle}
                 </h2>
                 <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600">
-                  Edit hero copy, featured job rules, benefits, trusted companies, and CTA blocks with the same squared visual language as the public landing page.
+                  {t.landingDescription}
                 </p>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
               <Button asChild className="h-11 rounded-none">
-                <Link href="/admin/content">Open CMS editor</Link>
+                <Link href="/admin/content">{t.openCms}</Link>
               </Button>
               <Button asChild variant="outline" className="h-11 rounded-none">
-                <Link href="/">Preview landing page</Link>
+                <Link href="/">{t.previewLanding}</Link>
               </Button>
             </div>
           </div>
@@ -131,29 +253,29 @@ export default function AdminDashboardPage() {
         <div className="grid gap-3 border border-[var(--brand-shell-strong)] bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] p-5 shadow-[var(--shadow-sm)]">
           <div className="border-b border-[var(--brand-shell-strong)] pb-3">
             <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-              Content status
+              {t.contentStatus}
             </div>
             <div className="mt-2 text-lg font-semibold text-[var(--brand-ink)]">
-              {summary.content.hasDraft ? "Draft changes are ready" : "Published content is in sync"}
+              {summary.content.hasDraft ? t.draftReady : t.publishedSync}
             </div>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="border border-[var(--brand-shell-strong)] bg-white p-3">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Status</div>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{t.status}</div>
               <div className="mt-3 flex items-center gap-2">
                 <AdminStatusBadge status={summary.content.status} />
               </div>
             </div>
             <div className="border border-[var(--brand-shell-strong)] bg-white p-3">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Last update</div>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{t.lastUpdate}</div>
               <div className="mt-2 text-sm font-medium text-[var(--brand-ink)]">
-                {summary.content.updatedAt ? new Date(summary.content.updatedAt).toLocaleString("id-ID") : "No update yet"}
+                {summary.content.updatedAt ? new Date(summary.content.updatedAt).toLocaleString("id-ID") : t.noUpdate}
               </div>
             </div>
             <div className="border border-[var(--brand-shell-strong)] bg-white p-3">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Last publish</div>
+              <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{t.lastPublish}</div>
               <div className="mt-2 text-sm font-medium text-[var(--brand-ink)]">
-                {summary.content.publishedAt ? new Date(summary.content.publishedAt).toLocaleString("id-ID") : "Not published"}
+                {summary.content.publishedAt ? new Date(summary.content.publishedAt).toLocaleString("id-ID") : t.notPublished}
               </div>
             </div>
           </div>
@@ -162,30 +284,30 @@ export default function AdminDashboardPage() {
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <AdminStatTile
-          label="Needs review"
+          label={t.needsReview}
           value={summary.statusCounts.raw}
-          hint="Raw jobs waiting for cleanup and approval."
+          hint={t.needsReviewHint}
           icon={Database}
           status="raw"
         />
         <AdminStatTile
-          label="Ready to publish"
+          label={t.readyToPublish}
           value={summary.statusCounts.draft}
-          hint="Drafted jobs that need a final publishing pass."
+          hint={t.readyToPublishHint}
           icon={FileText}
           status="draft"
         />
         <AdminStatTile
-          label="Published jobs"
+          label={t.publishedJobs}
           value={summary.statusCounts.published}
-          hint={`${summary.catalog.totalCategories} categories across ${summary.catalog.totalSources} sources.`}
+          hint={`${summary.catalog.totalCategories} ${t.categoriesSuffix} across ${summary.catalog.totalSources} sources.`}
           icon={Globe2}
           status="published"
         />
         <AdminStatTile
-          label="Needs attention"
+          label={t.needsAttention}
           value={summary.statusCounts.attention}
-          hint="Rejected or duplicate jobs that still need operator attention."
+          hint={t.needsAttentionHint}
           icon={AlertTriangle}
           status="attention"
         />
@@ -193,11 +315,11 @@ export default function AdminDashboardPage() {
 
       <section className="grid gap-4 xl:grid-cols-3">
         <AdminQueuePanel
-          title="Needs review"
-          description="Fresh raw jobs that should be cleaned up first."
+          title={t.queueNeedsReviewTitle}
+          description={t.queueNeedsReviewDescription}
           action={
             <Button asChild variant="outline" className="rounded-none">
-              <Link href="/admin/raw-data">Open review queue</Link>
+              <Link href="/admin/raw-data">{t.openReviewQueue}</Link>
             </Button>
           }
         >
@@ -214,17 +336,17 @@ export default function AdminDashboardPage() {
             ))
           ) : (
             <div className="border border-dashed border-border bg-background p-4 text-sm text-muted-foreground">
-              No raw jobs are waiting right now.
+              {t.noRawJobs}
             </div>
           )}
         </AdminQueuePanel>
 
         <AdminQueuePanel
-          title="Ready to publish"
-          description="Drafted jobs that look close to ready."
+          title={t.queueReadyTitle}
+          description={t.queueReadyDescription}
           action={
             <Button asChild variant="outline" className="rounded-none">
-              <Link href="/admin/jobs">Open job drafts</Link>
+              <Link href="/admin/jobs">{t.openJobDrafts}</Link>
             </Button>
           }
         >
@@ -241,17 +363,17 @@ export default function AdminDashboardPage() {
             ))
           ) : (
             <div className="border border-dashed border-border bg-background p-4 text-sm text-muted-foreground">
-              No draft jobs are ready to publish yet.
+              {t.noDraftReady}
             </div>
           )}
         </AdminQueuePanel>
 
         <AdminQueuePanel
-          title="Landing content"
-          description="CMS status for the public landing page."
+          title={t.landingContentTitle}
+          description={t.landingContentDescription}
           action={
             <Button asChild variant="outline" className="rounded-none">
-              <Link href="/admin/content">Open content editor</Link>
+              <Link href="/admin/content">{t.openContentEditor}</Link>
             </Button>
           }
         >
@@ -260,7 +382,7 @@ export default function AdminDashboardPage() {
               <AdminListRow
                 key={item.id}
                 title={item.title}
-                description="Draft changes are waiting to be published."
+                description={t.waitingToPublish}
                 href={item.href}
                 status={item.status}
                 meta={item.updatedAt ? new Date(item.updatedAt).toLocaleString("id-ID") : null}
@@ -268,14 +390,14 @@ export default function AdminDashboardPage() {
             ))
           ) : (
             <AdminListRow
-              title="Landing page content"
-              description="Published content is currently in sync."
+              title={t.landingPageContent}
+              description={t.currentlyInSync}
               href="/admin/content"
               status={summary.content.status}
               meta={
                 summary.content.publishedAt
-                  ? `Published ${new Date(summary.content.publishedAt).toLocaleString("id-ID")}`
-                  : "No published content yet"
+                  ? `${t.publishedPrefix} ${new Date(summary.content.publishedAt).toLocaleString("id-ID")}`
+                  : t.noPublishedYet
               }
             />
           )}
@@ -283,14 +405,14 @@ export default function AdminDashboardPage() {
       </section>
 
       <AdminQueuePanel
-        title="Recent activity"
-        description="Latest job and content changes across the workspace."
+        title={t.recentActivityTitle}
+        description={t.recentActivityDescription}
         action={
           <Link
             href="/admin/jobs"
             className="inline-flex items-center gap-2 text-sm font-semibold text-foreground"
           >
-            View all
+            {t.viewAll}
             <ArrowUpRight className="size-4" />
           </Link>
         }
@@ -314,10 +436,10 @@ export default function AdminDashboardPage() {
           <div className="flex items-center justify-between gap-4">
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                Catalog coverage
+                {t.catalogCoverage}
               </div>
               <div className="mt-2 text-lg font-semibold text-[var(--brand-ink)]">
-                {summary.catalog.totalCategories} categories
+                {summary.catalog.totalCategories} {t.categoriesSuffix}
               </div>
             </div>
             <div className="grid size-11 place-items-center border border-[var(--brand-shell-strong)] bg-sky-50 text-[var(--brand-blue)]">
@@ -325,18 +447,18 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <p className="mt-4 text-sm leading-7 text-slate-600">
-            Sources currently tracked: {summary.catalog.totalSources}. Use this count to keep the public taxonomy and landing page messaging aligned.
+            {t.sourcesTrackedPrefix} {summary.catalog.totalSources}. {t.sourcesTrackedSuffix}
           </p>
         </div>
         <div className="border border-[var(--brand-shell-strong)] bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] p-4 shadow-[var(--shadow-sm)]">
           <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-            Content + jobs ops
+            {t.opsTitle}
           </div>
           <div className="mt-2 text-lg font-semibold text-[var(--brand-ink)]">
-            One workspace for review, publish, and homepage control
+            {t.opsHeading}
           </div>
           <p className="mt-4 text-sm leading-7 text-slate-600">
-            The dashboard now stays focused on the next operational action instead of full reporting. Use the queues above to decide what moves first.
+            {t.opsDescription}
           </p>
         </div>
       </section>
