@@ -1,36 +1,20 @@
-# Coolify Split Deployment
+# Coolify Deployment
 
-This repository can be deployed to Coolify as 4 smaller Docker Compose resources instead of one heavy stack.
+Use a single Coolify Docker Compose resource.
 
-Resources:
-- `web` -> `frontend` + `backend`
-- `queue` -> Laravel worker
-- `scheduler` -> Laravel scheduler
-- `infra` -> PostgreSQL + Redis
-
-Compose files:
-- `docker-compose.coolify.web.yml`
-- `docker-compose.coolify.queue.yml`
-- `docker-compose.coolify.scheduler.yml`
-- `docker-compose.coolify.infra.yml`
-
-Legacy all-in-one file:
+Compose file:
 - `docker-compose.coolify.yml`
 
-## 1. Create Resources
+Do not split `web`, `queue`, `scheduler`, and `infra` into separate resources unless you also manage cross-resource networking yourself.
 
-Create 4 Coolify Docker Compose resources from the same repository and branch.
+## 1. Create Resource
 
-1. `infra`
-   - Compose file: `docker-compose.coolify.infra.yml`
-2. `web`
-   - Compose file: `docker-compose.coolify.web.yml`
-3. `queue`
-   - Compose file: `docker-compose.coolify.queue.yml`
-4. `scheduler`
-   - Compose file: `docker-compose.coolify.scheduler.yml`
+Create 1 Coolify Docker Compose resource from the same repository and branch.
 
-Use repo-relative paths in Coolify.
+1. `app`
+   - Compose file: `docker-compose.coolify.yml`
+
+Use the repo-relative path in Coolify.
 Do not prefix the compose file path with `/`.
 
 ## 2. Domains
@@ -47,15 +31,14 @@ No public domains:
 
 ## 3. Recommended Order
 
-1. Deploy `infra`
-2. Deploy `web`
-3. Run migrations and seeders in `backend`
-4. Deploy `queue`
-5. Deploy `scheduler`
+1. Configure environment variables
+2. Deploy `app`
+3. Verify `frontend`, `backend`, `db`, `redis`, `queue`, and `scheduler` are healthy
+4. Run migrations and seeders manually in `backend`
 
-## 4. Shared Environment
+## 4. Environment
 
-Use the same core application values across `web`, `queue`, and `scheduler`:
+Use this core application configuration:
 
 ```env
 APP_NAME=Job Loker API
@@ -78,85 +61,66 @@ LOG_LEVEL=warning
 ENABLE_LARAVEL_CACHE_WARMUP=true
 ```
 
-## 5. Database and Redis After Split
+## 5. Database and Redis
 
-Because resources are split, `DB_HOST=db` and `REDIS_HOST=redis` only work if Coolify provides cross-resource hostnames for those resource names in your environment.
-
-Set these values in `web`, `queue`, and `scheduler` to the hostnames exposed by your `infra` resource:
+With the single Compose resource, use the internal service names directly:
 
 ```env
 DB_CONNECTION=pgsql
-DB_HOST=<infra-postgres-host>
+DB_HOST=db
 DB_PORT=5432
 DB_DATABASE=job_platform
 DB_USERNAME=postgres
 DB_PASSWORD=your-password
 
 REDIS_CLIENT=phpredis
-REDIS_HOST=<infra-redis-host>
+REDIS_HOST=redis
 REDIS_PORT=6379
 REDIS_PASSWORD=
 ```
 
-Use the actual service hostname shown by Coolify for the Postgres and Redis resource.
+Set the matching Postgres container values too:
 
-## 6. Web Resource Variables
+```env
+POSTGRES_DB=job_platform
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your-password
+```
 
-Required for `docker-compose.coolify.web.yml`:
+## 6. Required Variables
+
+Required for `docker-compose.coolify.yml`:
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=https://api.yourdomain.com
 INTERNAL_API_BASE_URL=http://backend
 NEXT_PUBLIC_USE_MOCK=false
-RUN_MIGRATIONS=true
+RUN_MIGRATIONS=false
 AI_CLEANUP_ENABLED=false
 AI_CLEANUP_URL=http://frontend:3000/api/internal/clean-job
 ```
 
 Notes:
-- `NEXT_PUBLIC_API_BASE_URL` is build-time. Rebuild/redeploy after changing it.
-- Keep `RUN_MIGRATIONS=true` only for first deploy or schema changes.
-- After successful migration, set `RUN_MIGRATIONS=false` and redeploy `web`.
+- `NEXT_PUBLIC_API_BASE_URL` is build-time. Rebuild after changing it.
+- Keep `RUN_MIGRATIONS=false` for first deploy.
+- Run migrations manually from the `backend` terminal after the stack is healthy.
+- Keep `RUN_MIGRATIONS=false` after migration unless you intentionally need startup-time migration on a later deploy.
 
-## 7. Queue Resource Variables
-
-Required for `docker-compose.coolify.queue.yml`:
+## 7. Queue and Scheduler Variables
 
 ```env
 QUEUE_TRIES=3
 QUEUE_TIMEOUT=900
-AI_CLEANUP_ENABLED=false
-AI_CLEANUP_URL=https://jobs.yourdomain.com/api/internal/clean-job
-```
-
-Notes:
-- When `queue` is split from `web`, it cannot reach `http://frontend:3000`.
-- Use the public frontend URL for `AI_CLEANUP_URL` if AI cleanup stays enabled.
-- If AI cleanup is not needed yet, keep `AI_CLEANUP_ENABLED=false`.
-
-## 8. Scheduler Resource Variables
-
-Required for `docker-compose.coolify.scheduler.yml`:
-
-```env
 SCRAPER_SCHEDULE_ENABLED=true
 SCRAPER_SCHEDULE_CRON=0 */8 * * *
 SCRAPER_SCHEDULE_TIMEZONE=Asia/Jakarta
 ```
 
-## 9. Infra Resource Variables
+## 8. First-Time Setup
 
-Required for `docker-compose.coolify.infra.yml`:
+Use `.env.coolify.example` as the starting point for the resource environment.
 
-```env
-POSTGRES_DB=job_platform
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=use-a-strong-password
-```
-
-## 10. First-Time Setup
-
-After `web` is healthy, open the `backend` terminal and run:
+After the stack is healthy, open the `backend` terminal and run:
 
 ```bash
 php artisan migrate --force
@@ -165,15 +129,22 @@ php artisan db:seed --class=AdminUserSeeder --force
 php artisan optimize:clear
 ```
 
-Then set:
+Do not enable `RUN_MIGRATIONS` for the initial deploy.
+
+If you temporarily enable it for a later schema rollout, turn it back to:
 
 ```env
 RUN_MIGRATIONS=false
 ```
 
-and redeploy `web`.
+after the deployment completes and redeploy the stack.
 
-## 11. Verification
+## 9. Rollback
+
+- If deploy fails before migration, redeploy the previous image/config.
+- If migration fails, stop the rollout, restore the database from backup or snapshot, and redeploy the last known good stack.
+
+## 10. Verification
 
 Check:
 - frontend homepage works
@@ -181,12 +152,3 @@ Check:
 - admin login works
 - `queue` stays running
 - `scheduler` stays running
-
-## 12. Why Split
-
-Benefits:
-- smaller deployments
-- easier rollback
-- worker crashes do not restart web
-- clearer logs per workload
-- lower resource spikes during deploy
