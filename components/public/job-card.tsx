@@ -5,7 +5,7 @@ import type { Job } from "@/types"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
+import { cn, formatDate } from "@/lib/utils"
 
 import { categoryColor, jobTypeColor } from "./color-tags"
 import { JobStatusPill } from "./job-status-pill"
@@ -69,8 +69,8 @@ export function JobCard({
   className?: string
 }) {
   const compact = variant === "compact"
-  const companyName = job.companyName || "Company undisclosed"
-  const location = job.location || "Remote/On-site not specified"
+  const companyName = job.companyName || "Perusahaan tidak diketahui"
+  const location = job.location || "Lokasi tidak disebutkan"
   const palette = paletteForJob(job)
 
   return (
@@ -145,29 +145,31 @@ export function JobCard({
             {job.sourceName}
           </span>
           <span className="rounded-none border border-white/90 bg-white/62 px-3 py-1.5 font-medium">
-            {job.scrapedAt || "Recently found"}
+            {formatDate(job.scrapedAt) ?? "Baru ditemukan"}
           </span>
         </div>
 
         <div className={cn("mt-5 text-sm font-semibold", palette.meta)}>
-          {job.salaryText || "Salary not listed"}
+          {job.salaryText || "Gaji tidak disebutkan"}
         </div>
       </CardContent>
 
       <CardFooter className={cn("mt-auto flex w-full flex-col items-center gap-3", palette.footer, compact ? "p-5" : "p-6")}>
-        <Button
-          asChild
-          className="h-11 w-full rounded-none bg-blue-600 font-semibold text-white hover:bg-blue-700"
-        >
-          <a href={job.sourceUrl} target="_blank" rel="noreferrer">
-            Apply on source
-          </a>
-        </Button>
+        {job.sourceUrl ? (
+          <Button
+            asChild
+            className="h-11 w-full rounded-none bg-blue-600 font-semibold text-white hover:bg-blue-700"
+          >
+            <a href={job.sourceUrl} target="_blank" rel="noreferrer">
+              Lamar di sumber
+            </a>
+          </Button>
+        ) : null}
         <Link
           href={`/jobs/${job.slug}`}
           className="text-sm font-medium text-slate-700 underline-offset-2 hover:underline"
         >
-          Open full detail
+          Lihat detail lengkap
         </Link>
       </CardFooter>
     </Card>

@@ -48,13 +48,13 @@ class AdminScrapedJobController extends Controller
     public function update(Request $request, ScrapedJob $scrapedJob)
     {
         $payload = $request->validate([
-            'title' => ['sometimes', 'required', 'string'],
-            'company' => ['sometimes', 'required', 'string'],
-            'location' => ['nullable', 'string'],
-            'salary' => ['nullable', 'string'],
-            'employment_type' => ['nullable', 'string'],
-            'description' => ['nullable', 'string'],
-            'description_summary' => ['nullable', 'string'],
+            'title' => ['sometimes', 'required', 'string', 'max:500'],
+            'company' => ['sometimes', 'required', 'string', 'max:255'],
+            'location' => ['nullable', 'string', 'max:191'],
+            'salary' => ['nullable', 'string', 'max:191'],
+            'employment_type' => ['nullable', 'string', 'max:191'],
+            'description' => ['nullable', 'string', 'max:65535'],
+            'description_summary' => ['nullable', 'string', 'max:65535'],
             'posted_date' => ['nullable', 'date'],
             'status' => ['nullable', 'in:pending,approved,rejected,duplicate,published'],
         ]);
@@ -114,7 +114,7 @@ class AdminScrapedJobController extends Controller
     public function bulkCleanAi(Request $request)
     {
         $payload = $request->validate([
-            'ids' => ['required', 'array'],
+            'ids' => ['required', 'array', 'max:100'],
             'ids.*' => ['required', 'string', 'uuid'],
         ]);
 
@@ -133,7 +133,7 @@ class AdminScrapedJobController extends Controller
     public function bulkApprove(Request $request)
     {
         $payload = $request->validate([
-            'ids' => ['required', 'array'],
+            'ids' => ['required', 'array', 'max:100'],
             'ids.*' => ['required', 'string', 'uuid'],
         ]);
 
@@ -148,7 +148,7 @@ class AdminScrapedJobController extends Controller
     public function bulkReject(Request $request)
     {
         $payload = $request->validate([
-            'ids' => ['required', 'array'],
+            'ids' => ['required', 'array', 'max:100'],
             'ids.*' => ['required', 'string', 'uuid'],
         ]);
 
@@ -163,7 +163,7 @@ class AdminScrapedJobController extends Controller
     public function bulkPublish(Request $request)
     {
         $payload = $request->validate([
-            'ids' => ['required', 'array'],
+            'ids' => ['required', 'array', 'max:100'],
             'ids.*' => ['required', 'string', 'uuid'],
         ]);
 

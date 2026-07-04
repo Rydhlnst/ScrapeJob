@@ -77,57 +77,25 @@ export default async function JobsPage({
           <SiteContent>
           <div className="space-y-8">
             <section className="brand-shell overflow-hidden rounded-[36px] border border-white/80 p-5 shadow-[var(--shadow-lg)] md:p-7">
-              <div className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-end">
-                <div className="space-y-5">
-                  <div className="inline-flex rounded-full border border-sky-200 bg-white px-3 py-2 text-xs font-semibold tracking-[0.16em] text-sky-700 uppercase shadow-[var(--shadow-sm)]">
-                    Jobs board
-                  </div>
-                  <div>
-                    <h1 className="text-4xl font-semibold tracking-[-0.05em] text-[var(--brand-ink)] md:text-5xl">
-                      Temukan lowongan dalam layout yang lebih hidup.
-                    </h1>
-                    <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">
-                      Search bar, filter rail, dan job card disusun ulang supaya
-                      terasa seperti product board, bukan template daftar biasa.
-                    </p>
-                  </div>
-                  <Suspense fallback={<div className="h-[60px] w-full" />}>
-                    <JobSearchBar
-                      defaultKeyword={keyword}
-                      defaultLocation={location}
-                      defaultSort={sort}
-                    />
-                  </Suspense>
+              <div className="space-y-5">
+                <div className="inline-flex rounded-full border border-sky-200 bg-white px-3 py-2 text-xs font-semibold tracking-[0.16em] text-sky-700 uppercase shadow-[var(--shadow-sm)]">
+                  Papan lowongan
                 </div>
-
-                <div className="brand-image-slot rounded-[30px] border border-white/80 p-5 shadow-[var(--shadow-md)]">
-                  <div className="rounded-[26px] border border-dashed border-sky-200/90 bg-white/72 p-6">
-                    <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                      Reserved Image Space
-                    </div>
-                    <div className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-[var(--brand-ink)]">
-                      Add board screenshot, team photo, or campaign image
-                    </div>
-                    <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-[22px] bg-[linear-gradient(135deg,#eef6ff_0%,#dff2ff_100%)] p-4">
-                        <div className="text-sm font-semibold text-slate-900">
-                          Curated filters
-                        </div>
-                        <div className="mt-2 text-sm leading-6 text-slate-600">
-                          Cleaner grouping for category, job type, and source.
-                        </div>
-                      </div>
-                      <div className="rounded-[22px] bg-[linear-gradient(135deg,#fff9dc_0%,#fff0bf_100%)] p-4">
-                        <div className="text-sm font-semibold text-slate-900">
-                          Colorful cards
-                        </div>
-                        <div className="mt-2 text-sm leading-6 text-slate-600">
-                          Brand-led card palette inspired by the logo colors.
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div>
+                  <h1 className="text-4xl font-semibold tracking-[-0.05em] text-[var(--brand-ink)] md:text-5xl">
+                    Temukan lowongan yang tepat untukmu.
+                  </h1>
+                  <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">
+                    Ribuan lowongan dari berbagai sumber dikumpulkan dan diperbarui setiap hari. Gunakan filter untuk mempersempit pencarian.
+                  </p>
                 </div>
+                <Suspense fallback={<div className="h-[60px] w-full" />}>
+                  <JobSearchBar
+                    defaultKeyword={keyword}
+                    defaultLocation={location}
+                    defaultSort={sort}
+                  />
+                </Suspense>
               </div>
             </section>
 
@@ -147,7 +115,7 @@ export default async function JobsPage({
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                        Search Result
+                        Hasil pencarian
                       </div>
                       <div className="mt-2 text-sm text-muted-foreground">
                         Menampilkan{" "}

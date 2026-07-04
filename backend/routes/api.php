@@ -25,7 +25,6 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:auth-login');
     Route::post('/user/register', [AuthController::class, 'registerUser'])->middleware('throttle:auth-login');
     Route::post('/user/login', [AuthController::class, 'loginUser'])->middleware('throttle:auth-login');
-    Route::post('/admin/register', [AuthController::class, 'registerAdmin'])->middleware('throttle:auth-login');
     Route::post('/admin/login', [AuthController::class, 'loginAdmin'])->middleware('throttle:auth-login');
 
     Route::middleware('auth:sanctum')->group(function () {
@@ -39,7 +38,7 @@ Route::get('/jobs/stats', [PublicJobController::class, 'stats']);
 Route::get('/jobs/{identifier}', [PublicJobController::class, 'show']);
 Route::post('/internal/scraped-jobs/import', ScrapedJobImportController::class)->middleware('internal.token');
 Route::post('/scraper/run', [PublicScraperController::class, 'trigger'])->middleware('throttle:scrape-run');
-Route::get('/scraper/logs', [PublicScraperController::class, 'logs']);
+Route::get('/scraper/logs', [PublicScraperController::class, 'logs'])->middleware('throttle:60,1');
 Route::get('/categories', [PublicCategoryController::class, 'index']);
 Route::get('/locations', [PublicLocationController::class, 'index']);
 Route::get('/landing-page-content', [PublicLandingPageContentController::class, 'show']);

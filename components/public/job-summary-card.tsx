@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { formatDate } from "@/lib/utils"
 
 export function JobSummaryCard({ job }: { job: Job }) {
   const hasSourceUrl = Boolean(job.sourceUrl)
@@ -19,7 +20,7 @@ export function JobSummaryCard({ job }: { job: Job }) {
           <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-[var(--brand-shell)] px-4 py-3">
             <span>Perusahaan</span>
             <span className="text-right font-medium text-foreground">
-              {job.companyName || "Company undisclosed"}
+              {job.companyName || "Tidak diketahui"}
             </span>
           </div>
           <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-[var(--brand-shell)] px-4 py-3">
@@ -37,7 +38,7 @@ export function JobSummaryCard({ job }: { job: Job }) {
           <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-[var(--brand-shell)] px-4 py-3">
             <span>Ditemukan</span>
             <span className="text-right text-foreground">
-              {job.publishedAt || job.scrapedAt || "Recently found"}
+              {formatDate(job.publishedAt) ?? formatDate(job.scrapedAt) ?? "Baru ditemukan"}
             </span>
           </div>
           <Badge variant="outline" className="w-fit rounded-full border-white bg-white text-slate-600">

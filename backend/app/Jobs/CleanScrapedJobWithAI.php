@@ -61,8 +61,17 @@ class CleanScrapedJobWithAI implements ShouldQueue
             return;
         }
 
-        $url = $config['url'];
-        $token = $config['token'];
+        $url = $config['url'] ?? null;
+        $token = $config['token'] ?? null;
+
+        if (! $url || ! $token) {
+            Log::error("AI cleanup misconfigured: missing url or token. Skipping job ID: {$this->scrapedJob->id}");
+            $this->scrapedJob->update([
+                'draft_status' => 'drafted_raw',
+                'fail_reason' => 'AI cleanup service is not configured.',
+            ]);
+            return;
+        }
 
         Log::info("Starting AI cleanup for scraped job ID: {$this->scrapedJob->id}, title: {$this->scrapedJob->title}");
 

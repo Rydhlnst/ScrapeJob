@@ -33,7 +33,7 @@ function inferWorkMode(location: string) {
 }
 
 export function HeroJobCard({ job }: { job: Job }) {
-  const companyName = job.companyName || "Company undisclosed"
+  const companyName = job.companyName || "Perusahaan tidak diketahui"
 
   return (
     <Link
@@ -57,7 +57,7 @@ export function HeroJobCard({ job }: { job: Job }) {
           <div className="mt-2.5 flex flex-wrap gap-1.5 text-[10px]">
             <span className="inline-flex items-center gap-1 rounded-none bg-slate-100 px-2 py-1 font-medium text-slate-600">
               <MapPin className="size-3" />
-              {job.location || "Location not listed"}
+              {job.location || "Lokasi tidak disebutkan"}
             </span>
             <span className="inline-flex items-center gap-1 rounded-none bg-slate-100 px-2 py-1 font-medium text-slate-600">
               <MonitorSmartphone className="size-3" />
@@ -72,7 +72,7 @@ export function HeroJobCard({ job }: { job: Job }) {
 
           <div className="mt-2.5 flex items-center justify-between gap-4">
             <div className="text-xs font-semibold text-slate-950">
-              {job.salaryText || "Salary not listed"}
+              {job.salaryText || "Gaji tidak disebutkan"}
             </div>
             <div className="text-[10px] text-slate-400">{job.sourceName}</div>
           </div>

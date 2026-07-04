@@ -22,7 +22,7 @@ export function BenefitsSection({ content }: { content: LandingBenefitsContent }
         <div className="max-w-4xl">
           <SectionHeader
             title={content.title}
-            description="The homepage now shows the product experience first, so visitors can search, browse, and evaluate roles immediately."
+            description="Temukan lowongan yang relevan dengan cepat dan mudah melalui satu platform terpusat."
           />
         </div>
 
@@ -81,10 +81,10 @@ export function BenefitsSection({ content }: { content: LandingBenefitsContent }
             style={{ backgroundColor: "var(--brand-blue)" }}
           >
             <div className="max-w-md text-4xl font-semibold leading-tight tracking-[-0.05em]">
-              Find relevant roles faster, then continue on the official source.
+              Temukan lowongan yang tepat, lalu lanjutkan di sumber resminya.
             </div>
             <p className="mt-6 max-w-md text-sm leading-7 text-white/78">
-              Use one cleaner browsing experience to narrow the list before opening the full posting.
+              Saring pilihan dengan lebih mudah sebelum membuka postingan lengkap di sumber aslinya.
             </p>
             <div className="mt-8">
               <Button
@@ -92,7 +92,7 @@ export function BenefitsSection({ content }: { content: LandingBenefitsContent }
                 className="h-12 rounded-none bg-white px-5 text-sm font-medium hover:opacity-90"
                 style={{ color: "var(--brand-ink)" }}
               >
-                <a href="/jobs">Explore jobs</a>
+                <a href="/jobs">Jelajahi lowongan</a>
               </Button>
             </div>
           </div>

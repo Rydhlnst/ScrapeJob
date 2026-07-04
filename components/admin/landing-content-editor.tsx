@@ -152,11 +152,11 @@ export function LandingContentEditor({
       />
 
       <section className="grid gap-4 md:grid-cols-3 xl:grid-cols-5">
-        <div className="border border-[var(--brand-shell-strong)] bg-white p-4 shadow-[var(--shadow-sm)]">
+        <div className="border border-(--brand-shell-strong) bg-white p-4 shadow-[var(--shadow-sm)]">
           <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Status</div>
           <div className="mt-3"><AdminStatusBadge status={record.status} /></div>
         </div>
-        <div className="border border-[var(--brand-shell-strong)] bg-white p-4 shadow-[var(--shadow-sm)]">
+        <div className="border border-(--brand-shell-strong) bg-white p-4 shadow-[var(--shadow-sm)]">
           <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Quick links</div>
           <div className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-[var(--brand-ink)]">{draft.hero.quickLinks.length}</div>
         </div>
@@ -174,7 +174,7 @@ export function LandingContentEditor({
         </div>
       </section>
 
-      <Tabs defaultValue="hero" className="space-y-4">
+      <Tabs defaultValue="hero" className="space-y-4 flex flex-col">
         <div className="overflow-x-auto border border-[var(--brand-shell-strong)] bg-white shadow-[var(--shadow-sm)]">
           <TabsList className="h-auto min-w-max gap-2 rounded-none bg-transparent p-2">
             <TabsTrigger value="hero" className="h-11 flex-none rounded-none border border-transparent px-5 text-xs font-semibold uppercase tracking-[0.14em] data-active:border-[var(--brand-shell-strong)] data-active:bg-[var(--brand-shell)] data-active:text-[var(--brand-ink)]">Hero</TabsTrigger>

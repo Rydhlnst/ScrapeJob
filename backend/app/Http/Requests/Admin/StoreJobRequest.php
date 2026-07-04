@@ -14,16 +14,16 @@ class StoreJobRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string'],
-            'company_name' => ['required', 'string'],
-            'location' => ['required', 'string'],
+            'title' => ['required', 'string', 'max:500'],
+            'company_name' => ['required', 'string', 'max:255'],
+            'location' => ['required', 'string', 'max:191'],
             'category_id' => ['nullable', 'exists:categories,id'],
-            'job_type' => ['nullable', 'string'],
-            'salary_text' => ['nullable', 'string'],
-            'description' => ['required', 'string'],
-            'raw_description' => ['nullable', 'string'],
-            'source_url' => ['required', 'url'],
-            'source_name' => ['required', 'string'],
+            'job_type' => ['nullable', 'string', 'max:100'],
+            'salary_text' => ['nullable', 'string', 'max:191'],
+            'description' => ['required', 'string', 'max:65535'],
+            'raw_description' => ['nullable', 'string', 'max:65535'],
+            'source_url' => ['required', 'url', 'max:2048'],
+            'source_name' => ['required', 'string', 'max:100'],
             'status' => ['nullable', 'in:raw,draft,published,rejected,duplicate'],
         ];
     }

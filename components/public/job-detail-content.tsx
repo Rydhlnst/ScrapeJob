@@ -5,6 +5,27 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 
+function stripHtml(html: string): string {
+  return html
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n\n")
+    .replace(/<\/li>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/\n{3,}/g, "\n\n")
+    .trim()
+}
+
+function JobDescription({ text }: { text: string }) {
+  const hasHtml = /<[a-z][\s\S]*>/i.test(text)
+  const content = hasHtml ? stripHtml(text) : text
+  return <div className="whitespace-pre-wrap text-slate-700">{content}</div>
+}
+
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-3">
@@ -27,8 +48,8 @@ export function JobDetailContent({ job }: { job: Job }) {
         {job.title}
       </h1>
       <p className="mt-3 text-sm text-slate-600">
-        {job.companyName || "Company undisclosed"} -{" "}
-        {job.location || "Remote/On-site not specified"}
+        {job.companyName || "Perusahaan tidak diketahui"} -{" "}
+        {job.location || "Lokasi tidak disebutkan"}
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2">
@@ -54,7 +75,7 @@ export function JobDetailContent({ job }: { job: Job }) {
 
       <Section title="Deskripsi">
         {description ? (
-          <div className="whitespace-pre-wrap text-slate-700">{description}</div>
+          <JobDescription text={description} />
         ) : (
           <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-slate-600">
             Deskripsi lowongan tidak tersedia.

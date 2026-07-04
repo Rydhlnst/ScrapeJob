@@ -4,7 +4,6 @@ import Image from "next/image"
 import Link from "next/link"
 import {
   BriefcaseBusiness,
-  Crown,
   FolderKanban,
   LayoutGrid,
   Menu,
@@ -13,7 +12,6 @@ import {
   MoveRight,
   Palette,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 
@@ -29,9 +27,7 @@ import { SiteFrame } from "@/components/shared/SiteShell"
 import { cn } from "@/lib/utils"
 
 const topNavItems = [
-  { label: "Explore", href: "/jobs", icon: BriefcaseBusiness },
-  { label: "What's New", href: "/#features", icon: Sparkles },
-  { label: "Lowonganku Premium", href: "/#employers", icon: Crown },
+  { label: "Cari Lowongan", href: "/jobs", icon: BriefcaseBusiness },
 ]
 
 const categoryItems = [
@@ -83,16 +79,9 @@ export function Navbar() {
             ))}
             <Button
               asChild
-              variant="outline"
-              className="h-11 rounded-none border-[var(--brand-shell-strong)] bg-white px-5 text-sm font-medium text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]"
-            >
-              <Link href="/#employers">Find Talent</Link>
-            </Button>
-            <Button
-              asChild
               className="h-11 rounded-none bg-[var(--brand-blue)] px-5 text-sm font-medium text-white hover:bg-[var(--brand-sky)]"
             >
-              <Link href="/jobs">Find Work</Link>
+              <Link href="/jobs">Cari Lowongan</Link>
             </Button>
           </nav>
 
@@ -139,16 +128,9 @@ export function Navbar() {
                 <div className="mt-auto grid gap-3 pt-6">
                   <Button
                     asChild
-                    variant="outline"
-                    className="h-12 rounded-2xl border-[var(--brand-shell-strong)] bg-white text-sm font-medium text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]"
-                  >
-                    <Link href="/#employers">Find Talent</Link>
-                  </Button>
-                  <Button
-                    asChild
                     className="h-12 rounded-2xl bg-[var(--brand-blue)] text-sm font-medium text-white hover:bg-[var(--brand-sky)]"
                   >
-                    <Link href="/jobs">Find Work</Link>
+                    <Link href="/jobs">Cari Lowongan</Link>
                   </Button>
                 </div>
               </div>

@@ -16,7 +16,7 @@ class ScrapeLogResource extends JsonResource
             'title' => $this->title,
             'status' => $this->status,
             'message' => $this->message,
-            'payload' => $this->payload,
+            'payload' => $this->when($request->user() !== null, $this->payload),
             'createdAt' => $this->created_at,
         ];
     }

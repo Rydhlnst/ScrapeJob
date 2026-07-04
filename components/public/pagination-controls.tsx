@@ -27,15 +27,15 @@ export function PaginationControls({
     <div className="flex items-center justify-between gap-3">
       <Button asChild variant="outline" className="rounded-2xl" disabled={!canPrev}>
         <Link aria-disabled={!canPrev} href={buildHref(current, Math.max(1, page - 1))}>
-          Prev
+          Sebelumnya
         </Link>
       </Button>
       <div className="text-sm text-muted-foreground">
-        Page <span className="font-medium text-foreground">{page}</span> / {totalPages}
+        Halaman <span className="font-medium text-foreground">{page}</span> dari {totalPages}
       </div>
       <Button asChild variant="outline" className="rounded-2xl" disabled={!canNext}>
         <Link aria-disabled={!canNext} href={buildHref(current, Math.min(totalPages, page + 1))}>
-          Next
+          Selanjutnya
         </Link>
       </Button>
     </div>

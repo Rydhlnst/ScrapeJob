@@ -20,7 +20,6 @@ import { AdminShell } from "@/components/admin/admin-shell"
 import { AdminStatTile } from "@/components/admin/admin-stat-tile"
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { getAdminDashboardSummary } from "@/lib/api/admin-dashboard"
 import type { AdminDashboardSummary } from "@/types/landing-content"
 
@@ -32,7 +31,6 @@ const copy = {
     eyebrow: "Admin workspace",
     heroTitle: "Keep jobs and landing content moving.",
     heroDescription: "Review raw jobs, publish ready listings, and update the public landing page from one squared workspace.",
-    searchPlaceholder: "Search UI placeholder",
     reviewJobs: "Review jobs",
     editCms: "Edit landing CMS",
     scraperRuns: "Scraper runs",
@@ -90,7 +88,6 @@ const copy = {
     eyebrow: "Ruang admin",
     heroTitle: "Jaga lowongan dan konten landing tetap bergerak.",
     heroDescription: "Tinjau lowongan mentah, publikasikan listing yang siap, dan perbarui landing page publik dari satu workspace yang rapi.",
-    searchPlaceholder: "Placeholder pencarian UI",
     reviewJobs: "Review lowongan",
     editCms: "Edit CMS landing",
     scraperRuns: "Proses scraper",
@@ -203,13 +200,6 @@ export default function AdminDashboardPage() {
             description={t.heroDescription}
           />
           <div className="flex flex-col gap-3 sm:flex-row">
-            <div className="relative min-w-0 sm:min-w-[260px]">
-              <Input
-                readOnly
-                value={t.searchPlaceholder}
-                className="h-11 rounded-none border border-border bg-background text-muted-foreground"
-              />
-            </div>
             <Button asChild className="h-11 rounded-none">
               <Link href="/admin/raw-data">{t.reviewJobs}</Link>
             </Button>

@@ -41,7 +41,7 @@ return [
 
     'ai_cleanup' => [
         'url' => env('AI_CLEANUP_URL', env('FRONTEND_URL', 'http://localhost:3000') . '/api/internal/clean-job'),
-        'token' => env('SCRAPER_INTERNAL_API_TOKEN', 'secure-token'),
+        'token' => env('SCRAPER_INTERNAL_API_TOKEN'),
         'enabled' => env('AI_CLEANUP_ENABLED', true),
     ],
 
