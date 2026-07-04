@@ -13,13 +13,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="admin-modern flex min-h-screen w-full bg-[linear-gradient(180deg,#f8fbff_0%,#eef5ff_100%)] text-foreground">
               <AdminSidebar />
               <SidebarInset className="bg-transparent p-3 md:p-5 lg:p-6">
-                <div className="mb-3 flex items-center justify-between gap-3 md:justify-end">
-                  <div className="md:hidden">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
                     <SidebarTrigger className="rounded-none border border-border bg-white text-foreground shadow-none" />
+                    <div className="hidden text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 md:block">
+                      Admin Panel
+                    </div>
                   </div>
                   <AdminLanguageToggle />
                 </div>
-                <div className="min-h-full border border-[var(--brand-shell-strong)] bg-[rgba(255,255,255,0.92)] p-4 shadow-[var(--shadow-md)] backdrop-blur md:p-6">
+                <div className="min-h-full border border-[var(--brand-shell-strong)] bg-[rgba(255,255,255,0.96)] p-4 shadow-[var(--shadow-md)] backdrop-blur md:p-6">
                   {children}
                 </div>
               </SidebarInset>

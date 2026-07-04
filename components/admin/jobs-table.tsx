@@ -20,7 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ConfirmDialog } from "@/components/shared/confirm-dialog"
 import { JobStatusBadge } from "./job-status-badge"
 
 export function JobsTable({
@@ -35,7 +34,7 @@ export function JobsTable({
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="text-sm font-semibold text-slate-900">{title}</div>
         <div className="flex w-full gap-2 md:w-auto">
-          <Input placeholder="Search keyword (mock)" />
+          <Input placeholder="Search keyword (coming next)" />
           <Button variant="outline" disabled>
             Filter
           </Button>
@@ -45,10 +44,10 @@ export function JobsTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Title</TableHead>
+              <TableHead>Judul</TableHead>
               <TableHead>Company</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Category</TableHead>
+              <TableHead>Lokasi</TableHead>
+              <TableHead>Kategori</TableHead>
               <TableHead>Source</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Scraped</TableHead>
@@ -78,50 +77,16 @@ export function JobsTable({
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className="w-48">
                       <DropdownMenuItem asChild>
-                        <Link href={`/admin/jobs/${j.id}/edit`}>Edit</Link>
+                        <Link href={`/admin/jobs/${j.id}/edit`}>Edit article</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href={`/admin/jobs/${j.id}/preview`}>Preview</Link>
+                        <Link href={`/admin/jobs/${j.id}/preview`}>Preview admin</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onSelect={(e) => {
-                          e.preventDefault()
-                          console.log("publish", j.id)
-                        }}
-                      >
-                        Publish
+                      <DropdownMenuItem asChild>
+                        <Link href={`/jobs/${j.slug}`} target="_blank">Open public page</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onSelect={(e) => {
-                          e.preventDefault()
-                          console.log("unpublish", j.id)
-                        }}
-                      >
-                        Unpublish
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onSelect={(e) => {
-                          e.preventDefault()
-                          console.log("reject", j.id)
-                        }}
-                      >
-                        Reject
-                      </DropdownMenuItem>
-                      <ConfirmDialog
-                        title="Delete job?"
-                        description="Action permanent (mock)."
-                        confirmLabel="Delete"
-                        onConfirm={() => console.log("delete", j.id)}
-                      >
-                        <DropdownMenuItem
-                          className="text-rose-600 focus:text-rose-600"
-                          onSelect={(e) => e.preventDefault()}
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                      </ConfirmDialog>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

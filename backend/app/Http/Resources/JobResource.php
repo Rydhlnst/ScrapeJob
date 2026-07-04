@@ -30,6 +30,10 @@ class JobResource extends JsonResource
             'status' => $this->when($isAdminRoute, $this->status),
             'scrapedAt' => $this->when($isAdminRoute, $this->scraped_at),
             'updatedAt' => $this->when($isAdminRoute, $this->updated_at),
+            'requirements' => $this->when($isAdminRoute, $this->requirements),
+            'responsibilities' => $this->when($isAdminRoute, $this->responsibilities),
+            'skills' => $this->when($isAdminRoute, $this->skills),
+            'benefits' => $this->when($isAdminRoute, $this->benefits),
             'unified' => $this->when($isAdminRoute, $this->unified_payload),
         ];
     }

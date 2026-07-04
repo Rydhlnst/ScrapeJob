@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getJobBySlug } from "@/lib/api/jobs"
@@ -6,6 +7,31 @@ import { JobSummaryCard } from "@/components/public/job-summary-card"
 import { Footer } from "@/components/shared/Footer"
 import { Navbar } from "@/components/shared/Navbar"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  try {
+    const job = await getJobBySlug(slug)
+    if (!job) return {}
+    const company = job.companyName ? ` — ${job.companyName}` : ""
+    const location = job.location ? ` di ${job.location}` : ""
+    return {
+      title: `${job.title}${company} | Lowonganku`,
+      description:
+        job.description
+          ?.replace(/<[^>]+>/g, " ")
+          .replace(/\s+/g, " ")
+          .trim()
+          .slice(0, 160) || `Lowongan ${job.title}${location}. Temukan detail dan lamar sekarang di Lowonganku.`,
+    }
+  } catch {
+    return {}
+  }
+}
 
 export default async function JobDetailPage({
   params,

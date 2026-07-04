@@ -328,3 +328,35 @@
     outline: none;
   }
 }
+
+@layer components {
+  .admin-modern {
+    --admin-border: #e4e4e7;
+    --admin-panel: #ffffff;
+    --admin-panel-strong: #ffffff;
+    --admin-muted: #fafafa;
+    --admin-ink: #09090b;
+  }
+
+  .admin-modern [data-slot="dropdown-menu-content"],
+  .admin-modern [data-slot="dropdown-menu-sub-content"],
+  .admin-modern [data-slot="select-content"],
+  .admin-modern [data-slot="popover-content"] {
+    background: #ffffff;
+    backdrop-filter: none;
+    border-color: #e4e4e7;
+    color: #09090b;
+    box-shadow: 0 16px 40px rgba(9, 9, 11, 0.08);
+  }
+
+  .admin-modern [data-slot="tabs-list"] {
+    background: #ffffff;
+    border-color: #e4e4e7;
+    gap: 0;
+    padding: 0;
+  }
+
+  .admin-modern [data-slot="tabs-trigger"] {
+    border-radius: 0;
+  }
+}

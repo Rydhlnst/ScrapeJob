@@ -1,250 +1,285 @@
 "use client"
 
 import * as React from "react"
-import { z } from "zod"
-import { useForm } from "@tanstack/react-form"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
-import type { Job } from "@/types"
-import { cn } from "@/lib/utils"
+import type { AdminJobRecord } from "@/lib/api/admin-jobs"
+import {
+  deleteAdminJob,
+  publishAdminJob,
+  rejectAdminJob,
+  unpublishAdminJob,
+  updateAdminJob,
+} from "@/lib/api/admin-jobs"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Textarea } from "@/components/ui/textarea"
 
-const schema = z.object({
-  title: z.string().min(1, "Title required"),
-  companyName: z.string().min(1, "Company name required"),
-  location: z.string().min(1, "Location required"),
-  category: z.string().min(1, "Category required"),
-  jobType: z.string().min(1, "Job type required"),
-  salaryText: z.string().optional(),
-  description: z.string().min(1, "Description required"),
-  sourceName: z.string().min(1, "Source name required"),
-  sourceUrl: z.string().url("Source URL must be valid"),
-  seoTitle: z.string().optional(),
-  seoDescription: z.string().optional(),
-  status: z.string().min(1),
-})
+function stripHtml(html: string) {
+  return html
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n\n")
+    .replace(/<\/li>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/\n{3,}/g, "\n\n")
+    .trim()
+}
 
-function Field({
-  label,
-  children,
-  error,
-}: {
-  label: string
-  children: React.ReactNode
-  error?: string
+function toParagraphs(value: string) {
+  return stripHtml(value)
+    .split(/\n\s*\n/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
+
+function splitLines(value: string) {
+  return value.split("\n").map((item) => item.trim()).filter(Boolean)
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+}
+
+function paragraphHtml(value: string) {
+  if (!value.trim()) return ""
+  return `<p>${escapeHtml(value).replace(/\n/g, "<br />")}</p>`
+}
+
+function ensureHtml(value?: string | null) {
+  if (!value?.trim()) return ""
+  return /<[a-z][\s\S]*>/i.test(value) ? value : paragraphHtml(value)
+}
+
+function buildDescriptionHtml(values: {
+  intro: string
+  paragraph1: string
+  paragraph2: string
+  paragraph3: string
+  extraParagraphs: string[]
+  additionalInfo: string
+  sourceContent: string
 }) {
+  return [
+    values.intro,
+    values.paragraph1,
+    values.paragraph2,
+    values.paragraph3,
+    ...values.extraParagraphs,
+    values.additionalInfo,
+    values.sourceContent,
+  ]
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .join("")
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-1.5">
-      <Label className="text-slate-700">{label}</Label>
+    <label className="space-y-2">
+      <div className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</div>
       {children}
-      {error ? <div className="text-xs text-rose-600">{error}</div> : null}
+    </label>
+  )
+}
+
+export function JobEditorForm({ job }: { job: AdminJobRecord }) {
+  const router = useRouter()
+  const editorial = ((job.unified as {
+    editorial?: {
+      blog?: {
+        categoryLabel?: string
+        intro?: string
+        paragraph1?: string
+        paragraph2?: string
+        paragraph3?: string
+        extraParagraphs?: string[]
+        additionalInfo?: string
+        sourceContent?: string
+        seoTitle?: string
+        seoDescription?: string
+      }
+    }
+  } | null)?.editorial?.blog ?? null)
+  const descriptionParagraphs = toParagraphs(job.description ?? "")
+
+  const [title, setTitle] = React.useState(job.title)
+  const [companyName, setCompanyName] = React.useState(job.companyName)
+  const [location, setLocation] = React.useState(job.location)
+  const [jobType, setJobType] = React.useState(job.jobType ?? "")
+  const [salaryText, setSalaryText] = React.useState(job.salaryText ?? "")
+  const [categoryLabel, setCategoryLabel] = React.useState(editorial?.categoryLabel ?? job.category ?? "")
+  const [intro, setIntro] = React.useState(ensureHtml(editorial?.intro ?? descriptionParagraphs[0] ?? ""))
+  const [paragraph1, setParagraph1] = React.useState(ensureHtml(editorial?.paragraph1 ?? descriptionParagraphs[1] ?? ""))
+  const [paragraph2, setParagraph2] = React.useState(ensureHtml(editorial?.paragraph2 ?? descriptionParagraphs[2] ?? ""))
+  const [paragraph3, setParagraph3] = React.useState(ensureHtml(editorial?.paragraph3 ?? descriptionParagraphs[3] ?? ""))
+  const [extraParagraphs, setExtraParagraphs] = React.useState<string[]>((editorial?.extraParagraphs ?? descriptionParagraphs.slice(4)).map((item) => ensureHtml(item)))
+  const [additionalInfo, setAdditionalInfo] = React.useState(ensureHtml(editorial?.additionalInfo ?? ""))
+  const [sourceContent, setSourceContent] = React.useState(ensureHtml(editorial?.sourceContent ?? `<p><strong>Sumber:</strong> ${escapeHtml(job.sourceName)}${job.sourceUrl ? ` - <a href="${escapeHtml(job.sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(job.sourceUrl)}</a>` : ""}</p>`))
+  const [sourceUrl, setSourceUrl] = React.useState(job.sourceUrl)
+  const [seoTitle, setSeoTitle] = React.useState(editorial?.seoTitle ?? "")
+  const [seoDescription, setSeoDescription] = React.useState(editorial?.seoDescription ?? "")
+  const [requirementsText, setRequirementsText] = React.useState((job.requirements ?? []).join("\n"))
+  const [skillsText, setSkillsText] = React.useState((job.skills ?? []).join("\n"))
+  const [benefitsText, setBenefitsText] = React.useState((job.benefits ?? []).join("\n"))
+  const [status, setStatus] = React.useState(job.status)
+  const [isSaving, setIsSaving] = React.useState(false)
+  const [busyAction, setBusyAction] = React.useState<string | null>(null)
+
+  const previewHtml = React.useMemo(
+    () => buildDescriptionHtml({ intro, paragraph1, paragraph2, paragraph3, extraParagraphs, additionalInfo, sourceContent }),
+    [additionalInfo, extraParagraphs, intro, paragraph1, paragraph2, paragraph3, sourceContent],
+  )
+
+  async function saveDraft() {
+    setIsSaving(true)
+
+    try {
+      const nextUnified = {
+        ...(job.unified ?? {}),
+        editorial: {
+          contentType: "blog",
+          blog: {
+            categoryLabel,
+            intro,
+            paragraph1,
+            paragraph2,
+            paragraph3,
+            extraParagraphs,
+            additionalInfo,
+            sourceContent,
+            seoTitle,
+            seoDescription,
+          },
+        },
+      }
+
+      const nextJob = await updateAdminJob(job.id, {
+        title,
+        company_name: companyName,
+        location,
+        job_type: jobType,
+        salary_text: salaryText,
+        description: previewHtml,
+        source_name: stripHtml(sourceContent) || job.sourceName,
+        source_url: sourceUrl,
+        requirements: splitLines(requirementsText),
+        skills: splitLines(skillsText),
+        benefits: splitLines(benefitsText),
+        unified_payload: nextUnified,
+        status: status === "published" ? undefined : "draft",
+      })
+
+      setStatus(nextJob.status)
+      toast.success("Blog lowongan saved.")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to save job.")
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  async function runAction(action: "publish" | "unpublish" | "reject" | "delete") {
+    setBusyAction(action)
+
+    try {
+      if (action === "publish") {
+        await saveDraft()
+        const nextJob = await publishAdminJob(job.id)
+        setStatus(nextJob.status)
+        toast.success("Job published.")
+        return
+      }
+
+      if (action === "unpublish") {
+        const nextJob = await unpublishAdminJob(job.id)
+        setStatus(nextJob.status)
+        toast.success("Job moved back to draft.")
+        return
+      }
+
+      if (action === "reject") {
+        const nextJob = await rejectAdminJob(job.id)
+        setStatus(nextJob.status)
+        toast.success("Job rejected.")
+        return
+      }
+
+      await deleteAdminJob(job.id)
+      toast.success("Job deleted.")
+      router.push("/admin/jobs")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : `Failed to ${action} job.`)
+    } finally {
+      setBusyAction(null)
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-4">
+        <div className="border border-border bg-white p-4"><div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Status</div><div className="mt-3 text-lg font-semibold text-[var(--brand-ink)]">{status}</div></div>
+        <div className="border border-border bg-white p-4"><div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Format</div><div className="mt-3 text-lg font-semibold text-[var(--brand-ink)]">Blog article</div></div>
+        <div className="border border-border bg-white p-4"><div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Route</div><div className="mt-3 break-all text-sm text-slate-700">/jobs/{job.slug}</div></div>
+        <div className="border border-border bg-white p-4"><div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Public</div><div className="mt-3"><Button asChild variant="outline" className="rounded-none"><Link href={`/jobs/${job.slug}`} target="_blank">Open page</Link></Button></div></div>
+      </div>
+
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <Field label="Judul"><Input value={title} onChange={(event) => setTitle(event.target.value)} /></Field>
+        <Field label="Company"><Input value={companyName} onChange={(event) => setCompanyName(event.target.value)} /></Field>
+        <Field label="Lokasi"><Input value={location} onChange={(event) => setLocation(event.target.value)} /></Field>
+        <Field label="Kategori Blog"><Input value={categoryLabel} onChange={(event) => setCategoryLabel(event.target.value)} placeholder="Technology / Data / Marketing" /></Field>
+        <Field label="Employment Type"><Input value={jobType} onChange={(event) => setJobType(event.target.value)} placeholder="Full-time" /></Field>
+        <Field label="Salary"><Input value={salaryText} onChange={(event) => setSalaryText(event.target.value)} placeholder="Rp 6jt - Rp 10jt" /></Field>
+      </section>
+
+      <section className="space-y-4 border border-border bg-white p-5">
+        <div><h2 className="text-base font-semibold text-[var(--brand-ink)]">Body Article</h2><p className="text-sm text-muted-foreground">Bagian isi blog sekarang memakai tiptap editor untuk tiap blok konten.</p></div>
+        <Field label="Intro"><RichTextEditor value={intro} onChange={setIntro} /></Field>
+        <div className="grid gap-4 md:grid-cols-3"><Field label="Paragraf 1"><RichTextEditor value={paragraph1} onChange={setParagraph1} /></Field><Field label="Paragraf 2"><RichTextEditor value={paragraph2} onChange={setParagraph2} /></Field><Field label="Paragraf 3"><RichTextEditor value={paragraph3} onChange={setParagraph3} /></Field></div>
+        <div className="space-y-3"><div className="flex items-center justify-between"><div className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Paragraf lain</div><Button type="button" variant="outline" className="rounded-none" onClick={() => setExtraParagraphs((current) => [...current, "<p></p>"])}>Add paragraph</Button></div>{extraParagraphs.map((paragraph, index) => (<div key={index} className="space-y-2"><RichTextEditor value={paragraph} onChange={(value) => setExtraParagraphs((current) => current.map((item, currentIndex) => (currentIndex === index ? value : item)))} /><div className="flex justify-end"><Button type="button" variant="destructive" className="rounded-none" onClick={() => setExtraParagraphs((current) => current.filter((_, currentIndex) => currentIndex !== index))}>Remove</Button></div></div>))}</div>
+        <Field label="Tambahan informasi"><RichTextEditor value={additionalInfo} onChange={setAdditionalInfo} /></Field>
+        <Field label="Source"><RichTextEditor value={sourceContent} onChange={setSourceContent} /></Field>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <Field label="Source URL metadata"><Input value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} /></Field>
+        <Field label="SEO title"><Input value={seoTitle} onChange={(event) => setSeoTitle(event.target.value)} /></Field>
+        <Field label="SEO description"><Textarea value={seoDescription} onChange={(event) => setSeoDescription(event.target.value)} className="min-h-24" /></Field>
+        <Field label="Requirements"><Textarea value={requirementsText} onChange={(event) => setRequirementsText(event.target.value)} className="min-h-24" placeholder="Satu baris satu item" /></Field>
+        <Field label="Skills"><Textarea value={skillsText} onChange={(event) => setSkillsText(event.target.value)} className="min-h-24" placeholder="Skills" /></Field>
+        <Field label="Benefits"><Textarea value={benefitsText} onChange={(event) => setBenefitsText(event.target.value)} className="min-h-24" placeholder="Benefits" /></Field>
+      </section>
+
+      <section className="border border-border bg-white p-5">
+        <div className="mb-4"><h2 className="text-base font-semibold text-[var(--brand-ink)]">Live preview</h2><p className="text-sm text-muted-foreground">HTML final yang akan tampil di halaman publik lowonganku.com.</p></div>
+        <div className="rich-text min-h-48 border border-border bg-slate-50 p-4" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+      </section>
+
+      <Accordion type="single" collapsible>
+        <AccordionItem value="raw"><AccordionTrigger>Raw description (readonly)</AccordionTrigger><AccordionContent><div className="rounded-none border bg-slate-50 p-3 text-sm text-slate-700 whitespace-pre-wrap">{job.rawDescription ? job.rawDescription : <span className="text-slate-500">No raw description.</span>}</div></AccordionContent></AccordionItem>
+      </Accordion>
+
+      <div className="flex flex-wrap gap-2">
+        <Button type="button" variant="outline" className="rounded-none" onClick={saveDraft} disabled={isSaving}>{isSaving ? "Saving..." : "Save draft"}</Button>
+        <Button type="button" className="rounded-none" onClick={() => runAction("publish")} disabled={busyAction === "publish"}>{busyAction === "publish" ? "Publishing..." : "Publish"}</Button>
+        <Button type="button" variant="outline" className="rounded-none" onClick={() => runAction("unpublish")} disabled={busyAction === "unpublish"}>{busyAction === "unpublish" ? "Moving..." : "Back to draft"}</Button>
+        <Button type="button" variant="outline" className="rounded-none" onClick={() => runAction("reject")} disabled={busyAction === "reject"}>{busyAction === "reject" ? "Rejecting..." : "Reject"}</Button>
+        <Button type="button" variant="destructive" className="rounded-none" onClick={() => runAction("delete")} disabled={busyAction === "delete"}>{busyAction === "delete" ? "Deleting..." : "Delete"}</Button>
+      </div>
     </div>
   )
 }
-
-export function JobEditorForm({ job }: { job: Job }) {
-  const form = useForm({
-    defaultValues: {
-      title: job.title,
-      companyName: job.companyName,
-      location: job.location,
-      category: job.category ?? "",
-      jobType: job.jobType ?? "",
-      salaryText: job.salaryText ?? "",
-      description: job.description,
-      sourceName: job.sourceName,
-      sourceUrl: job.sourceUrl,
-      seoTitle: "",
-      seoDescription: "",
-      status: job.status,
-    },
-    onSubmit: async ({ value }) => {
-      const parsed = schema.safeParse(value)
-      if (!parsed.success) return
-      console.log("save-draft", { id: job.id, ...parsed.data })
-    },
-  })
-
-  const rawDescription = job.rawDescription ?? ""
-
-  return (
-    <form
-      className="space-y-6"
-      onSubmit={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        void form.handleSubmit()
-      }}
-    >
-      <div className="grid gap-4 md:grid-cols-2">
-        <form.Field
-          name="title"
-          validators={{
-            onSubmit: ({ value }) => schema.shape.title.safeParse(value).success ? undefined : "Title required",
-          }}
-        >
-          {(field) => (
-            <Field label="Title" error={field.state.meta.errors?.[0] as string | undefined}>
-              <Input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
-            </Field>
-          )}
-        </form.Field>
-
-        <form.Field
-          name="companyName"
-          validators={{
-            onSubmit: ({ value }) => schema.shape.companyName.safeParse(value).success ? undefined : "Company name required",
-          }}
-        >
-          {(field) => (
-            <Field label="Company Name" error={field.state.meta.errors?.[0] as string | undefined}>
-              <Input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
-            </Field>
-          )}
-        </form.Field>
-
-        <form.Field
-          name="location"
-          validators={{
-            onSubmit: ({ value }) => schema.shape.location.safeParse(value).success ? undefined : "Location required",
-          }}
-        >
-          {(field) => (
-            <Field label="Location" error={field.state.meta.errors?.[0] as string | undefined}>
-              <Input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
-            </Field>
-          )}
-        </form.Field>
-
-        <form.Field name="category">
-          {(field) => (
-            <Field label="Category">
-              <Input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} placeholder="IT & Software" />
-            </Field>
-          )}
-        </form.Field>
-
-        <form.Field name="jobType">
-          {(field) => (
-            <Field label="Job Type">
-              <Input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} placeholder="Full-time" />
-            </Field>
-          )}
-        </form.Field>
-
-        <form.Field name="salaryText">
-          {(field) => (
-            <Field label="Salary Text">
-              <Input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} placeholder="Rp 6jt - Rp 10jt" />
-            </Field>
-          )}
-        </form.Field>
-      </div>
-
-      <form.Field
-        name="description"
-        validators={{
-          onSubmit: ({ value }) => schema.shape.description.safeParse(value).success ? undefined : "Description required",
-        }}
-      >
-        {(field) => (
-          <Field label="Description" error={field.state.meta.errors?.[0] as string | undefined}>
-            <RichTextEditor value={field.state.value} onChange={(val) => field.handleChange(val)} />
-          </Field>
-        )}
-      </form.Field>
-
-      <Accordion type="single" collapsible>
-        <AccordionItem value="raw">
-          <AccordionTrigger>Raw Description (readonly)</AccordionTrigger>
-          <AccordionContent>
-            <div className={cn("rounded-md border bg-slate-50 p-3 text-sm text-slate-700")}>
-              {rawDescription ? rawDescription : <span className="text-slate-500">No raw description.</span>}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <form.Field name="sourceName">
-          {(field) => (
-            <Field label="Source Name">
-              <Input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
-            </Field>
-          )}
-        </form.Field>
-        <form.Field
-          name="sourceUrl"
-          validators={{
-            onSubmit: ({ value }) => schema.shape.sourceUrl.safeParse(value).success ? undefined : "Invalid URL",
-          }}
-        >
-          {(field) => (
-            <Field label="Source URL (readonly)" error={field.state.meta.errors?.[0] as string | undefined}>
-              <Input readOnly value={field.state.value} />
-            </Field>
-          )}
-        </form.Field>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <form.Field name="seoTitle">
-          {(field) => (
-            <Field label="SEO Title">
-              <Input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
-            </Field>
-          )}
-        </form.Field>
-        <form.Field name="seoDescription">
-          {(field) => (
-            <Field label="SEO Description">
-              <Input value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
-            </Field>
-          )}
-        </form.Field>
-      </div>
-
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-wrap gap-2">
-          <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-            Save Draft
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => console.log("preview", job.id)}
-          >
-            Preview
-          </Button>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            onClick={() => console.log("publish", job.id)}
-            className="bg-emerald-600 hover:bg-emerald-700"
-          >
-            Publish
-          </Button>
-          <Button
-            type="button"
-            onClick={() => console.log("reject", job.id)}
-            className="bg-rose-600 hover:bg-rose-700"
-          >
-            Reject
-          </Button>
-          <Button
-            type="button"
-            variant="destructive"
-            onClick={() => console.log("delete", job.id)}
-          >
-            Delete
-          </Button>
-        </div>
-      </div>
-    </form>
-  )
-}
-

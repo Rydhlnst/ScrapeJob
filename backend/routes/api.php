@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Api\Admin\JobSourceController as AdminJobSourceController;
 use App\Http\Controllers\Api\Admin\LandingPageContentController as AdminLandingPageContentController;
+use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\AdminScrapedJobController;
 use App\Http\Controllers\Api\Admin\ScrapeRunController;
 use App\Http\Controllers\Api\Auth\AuthController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryControll
 use App\Http\Controllers\Api\Public\JobController as PublicJobController;
 use App\Http\Controllers\Api\Public\LandingPageContentController as PublicLandingPageContentController;
 use App\Http\Controllers\Api\Public\LocationController as PublicLocationController;
+use App\Http\Controllers\Api\Public\PageController as PublicPageController;
 use App\Http\Controllers\Api\Public\ScraperController as PublicScraperController;
 use App\Http\Controllers\Api\ScrapedJobImportController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +38,7 @@ Route::prefix('auth')->group(function () {
 Route::get('/jobs', [PublicJobController::class, 'index']);
 Route::get('/jobs/stats', [PublicJobController::class, 'stats']);
 Route::get('/jobs/{identifier}', [PublicJobController::class, 'show']);
+Route::get('/pages/{slug}', [PublicPageController::class, 'show']);
 Route::post('/internal/scraped-jobs/import', ScrapedJobImportController::class)->middleware('internal.token');
 Route::post('/scraper/run', [PublicScraperController::class, 'trigger'])->middleware('throttle:scrape-run');
 Route::get('/scraper/logs', [PublicScraperController::class, 'logs'])->middleware('throttle:60,1');
@@ -64,6 +67,8 @@ Route::prefix('admin')
 
         Route::apiResource('/categories', AdminCategoryController::class)->middleware('permission:manage categories');
         Route::apiResource('/job-sources', AdminJobSourceController::class)->middleware('permission:manage sources');
+        Route::apiResource('/pages', AdminPageController::class)->middleware('permission:manage site content');
+        Route::patch('/pages/{page}/publish', [AdminPageController::class, 'publish'])->middleware('permission:manage site content');
 
         Route::get('/scrape-runs', [ScrapeRunController::class, 'index'])->middleware('permission:view scrape logs');
         Route::post('/scrape-runs/run', [ScrapeRunController::class, 'run'])

@@ -37,15 +37,15 @@ export default function AdminJobsPage() {
   return (
     <AdminShell>
       <AdminHeader
-        title="Jobs"
-        description="Kelola raw, draft, published, rejected, dan duplicate jobs dalam satu alur editorial."
+        title="Blog Loker"
+        description="Kelola hasil scrape yang sudah dipublish sebagai artikel lowongan yang masih bisa diedit ulang secara manual."
       />
       {error ? (
         <div className="border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>
       ) : loading ? (
         <div className="border border-border bg-card p-4 text-sm text-muted-foreground">Loading jobs...</div>
       ) : (
-        <JobsTable jobs={jobs} />
+        <JobsTable jobs={jobs} title="Blog lowongan" />
       )}
     </AdminShell>
   )

@@ -4,17 +4,17 @@ import * as React from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 
-import { getAdminJobById } from "@/lib/api/jobs"
+import { getAdminJobByIdExtended } from "@/lib/api/admin-jobs"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminShell } from "@/components/admin/admin-shell"
 import { JobEditorForm } from "@/components/admin/job-editor-form"
 import { Button } from "@/components/ui/button"
-import type { Job } from "@/types"
+import type { AdminJobRecord } from "@/lib/api/admin-jobs"
 
 export default function AdminJobEditPage() {
   const params = useParams<{ id: string }>()
   const id = typeof params?.id === "string" ? params.id : ""
-  const [job, setJob] = React.useState<Job | null>(null)
+  const [job, setJob] = React.useState<AdminJobRecord | null>(null)
   const [error, setError] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(true)
 
@@ -22,7 +22,7 @@ export default function AdminJobEditPage() {
     if (!id) return
     let active = true
 
-    getAdminJobById(id)
+    getAdminJobByIdExtended(id)
       .then((result) => {
         if (active) {
           setJob(result)
@@ -44,13 +44,18 @@ export default function AdminJobEditPage() {
   return (
     <AdminShell>
       <AdminHeader
-        title="Edit Job"
-        description="Bedakan data mentah vs data yang sudah diedit. Raw description ada di accordion."
+        title="Edit Blog Lowongan"
+        description="Ubah hasil scrape menjadi format blog yang lebih rapi, lalu publish tanpa kehilangan source aslinya."
         actions={
           job ? (
-            <Button asChild variant="outline" className="rounded-none">
-              <Link href={`/admin/jobs/${job.id}/preview`}>Preview</Link>
-            </Button>
+            <>
+              <Button asChild variant="outline" className="rounded-none">
+                <Link href={`/admin/jobs/${job.id}/preview`}>Preview Admin</Link>
+              </Button>
+              <Button asChild className="rounded-none">
+                <Link href={`/jobs/${job.slug}`} target="_blank">Open Public</Link>
+              </Button>
+            </>
           ) : null
         }
       />

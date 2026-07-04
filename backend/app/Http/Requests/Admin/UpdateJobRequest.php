@@ -24,6 +24,15 @@ class UpdateJobRequest extends FormRequest
             'raw_description' => ['nullable', 'string', 'max:65535'],
             'source_url' => ['sometimes', 'required', 'url', 'max:2048'],
             'source_name' => ['sometimes', 'required', 'string', 'max:100'],
+            'requirements' => ['nullable', 'array'],
+            'requirements.*' => ['string'],
+            'responsibilities' => ['nullable', 'array'],
+            'responsibilities.*' => ['string'],
+            'skills' => ['nullable', 'array'],
+            'skills.*' => ['string'],
+            'benefits' => ['nullable', 'array'],
+            'benefits.*' => ['string'],
+            'unified_payload' => ['nullable', 'array'],
             'status' => ['nullable', 'in:raw,draft,published,rejected,duplicate'],
         ];
     }

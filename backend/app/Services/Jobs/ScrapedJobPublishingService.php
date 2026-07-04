@@ -126,6 +126,12 @@ class ScrapedJobPublishingService
             'unified_payload' => [
                 'source' => $scrapedJob->source,
                 'raw' => $scrapedJob->raw_json,
+                'editorial' => [
+                    'pipeline' => 'ai_cleaned_scraped_job',
+                    'draftStatus' => $scrapedJob->draft_status,
+                    'cleanedByAi' => $scrapedJob->draft_status === 'drafted_ai',
+                    'descriptionSummary' => $scrapedJob->description_summary,
+                ],
             ],
         ];
     }

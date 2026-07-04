@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\JobSource;
 use App\Models\Job;
+use App\Models\JobSource;
 use App\Models\ScrapedJob;
 use App\Models\User;
 use App\Services\Scraping\PythonScraperExecutor;
@@ -131,7 +131,7 @@ class ScrapeRunsApiTest extends TestCase
         $this->assertSame('Backend Engineer', $scrapedJob->title);
     }
 
-    public function test_ok_scraped_job_must_be_approved_before_publish(): void
+    public function test_ok_scraped_job_can_be_published_without_ai_cleanup(): void
     {
         $admin = User::factory()->create();
         $admin->assignRole('admin');
@@ -148,6 +148,7 @@ class ScrapeRunsApiTest extends TestCase
             'posted_date' => now()->toDateString(),
             'scraped_at' => now(),
             'status' => 'pending',
+            'draft_status' => 'drafted_raw',
         ]);
 
         $publishWhilePending = $this->actingAs($admin, 'sanctum')
@@ -166,7 +167,9 @@ class ScrapeRunsApiTest extends TestCase
             ->postJson("/api/admin/scraped-jobs/{$scrapedJob->id}/publish");
 
         $publishApproved->assertOk()
-            ->assertJsonPath('success', true);
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.unified.editorial.cleanedByAi', false)
+            ->assertJsonPath('data.unified.editorial.draftStatus', 'drafted_raw');
 
         $this->assertDatabaseHas('jobs', [
             'scraped_job_id' => $scrapedJob->id,
