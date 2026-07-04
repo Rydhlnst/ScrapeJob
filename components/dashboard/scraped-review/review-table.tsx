@@ -16,12 +16,13 @@ export function ReviewTable({
   onToggleAll,
   onToggleRow,
   onAction,
+  onInspect,
   canPublish,
 }: ReviewTableProps) {
   return (
     <>
-      <div className="hidden overflow-x-auto rounded-xl border border-border/70 md:block">
-        <Table>
+      <div className="hidden max-w-full overflow-x-auto rounded-xl border border-border/70 md:block">
+        <Table className="min-w-[1100px]">
           <TableHeader className="[&_tr]:border-b [&_tr]:border-border/70">
             <TableRow className="bg-muted/40 hover:bg-muted/40">
               <TableHead className="w-10">
@@ -52,25 +53,25 @@ export function ReviewTable({
                   <TableCell className="max-w-[420px]">
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <p className="truncate text-sm font-semibold text-foreground max-w-[280px]">{title}</p>
+                        <p className="max-w-[280px] truncate text-sm font-semibold text-foreground">{title}</p>
                         {job.draftStatus === "drafted_ai" ? (
-                          <Badge variant="outline" className="rounded-none bg-sky-50 text-[10px] font-semibold text-sky-700 border-sky-100 px-1.5 py-0.5 shrink-0">
+                          <Badge variant="outline" className="shrink-0 rounded-none border-sky-100 bg-sky-50 px-1.5 py-0.5 text-[10px] font-semibold text-sky-700">
                             Drafted by AI
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="rounded-none bg-slate-100 text-[10px] font-semibold text-slate-600 border-slate-200 px-1.5 py-0.5 shrink-0">
+                          <Badge variant="outline" className="shrink-0 rounded-none border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
                             Drafted Raw
                           </Badge>
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        {job.employmentType ?? "Not specified"} • Scraped {scrapedAt}
+                        {job.employmentType ?? "Not specified"} | Scraped {scrapedAt}
                       </p>
-                      {job.failReason && (
-                        <p className="text-[11px] font-medium text-red-500 leading-tight mt-0.5">
+                      {job.failReason ? (
+                        <p className="mt-0.5 text-[11px] font-medium leading-tight text-red-500">
                           Gagal AI: {job.failReason}
                         </p>
-                      )}
+                      ) : null}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -96,10 +97,12 @@ export function ReviewTable({
                   <TableCell className="text-sm text-muted-foreground">{scrapedAt}</TableCell>
                   <TableCell className="text-right">
                     <ReviewRowActions
+                      job={job}
                       sourceUrl={job.sourceUrl}
                       disabled={busy}
                       publishDisabled={!canPublish(job)}
                       onAction={(action) => onAction(job.id, action)}
+                      onInspect={() => onInspect(job)}
                     />
                   </TableCell>
                 </TableRow>
@@ -121,23 +124,23 @@ export function ReviewTable({
                   <Checkbox checked={checked} onCheckedChange={(value) => onToggleRow(job.id, Boolean(value))} />
                   <div className="min-w-0 flex-1 space-y-0.5">
                     <div className="flex flex-wrap items-center gap-1.5">
-                      <p className="truncate text-sm font-semibold max-w-[150px]">{title}</p>
+                      <p className="max-w-[150px] truncate text-sm font-semibold">{title}</p>
                       {job.draftStatus === "drafted_ai" ? (
-                        <Badge variant="outline" className="rounded-none bg-sky-50 text-[9px] font-medium text-sky-700 border-sky-100 px-1 py-0 shrink-0">
+                        <Badge variant="outline" className="shrink-0 rounded-none border-sky-100 bg-sky-50 px-1 py-0 text-[9px] font-medium text-sky-700">
                           AI
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="rounded-none bg-slate-100 text-[9px] font-medium text-slate-600 border-slate-200 px-1 py-0 shrink-0">
+                        <Badge variant="outline" className="shrink-0 rounded-none border-slate-200 bg-slate-100 px-1 py-0 text-[9px] font-medium text-slate-600">
                           Raw
                         </Badge>
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground">{job.company || "Unknown company"}</p>
-                    {job.failReason && (
-                      <p className="text-[10px] font-medium text-red-500 leading-tight mt-0.5">
+                    {job.failReason ? (
+                      <p className="mt-0.5 text-[10px] font-medium leading-tight text-red-500">
                         Gagal AI: {job.failReason}
                       </p>
-                    )}
+                    ) : null}
                   </div>
                   <Badge className={`rounded-full px-2.5 ${helpers.statusBadgeClass(job.status)}`}>
                     {helpers.statusLabel(job.status)}
@@ -150,10 +153,12 @@ export function ReviewTable({
                 <div className="flex items-center justify-between">
                   <Badge className={`rounded-full px-2.5 ${helpers.sourceBadgeClass(job.source)}`}>{job.source}</Badge>
                   <ReviewRowActions
+                    job={job}
                     sourceUrl={job.sourceUrl}
                     disabled={busy}
                     publishDisabled={!canPublish(job)}
                     onAction={(action) => onAction(job.id, action)}
+                    onInspect={() => onInspect(job)}
                   />
                 </div>
               </CardContent>

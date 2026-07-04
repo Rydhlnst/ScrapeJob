@@ -190,7 +190,7 @@ export function LandingContentEditor({
             title="Hero"
             description="Main headline, supporting copy, primary actions, and quick links."
           >
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4">
               <Field label="Title">
                 <Textarea value={draft.hero.title} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, title: event.target.value } }))} />
               </Field>
@@ -198,7 +198,7 @@ export function LandingContentEditor({
                 <Textarea value={draft.hero.description} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, description: event.target.value } }))} />
               </Field>
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4">
               <Field label="Primary CTA Label">
                 <Input value={draft.hero.primaryCta.label} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, primaryCta: { ...current.hero.primaryCta, label: event.target.value } } }))} />
               </Field>
@@ -212,9 +212,9 @@ export function LandingContentEditor({
                 <Input value={draft.hero.secondaryCta.href} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, secondaryCta: { ...current.hero.secondaryCta, href: event.target.value } } }))} />
               </Field>
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4">
               {draft.hero.quickLinks.map((link, index) => (
-                <div key={`${link.label}-${index}`} className="grid gap-4 md:grid-cols-2">
+                <div key={`${link.label}-${index}`} className="grid gap-4">
                   <Field label={`Quick Link ${index + 1} Label`}>
                     <Input value={link.label} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, quickLinks: setLinkValue(current.hero.quickLinks, index, "label", event.target.value) } }))} />
                   </Field>
@@ -232,7 +232,7 @@ export function LandingContentEditor({
             title="Featured jobs"
             description="Section copy plus query rules for the jobs pulled into the homepage."
           >
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4">
               <Field label="Title">
                 <Textarea value={draft.featuredJobs.title} onChange={(event) => setDraft((current) => ({ ...current, featuredJobs: { ...current.featuredJobs, title: event.target.value } }))} />
               </Field>
@@ -242,7 +242,7 @@ export function LandingContentEditor({
               <Field label="Empty state">
                 <Textarea value={draft.featuredJobs.emptyState} onChange={(event) => setDraft((current) => ({ ...current, featuredJobs: { ...current.featuredJobs, emptyState: event.target.value } }))} />
               </Field>
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4">
                 <Field label="Sort">
                   <Input value={draft.featuredJobs.rules.sort} onChange={(event) => setDraft((current) => ({ ...current, featuredJobs: { ...current.featuredJobs, rules: { ...current.featuredJobs.rules, sort: event.target.value as LandingPageContent["featuredJobs"]["rules"]["sort"] } } }))} />
                 </Field>
@@ -270,7 +270,7 @@ export function LandingContentEditor({
             </Field>
             <div className="grid gap-4">
               {draft.benefits.items.map((item, index) => (
-                <div key={`${item.title}-${index}`} className="grid gap-4 md:grid-cols-2">
+                <div key={`${item.title}-${index}`} className="grid gap-4">
                   <Field label={`Benefit ${index + 1} title`}>
                     <Input value={item.title} onChange={(event) => setDraft((current) => ({ ...current, benefits: { ...current.benefits, items: setBenefitValue(current.benefits.items, index, "title", event.target.value) } }))} />
                   </Field>
@@ -317,7 +317,7 @@ export function LandingContentEditor({
             title="CTA"
             description="Closing call-to-action that anchors the bottom of the landing page."
           >
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4">
               <Field label="Title">
                 <Textarea value={draft.cta.title} onChange={(event) => setDraft((current) => ({ ...current, cta: { ...current.cta, title: event.target.value } }))} />
               </Field>

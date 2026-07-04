@@ -52,6 +52,26 @@ return [
 
     // Built-in examples for extension
     'builtin_sources' => [
+        'glints' => [
+            'base_url' => 'https://glints.com',
+            'list_url' => 'https://glints.com/id/en/opportunities/jobs',
+        ],
+        'jobstreet' => [
+            'base_url' => 'https://www.jobstreet.co.id',
+            'list_url' => 'https://www.jobstreet.co.id/id/jobs',
+        ],
+        'jobstreetexpress' => [
+            'base_url' => 'https://id.jobstreetexpress.com',
+            'list_url' => 'https://id.jobstreetexpress.com/lowongan-Full-time',
+        ],
+        'kalibrr' => [
+            'base_url' => 'https://www.kalibrr.com',
+            'list_url' => 'https://www.kalibrr.com/job-board/te',
+        ],
+        'lokerid' => [
+            'base_url' => 'https://www.loker.id',
+            'list_url' => 'https://www.loker.id/cari-lowongan-kerja',
+        ],
         'example_json' => [
             'type' => 'json',
             'api_url' => 'https://example.com/api/jobs',

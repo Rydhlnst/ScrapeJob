@@ -4,6 +4,7 @@ import * as React from "react"
 import { toast } from "sonner"
 
 import type { ScrapedJob, ScrapedJobStatus } from "@/types/job"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -15,6 +16,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { getScrapedJobs } from "@/src/features/admin/scraped-jobs/api/get-scraped-jobs"
 import { approveScrapedJob } from "@/src/features/admin/scraped-jobs/api/approve-scraped-job"
 import { publishScrapedJob } from "@/src/features/admin/scraped-jobs/api/publish-scraped-job"
@@ -82,6 +84,89 @@ function formatDate(date: string | null) {
   })
 }
 
+function DraftReviewSheet({
+  job,
+  open,
+  onOpenChange,
+}: {
+  job: ScrapedJob | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-3xl">
+        {job ? (
+          <>
+            <SheetHeader className="border-b border-border/70">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge
+                  variant="outline"
+                  className={job.draftStatus === "drafted_ai" ? "rounded-none border-sky-100 bg-sky-50 text-sky-700" : "rounded-none border-slate-200 bg-slate-100 text-slate-600"}
+                >
+                  {job.draftStatus === "drafted_ai" ? "Drafted by AI" : "Drafted Raw"}
+                </Badge>
+                <Badge className={`rounded-full px-2.5 ${statusBadgeClass(job.status)}`}>{statusLabel(job.status)}</Badge>
+              </div>
+              <SheetTitle className="mt-3 text-xl">{cleanJobTitle(job.title)}</SheetTitle>
+              <SheetDescription>
+                Review the current draft before approve or publish.
+              </SheetDescription>
+            </SheetHeader>
+
+            <div className="space-y-6 p-4">
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-xl border border-border/70 p-4">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Company</div>
+                  <div className="mt-2 text-sm text-foreground">{job.company || "Unknown company"}</div>
+                </div>
+                <div className="rounded-xl border border-border/70 p-4">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Location</div>
+                  <div className="mt-2 text-sm text-foreground">{normalizeLocation(job.location) ?? "Not specified"}</div>
+                </div>
+                <div className="rounded-xl border border-border/70 p-4">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Employment Type</div>
+                  <div className="mt-2 text-sm text-foreground">{job.employmentType ?? "Not specified"}</div>
+                </div>
+                <div className="rounded-xl border border-border/70 p-4">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Salary</div>
+                  <div className="mt-2 text-sm text-foreground">{job.salary ?? "Not disclosed"}</div>
+                </div>
+              </div>
+
+              <section className="space-y-2">
+                <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Summary</div>
+                <div className="rounded-xl border border-border/70 bg-muted/20 p-4 text-sm leading-7 text-foreground">
+                  {job.descriptionSummary ?? "No summary generated yet."}
+                </div>
+              </section>
+
+              <section className="space-y-2">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Current Draft Description</div>
+                  <a href={job.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-sky-700 underline-offset-4 hover:underline">
+                    Open source
+                  </a>
+                </div>
+                <div
+                  className="rounded-xl border border-border/70 bg-white p-4 text-sm leading-7 text-foreground [&_li]:ml-5 [&_li]:list-disc [&_p]:mb-3"
+                  dangerouslySetInnerHTML={{ __html: job.description || "<p>No draft description yet.</p>" }}
+                />
+              </section>
+
+              {job.failReason ? (
+                <section className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                  AI failed: {job.failReason}
+                </section>
+              ) : null}
+            </div>
+          </>
+        ) : null}
+      </SheetContent>
+    </Sheet>
+  )
+}
+
 export function RawDataReviewClient() {
   const PER_PAGE = 15
   const ALL_PAGE_SIZE = 100
@@ -103,6 +188,7 @@ export function RawDataReviewClient() {
   const [searchInput, setSearchInput] = React.useState("")
   const [sourceFilter, setSourceFilter] = React.useState("all")
   const [statusFilter, setStatusFilter] = React.useState<ScrapedJobStatus | "all">("pending")
+  const [previewJob, setPreviewJob] = React.useState<ScrapedJob | null>(null)
 
   const refreshStats = React.useCallback(async () => {
     const [pending, approved, rejected, published] = await Promise.all([
@@ -192,12 +278,14 @@ export function RawDataReviewClient() {
   async function runAction(id: string, action: RowAction) {
     setBusyId(id)
     try {
+      let cleanedJob: ScrapedJob | null = null
       if (action === "approve") await approveScrapedJob(id)
       if (action === "reject") await rejectScrapedJob(id)
       if (action === "publish") await publishScrapedJob(id)
-      if (action === "clean_ai") await cleanScrapedJobWithAi(id)
+      if (action === "clean_ai") cleanedJob = await cleanScrapedJobWithAi(id)
       const targetPage = jobs.length === 1 && page > 1 ? page - 1 : page
       await Promise.all([refresh(targetPage), refreshStats()])
+      if (cleanedJob) setPreviewJob(cleanedJob)
       toast.success("Action completed.")
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Aksi gagal.")
@@ -239,6 +327,7 @@ export function RawDataReviewClient() {
 
   return (
     <section className="space-y-6">
+      <DraftReviewSheet job={previewJob} open={Boolean(previewJob)} onOpenChange={(open) => !open && setPreviewJob(null)} />
       <ReviewStatsCards stats={stats} />
 
       <Card className="border-border/70 shadow-sm">
@@ -267,7 +356,7 @@ export function RawDataReviewClient() {
           />
         </CardHeader>
 
-        <CardContent className="space-y-4 p-4 md:p-6">
+        <CardContent className="max-w-full overflow-x-hidden space-y-4 p-4 md:p-6">
           <BulkActionBar
             selectedCount={selectedCount}
             busy={batchBusy}
@@ -305,6 +394,7 @@ export function RawDataReviewClient() {
                   setSelected((prev) => (checked ? (prev.includes(id) ? prev : [...prev, id]) : prev.filter((item) => item !== id)))
                 }
                 onAction={runAction}
+                onInspect={setPreviewJob}
                 canPublish={canPublish}
               />
 
