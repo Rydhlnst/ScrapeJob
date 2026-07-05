@@ -304,7 +304,18 @@ Workflow Docker sekarang mencakup:
 - `db`
 - `redis`
 
-Command utama dari root project:
+Command satu kali dari root project:
+
+```bash
+pnpm run:all
+```
+
+Command ini akan:
+
+- membuat `.env.local`, `backend/.env.docker`, dan `scraper-service/.env` jika belum ada
+- menjalankan `frontend`, `backend`, `queue`, `scheduler`, `db`, dan `redis`
+
+Command manual yang setara:
 
 ```bash
 pnpm docker:up
@@ -504,3 +515,4 @@ Kalau mau repo ini lebih siap untuk onboarding/deploy, langkah paling bernilai b
 2. Pindahkan PostgreSQL dan Redis ke service terkelola jika ingin mengurangi beban operasional VPS
 3. Tambahkan monitoring/log shipping untuk queue dan scraping
 4. Tambahkan CI check untuk `docker compose config`, build frontend, dan syntax Laravel
+
