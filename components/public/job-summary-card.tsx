@@ -9,7 +9,7 @@ export function JobSummaryCard({ job }: { job: Job }) {
   const hasSourceUrl = Boolean(job.sourceUrl)
 
   return (
-    <Card className="sticky top-24 rounded-[30px] border border-white/80 bg-white/82 shadow-[var(--shadow-md)]">
+    <Card className="sticky top-24 rounded-[30px] border border-white bg-white shadow-[var(--shadow-md)]">
       <CardHeader>
         <CardTitle className="text-base font-semibold tracking-[0.12em] uppercase text-slate-500">
           Ringkasan
@@ -67,3 +67,4 @@ export function JobSummaryCard({ job }: { job: Job }) {
     </Card>
   )
 }
+

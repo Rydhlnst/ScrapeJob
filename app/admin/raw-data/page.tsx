@@ -8,12 +8,12 @@ import { RefreshCw, Play } from "lucide-react"
 export default function AdminRawDataPage() {
   return (
     <AdminShell>
-      <Card className="overflow-hidden rounded-none border-border/70 shadow-none">
+      <Card className="overflow-hidden rounded-none border-0 shadow-none">
         <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between md:p-6">
           <div className="space-y-1.5">
             <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">Scraped Jobs Review</h1>
             <p className="text-sm text-muted-foreground">
-              Review, clean, approve, reject, and publish scraped job listings.
+              Review, clean, edit, reject, and move scraped job listings into Blog Loker drafts.
             </p>
           </div>
 
@@ -37,3 +37,4 @@ export default function AdminRawDataPage() {
     </AdminShell>
   )
 }
+

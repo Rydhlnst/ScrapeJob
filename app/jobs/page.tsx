@@ -49,7 +49,7 @@ export default async function JobsPage({
       ? Number(resolvedSearchParams.page)
       : 1
 
-  const [jobs, categories, stats] = await Promise.all([
+  const [jobs, navJobs, categories, stats] = await Promise.all([
     listJobs({
       keyword,
       location,
@@ -60,6 +60,7 @@ export default async function JobsPage({
       page,
       perPage: 9,
     }),
+    listJobs({ page: 1, perPage: 100, sort: "newest" }),
     listCategories(),
     getJobStats(),
   ])
@@ -70,13 +71,13 @@ export default async function JobsPage({
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar jobs={navJobs.data} categories={categories} totalJobs={jobs.total} />
 
       <main className="py-8">
         <SiteFrame>
           <SiteContent>
           <div className="space-y-8">
-            <section className="brand-shell overflow-hidden rounded-[36px] border border-white/80 p-5 shadow-[var(--shadow-lg)] md:p-7">
+            <section className="brand-shell overflow-hidden rounded-[36px] border border-white p-5 shadow-[var(--shadow-lg)] md:p-7">
               <div className="space-y-5">
                 <div className="inline-flex rounded-full border border-sky-200 bg-white px-3 py-2 text-xs font-semibold tracking-[0.16em] text-sky-700 uppercase shadow-[var(--shadow-sm)]">
                   Papan lowongan
@@ -100,7 +101,7 @@ export default async function JobsPage({
             </section>
 
             <div className="grid gap-6 lg:grid-cols-[300px_1fr] lg:items-start">
-              <Suspense fallback={<div className="h-96 w-full rounded-[28px] border border-white/80 bg-white/72" />}>
+              <Suspense fallback={<div className="h-96 w-full rounded-[28px] border border-white bg-white" />}>
                 <JobFilterSidebar
                   categories={categories}
                   sourceOptions={sourceOptions}
@@ -111,7 +112,7 @@ export default async function JobsPage({
               </Suspense>
 
               <div className="space-y-4">
-                <div className="rounded-[28px] border border-white/80 bg-white/76 p-5 shadow-[var(--shadow-sm)]">
+                <div className="rounded-[28px] border border-white bg-white p-5 shadow-[var(--shadow-sm)]">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
@@ -132,7 +133,7 @@ export default async function JobsPage({
                         </Badge>
                       ) : null}
                       {location ? (
-                        <Badge variant="outline" className="rounded-full border-white bg-white/84 text-slate-600">
+                        <Badge variant="outline" className="rounded-full border-white bg-white text-slate-600">
                           lokasi: {location}
                         </Badge>
                       ) : null}
@@ -173,3 +174,4 @@ export default async function JobsPage({
     </div>
   )
 }
+

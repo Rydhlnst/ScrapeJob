@@ -22,8 +22,8 @@ export function AuthLoginForm({ role }: { role: "user" | "admin" }) {
 
   const form = useForm({
     defaultValues: {
-      email: role === "admin" ? "admin@example.com" : "",
-      password: role === "admin" ? "password" : "",
+      email: "",
+      password: "",
     },
     onSubmit: async ({ value }) => {
       const parsed = schema.safeParse(value)
@@ -70,6 +70,7 @@ export function AuthLoginForm({ role }: { role: "user" | "admin" }) {
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="your@email.com"
+              className="h-11 rounded-none border-[#d8e4f6] bg-white px-3 text-foreground shadow-none"
             />
           </div>
         )}
@@ -86,7 +87,8 @@ export function AuthLoginForm({ role }: { role: "user" | "admin" }) {
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
-              placeholder="••••••••"
+              placeholder="********"
+              className="h-11 rounded-none border-[#d8e4f6] bg-white px-3 text-foreground shadow-none"
             />
           </div>
         )}
@@ -95,7 +97,11 @@ export function AuthLoginForm({ role }: { role: "user" | "admin" }) {
       <form.Subscribe
         selector={(state) => [state.isSubmitting]}
         children={([isSubmitting]) => (
-          <Button className="h-11 w-full rounded-xl" type="submit" disabled={isSubmitting}>
+          <Button
+            className="h-11 w-full rounded-none bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700"
+            type="submit"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />

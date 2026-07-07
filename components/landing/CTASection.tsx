@@ -11,7 +11,7 @@ export function CTASection({ content }: { content: LandingCtaContent }) {
       style={{ backgroundColor: "var(--brand-blue)" }}
     >
       <Container>
-        <div className="grid gap-8 border border-white/16 bg-[rgba(255,255,255,0.06)] p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end" id="employers">
+        <div className="grid gap-8 border border-white bg-white p-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end" id="employers">
           <div className="max-w-4xl">
             <div className="text-4xl font-semibold leading-[1] tracking-[-0.04em] md:text-6xl">
               {content.title}
@@ -31,7 +31,7 @@ export function CTASection({ content }: { content: LandingCtaContent }) {
             <Button
               asChild
               variant="outline"
-              className="h-11 rounded-none border-white/30 bg-transparent px-5 text-sm font-semibold text-white hover:bg-white/10"
+              className="h-11 rounded-none border-white bg-white px-5 text-sm font-semibold text-white hover:bg-white"
             >
               <Link href={content.secondaryButton.href}>{content.secondaryButton.label}</Link>
             </Button>
@@ -44,3 +44,4 @@ export function CTASection({ content }: { content: LandingCtaContent }) {
     </section>
   )
 }
+

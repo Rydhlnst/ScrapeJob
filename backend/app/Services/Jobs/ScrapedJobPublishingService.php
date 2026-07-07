@@ -16,7 +16,7 @@ class ScrapedJobPublishingService
 
     public function publish(ScrapedJob $scrapedJob): string
     {
-        $payload = $this->toJobPayload($scrapedJob);
+        $payload = $this->toJobPayload($scrapedJob, 'published');
 
         $existingByUrl = Job::query()
             ->where('source_url_hash', $payload['source_url_hash'])
@@ -59,7 +59,62 @@ class ScrapedJobPublishingService
         return 'created';
     }
 
-    private function toJobPayload(ScrapedJob $scrapedJob): array
+    public function moveToDraft(ScrapedJob $scrapedJob): array
+    {
+        $payload = $this->toJobPayload($scrapedJob, 'draft');
+
+        $existingByScrapedJob = Job::query()
+            ->where('scraped_job_id', $scrapedJob->id)
+            ->first();
+
+        if ($existingByScrapedJob) {
+            $existingByScrapedJob->update([
+                ...$payload,
+                'notified' => $existingByScrapedJob->notified,
+                'published_at' => null,
+            ]);
+            $scrapedJob->update(['status' => 'approved']);
+
+            return ['result' => 'updated', 'job' => $existingByScrapedJob->refresh()];
+        }
+
+        $existingDraftByUrl = Job::query()
+            ->where('source_url_hash', $payload['source_url_hash'])
+            ->where('status', 'draft')
+            ->first();
+
+        if ($existingDraftByUrl) {
+            $existingDraftByUrl->update([
+                ...$payload,
+                'notified' => $existingDraftByUrl->notified,
+                'published_at' => null,
+            ]);
+            $scrapedJob->update(['status' => 'approved']);
+
+            return ['result' => 'updated', 'job' => $existingDraftByUrl->refresh()];
+        }
+
+        $hasDuplicate = Job::query()
+            ->where(function ($query) use ($payload) {
+                $query->where('source_url_hash', $payload['source_url_hash'])
+                    ->orWhere('fingerprint', $payload['fingerprint'])
+                    ->orWhere('content_hash', $payload['content_hash']);
+            })
+            ->exists();
+
+        if ($hasDuplicate) {
+            $scrapedJob->update(['status' => 'duplicate']);
+
+            return ['result' => 'duplicate', 'job' => null];
+        }
+
+        $job = Job::query()->create($payload + ['notified' => false]);
+        $scrapedJob->update(['status' => 'approved']);
+
+        return ['result' => 'created', 'job' => $job];
+    }
+
+    private function toJobPayload(ScrapedJob $scrapedJob, string $status): array
     {
         $description = $this->normalizationService->sanitizeDescription($scrapedJob->description ?? '');
         $location = (string) ($scrapedJob->location ?? 'Unknown');
@@ -116,10 +171,10 @@ class ScrapedJobPublishingService
                 $scrapedJob->company,
                 $scrapedJob->location ?? '',
             ),
-            'status' => 'published',
+            'status' => $status,
             'scraped_at' => $scrapedJob->scraped_at ?? now(),
             'posted_at' => $scrapedJob->posted_date ? Carbon::parse($scrapedJob->posted_date) : null,
-            'published_at' => now(),
+            'published_at' => $status === 'published' ? now() : null,
             'expires_at' => null,
             'is_active' => true,
             'tags' => [],

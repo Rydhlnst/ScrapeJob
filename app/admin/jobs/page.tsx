@@ -15,7 +15,7 @@ export default function AdminJobsPage() {
   React.useEffect(() => {
     let active = true
 
-    listJobs({ admin: true, perPage: 50, page: 1, sort: "newest" })
+    listJobs({ admin: true, perPage: 50, page: 1, sort: "newest", status: "draft" })
       .then((result) => {
         if (active) {
           setJobs(result.data)
@@ -38,14 +38,14 @@ export default function AdminJobsPage() {
     <AdminShell>
       <AdminHeader
         title="Blog Loker"
-        description="Kelola hasil scrape yang sudah dipublish sebagai artikel lowongan yang masih bisa diedit ulang secara manual."
+        description="Kelola draft dari raw scrape sebagai artikel lowongan dinamis sebelum dipublish."
       />
       {error ? (
         <div className="border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>
       ) : loading ? (
         <div className="border border-border bg-card p-4 text-sm text-muted-foreground">Loading jobs...</div>
       ) : (
-        <JobsTable jobs={jobs} title="Blog lowongan" />
+        <JobsTable jobs={jobs} title="Draft Blog Loker" />
       )}
     </AdminShell>
   )

@@ -28,27 +28,27 @@ function hashToIndex(input: string, modulo: number) {
 const cardPalettes = [
   {
     shell: "bg-[linear-gradient(135deg,#eef6ff_0%,#dff2ff_100%)] border-sky-100",
-    avatar: "bg-white/84 text-sky-700 border border-white/80",
+    avatar: "bg-white text-sky-700 border border-white",
     meta: "text-sky-700",
-    footer: "bg-white/56",
+    footer: "bg-white",
   },
   {
     shell: "bg-[linear-gradient(135deg,#fff9dc_0%,#fff0bf_100%)] border-amber-100",
-    avatar: "bg-white/84 text-amber-700 border border-white/80",
+    avatar: "bg-white text-amber-700 border border-white",
     meta: "text-amber-700",
-    footer: "bg-white/58",
+    footer: "bg-white",
   },
   {
     shell: "bg-[linear-gradient(135deg,#eef1ff_0%,#e2e8ff_100%)] border-indigo-100",
-    avatar: "bg-white/84 text-indigo-700 border border-white/80",
+    avatar: "bg-white text-indigo-700 border border-white",
     meta: "text-indigo-700",
-    footer: "bg-white/58",
+    footer: "bg-white",
   },
   {
     shell: "bg-[linear-gradient(135deg,#f6fbff_0%,#ebf4ff_100%)] border-blue-100",
-    avatar: "bg-white/84 text-blue-700 border border-white/80",
+    avatar: "bg-white text-blue-700 border border-white",
     meta: "text-blue-700",
-    footer: "bg-white/56",
+    footer: "bg-white",
   },
 ] as const
 
@@ -97,7 +97,7 @@ export function JobCard({
             <button
               type="button"
               aria-label="Save job"
-              className="grid size-9 place-items-center rounded-none border border-white/90 bg-white/70 text-slate-500 transition-colors hover:text-slate-900"
+              className="grid size-9 place-items-center rounded-none border border-white bg-white text-slate-500 transition-colors hover:text-slate-900"
             >
               <Bookmark className="size-4" />
             </button>
@@ -141,10 +141,10 @@ export function JobCard({
         <p className="line-clamp-3 text-sm leading-7 text-slate-600">{job.description}</p>
 
         <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-600">
-          <span className="rounded-none border border-white/90 bg-white/74 px-3 py-1.5 font-medium">
+          <span className="rounded-none border border-white bg-white px-3 py-1.5 font-medium">
             {job.sourceName}
           </span>
-          <span className="rounded-none border border-white/90 bg-white/62 px-3 py-1.5 font-medium">
+          <span className="rounded-none border border-white bg-white px-3 py-1.5 font-medium">
             {formatDate(job.scrapedAt) ?? "Baru ditemukan"}
           </span>
         </div>
@@ -175,3 +175,4 @@ export function JobCard({
     </Card>
   )
 }
+

@@ -2,14 +2,13 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
+import { Suspense, useEffect, useState } from "react"
 import {
-  Activity,
   Briefcase,
   ChevronRight,
   Database,
   FilePenLine,
-  FileStack,
   Home,
   Layers,
   ListChecks,
@@ -19,7 +18,20 @@ import {
 
 import { useAdminLanguage } from "@/components/admin/admin-language"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Sidebar, SidebarContent, SidebarHeader, useSidebar } from "@/components/ui/sidebar"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+} from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 
 type NavChild = {
@@ -44,9 +56,9 @@ const navGroups: Record<"en" | "id", NavGroup[]> = {
       defaultOpen: true,
       children: [
         { label: "All jobs", href: "/admin/jobs" },
-        { label: "Draft", href: "/admin/jobs" },
-        { label: "Published", href: "/admin/jobs" },
-        { label: "Archive", href: "/admin/jobs" },
+        { label: "Draft", href: "/admin/jobs?status=draft" },
+        { label: "Published", href: "/admin/jobs?status=published" },
+        { label: "Archive", href: "/admin/jobs?status=archived" },
       ],
     },
     {
@@ -55,8 +67,8 @@ const navGroups: Record<"en" | "id", NavGroup[]> = {
       defaultOpen: true,
       children: [
         { label: "Review queue", href: "/admin/raw-data" },
-        { label: "Duplicate", href: "/admin/raw-data" },
-        { label: "Rejected", href: "/admin/raw-data" },
+        { label: "Duplicate", href: "/admin/raw-data?status=duplicate" },
+        { label: "Rejected", href: "/admin/raw-data?status=rejected" },
       ],
     },
     {
@@ -77,8 +89,8 @@ const navGroups: Record<"en" | "id", NavGroup[]> = {
       children: [
         { label: "Pages", href: "/admin/pages" },
         { label: "Categories", href: "/admin/categories" },
-        { label: "Locations", disabled: true },
-        { label: "Source", disabled: true },
+        { label: "Locations", href: "/admin/categories?type=locations" },
+        { label: "Source", href: "/admin/categories?type=sources" },
       ],
     },
     {
@@ -86,8 +98,8 @@ const navGroups: Record<"en" | "id", NavGroup[]> = {
       icon: ListChecks,
       children: [
         { label: "Schedule", href: "/admin/scrape-runs" },
-        { label: "Monitoring", href: "/admin/scrape-runs" },
-        { label: "History & Log", href: "/admin/scrape-runs" },
+        { label: "Monitoring", href: "/admin/scrape-runs?view=monitoring" },
+        { label: "History & Log", href: "/admin/scrape-runs?view=logs" },
       ],
     },
     {
@@ -95,21 +107,21 @@ const navGroups: Record<"en" | "id", NavGroup[]> = {
       icon: Sparkles,
       future: true,
       children: [
-        { label: "Employer", disabled: true },
-        { label: "Recruiter", disabled: true },
-        { label: "Subscription", disabled: true },
-        { label: "Analytics", disabled: true },
+        { label: "Employer", href: "/admin/dashboard?section=employer" },
+        { label: "Recruiter", href: "/admin/dashboard?section=recruiter" },
+        { label: "Subscription", href: "/admin/dashboard?section=subscription" },
+        { label: "Analytics", href: "/admin/dashboard?section=analytics" },
       ],
     },
     {
       label: "Settings",
       icon: Settings,
       children: [
-        { label: "General", disabled: true },
-        { label: "User & Role", disabled: true },
-        { label: "API", disabled: true },
-        { label: "Notifications", disabled: true },
-        { label: "Audit Log", disabled: true },
+        { label: "General", href: "/admin/settings/general" },
+        { label: "User & Role", href: "/admin/settings/users" },
+        { label: "API", href: "/admin/settings/api" },
+        { label: "Notifications", href: "/admin/settings/notifications" },
+        { label: "Audit Log", href: "/admin/settings/audit" },
       ],
     },
   ],
@@ -120,9 +132,9 @@ const navGroups: Record<"en" | "id", NavGroup[]> = {
       defaultOpen: true,
       children: [
         { label: "Semua Lowongan", href: "/admin/jobs" },
-        { label: "Draft", href: "/admin/jobs" },
-        { label: "Published", href: "/admin/jobs" },
-        { label: "Arsip", href: "/admin/jobs" },
+        { label: "Draft", href: "/admin/jobs?status=draft" },
+        { label: "Published", href: "/admin/jobs?status=published" },
+        { label: "Arsip", href: "/admin/jobs?status=archived" },
       ],
     },
     {
@@ -131,8 +143,8 @@ const navGroups: Record<"en" | "id", NavGroup[]> = {
       defaultOpen: true,
       children: [
         { label: "Antrean Review", href: "/admin/raw-data" },
-        { label: "Duplikat", href: "/admin/raw-data" },
-        { label: "Ditolak", href: "/admin/raw-data" },
+        { label: "Duplikat", href: "/admin/raw-data?status=duplicate" },
+        { label: "Ditolak", href: "/admin/raw-data?status=rejected" },
       ],
     },
     {
@@ -153,8 +165,8 @@ const navGroups: Record<"en" | "id", NavGroup[]> = {
       children: [
         { label: "Halaman", href: "/admin/pages" },
         { label: "Kategori", href: "/admin/categories" },
-        { label: "Lokasi", disabled: true },
-        { label: "Source", disabled: true },
+        { label: "Lokasi", href: "/admin/categories?type=locations" },
+        { label: "Source", href: "/admin/categories?type=sources" },
       ],
     },
     {
@@ -162,8 +174,8 @@ const navGroups: Record<"en" | "id", NavGroup[]> = {
       icon: ListChecks,
       children: [
         { label: "Jadwal", href: "/admin/scrape-runs" },
-        { label: "Monitoring", href: "/admin/scrape-runs" },
-        { label: "Riwayat & Log", href: "/admin/scrape-runs" },
+        { label: "Monitoring", href: "/admin/scrape-runs?view=monitoring" },
+        { label: "Riwayat & Log", href: "/admin/scrape-runs?view=logs" },
       ],
     },
     {
@@ -171,21 +183,21 @@ const navGroups: Record<"en" | "id", NavGroup[]> = {
       icon: Sparkles,
       future: true,
       children: [
-        { label: "Employer", disabled: true },
-        { label: "Recruiter", disabled: true },
-        { label: "Subscription", disabled: true },
-        { label: "Analytics", disabled: true },
+        { label: "Employer", href: "/admin/dashboard?section=employer" },
+        { label: "Recruiter", href: "/admin/dashboard?section=recruiter" },
+        { label: "Subscription", href: "/admin/dashboard?section=subscription" },
+        { label: "Analytics", href: "/admin/dashboard?section=analytics" },
       ],
     },
     {
       label: "Pengaturan",
       icon: Settings,
       children: [
-        { label: "General", disabled: true },
-        { label: "User & Role", disabled: true },
-        { label: "API", disabled: true },
-        { label: "Notifikasi", disabled: true },
-        { label: "Audit Log", disabled: true },
+        { label: "General", href: "/admin/settings/general" },
+        { label: "User & Role", href: "/admin/settings/users" },
+        { label: "API", href: "/admin/settings/api" },
+        { label: "Notifikasi", href: "/admin/settings/notifications" },
+        { label: "Audit Log", href: "/admin/settings/audit" },
       ],
     },
   ],
@@ -204,52 +216,130 @@ const sidebarCopy = {
   },
 } as const
 
-function SidebarCollapsedNav({ pathname }: { pathname: string }) {
-  const items = [
-    { href: "/admin/dashboard", icon: Home, label: "Dashboard" },
-    { href: "/admin/jobs", icon: Briefcase, label: "Lowongan" },
-    { href: "/admin/raw-data", icon: Database, label: "Review" },
-    { href: "/admin/content", icon: FilePenLine, label: "Landing" },
-    { href: "/admin/pages", icon: FileStack, label: "Pages" },
-    { href: "/admin/scrape-runs", icon: Activity, label: "Scraper" },
-    { href: "/admin/categories", icon: Layers, label: "Master" },
-  ]
+type SidebarLabels = (typeof sidebarCopy)[keyof typeof sidebarCopy]
+
+function SidebarNavContent({ groups, labels }: { groups: NavGroup[]; labels: SidebarLabels }) {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  function isActive(href: string): boolean {
+    try {
+      const url = new URL(href, "http://x")
+      if (url.pathname !== pathname) return false
+      for (const [key, value] of url.searchParams) {
+        if (searchParams.get(key) !== value) return false
+      }
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  function activeGroupLabel(): string | null {
+    return groups.find((g) => g.children.some((c) => c.href && isActive(c.href)))?.label ?? null
+  }
+
+  const [openGroup, setOpenGroup] = useState<string | null>(
+    () => activeGroupLabel() ?? groups.find((g) => g.defaultOpen)?.label ?? null
+  )
+
+  useEffect(() => {
+    const active = activeGroupLabel()
+    if (active) setOpenGroup(active)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, searchParams.toString()])
 
   return (
-    <div className="flex flex-col gap-2 p-2">
-      {items.map((item) => {
-        const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
+    <SidebarGroup>
+      <SidebarMenu className="space-y-1">
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild tooltip={labels.dashboard} isActive={pathname === "/admin/dashboard"} className="h-9">
+            <Link href="/admin/dashboard">
+              <Home />
+              <span>{labels.dashboard}</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
 
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            title={item.label}
-            className={cn(
-              "flex h-10 items-center justify-center border border-transparent bg-white text-slate-500 transition hover:border-slate-200 hover:text-slate-900",
-              active && "border-indigo-200 bg-indigo-50 text-indigo-700",
-            )}
-          >
-            <item.icon className="h-4 w-4" />
-          </Link>
-        )
-      })}
-    </div>
+      <SidebarGroupContent className="mt-2">
+        <SidebarGroupLabel className="px-2 text-[11px] font-bold uppercase tracking-wider">
+          Menu
+        </SidebarGroupLabel>
+        <SidebarMenu className="space-y-1">
+          {groups.map((group) => (
+            <Collapsible
+              key={group.label}
+              open={openGroup === group.label}
+              onOpenChange={(o) => setOpenGroup(o ? group.label : null)}
+              className="group/collapsible"
+              asChild
+            >
+              <SidebarMenuItem className={cn(group.future && "mt-2 border-t border-sidebar-border pt-2")}>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton
+                    tooltip={group.label}
+                    isActive={group.children.some((child) => child.href && isActive(child.href))}
+                    className="h-9"
+                  >
+                    <group.icon />
+                    <span>{group.label}</span>
+                    {group.future ? (
+                      <span className="ml-auto rounded-md bg-sidebar-accent px-1.5 py-0.5 text-[10px] font-medium text-sidebar-accent-foreground group-data-[collapsible=icon]:hidden">
+                        {labels.future}
+                      </span>
+                    ) : (
+                      <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
+                    )}
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarMenuSub className="py-1">
+                    {group.children.map((child) => {
+                      const active = child.href ? isActive(child.href) : false
+
+                      if (child.disabled || !child.href) {
+                        return (
+                          <SidebarMenuSubItem
+                            key={child.label}
+                            className="flex h-7 items-center rounded-md px-2 text-sm text-sidebar-foreground/45"
+                          >
+                            {child.label}
+                          </SidebarMenuSubItem>
+                        )
+                      }
+
+                      return (
+                        <SidebarMenuSubItem key={child.label}>
+                          <SidebarMenuSubButton asChild isActive={active}>
+                            <Link href={child.href}>
+                              <span>{child.label}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      )
+                    })}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
   )
 }
 
 export function AdminSidebar() {
-  const pathname = usePathname()
   const { language } = useAdminLanguage()
-  const { state } = useSidebar()
   const labels = sidebarCopy[language]
   const groups = navGroups[language]
 
   return (
-    <Sidebar variant="inset" collapsible="icon" className="border-r border-sidebar-border/70">
-      <SidebarHeader className="border-b border-sidebar-border px-3 py-4">
-        <Link href="/admin/dashboard" className="flex items-center gap-3 px-2">
-          <Image src="/logo.png" alt="Lowonganku logo" width={28} height={28} className="h-7 w-7 rounded-none object-cover" />
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
+      <SidebarHeader className="border-b border-sidebar-border px-2 py-3">
+        <Link href="/admin/dashboard" className="flex h-9 items-center gap-2 rounded-md px-2">
+          <Image src="/logo.png" alt="Lowonganku logo" width={28} height={28} className="h-7 w-7 shrink-0 rounded-none object-contain" />
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
             <div className="truncate text-sm font-semibold tracking-[-0.01em] text-[#09090B]">Lowonganku</div>
             <div className="truncate text-xs text-[#71717A]">{labels.workspace}</div>
@@ -257,58 +347,12 @@ export function AdminSidebar() {
         </Link>
       </SidebarHeader>
 
-      {state === "collapsed" ? (
-        <SidebarCollapsedNav pathname={pathname} />
-      ) : (
-        <SidebarContent className="px-2 py-3">
-          <Link
-            href="/admin/dashboard"
-            className={cn(
-              "mb-3 flex items-center gap-2 bg-[#EEF0FE] px-3 py-2.5 text-[13.5px] font-semibold text-[#3730A3]",
-              pathname === "/admin/dashboard" && "ring-1 ring-[#C7D2FE]",
-            )}
-          >
-            <Home className="h-4 w-4" />
-            <span>{labels.dashboard}</span>
-          </Link>
-
-          <div className="space-y-1.5">
-            {groups.map((group) => (
-              <Collapsible key={group.label} defaultOpen={group.defaultOpen}>
-                <div className={cn("border-b border-transparent", group.future && "mt-2 border-t border-slate-200 pt-3")}>
-                  <CollapsibleTrigger className="flex w-full items-center justify-between px-2 py-2 text-left text-[11.5px] font-bold uppercase tracking-[0.05em] text-[#A1A1AA] transition hover:text-[#71717A]">
-                    <span className="flex items-center gap-2">
-                      <group.icon className="h-3.5 w-3.5" />
-                      {group.label}
-                    </span>
-                    {group.future ? (
-                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[9.5px] font-bold normal-case tracking-normal text-[#71717A]">{labels.future}</span>
-                    ) : (
-                      <ChevronRight className="h-3.5 w-3.5 transition data-[state=open]:rotate-90" />
-                    )}
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="space-y-1 pb-2">
-                    {group.children.map((child) => {
-                      const active = child.href ? pathname === child.href || pathname.startsWith(`${child.href}/`) : false
-                      const baseClass = cn(
-                        "flex items-center justify-between px-6 py-2 text-[13.5px] font-medium transition",
-                        child.disabled ? "cursor-default text-[#A1A1AA]" : "text-[#3F3F46] hover:bg-[#F4F4F5]",
-                        active && "bg-[#EEF0FE] text-[#3730A3]",
-                      )
-
-                      if (!child.href || child.disabled) {
-                        return <div key={child.label} className={baseClass}>{child.label}</div>
-                      }
-
-                      return <Link key={child.label} href={child.href} className={baseClass}>{child.label}</Link>
-                    })}
-                  </CollapsibleContent>
-                </div>
-              </Collapsible>
-            ))}
-          </div>
-        </SidebarContent>
-      )}
+      <SidebarContent className="py-2">
+        <Suspense fallback={null}>
+          <SidebarNavContent groups={groups} labels={labels} />
+        </Suspense>
+      </SidebarContent>
     </Sidebar>
   )
 }
+

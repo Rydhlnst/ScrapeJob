@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Http\Controllers\Api\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
+use App\Models\Setting;
+use App\Support\ApiResponse;
+use Illuminate\Http\Request;
+
+class SettingsController extends Controller
+{
+    private const KEYS = [
+        'site_name'             => 'string',
+        'site_tagline'          => 'string',
+        'contact_email'         => 'string',
+        'auto_publish_jobs'     => 'boolean',
+        'ai_cleanup_url'        => 'secret',
+        'ai_cleanup_token'      => 'secret',
+        'notify_on_scrape'      => 'boolean',
+        'notify_emails'         => 'string',
+        'scraper_active_sources'=> 'string',
+    ];
+
+    public function index()
+    {
+        $rows = Setting::whereIn('key', array_keys(self::KEYS))->get()->keyBy('key');
+
+        $data = [];
+        foreach (self::KEYS as $key => $type) {
+            $row = $rows->get($key);
+            $value = $row?->value;
+
+            // Mask secrets — only send prefix
+            if ($type === 'secret' && $value !== null && $value !== '') {
+                $value = substr($value, 0, 4) . str_repeat('*', max(0, strlen($value) - 4));
+            }
+
+            $data[$key] = [
+                'value' => $value,
+                'type'  => $type,
+            ];
+        }
+
+        return ApiResponse::success($data, 'Settings retrieved');
+    }
+
+    public function update(Request $request)
+    {
+        $payload = $request->validate([
+            'settings'          => 'required|array',
+            'settings.*.key'    => 'required|string',
+            'settings.*.value'  => 'present|nullable',
+        ]);
+
+        $before = [];
+        $after  = [];
+
+        foreach ($payload['settings'] as $item) {
+            $key = $item['key'];
+            if (! array_key_exists($key, self::KEYS)) continue;
+
+            $type  = self::KEYS[$key];
+            $value = $item['value'];
+
+            // Skip if user just sent back the masked placeholder
+            if ($type === 'secret' && is_string($value) && str_contains($value, '****')) {
+                continue;
+            }
+
+            $old = Setting::where('key', $key)->value('value');
+            $before[$key] = $type === 'secret' ? '[redacted]' : $old;
+
+            if ($value === null || $value === '') {
+                Setting::where('key', $key)->delete();
+                $after[$key] = null;
+            } else {
+                Setting::set($key, $value, $type);
+                $after[$key] = $type === 'secret' ? '[redacted]' : $value;
+            }
+        }
+
+        AuditLog::record('settings.update', 'Setting', null, $before, $after);
+
+        return ApiResponse::success(null, 'Settings saved');
+    }
+}

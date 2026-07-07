@@ -13,7 +13,7 @@ import { normalizeLandingPageContent } from "@/lib/landing-page-content"
 
 export default async function HomePage() {
   const content = normalizeLandingPageContent(await getPublicLandingPageContent())
-  const [jobsRes, categories] = await Promise.all([
+  const [jobsRes, navJobsRes, categories] = await Promise.all([
     listJobs({
       page: 1,
       perPage: content.featuredJobs.rules.limit,
@@ -21,6 +21,7 @@ export default async function HomePage() {
       category: content.featuredJobs.rules.category ?? undefined,
       source: content.featuredJobs.rules.source ?? undefined,
     }),
+    listJobs({ page: 1, perPage: 100, sort: "newest" }),
     listCategories(),
   ])
   const homepageJobs = jobsRes.data.slice(0, content.featuredJobs.rules.limit)
@@ -28,7 +29,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar jobs={navJobsRes.data} categories={categories} totalJobs={jobsRes.total} />
       <main>
         <HeroSection
           totalJobs={jobsRes.total || homepageJobs.length}
@@ -47,3 +48,4 @@ export default async function HomePage() {
     </div>
   )
 }
+

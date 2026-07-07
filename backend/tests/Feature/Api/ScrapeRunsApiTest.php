@@ -6,6 +6,7 @@ use App\Models\Job;
 use App\Models\JobSource;
 use App\Models\ScrapedJob;
 use App\Models\User;
+use App\Services\Jobs\JobHashService;
 use App\Services\Scraping\PythonScraperExecutor;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -131,7 +132,7 @@ class ScrapeRunsApiTest extends TestCase
         $this->assertSame('Backend Engineer', $scrapedJob->title);
     }
 
-    public function test_ok_scraped_job_can_be_published_without_ai_cleanup(): void
+    public function test_ok_scraped_job_moves_to_draft_then_publishes_from_blog_editor(): void
     {
         $admin = User::factory()->create();
         $admin->assignRole('admin');
@@ -151,34 +152,95 @@ class ScrapeRunsApiTest extends TestCase
             'draft_status' => 'drafted_raw',
         ]);
 
-        $publishWhilePending = $this->actingAs($admin, 'sanctum')
-            ->postJson("/api/admin/scraped-jobs/{$scrapedJob->id}/publish");
-
-        $publishWhilePending->assertStatus(422)
-            ->assertJsonPath('success', false);
-
-        $approve = $this->actingAs($admin, 'sanctum')
+        $moveToDraft = $this->actingAs($admin, 'sanctum')
             ->patchJson("/api/admin/scraped-jobs/{$scrapedJob->id}/approve");
 
-        $approve->assertOk()
-            ->assertJsonPath('data.status', 'approved');
-
-        $publishApproved = $this->actingAs($admin, 'sanctum')
-            ->postJson("/api/admin/scraped-jobs/{$scrapedJob->id}/publish");
-
-        $publishApproved->assertOk()
+        $moveToDraft->assertOk()
             ->assertJsonPath('success', true)
+            ->assertJsonPath('data.status', 'draft')
             ->assertJsonPath('data.unified.editorial.cleanedByAi', false)
             ->assertJsonPath('data.unified.editorial.draftStatus', 'drafted_raw');
 
+        $jobId = $moveToDraft->json('data.id');
+
         $this->assertDatabaseHas('jobs', [
+            'id' => $jobId,
             'scraped_job_id' => $scrapedJob->id,
-            'status' => 'published',
+            'status' => 'draft',
             'title' => 'Backend Engineer',
         ]);
         $this->assertDatabaseHas('scraped_jobs', [
             'id' => $scrapedJob->id,
+            'status' => 'approved',
+        ]);
+
+        $moveToDraftAgain = $this->actingAs($admin, 'sanctum')
+            ->patchJson("/api/admin/scraped-jobs/{$scrapedJob->id}/approve");
+
+        $moveToDraftAgain->assertOk()
+            ->assertJsonPath('data.id', $jobId)
+            ->assertJsonPath('data.status', 'draft');
+
+        $this->assertSame(1, Job::query()->where('scraped_job_id', $scrapedJob->id)->count());
+
+        $publishDraft = $this->actingAs($admin, 'sanctum')
+            ->patchJson("/api/admin/jobs/{$jobId}/publish");
+
+        $publishDraft->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.status', 'published');
+
+        $this->assertDatabaseHas('jobs', [
+            'id' => $jobId,
             'status' => 'published',
+        ]);
+    }
+    public function test_move_to_draft_keeps_duplicate_job_protection(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $sourceUrl = 'https://example.com/jobs/existing';
+        $hashService = app(JobHashService::class);
+
+        Job::query()->create([
+            'external_id' => 'existing-job',
+            'fingerprint' => Job::makeFingerprint('example jobs', 'Backend Engineer', 'Acme Labs', 'Jakarta'),
+            'source' => 'example jobs',
+            'title' => 'Backend Engineer',
+            'company_name' => 'Acme Labs',
+            'location' => 'Jakarta',
+            'description' => '<p>Existing published job</p>',
+            'source_url' => $sourceUrl,
+            'source_url_hash' => $hashService->makeSourceUrlHash($sourceUrl),
+            'source_name' => 'Example Jobs',
+            'content_hash' => $hashService->makeContentHash('Backend Engineer', 'Acme Labs', 'Jakarta'),
+            'status' => 'published',
+            'published_at' => now(),
+        ]);
+
+        $scrapedJob = ScrapedJob::query()->create([
+            'external_id' => 'job-duplicate-001',
+            'source' => 'example jobs',
+            'source_url' => $sourceUrl,
+            'title' => 'Backend Engineer',
+            'company' => 'Acme Labs',
+            'location' => 'Jakarta',
+            'description' => '<p>Duplicate scraped job</p>',
+            'status' => 'pending',
+            'draft_status' => 'drafted_raw',
+        ]);
+
+        $response = $this->actingAs($admin, 'sanctum')
+            ->patchJson("/api/admin/scraped-jobs/{$scrapedJob->id}/approve");
+
+        $response->assertStatus(409)
+            ->assertJsonPath('success', false);
+
+        $this->assertSame(1, Job::query()->count());
+        $this->assertDatabaseHas('scraped_jobs', [
+            'id' => $scrapedJob->id,
+            'status' => 'duplicate',
         ]);
     }
 }

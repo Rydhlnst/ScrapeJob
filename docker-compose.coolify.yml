@@ -64,7 +64,10 @@ services:
       SCRAPER_PYTHON_BIN: python3
       WAIT_FOR_DB: "true"
       ENABLE_LARAVEL_CACHE_WARMUP: "true"
-      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-false}
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-true}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_NAME: "${ADMIN_NAME:-Super Admin}"
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
       AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
       AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
       LOG_CHANNEL: ${LOG_CHANNEL:-stack}

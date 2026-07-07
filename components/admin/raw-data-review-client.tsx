@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 import type { ScrapedJob, ScrapedJobStatus } from "@/types/job"
@@ -16,16 +17,18 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Textarea } from "@/components/ui/textarea"
+import { RichTextEditor } from "@/components/ui/rich-text-editor"
 import { getScrapedJobs } from "@/src/features/admin/scraped-jobs/api/get-scraped-jobs"
+import { updateScrapedJob } from "@/src/features/admin/scraped-jobs/api/update-scraped-job"
 import { approveScrapedJob } from "@/src/features/admin/scraped-jobs/api/approve-scraped-job"
-import { publishScrapedJob } from "@/src/features/admin/scraped-jobs/api/publish-scraped-job"
 import { rejectScrapedJob } from "@/src/features/admin/scraped-jobs/api/reject-scraped-job"
 import { cleanScrapedJobWithAi } from "@/src/features/admin/scraped-jobs/api/clean-scraped-job"
 import { bulkCleanScrapedJobsWithAi } from "@/src/features/admin/scraped-jobs/api/bulk-clean-scraped-jobs"
 import { bulkApproveScrapedJobs } from "@/src/features/admin/scraped-jobs/api/bulk-approve-scraped-jobs"
 import { bulkRejectScrapedJobs } from "@/src/features/admin/scraped-jobs/api/bulk-reject-scraped-jobs"
-import { bulkPublishScrapedJobs } from "@/src/features/admin/scraped-jobs/api/bulk-publish-scraped-jobs"
 import { BulkActionBar } from "@/components/dashboard/scraped-review/bulk-action-bar"
 import { ReviewEmptyState } from "@/components/dashboard/scraped-review/empty-state"
 import { ReviewErrorState } from "@/components/dashboard/scraped-review/error-state"
@@ -50,7 +53,7 @@ function normalizeLocation(value: string | null) {
 function statusLabel(status: ScrapedJobStatus | "all") {
   if (status === "all") return "All"
   if (status === "pending") return "Pending"
-  if (status === "approved") return "Approved"
+  if (status === "approved") return "Draft Created"
   if (status === "rejected") return "Rejected"
   if (status === "published") return "Published"
   return "Duplicate"
@@ -84,21 +87,79 @@ function formatDate(date: string | null) {
   })
 }
 
+function ensureHtml(value?: string | null): string {
+  if (!value?.trim()) return ""
+  if (/<[a-z][\s\S]*>/i.test(value)) return value
+  return `<p>${value.replace(/\n/g, "<br />")}</p>`
+}
+
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+      {children}
+    </div>
+  )
+}
+
 function DraftReviewSheet({
   job,
   open,
   onOpenChange,
+  onSaved,
 }: {
   job: ScrapedJob | null
   open: boolean
   onOpenChange: (open: boolean) => void
+  onSaved: (updated: ScrapedJob) => void
 }) {
+  const [title, setTitle] = React.useState("")
+  const [company, setCompany] = React.useState("")
+  const [location, setLocation] = React.useState("")
+  const [salary, setSalary] = React.useState("")
+  const [employmentType, setEmploymentType] = React.useState("")
+  const [summary, setSummary] = React.useState("")
+  const [description, setDescription] = React.useState("")
+  const [isSaving, setIsSaving] = React.useState(false)
+
+  React.useEffect(() => {
+    if (!job) return
+    setTitle(cleanJobTitle(job.title))
+    setCompany(job.company ?? "")
+    setLocation(job.location ?? "")
+    setSalary(job.salary ?? "")
+    setEmploymentType(job.employmentType ?? "")
+    setSummary(job.descriptionSummary ?? "")
+    setDescription(ensureHtml(job.description))
+  }, [job])
+
+  async function handleSave() {
+    if (!job) return
+    setIsSaving(true)
+    try {
+      const updated = await updateScrapedJob(job.id, {
+        title,
+        company,
+        location: location || null,
+        salary: salary || null,
+        employment_type: employmentType || null,
+        description: description || null,
+        description_summary: summary || null,
+      })
+      toast.success("Draft saved.")
+      onSaved(updated)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to save.")
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-3xl">
+      <SheetContent side="right" className="flex w-full flex-col overflow-y-auto sm:max-w-3xl">
         {job ? (
           <>
-            <SheetHeader className="border-b border-border/70">
+            <SheetHeader className="border-b border-border pb-4">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge
                   variant="outline"
@@ -108,57 +169,76 @@ function DraftReviewSheet({
                 </Badge>
                 <Badge className={`rounded-full px-2.5 ${statusBadgeClass(job.status)}`}>{statusLabel(job.status)}</Badge>
               </div>
-              <SheetTitle className="mt-3 text-xl">{cleanJobTitle(job.title)}</SheetTitle>
+              <SheetTitle className="mt-2 text-xl">{cleanJobTitle(job.title)}</SheetTitle>
               <SheetDescription>
-                Review the current draft before approve or publish.
+                Edit the raw draft below, then save. Move it to Draft to continue in the Blog Loker editor.
               </SheetDescription>
             </SheetHeader>
 
-            <div className="space-y-6 p-4">
-              <div className="grid gap-3 md:grid-cols-2">
-                <div className="rounded-xl border border-border/70 p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Company</div>
-                  <div className="mt-2 text-sm text-foreground">{job.company || "Unknown company"}</div>
+            <div className="flex-1 space-y-5 p-4">
+              <div className="space-y-1.5">
+                <FieldLabel>Title</FieldLabel>
+                <Input value={title} onChange={(e) => setTitle(e.target.value)} className="rounded-none" />
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-1.5">
+                  <FieldLabel>Company</FieldLabel>
+                  <Input value={company} onChange={(e) => setCompany(e.target.value)} className="rounded-none" />
                 </div>
-                <div className="rounded-xl border border-border/70 p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Location</div>
-                  <div className="mt-2 text-sm text-foreground">{normalizeLocation(job.location) ?? "Not specified"}</div>
+                <div className="space-y-1.5">
+                  <FieldLabel>Location</FieldLabel>
+                  <Input value={location} onChange={(e) => setLocation(e.target.value)} className="rounded-none" placeholder="e.g. Jakarta" />
                 </div>
-                <div className="rounded-xl border border-border/70 p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Employment Type</div>
-                  <div className="mt-2 text-sm text-foreground">{job.employmentType ?? "Not specified"}</div>
+                <div className="space-y-1.5">
+                  <FieldLabel>Employment Type</FieldLabel>
+                  <Input value={employmentType} onChange={(e) => setEmploymentType(e.target.value)} className="rounded-none" placeholder="e.g. Full-time" />
                 </div>
-                <div className="rounded-xl border border-border/70 p-4">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Salary</div>
-                  <div className="mt-2 text-sm text-foreground">{job.salary ?? "Not disclosed"}</div>
+                <div className="space-y-1.5">
+                  <FieldLabel>Salary</FieldLabel>
+                  <Input value={salary} onChange={(e) => setSalary(e.target.value)} className="rounded-none" placeholder="e.g. Rp 6jt–10jt" />
                 </div>
               </div>
 
-              <section className="space-y-2">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Summary</div>
-                <div className="rounded-xl border border-border/70 bg-muted/20 p-4 text-sm leading-7 text-foreground">
-                  {job.descriptionSummary ?? "No summary generated yet."}
-                </div>
-              </section>
+              <div className="space-y-1.5">
+                <FieldLabel>Summary</FieldLabel>
+                <Textarea
+                  value={summary}
+                  onChange={(e) => setSummary(e.target.value)}
+                  className="min-h-[80px] rounded-none"
+                  placeholder="Short AI-generated summary of the job"
+                />
+              </div>
 
-              <section className="space-y-2">
+              <div className="space-y-1.5">
                 <div className="flex items-center justify-between gap-3">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Current Draft Description</div>
-                  <a href={job.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-sky-700 underline-offset-4 hover:underline">
+                  <FieldLabel>Description</FieldLabel>
+                  <a
+                    href={job.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-medium text-sky-700 underline-offset-4 hover:underline"
+                  >
                     Open source
                   </a>
                 </div>
-                <div
-                  className="rounded-xl border border-border/70 bg-white p-4 text-sm leading-7 text-foreground [&_li]:ml-5 [&_li]:list-disc [&_p]:mb-3"
-                  dangerouslySetInnerHTML={{ __html: job.description || "<p>No draft description yet.</p>" }}
-                />
-              </section>
+                <RichTextEditor value={description} onChange={setDescription} />
+              </div>
 
               {job.failReason ? (
-                <section className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                <div className="rounded-none border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                   AI failed: {job.failReason}
-                </section>
+                </div>
               ) : null}
+
+              <div className="flex gap-2 border-t border-border pt-4">
+                <Button type="button" className="rounded-none" onClick={handleSave} disabled={isSaving}>
+                  {isSaving ? "Saving..." : "Save draft"}
+                </Button>
+                <Button type="button" variant="outline" className="rounded-none" onClick={() => onOpenChange(false)}>
+                  Close
+                </Button>
+              </div>
             </div>
           </>
         ) : null}
@@ -168,6 +248,7 @@ function DraftReviewSheet({
 }
 
 export function RawDataReviewClient() {
+  const router = useRouter()
   const PER_PAGE = 15
   const ALL_PAGE_SIZE = 100
   const [jobs, setJobs] = React.useState<ScrapedJob[]>([])
@@ -261,13 +342,6 @@ export function RawDataReviewClient() {
   const allChecked = jobs.length > 0 && selected.length === jobs.length
   const selectedCount = selected.length
   const batchBusy = busyId === "__batch__"
-  const selectedJobs = React.useMemo(
-    () => jobs.filter((job) => selected.includes(job.id)),
-    [jobs, selected],
-  )
-  const canPublish = React.useCallback((job: ScrapedJob) => job.status === "approved", [])
-  const canBulkPublish = selectedJobs.length > 0 && selectedJobs.every(canPublish)
-
   const pageItems = React.useMemo(() => {
     if (totalPages <= 5) return Array.from({ length: totalPages }, (_, index) => index + 1)
     if (page <= 3) return [1, 2, 3, 4, "ellipsis-right", totalPages] as const
@@ -279,21 +353,35 @@ export function RawDataReviewClient() {
     setBusyId(id)
     try {
       let cleanedJob: ScrapedJob | null = null
-      if (action === "approve") await approveScrapedJob(id)
+      let draftId: string | null = null
+
+      if (action === "approve") {
+        const draft = await approveScrapedJob(id)
+        draftId = draft.id
+      }
       if (action === "reject") await rejectScrapedJob(id)
-      if (action === "publish") await publishScrapedJob(id)
       if (action === "clean_ai") cleanedJob = await cleanScrapedJobWithAi(id)
+
       const targetPage = jobs.length === 1 && page > 1 ? page - 1 : page
       await Promise.all([refresh(targetPage), refreshStats()])
       if (cleanedJob) setPreviewJob(cleanedJob)
-      toast.success("Action completed.")
+
+      if (draftId) {
+        toast.success("Moved to Blog Loker draft.", {
+          action: {
+            label: "Open Draft",
+            onClick: () => router.push(`/admin/jobs/${draftId}/edit`),
+          },
+        })
+      } else {
+        toast.success("Action completed.")
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Aksi gagal.")
     } finally {
       setBusyId(null)
     }
   }
-
   async function runBulkAction(action: RowAction) {
     if (!selected.length) return
     setBusyId("__batch__")
@@ -304,18 +392,16 @@ export function RawDataReviewClient() {
         await bulkApproveScrapedJobs(selected)
       } else if (action === "reject") {
         await bulkRejectScrapedJobs(selected)
-      } else if (action === "publish") {
-        await bulkPublishScrapedJobs(selected)
       }
+
       await Promise.all([refresh(page), refreshStats()])
-      toast.success(`Bulk ${action} completed.`)
+      toast.success(action === "approve" ? "Selected jobs moved to Blog Loker drafts." : `Bulk ${action} completed.`)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Bulk action failed.")
     } finally {
       setBusyId(null)
     }
   }
-
   const helpers = {
     cleanJobTitle,
     normalizeLocation,
@@ -327,11 +413,19 @@ export function RawDataReviewClient() {
 
   return (
     <section className="space-y-6">
-      <DraftReviewSheet job={previewJob} open={Boolean(previewJob)} onOpenChange={(open) => !open && setPreviewJob(null)} />
+      <DraftReviewSheet
+        job={previewJob}
+        open={Boolean(previewJob)}
+        onOpenChange={(open) => !open && setPreviewJob(null)}
+        onSaved={(updated) => {
+          setPreviewJob(updated)
+          void refresh(page)
+        }}
+      />
       <ReviewStatsCards stats={stats} />
 
-      <Card className="border-border/70 shadow-sm">
-        <CardHeader className="gap-4 border-b border-border/70 bg-muted/20">
+      <Card className="border-border shadow-sm">
+        <CardHeader className="gap-4 border-b border-border bg-white">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <CardTitle className="text-base">Review Queue</CardTitle>
@@ -360,10 +454,8 @@ export function RawDataReviewClient() {
           <BulkActionBar
             selectedCount={selectedCount}
             busy={batchBusy}
-            publishDisabled={!canBulkPublish}
             onApproveSelected={() => void runBulkAction("approve")}
             onRejectSelected={() => void runBulkAction("reject")}
-            onPublishSelected={() => void runBulkAction("publish")}
             onCleanAiSelected={() => void runBulkAction("clean_ai")}
             onClear={() => setSelected([])}
           />
@@ -395,7 +487,6 @@ export function RawDataReviewClient() {
                 }
                 onAction={runAction}
                 onInspect={setPreviewJob}
-                canPublish={canPublish}
               />
 
               {totalPages > 1 ? (
@@ -460,5 +551,6 @@ export function RawDataReviewClient() {
     </section>
   )
 }
+
 
 

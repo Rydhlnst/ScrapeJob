@@ -4,16 +4,19 @@ import Image from "next/image"
 import Link from "next/link"
 import {
   BriefcaseBusiness,
-  FolderKanban,
-  LayoutGrid,
+  Building2,
+  CheckCircle2,
+  ChevronDown,
+  Clock3,
+  GraduationCap,
+  Layers3,
+  MapPin,
   Menu,
-  Megaphone,
-  MonitorSmartphone,
   MoveRight,
-  Palette,
-  ShieldCheck,
+  Search,
+  X,
 } from "lucide-react"
-import { usePathname } from "next/navigation"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -25,133 +28,558 @@ import {
 } from "@/components/ui/sheet"
 import { SiteFrame } from "@/components/shared/SiteShell"
 import { cn } from "@/lib/utils"
+import type { Category as SiteCategory, Job as SiteJob } from "@/types"
 
-const topNavItems = [
-  { label: "Cari Lowongan", href: "/jobs", icon: BriefcaseBusiness },
+type IconType = typeof BriefcaseBusiness
+
+type CountItem = {
+  label: string
+  href: string
+  count?: string
+  icon?: IconType
+}
+
+type Category = CountItem & {
+  roles: CountItem[]
+}
+
+type Facet = {
+  id: "kategori" | "pendidikan" | "pengalaman" | "lokasi" | "tipe"
+  label: string
+  href: string
+  icon: IconType
+}
+
+const facets: Facet[] = [
+  { id: "kategori", label: "Kategori", href: "/jobs", icon: Layers3 },
+  { id: "pendidikan", label: "Pendidikan", href: "/jobs?education=all", icon: GraduationCap },
+  { id: "pengalaman", label: "Pengalaman", href: "/jobs?experience=all", icon: BriefcaseBusiness },
+  { id: "lokasi", label: "Lokasi", href: "/jobs?location=all", icon: MapPin },
+  { id: "tipe", label: "Jenis Kerja", href: "/jobs?type=all", icon: Clock3 },
 ]
 
-const categoryItems = [
-  { label: "Development & IT", href: "/jobs?category=it-software", icon: MonitorSmartphone },
-  { label: "Marketing", href: "/jobs?category=marketing", icon: Megaphone },
-  { label: "Design", href: "/jobs?category=design", icon: Palette },
-  { label: "Sales", href: "/jobs?category=sales", icon: MoveRight },
-  { label: "Customer Support", href: "/jobs?category=customer-service", icon: ShieldCheck },
-  { label: "More", href: "/jobs", icon: LayoutGrid },
+const categories: Category[] = [
+  {
+    label: "IT & Software",
+    href: "/jobs?category=it-software",
+    count: "420rb",
+    roles: [
+      { label: "Backend Developer", href: "/jobs?role=backend-developer", count: "52rb" },
+      { label: "Frontend Developer", href: "/jobs?role=frontend-developer", count: "48rb" },
+      { label: "Full Stack Developer", href: "/jobs?role=full-stack-developer", count: "41rb" },
+      { label: "Mobile Developer", href: "/jobs?role=mobile-developer", count: "28rb" },
+      { label: "DevOps Engineer", href: "/jobs?role=devops-engineer", count: "19rb" },
+    ],
+  },
+  {
+    label: "Marketing",
+    href: "/jobs?category=marketing",
+    count: "180rb",
+    roles: [
+      { label: "Digital Marketing", href: "/jobs?role=digital-marketing", count: "44rb" },
+      { label: "Brand Strategist", href: "/jobs?role=brand-strategist", count: "21rb" },
+      { label: "Content Marketing", href: "/jobs?role=content-marketing", count: "17rb" },
+    ],
+  },
+  {
+    label: "Finance",
+    href: "/jobs?category=finance",
+    count: "150rb",
+    roles: [
+      { label: "Accounting", href: "/jobs?role=accounting", count: "36rb" },
+      { label: "Financial Analyst", href: "/jobs?role=financial-analyst", count: "18rb" },
+      { label: "Tax Specialist", href: "/jobs?role=tax-specialist", count: "12rb" },
+    ],
+  },
+  {
+    label: "Manufacturing",
+    href: "/jobs?category=manufacturing",
+    count: "130rb",
+    roles: [
+      { label: "Production Staff", href: "/jobs?role=production-staff", count: "45rb" },
+      { label: "Quality Control", href: "/jobs?role=quality-control", count: "26rb" },
+      { label: "Maintenance Engineer", href: "/jobs?role=maintenance-engineer", count: "13rb" },
+    ],
+  },
+  {
+    label: "Customer Service",
+    href: "/jobs?category=customer-service",
+    count: "95rb",
+    roles: [
+      { label: "Customer Support", href: "/jobs?role=customer-support", count: "38rb" },
+      { label: "Call Center", href: "/jobs?role=call-center", count: "29rb" },
+      { label: "Client Success", href: "/jobs?role=client-success", count: "8rb" },
+    ],
+  },
 ]
+
+const educationItems: CountItem[] = [
+  { label: "Semua Pendidikan", href: "/jobs", count: "1.8jt", icon: GraduationCap },
+  { label: "SMA / SMK", href: "/jobs?education=sma-smk", count: "620rb", icon: GraduationCap },
+  { label: "D3", href: "/jobs?education=d3", count: "380rb", icon: GraduationCap },
+  { label: "S1", href: "/jobs?education=s1", count: "740rb", icon: GraduationCap },
+  { label: "S2+", href: "/jobs?education=s2", count: "86rb", icon: GraduationCap },
+]
+
+const experienceItems: CountItem[] = [
+  { label: "Fresh Graduate", href: "/jobs?experience=fresh-graduate", count: "210rb", icon: BriefcaseBusiness },
+  { label: "1-3 Tahun", href: "/jobs?experience=1-3", count: "540rb", icon: BriefcaseBusiness },
+  { label: "3-5 Tahun", href: "/jobs?experience=3-5", count: "320rb", icon: BriefcaseBusiness },
+  { label: "Managerial", href: "/jobs?experience=managerial", count: "96rb", icon: BriefcaseBusiness },
+]
+
+const locationItems: CountItem[] = [
+  { label: "DKI Jakarta", href: "/jobs?location=jakarta", count: "310rb" },
+  { label: "Jawa Barat", href: "/jobs?location=jawa-barat", count: "260rb" },
+  { label: "Jawa Timur", href: "/jobs?location=jawa-timur", count: "190rb" },
+  { label: "Banten", href: "/jobs?location=banten", count: "116rb" },
+  { label: "Remote", href: "/jobs?location=remote", count: "72rb" },
+]
+
+const jobTypeItems: CountItem[] = [
+  { label: "Full Time", href: "/jobs?type=full-time", count: "980rb", icon: Clock3 },
+  { label: "Part Time", href: "/jobs?type=part-time", count: "135rb", icon: Clock3 },
+  { label: "Contract", href: "/jobs?type=contract", count: "210rb", icon: Clock3 },
+  { label: "Internship", href: "/jobs?type=internship", count: "88rb", icon: Clock3 },
+]
+
+const companyTypes = [
+  {
+    label: "Terverifikasi",
+    href: "/jobs?company=verified",
+    count: "1.2rb",
+    companies: ["Astra Group", "Bank Mandiri", "Telkomsel", "Gojek", "Traveloka", "Unilever ID"],
+  },
+  {
+    label: "BUMN",
+    href: "/jobs?company=bumn",
+    count: "340",
+    companies: ["Pertamina", "PLN", "Bank BRI", "Telkom Indonesia", "Garuda Indonesia", "Bulog"],
+  },
+  {
+    label: "Startup",
+    href: "/jobs?company=startup",
+    count: "2.4rb",
+    companies: ["Xendit", "Ajaib", "Flip", "Kredivo", "Sicepat", "Ninja Xpress"],
+  },
+  {
+    label: "Teknologi",
+    href: "/jobs?company=technology",
+    count: "1.1rb",
+    companies: ["Gojek", "Tokopedia", "Bukalapak", "Traveloka", "DANA", "OVO"],
+  },
+]
+
+const quickLinks = ["S1 Jakarta", "Fresh Graduate", "Remote", "Full Time", "BUMN", "Startup"]
+type NavbarData = {
+  jobs?: SiteJob[]
+  categories?: SiteCategory[]
+  totalJobs?: number
+}
+
+function formatCount(count: number) {
+  if (count >= 1_000_000) return `${(count / 1_000_000).toFixed(1).replace(".0", "")}jt`
+  if (count >= 1_000) return `${Math.round(count / 1_000)}rb`
+  return String(count)
+}
+
+function titleFromSlug(value: string) {
+  return value
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ")
+}
+
+function topCounts<T extends string>(values: Array<T | null | undefined>, limit: number) {
+  const counts = new Map<T, number>()
+  values.forEach((value) => {
+    if (!value) return
+    counts.set(value, (counts.get(value) ?? 0) + 1)
+  })
+
+  return Array.from(counts.entries())
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, limit)
+}
+
+function buildNavbarData(data?: NavbarData) {
+  const jobs = data?.jobs ?? []
+  const dynamicCategories = (data?.categories ?? [])
+    .map((category) => {
+      const categoryJobs = jobs.filter((job) => {
+        const categoryValue = job.categoryId ?? job.category ?? ""
+        return categoryValue === category.id || categoryValue === category.slug || categoryValue === category.name
+      })
+      const roles = topCounts(categoryJobs.map((job) => job.title), 5).map(([title, count]) => ({
+        label: title,
+        href: `/jobs?keyword=${encodeURIComponent(title)}`,
+        count: formatCount(count),
+      }))
+
+      return {
+        label: category.name,
+        href: `/jobs?category=${encodeURIComponent(category.slug ?? category.id)}`,
+        count: formatCount(category.totalJobs ?? categoryJobs.length),
+        roles: roles.length ? roles : categories[0].roles,
+      }
+    })
+    .filter((category) => category.count !== "0")
+    .slice(0, 5)
+
+  const dynamicLocations = topCounts(jobs.map((job) => job.location), 5).map(([location, count]) => ({
+    label: location,
+    href: `/jobs?location=${encodeURIComponent(location)}`,
+    count: formatCount(count),
+  }))
+
+  const dynamicTypes = topCounts(jobs.map((job) => job.jobType), 5).map(([type, count]) => ({
+    label: titleFromSlug(type),
+    href: `/jobs?jobType=${encodeURIComponent(type)}`,
+    count: formatCount(count),
+    icon: Clock3,
+  }))
+
+  const dynamicCompanies = topCounts(jobs.map((job) => job.companyName), 12).map(([company]) => company)
+  const dynamicSources = topCounts(jobs.map((job) => job.sourceName), 4).map(([source, count]) => ({
+    label: source,
+    href: `/jobs?source=${encodeURIComponent(source)}`,
+    count: formatCount(count),
+    companies: dynamicCompanies.slice(0, 6),
+  }))
+
+  return {
+    categories: dynamicCategories.length ? dynamicCategories : categories,
+    locations: dynamicLocations.length ? dynamicLocations : locationItems,
+    jobTypes: dynamicTypes.length ? dynamicTypes : jobTypeItems,
+    companyTypes: dynamicSources.length ? dynamicSources : companyTypes,
+    totalJobs: data?.totalJobs ?? jobs.length,
+    totalLocations: new Set(jobs.map((job) => job.location).filter(Boolean)).size,
+    totalCompanies: new Set(jobs.map((job) => job.companyName).filter(Boolean)).size,
+  }
+}
 
 function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-3" aria-label="Lowonganku home">
-      <div className="flex h-12 w-12 items-center justify-center border-r border-[var(--brand-shell-strong)] pr-3">
-        <Image
-          src="/logo.png"
-          alt="Lowonganku logo"
-          width={28}
-          height={28}
-          className="h-7 w-7 rounded-none object-cover"
-        />
-      </div>
-      <span className="text-lg font-semibold tracking-[-0.03em] text-[var(--brand-ink)]">
-        Lowonganku
-      </span>
+    <Link href="/" className="flex items-center gap-2.5" aria-label="Lowonganku home">
+      <Image src="/logo.png" alt="Lowonganku logo" width={32} height={32} className="size-8 shrink-0 object-contain" />
+      <span className="text-[15px] font-semibold tracking-tight text-[var(--brand-ink)]">Lowonganku</span>
     </Link>
   )
 }
 
-export function Navbar() {
-  const pathname = usePathname()
+function CountLink({ item, active = false }: { item: CountItem; active?: boolean }) {
+  const Icon = item.icon
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[var(--brand-shell-strong)] bg-white">
-      <SiteFrame className="bg-white">
-        <div className="flex h-18 items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Logo />
+    <Link
+      href={item.href}
+      className={cn(
+        "flex items-center justify-between gap-3 rounded-none px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary",
+        active && "bg-[var(--brand-shell-strong)] text-primary",
+      )}
+    >
+      <span className="flex items-center gap-2">
+        {Icon ? <Icon className="size-4 text-primary/70" /> : null}
+        {item.label}
+      </span>
+      {item.count ? <span className="font-mono text-xs text-slate-400">{item.count}</span> : null}
+    </Link>
+  )
+}
 
-          <nav className="hidden items-center gap-8 lg:flex">
-            {topNavItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-sm font-medium text-[var(--brand-ink)] transition-colors hover:text-[var(--brand-blue)]"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <Button
-              asChild
-              className="h-11 rounded-none bg-[var(--brand-blue)] px-5 text-sm font-medium text-white hover:bg-[var(--brand-sky)]"
-            >
-              <Link href="/jobs">Cari Lowongan</Link>
-            </Button>
-          </nav>
-
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="h-11 w-11 rounded-none border-[var(--brand-shell-strong)] lg:hidden">
-                <Menu className="size-4" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="inset-0 h-svh w-screen max-w-none border-0 bg-[linear-gradient(180deg,#ffffff_0%,#f5f9ff_100%)] p-0"
-            >
-              <SheetHeader className="border-b border-[var(--brand-shell-strong)] px-6 py-5">
-                <SheetTitle className="flex items-center gap-2 text-[var(--brand-ink)]">
-                  <FolderKanban className="size-5 text-[var(--brand-blue)]" />
-                  Lowonganku
-                </SheetTitle>
-              </SheetHeader>
-
-              <div className="flex flex-1 flex-col overflow-auto px-6 py-6">
-                <div className="space-y-3">
-                  {topNavItems.concat(categoryItems).map((item) => {
-                    const Icon = item.icon
-
-                    return (
-                      <Link
-                        key={`${item.label}-${item.href}`}
-                        href={item.href}
-                        className={cn(
-                          "flex items-center gap-3 rounded-2xl border border-[var(--brand-shell-strong)] bg-white px-4 py-4 text-sm font-medium text-[var(--brand-ink)] shadow-[var(--shadow-sm)] transition-all hover:border-[var(--brand-blue)] hover:bg-[var(--brand-shell)]",
-                          pathname?.startsWith(item.href) && "border-[var(--brand-blue)] bg-[var(--brand-shell)]",
-                        )}
-                      >
-                        <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-[var(--brand-shell-strong)] bg-sky-50 text-[var(--brand-blue)]">
-                          <Icon className="size-4" />
-                        </span>
-                        <span className="flex-1">{item.label}</span>
-                      </Link>
-                    )
-                  })}
-                </div>
-
-                <div className="mt-auto grid gap-3 pt-6">
-                  <Button
-                    asChild
-                    className="h-12 rounded-2xl bg-[var(--brand-blue)] text-sm font-medium text-white hover:bg-[var(--brand-sky)]"
-                  >
-                    <Link href="/jobs">Cari Lowongan</Link>
-                  </Button>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+function FlatPanel({ items, title }: { items: CountItem[]; title: string }) {
+  return (
+    <div className="grid min-h-[280px] grid-cols-[1.5fr_1fr]">
+      <div className="p-5">
+        <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">{title}</p>
+        <div className="grid gap-0.5">
+          {items.map((item) => <CountLink key={item.href} item={item} />)}
         </div>
+      </div>
+      <div className="border-l border-slate-100 p-5">
+        <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Kombinasi Populer</p>
+        <div className="flex flex-wrap gap-2 px-3">
+          {quickLinks.map((link) => (
+            <Link key={link} href={`/jobs?q=${encodeURIComponent(link)}`} className="rounded-none bg-[var(--brand-shell)] px-3 py-1 text-xs text-slate-600 transition-colors hover:bg-[var(--brand-shell-strong)] hover:text-primary">
+              {link}
+            </Link>
+          ))}
+        </div>
+        <Link href="/jobs" className="mt-5 inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-sm text-white transition-opacity hover:opacity-90">
+          Lihat Semua Lowongan <MoveRight className="size-4" />
+        </Link>
+      </div>
+    </div>
+  )
+}
 
-        <nav className="hidden border-t border-[var(--brand-shell-strong)] px-4 sm:px-6 lg:block lg:px-8">
-          <div className="flex min-h-12 items-center gap-7 overflow-x-auto whitespace-nowrap py-3">
-            {categoryItems.map((item) => (
+function JobsMegaMenu({ open, menuData }: { open: boolean; menuData: ReturnType<typeof buildNavbarData> }) {
+  const [activeFacet, setActiveFacet] = useState<Facet["id"]>("kategori")
+  const [activeCategory, setActiveCategory] = useState(menuData.categories[0])
+
+  return (
+    <div className={cn(
+      "absolute left-1/2 top-full hidden w-[min(960px,95vw)] -translate-x-1/2 rounded-none bg-white shadow-[var(--shadow-lg)] ring-1 ring-slate-100",
+      open && "block",
+    )}>
+      <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-3.5">
+        <Search className="size-4 text-primary" />
+        <input
+          className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
+          placeholder="Cari posisi, skill, atau perusahaan..."
+          aria-label="Cari lowongan"
+        />
+      </div>
+
+      <div className="flex overflow-x-auto border-b border-slate-100 px-4">
+        {facets.map((facet) => {
+          const Icon = facet.icon
+          return (
+            <Link
+              key={facet.id}
+              href={facet.href}
+              onMouseEnter={() => setActiveFacet(facet.id)}
+              onClick={(e) => {
+                if (activeFacet !== facet.id) { e.preventDefault(); setActiveFacet(facet.id) }
+              }}
+              className={cn(
+                "mb-[-1px] inline-flex shrink-0 items-center gap-1.5 border-b-2 border-transparent px-3 py-3 text-[13px] text-slate-500 transition-colors hover:text-slate-800",
+                activeFacet === facet.id && "border-primary text-primary",
+              )}
+            >
+              <Icon className="size-3.5" />
+              {facet.label}
+            </Link>
+          )
+        })}
+      </div>
+
+      {activeFacet === "kategori" ? (
+        <div className="grid min-h-[320px] grid-cols-[1fr_1.3fr_1fr]">
+          <div className="p-5">
+            <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Kategori</p>
+            <div className="grid gap-0.5">
+              {menuData.categories.map((category) => (
+                <span key={category.href} onMouseEnter={() => setActiveCategory(category)}>
+                  <CountLink item={category} active={activeCategory.href === category.href} />
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="border-l border-slate-100 p-5">
+            <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">
+              Peran di {activeCategory.label}
+            </p>
+            <div className="grid max-h-[260px] gap-0.5 overflow-y-auto pr-1">
+              {activeCategory.roles.map((role) => <CountLink key={role.href} item={role} />)}
+            </div>
+          </div>
+          <div className="border-l border-slate-100 p-5">
+            <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Filter Cepat</p>
+            <div className="flex flex-wrap gap-2 px-3">
+              {quickLinks.slice(0, 4).map((link) => (
+                <Link
+                  key={link}
+                  href={`/jobs?q=${encodeURIComponent(`${activeCategory.label} ${link}`)}`}
+                  className="rounded-none bg-[var(--brand-shell)] px-3 py-1 text-xs text-slate-600 transition-colors hover:bg-[var(--brand-shell-strong)] hover:text-primary"
+                >
+                  {link}
+                </Link>
+              ))}
+            </div>
+            <Link href={activeCategory.href} className="mt-5 inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-sm text-white transition-opacity hover:opacity-90">
+              {activeCategory.count} lowongan <MoveRight className="size-4" />
+            </Link>
+          </div>
+        </div>
+      ) : null}
+
+      {activeFacet === "pendidikan" ? <FlatPanel title="Jenjang Pendidikan" items={educationItems} /> : null}
+      {activeFacet === "pengalaman" ? <FlatPanel title="Pengalaman" items={experienceItems} /> : null}
+      {activeFacet === "lokasi" ? <FlatPanel title="Lokasi" items={menuData.locations} /> : null}
+      {activeFacet === "tipe" ? <FlatPanel title="Jenis Pekerjaan" items={menuData.jobTypes} /> : null}
+
+      <div className="flex items-center justify-between border-t border-slate-100 px-5 py-3.5">
+        <div className="flex gap-5 text-xs text-slate-500">
+          <span><span className="font-semibold text-slate-800">{formatCount(menuData.totalJobs)}</span> lowongan</span>
+          <span><span className="font-semibold text-slate-800">{formatCount(menuData.totalLocations)}</span> kota</span>
+          <span><span className="font-semibold text-slate-800">{formatCount(menuData.totalCompanies)}</span> perusahaan</span>
+        </div>
+        <Link href="/jobs" className="inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-sm text-white transition-opacity hover:opacity-90">
+          Buka Pencarian <MoveRight className="size-4" />
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+function CompaniesMegaMenu({ open, menuData }: { open: boolean; menuData: ReturnType<typeof buildNavbarData> }) {
+  const [activeType, setActiveType] = useState(menuData.companyTypes[0])
+
+  return (
+    <div className={cn(
+      "absolute left-1/2 top-full hidden w-[min(720px,92vw)] -translate-x-1/2 rounded-none bg-white shadow-[var(--shadow-lg)] ring-1 ring-slate-100",
+      open && "block",
+    )}>
+      <div className="grid min-h-[280px] grid-cols-[1fr_1.6fr]">
+        <div className="p-5">
+          <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Tipe Perusahaan</p>
+          <div className="grid gap-0.5">
+            {menuData.companyTypes.map((type) => (
               <Link
-                key={item.label}
-                href={item.href}
-                className="text-sm font-medium text-[var(--brand-ink)] transition-colors hover:text-[var(--brand-blue)]"
+                key={type.href}
+                href={type.href}
+                onMouseEnter={() => setActiveType(type)}
+                className={cn(
+                  "flex items-center justify-between rounded-none px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary",
+                  activeType.href === type.href && "bg-[var(--brand-shell-strong)] text-primary",
+                )}
               >
-                {item.label}
+                {type.label}
+                <span className="font-mono text-xs text-slate-400">{type.count}</span>
               </Link>
             ))}
           </div>
-        </nav>
+        </div>
+        <div className="border-l border-slate-100 p-5">
+          <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">{activeType.label}</p>
+          <div className="grid grid-cols-2 gap-2">
+            {activeType.companies.map((company) => (
+              <Link
+                key={company}
+                href={activeType.href}
+                className="flex items-center gap-2.5 rounded-none bg-[var(--brand-shell)] px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-[var(--brand-shell-strong)] hover:text-primary"
+              >
+                <span className="grid size-7 shrink-0 place-items-center rounded-none bg-primary/10 text-xs font-semibold text-primary">
+                  {company.charAt(0)}
+                </span>
+                <span className="min-w-0 flex-1 truncate text-xs">{company}</span>
+                <CheckCircle2 className="size-3.5 shrink-0 text-primary/60" />
+              </Link>
+            ))}
+          </div>
+          <Link href={activeType.href} className="mt-5 inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-sm text-white transition-opacity hover:opacity-90">
+            Lihat Semua {activeType.label} <MoveRight className="size-4" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DesktopNav({ menuData }: { menuData: ReturnType<typeof buildNavbarData> }) {
+  const [openMenu, setOpenMenu] = useState<"jobs" | "companies" | null>(null)
+
+  return (
+    <nav className="hidden items-stretch gap-0.5 lg:flex" onMouseLeave={() => setOpenMenu(null)}>
+      <div className="relative flex items-center" onMouseEnter={() => setOpenMenu("jobs")}>
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 rounded-none px-3 py-2 text-[13px] text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary"
+          aria-expanded={openMenu === "jobs"}
+        >
+          Cari Lowongan
+          <ChevronDown className={cn("size-3.5 text-slate-400 transition-transform", openMenu === "jobs" && "rotate-180")} />
+        </button>
+        <JobsMegaMenu open={openMenu === "jobs"} menuData={menuData} />
+      </div>
+
+      <div className="relative flex items-center" onMouseEnter={() => setOpenMenu("companies")}>
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 rounded-none px-3 py-2 text-[13px] text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary"
+          aria-expanded={openMenu === "companies"}
+        >
+          Perusahaan
+          <ChevronDown className={cn("size-3.5 text-slate-400 transition-transform", openMenu === "companies" && "rotate-180")} />
+        </button>
+        <CompaniesMegaMenu open={openMenu === "companies"} menuData={menuData} />
+      </div>
+
+      <Link href="/jobs" className="self-center rounded-none px-3 py-2 text-[13px] text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary">
+        Karier
+      </Link>
+      <Link href="/page/blog" className="self-center rounded-none px-3 py-2 text-[13px] text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary">
+        Blog
+      </Link>
+    </nav>
+  )
+}
+
+function MobileDrawer({ menuData }: { menuData: ReturnType<typeof buildNavbarData> }) {
+  const mobileGroups = [
+    { title: "Kategori", icon: Layers3, items: menuData.categories },
+    { title: "Pendidikan", icon: GraduationCap, items: educationItems },
+    { title: "Pengalaman", icon: BriefcaseBusiness, items: experienceItems },
+    { title: "Lokasi", icon: MapPin, items: menuData.locations },
+    { title: "Jenis Pekerjaan", icon: Clock3, items: menuData.jobTypes },
+    { title: "Perusahaan", icon: Building2, items: menuData.companyTypes },
+  ]
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="size-9 rounded-none lg:hidden">
+          <Menu className="size-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-[min(360px,92vw)] overflow-y-auto rounded-none bg-white p-0">
+        <SheetHeader className="border-b border-slate-100 px-5 py-4">
+          <SheetTitle className="flex items-center justify-between text-slate-900">
+            <span className="flex items-center gap-2 text-sm">
+              <Image src="/logo.png" alt="Lowonganku" width={24} height={24} className="size-6 object-contain" />
+              Lowonganku
+            </span>
+            <X className="size-4 text-slate-400" />
+          </SheetTitle>
+        </SheetHeader>
+        <div className="grid gap-0 p-3">
+          {mobileGroups.map((group) => {
+            const Icon = group.icon
+            return (
+              <details key={group.title} className="rounded-none open:bg-[var(--brand-shell)]" open={group.title === "Kategori"}>
+                <summary className="flex cursor-pointer list-none items-center gap-3 px-3 py-3 text-[13px] text-slate-700 [&::-webkit-details-marker]:hidden">
+                  <Icon className="size-4 text-primary" />
+                  {group.title}
+                  <ChevronDown className="ml-auto size-4 text-slate-400" />
+                </summary>
+                <div className="grid gap-0.5 pb-3 pl-7 pr-2">
+                  {group.items.map((item) => <CountLink key={item.href} item={item} />)}
+                </div>
+              </details>
+            )
+          })}
+          <Button asChild className="mt-4 h-11 rounded-none bg-primary text-sm text-white hover:opacity-90">
+            <Link href="/jobs">Cari Lowongan</Link>
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
+export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
+  const menuData = buildNavbarData({ jobs, categories, totalJobs })
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/95 backdrop-blur-sm">
+      <SiteFrame>
+        <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Logo />
+          <DesktopNav menuData={menuData} />
+          <div className="hidden items-center gap-2 lg:flex">
+            <Button asChild variant="ghost" className="h-9 rounded-none px-4 text-[13px] text-slate-600 hover:bg-[var(--brand-shell)] hover:text-primary">
+              <Link href="/admin/login">Masuk</Link>
+            </Button>
+            <Button asChild className="h-9 rounded-none bg-primary px-5 text-[13px] text-white hover:opacity-90">
+              <Link href="/jobs">Pasang Lowongan</Link>
+            </Button>
+          </div>
+          <MobileDrawer menuData={menuData} />
+        </div>
       </SiteFrame>
     </header>
   )
 }
+

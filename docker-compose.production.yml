@@ -57,7 +57,10 @@ x-backend-env: &backend-env
   PUPPETEER_TIMEOUT: ${PUPPETEER_TIMEOUT:-120}
   WAIT_FOR_DB: "true"
   ENABLE_LARAVEL_CACHE_WARMUP: "true"
-  RUN_MIGRATIONS: "false"
+  RUN_MIGRATIONS: "true"
+  ADMIN_EMAIL: ${ADMIN_EMAIL:?ADMIN_EMAIL is required}
+  ADMIN_NAME: ${ADMIN_NAME:-Super Admin}
+  ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD is required}
   AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
   AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
 

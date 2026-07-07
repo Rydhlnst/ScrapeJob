@@ -29,7 +29,7 @@ return [
         'enabled' => (bool) env('SCRAPER_SCHEDULE_ENABLED', true),
         'cron_expression' => env('SCRAPER_SCHEDULE_CRON', '0 */8 * * *'),
         'timezone' => env('SCRAPER_SCHEDULE_TIMEZONE', env('APP_TIMEZONE', 'Asia/Jakarta')),
-        'without_overlapping_minutes' => (int) env('SCRAPER_SCHEDULE_WITHOUT_OVERLAPPING_MINUTES', 480),
+        'without_overlapping_minutes' => (int) env('SCRAPER_SCHEDULE_WITHOUT_OVERLAPPING_MINUTES', 60),
     ],
 
     'active_sources' => $parseCsv(env('SCRAPER_ACTIVE_SOURCES'), ['glints', 'jobstreet']),

@@ -39,7 +39,7 @@ export function JobDetailContent({ job }: { job: Job }) {
   const description = job.description?.trim()
 
   return (
-    <Card className="rounded-[30px] border border-white/80 bg-white/82 p-7 shadow-[var(--shadow-md)]">
+    <Card className="rounded-[30px] border border-white bg-white p-7 shadow-[var(--shadow-md)]">
       <div className="inline-flex w-fit rounded-full border border-sky-100 bg-sky-50 px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-sky-700 uppercase">
         Detail lowongan
       </div>
@@ -85,3 +85,4 @@ export function JobDetailContent({ job }: { job: Job }) {
     </Card>
   )
 }
+

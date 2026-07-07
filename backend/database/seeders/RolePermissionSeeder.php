@@ -24,6 +24,9 @@ class RolePermissionSeeder extends Seeder
             'manage site content',
             'run scraping',
             'view scrape logs',
+            'manage settings',
+            'manage users',
+            'view audit logs',
         ];
 
         foreach ($permissions as $permission) {
@@ -50,6 +53,9 @@ class RolePermissionSeeder extends Seeder
             'manage site content',
             'run scraping',
             'view scrape logs',
+            'manage settings',
+            'manage users',
+            'view audit logs',
         ]);
 
         $editor->syncPermissions([

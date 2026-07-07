@@ -166,10 +166,7 @@ export function HowItWorks() {
                 type="button"
                 aria-label={`Go to step ${index + 1}`}
                 className="h-2.5 w-10 transition-opacity"
-                style={{
-                  backgroundColor: "var(--brand-blue)",
-                  opacity: index === activeIndex ? 1 : 0.22,
-                }}
+                style={{ backgroundColor: index === activeIndex ? "var(--brand-blue)" : "#bfdbfe" }}
                 onClick={() => api?.scrollTo(index)}
               />
             ))}
@@ -196,13 +193,13 @@ export function HowItWorks() {
                   >
                     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
                       <div className="flex min-h-full flex-col">
-                        <div className="text-5xl font-medium tracking-[-0.05em] text-white/72">
+                        <div className="text-5xl font-medium tracking-[-0.05em] text-blue-100">
                           {step.step}
                         </div>
                         <div className="mt-8 max-w-3xl text-4xl font-semibold leading-tight tracking-[-0.05em] md:text-5xl">
                           {step.title}
                         </div>
-                        <p className="mt-8 max-w-2xl text-base leading-8 text-white/76">
+                        <p className="mt-8 max-w-2xl text-base leading-8 text-blue-100">
                           {step.description}
                         </p>
                       </div>
@@ -220,7 +217,7 @@ export function HowItWorks() {
                         />
                         <div
                           className="mt-6 text-sm"
-                          style={{ color: "rgba(23,37,84,0.6)" }}
+                          style={{ color: "#64748b" }}
                         >
                           {step.meta}
                         </div>
@@ -229,7 +226,7 @@ export function HowItWorks() {
                         </div>
                         <div
                           className="mt-2 text-sm"
-                          style={{ color: "rgba(23,37,84,0.72)" }}
+                          style={{ color: "#475569" }}
                         >
                           {step.sampleSubtitle}
                         </div>
@@ -261,3 +258,5 @@ export function HowItWorks() {
     </section>
   )
 }
+
+

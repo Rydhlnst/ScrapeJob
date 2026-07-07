@@ -5,11 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Navbar } from "@/components/shared/Navbar"
 import { Footer } from "@/components/shared/Footer"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
+import { getNavbarData } from "@/lib/api/navbar"
 
-export default function NotFound() {
+export default async function NotFound() {
+  const navbarData = await getNavbarData()
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
+      <Navbar jobs={navbarData.jobs} categories={navbarData.categories} totalJobs={navbarData.totalJobs} />
       <main className="flex-1 py-12 md:py-20 flex items-center">
         <SiteFrame className="w-full">
           <SiteContent>

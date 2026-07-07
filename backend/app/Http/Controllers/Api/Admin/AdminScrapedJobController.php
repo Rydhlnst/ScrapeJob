@@ -66,11 +66,13 @@ class AdminScrapedJobController extends Controller
 
     public function approve(ScrapedJob $scrapedJob)
     {
-        $scrapedJob->update(['status' => 'approved']);
+        $result = $this->publishingService->moveToDraft($scrapedJob->refresh());
+        if ($result['result'] === 'duplicate') {
+            return ApiResponse::error('Job already exists in draft or published jobs.', 409);
+        }
 
-        return ApiResponse::success(new ScrapedJobResource($scrapedJob->refresh()), 'Scraped job approved successfully');
+        return ApiResponse::success(new JobResource($result['job']->load('category')), 'Scraped job moved to draft successfully');
     }
-
     public function reject(ScrapedJob $scrapedJob)
     {
         $scrapedJob->update(['status' => 'rejected']);
@@ -137,14 +139,28 @@ class AdminScrapedJobController extends Controller
             'ids.*' => ['required', 'string', 'uuid'],
         ]);
 
-        ScrapedJob::query()
+        $jobs = ScrapedJob::query()
             ->whereIn('id', $payload['ids'])
-            ->where('status', 'pending')
-            ->update(['status' => 'approved']);
+            ->whereIn('status', ['pending', 'approved'])
+            ->get();
 
-        return ApiResponse::success(null, 'Bulk approval successful');
+        $successCount = 0;
+        $duplicateCount = 0;
+
+        foreach ($jobs as $scrapedJob) {
+            $result = $this->publishingService->moveToDraft($scrapedJob);
+            if ($result['result'] === 'duplicate') {
+                $duplicateCount++;
+            } else {
+                $successCount++;
+            }
+        }
+
+        return ApiResponse::success([
+            'success_count' => $successCount,
+            'duplicate_count' => $duplicateCount,
+        ], 'Bulk move to draft completed');
     }
-
     public function bulkReject(Request $request)
     {
         $payload = $request->validate([

@@ -10,14 +10,30 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::query()->updateOrCreate(
-            ['email' => 'admin@example.com'],
+        $email    = env('ADMIN_EMAIL');
+        $name     = env('ADMIN_NAME', 'Super Admin');
+        $password = env('ADMIN_PASSWORD');
+
+        if (! $email || ! $password) {
+            $this->command?->warn(
+                'ADMIN_EMAIL or ADMIN_PASSWORD not set — skipping admin user seeding. ' .
+                'Set these env vars to create/update the initial admin account.'
+            );
+            return;
+        }
+
+        $admin = User::updateOrCreate(
+            ['email' => $email],
             [
-                'name' => 'Super Admin',
-                'password' => Hash::make('password'),
+                'name'     => $name,
+                'password' => Hash::make($password),
             ]
         );
 
-        $admin->assignRole('super_admin');
+        if (! $admin->hasRole('super_admin')) {
+            $admin->assignRole('super_admin');
+        }
+
+        $this->command?->info("Admin user ready: {$email}");
     }
 }

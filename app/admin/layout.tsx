@@ -12,7 +12,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarProvider>
             <div className="admin-modern flex min-h-screen w-full bg-[linear-gradient(180deg,#f8fbff_0%,#eef5ff_100%)] text-foreground">
               <AdminSidebar />
-              <SidebarInset className="bg-transparent p-3 md:p-5 lg:p-6">
+              <SidebarInset className="bg-white p-3 md:p-5 lg:p-6">
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <SidebarTrigger className="rounded-none border border-border bg-white text-foreground shadow-none" />
@@ -22,7 +22,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   </div>
                   <AdminLanguageToggle />
                 </div>
-                <div className="min-h-full border border-[var(--brand-shell-strong)] bg-[rgba(255,255,255,0.96)] p-4 shadow-[var(--shadow-md)] backdrop-blur md:p-6">
+                <div className="min-h-full border border-[var(--brand-shell-strong)] bg-white p-4 shadow-[var(--shadow-md)] md:p-6">
                   {children}
                 </div>
               </SidebarInset>
@@ -33,3 +33,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </AdminAuthGuard>
   )
 }
+

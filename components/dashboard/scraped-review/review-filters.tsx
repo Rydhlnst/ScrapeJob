@@ -38,7 +38,7 @@ export function ReviewFilters({
           value={searchInput}
           onChange={(event) => onSearchInputChange(event.target.value)}
           placeholder="Search job title, company, or location..."
-          className="pl-9"
+          className="bg-white pl-9"
         />
       </div>
 
@@ -61,7 +61,7 @@ export function ReviewFilters({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="pending">Pending</SelectItem>
-          <SelectItem value="approved">Approved</SelectItem>
+          <SelectItem value="approved">Draft Created</SelectItem>
           <SelectItem value="rejected">Rejected</SelectItem>
           <SelectItem value="published">Published</SelectItem>
           <SelectItem value="all">All Statuses</SelectItem>

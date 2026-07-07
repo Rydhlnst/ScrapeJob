@@ -54,7 +54,7 @@ export function TestimonialsSection() {
             >
               <p
                 className="text-sm leading-7"
-                style={{ color: "rgba(23,37,84,0.72)" }}
+                style={{ color: "#475569" }}
               >
                 "{testimonial.quote}"
               </p>
@@ -67,7 +67,7 @@ export function TestimonialsSection() {
                 </div>
                 <div
                   className="text-xs"
-                  style={{ color: "rgba(23,37,84,0.6)" }}
+                  style={{ color: "#64748b" }}
                 >
                   {testimonial.role}
                 </div>
@@ -79,3 +79,4 @@ export function TestimonialsSection() {
     </section>
   )
 }
+

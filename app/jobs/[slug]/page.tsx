@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getJobBySlug } from "@/lib/api/jobs"
+import { getNavbarData } from "@/lib/api/navbar"
 import { JobDetailContent } from "@/components/public/job-detail-content"
 import { JobSummaryCard } from "@/components/public/job-summary-card"
 import { Footer } from "@/components/shared/Footer"
@@ -39,12 +40,15 @@ export default async function JobDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const job = await getJobBySlug(slug)
+  const [job, navbarData] = await Promise.all([
+    getJobBySlug(slug),
+    getNavbarData(),
+  ])
   if (!job || (job.status && job.status !== "published")) notFound()
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
+      <Navbar jobs={navbarData.jobs} categories={navbarData.categories} totalJobs={navbarData.totalJobs} />
       <main className="py-8">
         <SiteFrame>
           <SiteContent>

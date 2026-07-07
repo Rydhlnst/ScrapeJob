@@ -7,7 +7,7 @@ export type ReviewStats = {
   published: number
 }
 
-export type RowAction = "approve" | "reject" | "publish" | "clean_ai"
+export type RowAction = "approve" | "reject" | "clean_ai"
 
 export type ReviewTableHelpers = {
   cleanJobTitle: (value: string) => string
@@ -28,5 +28,4 @@ export type ReviewTableProps = {
   onToggleRow: (id: string, checked: boolean) => void
   onAction: (id: string, action: RowAction) => Promise<void>
   onInspect: (job: ScrapedJob) => void
-  canPublish: (job: ScrapedJob) => boolean
 }

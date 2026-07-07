@@ -108,7 +108,7 @@ function FiltersForm({
             className={`relative z-10 cursor-pointer rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
               category === ""
                 ? "border-sky-100 bg-sky-50 text-sky-700"
-                : "border-white bg-white/92 text-slate-600 hover:bg-sky-50 hover:text-sky-700"
+                : "border-white bg-white text-slate-600 hover:bg-sky-50 hover:text-sky-700"
             }`}
           >
             Semua
@@ -121,7 +121,7 @@ function FiltersForm({
               className={`relative z-10 cursor-pointer rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
                 category === item.id
                   ? "border-sky-100 bg-sky-50 text-sky-700"
-                  : "border-white bg-white/92 text-slate-600 hover:bg-sky-50 hover:text-sky-700"
+                  : "border-white bg-white text-slate-600 hover:bg-sky-50 hover:text-sky-700"
               }`}
             >
               {item.name}
@@ -139,7 +139,7 @@ function FiltersForm({
             <Label
               htmlFor={optionId("jobType", value)}
               key={value}
-              className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white/92 px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
+              className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
             >
               <RadioGroupItem id={optionId("jobType", value)} value={value} />
               {formatJobType(value)}
@@ -147,7 +147,7 @@ function FiltersForm({
           ))}
           <Label
             htmlFor={optionId("jobType", "")}
-            className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white/92 px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
+            className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
           >
             <RadioGroupItem id={optionId("jobType", "")} value="" />
             Semua
@@ -164,7 +164,7 @@ function FiltersForm({
             <Label
               htmlFor={optionId("source", value)}
               key={value}
-              className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white/92 px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
+              className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
             >
               <RadioGroupItem id={optionId("source", value)} value={value} />
               {value}
@@ -172,7 +172,7 @@ function FiltersForm({
           ))}
           <Label
             htmlFor={optionId("source", "")}
-            className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white/92 px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
+            className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
           >
             <RadioGroupItem id={optionId("source", "")} value="" />
             Semua
@@ -182,13 +182,13 @@ function FiltersForm({
 
       <div className="flex gap-2 pt-2">
         <Button
-          className="flex-1 rounded-2xl bg-[var(--brand-blue)] text-white hover:bg-[color:rgba(37,99,235,0.92)]"
+          className="flex-1 rounded-2xl bg-[var(--brand-blue)] text-white hover:bg-blue-700"
           onClick={apply}
         >
           Terapkan
         </Button>
         <Button
-          className="flex-1 rounded-2xl border-white bg-white/82 hover:bg-white"
+          className="flex-1 rounded-2xl border-white bg-white hover:bg-white"
           variant="outline"
           onClick={reset}
         >
@@ -220,7 +220,7 @@ export function JobFilterSidebar({
   return (
     <>
       <div className="hidden md:block">
-        <Card className="rounded-[28px] border border-white/80 bg-white/72 shadow-[var(--shadow-sm)]">
+        <Card className="rounded-[28px] border border-white bg-white shadow-[var(--shadow-sm)]">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold tracking-[0.12em] uppercase text-slate-500">
               Filters
@@ -232,12 +232,12 @@ export function JobFilterSidebar({
                 </Badge>
               ) : null}
               {jobType ? (
-                <Badge variant="outline" className="rounded-full border-white bg-white/82 text-slate-600">
+                <Badge variant="outline" className="rounded-full border-white bg-white text-slate-600">
                   {formatJobType(jobType)}
                 </Badge>
               ) : null}
               {source ? (
-                <Badge variant="outline" className="rounded-full border-white bg-white/82 text-slate-600">
+                <Badge variant="outline" className="rounded-full border-white bg-white text-slate-600">
                   {source}
                 </Badge>
               ) : null}
@@ -258,7 +258,7 @@ export function JobFilterSidebar({
       <div className="md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" className="w-full rounded-[22px] border-white bg-white/82">
+            <Button variant="outline" className="w-full rounded-[22px] border-white bg-white">
               <SlidersHorizontal className="mr-2 size-4" />
               Filter
             </Button>
@@ -283,3 +283,4 @@ export function JobFilterSidebar({
     </>
   )
 }
+

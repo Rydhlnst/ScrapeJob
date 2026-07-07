@@ -61,7 +61,7 @@ export function BenefitsSection({ content }: { content: LandingBenefitsContent }
                     </div>
                     <p
                       className="mt-3 max-w-xl text-sm leading-7"
-                      style={{ color: "rgba(23,37,84,0.72)" }}
+                      style={{ color: "#475569" }}
                     >
                       {benefit.description}
                     </p>
@@ -108,3 +108,4 @@ export function BenefitsSection({ content }: { content: LandingBenefitsContent }
     </section>
   )
 }
+

@@ -115,7 +115,7 @@ export function TrustedCompanies({ content }: { content: LandingTrustedCompanies
                 <div className="mt-3 text-lg font-medium text-[var(--brand-ink)]">
                   Openings indexed
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[color:rgba(23,37,84,0.72)]">
+                <p className="mt-3 text-sm leading-7 text-slate-600">
                   Browse roles across engineering, product, operations, sales, and support.
                 </p>
               </div>
@@ -126,7 +126,7 @@ export function TrustedCompanies({ content }: { content: LandingTrustedCompanies
                 <div className="mt-3 text-lg font-medium text-[var(--brand-ink)]">
                   Monthly job seekers
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[color:rgba(23,37,84,0.72)]">
+                <p className="mt-3 text-sm leading-7 text-slate-600">
                   Designed for first-time visitors who want to evaluate jobs before committing to a deeper search.
                 </p>
               </div>
@@ -158,3 +158,4 @@ export function TrustedCompanies({ content }: { content: LandingTrustedCompanies
     </section>
   )
 }
+

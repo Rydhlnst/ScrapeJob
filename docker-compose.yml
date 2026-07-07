@@ -26,6 +26,41 @@ services:
       retries: 5
       start_period: 20s
 
+  migrate:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file:
+      - ./backend/.env.docker
+    environment:
+      APP_URL: http://localhost:8000
+      FRONTEND_URL: http://localhost:3000
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: job_platform
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      WAIT_FOR_DB: "true"
+      RUN_MIGRATIONS: "false"
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_NAME: "${ADMIN_NAME:-Super Admin}"
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+    command:
+      - sh
+      - -c
+      - |
+        php artisan migrate --force &&
+        php artisan db:seed --class=RolePermissionSeeder --force &&
+        php artisan db:seed --class=AdminUserSeeder --force
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
   backend:
     build:
       context: .
@@ -49,10 +84,10 @@ services:
       SCRAPER_PYTHON_BIN: python3
       SCRAPER_SCHEDULE_ENABLED: "true"
       SCRAPER_SCHEDULE_CRON: "0 */8 * * *"
-      RUN_MIGRATIONS: "true"
+      RUN_MIGRATIONS: "false"
     depends_on:
-      db:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       redis:
         condition: service_healthy
     healthcheck:
@@ -84,6 +119,8 @@ services:
       WAIT_FOR_DB: "true"
     command: ["/var/www/html/docker/start-worker.sh"]
     depends_on:
+      migrate:
+        condition: service_completed_successfully
       db:
         condition: service_healthy
       redis:
@@ -113,6 +150,8 @@ services:
       WAIT_FOR_DB: "true"
     command: ["/var/www/html/docker/start-scheduler.sh"]
     depends_on:
+      migrate:
+        condition: service_completed_successfully
       db:
         condition: service_healthy
       redis:

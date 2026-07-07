@@ -60,7 +60,7 @@ export function PopularCategories({ categories }: { categories: Category[] }) {
                   </div>
                   <div
                     className="mt-1 text-sm"
-                    style={{ color: "rgba(23,37,84,0.68)" }}
+                    style={{ color: "#475569" }}
                   >
                     {cat.totalJobs ? `${cat.totalJobs} jobs` : "Browse roles"}
                   </div>
@@ -73,3 +73,4 @@ export function PopularCategories({ categories }: { categories: Category[] }) {
     </section>
   )
 }
+

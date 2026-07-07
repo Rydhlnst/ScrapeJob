@@ -71,6 +71,8 @@ if [ "${APP_ENV:-production}" = "production" ]; then
   require_env DB_USERNAME
   require_env DB_PASSWORD
   require_env REDIS_HOST
+  require_env ADMIN_EMAIL
+  require_env ADMIN_PASSWORD
 
   if [ "${APP_DEBUG:-false}" != "false" ]; then
     echo "APP_DEBUG must be false in production." >&2
@@ -89,6 +91,8 @@ wait_for_database
 
 if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
   php artisan migrate --force
+  php artisan db:seed --class=RolePermissionSeeder --force
+  php artisan db:seed --class=AdminUserSeeder --force
 fi
 
 # Ensure storage symbolic link exists (only run as root to avoid permission errors in worker/scheduler)

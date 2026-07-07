@@ -8,7 +8,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      className="w-full overflow-x-auto"
     >
       <table
         data-slot="table"
@@ -23,7 +23,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("bg-slate-50/80 [&_tr]:border-b [&_tr]:border-slate-200", className)}
+      className={cn("bg-slate-50 [&_tr]:border-b [&_tr]:border-slate-200", className)}
       {...props}
     />
   )
@@ -44,7 +44,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
     <tfoot
       data-slot="table-footer"
       className={cn(
-        "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
+        "border-t bg-muted font-medium [&>tr]:last:border-b-0",
         className
       )}
       {...props}
@@ -57,7 +57,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-b border-slate-100 transition-colors hover:bg-slate-50/70 has-aria-expanded:bg-slate-50 data-[state=selected]:bg-slate-50",
+        "border-b border-slate-100 transition-colors hover:bg-slate-50 has-aria-expanded:bg-slate-50 data-[state=selected]:bg-slate-50",
         className
       )}
       {...props}
@@ -114,3 +114,4 @@ export {
   TableCell,
   TableCaption,
 }
+

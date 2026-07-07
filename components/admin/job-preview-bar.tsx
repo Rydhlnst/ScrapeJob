@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 
 export function JobPreviewBar({ jobId }: { jobId: string }) {
   return (
-    <div className="sticky top-0 z-40 border-b bg-white/95 backdrop-blur">
+    <div className="sticky top-0 z-40 border-b bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
         <Button asChild variant="outline">
           <Link href={`/admin/jobs/${jobId}/edit`}>Back to Edit</Link>
@@ -29,4 +29,5 @@ export function JobPreviewBar({ jobId }: { jobId: string }) {
     </div>
   )
 }
+
 

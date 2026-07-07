@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
 import { getPublicPageBySlug } from "@/lib/api/pages"
+import { getNavbarData } from "@/lib/api/navbar"
 import { Footer } from "@/components/shared/Footer"
 import { Navbar } from "@/components/shared/Navbar"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
@@ -32,7 +33,10 @@ export default async function PublicPage({
   const { slug } = await params
 
   try {
-    const page = await getPublicPageBySlug(slug)
+    const [page, navbarData] = await Promise.all([
+      getPublicPageBySlug(slug),
+      getNavbarData(),
+    ])
 
     if (!page) {
       notFound()
@@ -40,11 +44,11 @@ export default async function PublicPage({
 
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
+        <Navbar jobs={navbarData.jobs} categories={navbarData.categories} totalJobs={navbarData.totalJobs} />
         <main className="py-8">
           <SiteFrame>
             <SiteContent>
-              <article className="border border-white/80 bg-white/90 p-7 shadow-[var(--shadow-md)]">
+              <article className="border border-white bg-white p-7 shadow-[var(--shadow-md)]">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-700">
                   Page
                 </div>
@@ -69,3 +73,4 @@ export default async function PublicPage({
     notFound()
   }
 }
+

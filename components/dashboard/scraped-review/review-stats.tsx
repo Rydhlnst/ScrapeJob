@@ -15,9 +15,9 @@ export function ReviewStatsCards({ stats }: { stats: ReviewStats }) {
     },
     {
       key: "approved",
-      label: "Approved Jobs",
+      label: "Draft Created",
       value: stats.approved,
-      helper: "Ready to publish",
+      helper: "Ready to edit",
       icon: CheckCheck,
       tone: "text-blue-600",
     },
@@ -42,7 +42,7 @@ export function ReviewStatsCards({ stats }: { stats: ReviewStats }) {
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {cards.map((item) => (
-        <Card key={item.key} className="border-border/70 bg-card/90 transition hover:shadow-sm">
+        <Card key={item.key} className="border-[#e4e4e7] bg-white transition hover:shadow-sm">
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center justify-between text-xs uppercase tracking-wide">
               {item.label}
@@ -56,4 +56,5 @@ export function ReviewStatsCards({ stats }: { stats: ReviewStats }) {
     </div>
   )
 }
+
 

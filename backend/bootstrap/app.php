@@ -52,7 +52,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->cron((string) config('scraper.schedule.cron_expression', '0 */8 * * *'))
                 ->timezone((string) config('scraper.schedule.timezone', 'Asia/Jakarta'))
                 ->name('dispatch-scheduled-scraping')
-                ->withoutOverlapping((int) config('scraper.schedule.without_overlapping_minutes', 480));
+                ->withoutOverlapping((int) config('scraper.schedule.without_overlapping_minutes', 60));
         }
 
         $schedule->job(new SendJobNotificationJob())

@@ -19,7 +19,7 @@ class BulkScrapedJobsAndNormalizationTest extends TestCase
         $this->seed(RolePermissionSeeder::class);
     }
 
-    public function test_bulk_approve_updates_status_to_approved(): void
+    public function test_bulk_approve_moves_scraped_jobs_to_drafts(): void
     {
         $admin = User::factory()->create();
         $admin->assignRole('admin');
@@ -48,10 +48,14 @@ class BulkScrapedJobsAndNormalizationTest extends TestCase
         ]);
 
         $response->assertOk()
-            ->assertJsonPath('success', true);
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.success_count', 2)
+            ->assertJsonPath('data.duplicate_count', 0);
 
         $this->assertDatabaseHas('scraped_jobs', ['id' => $job1->id, 'status' => 'approved']);
         $this->assertDatabaseHas('scraped_jobs', ['id' => $job2->id, 'status' => 'approved']);
+        $this->assertDatabaseHas('jobs', ['scraped_job_id' => $job1->id, 'status' => 'draft']);
+        $this->assertDatabaseHas('jobs', ['scraped_job_id' => $job2->id, 'status' => 'draft']);
     }
 
     public function test_bulk_reject_updates_status_to_rejected(): void

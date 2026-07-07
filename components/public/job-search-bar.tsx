@@ -95,7 +95,7 @@ export function JobSearchBar({
 
   return (
     <div className="grid items-stretch gap-3 xl:grid-cols-[minmax(0,1fr)_180px]">
-      <div className="rounded-none border border-white/80 bg-white/92 p-2 shadow-[var(--shadow-sm)]">
+      <div className="rounded-none border border-white bg-white p-2 shadow-[var(--shadow-sm)]">
         <div className="grid items-center gap-2 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)_220px] md:gap-0">
           <div className="relative md:pr-2 md:after:absolute md:after:right-0 md:after:top-2 md:after:h-[calc(100%-16px)] md:after:w-px md:after:bg-slate-200">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -103,7 +103,7 @@ export function JobSearchBar({
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               placeholder="Posisi / perusahaan / keyword"
-              className="h-12 border-0 bg-transparent pl-11 shadow-none focus-visible:ring-0"
+              className="h-12 border-0 bg-white pl-11 shadow-none focus-visible:ring-0"
               onKeyDown={(e) => {
                 if (e.key === "Enter") submit()
               }}
@@ -115,7 +115,7 @@ export function JobSearchBar({
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Lokasi (kota/provinsi)"
-              className="h-12 border-0 bg-transparent pl-11 shadow-none focus-visible:ring-0"
+              className="h-12 border-0 bg-white pl-11 shadow-none focus-visible:ring-0"
               onKeyDown={(e) => {
                 if (e.key === "Enter") submit()
               }}
@@ -149,3 +149,4 @@ export function JobSearchBar({
     </div>
   )
 }
+

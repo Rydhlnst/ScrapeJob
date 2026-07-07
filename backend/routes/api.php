@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AuditLogController;
+use App\Http\Controllers\Api\Admin\ApiKeyController;
 use App\Http\Controllers\Api\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\JobController as AdminJobController;
@@ -7,7 +9,9 @@ use App\Http\Controllers\Api\Admin\JobSourceController as AdminJobSourceControll
 use App\Http\Controllers\Api\Admin\LandingPageContentController as AdminLandingPageContentController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\AdminScrapedJobController;
+use App\Http\Controllers\Api\Admin\SettingsController;
 use App\Http\Controllers\Api\Admin\ScrapeRunController;
+use App\Http\Controllers\Api\Admin\UserManagementController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
 use App\Http\Controllers\Api\Public\JobController as PublicJobController;
@@ -75,6 +79,25 @@ Route::prefix('admin')
             ->middleware(['permission:run scraping', 'throttle:scrape-run']);
         Route::get('/scrape-runs/{id}', [ScrapeRunController::class, 'show'])->middleware('permission:view scrape logs');
         Route::get('/scrape-runs/{id}/logs', [ScrapeRunController::class, 'logs'])->middleware('permission:view scrape logs');
+
+        // Settings
+        Route::get('/settings', [SettingsController::class, 'index'])->middleware('permission:manage settings');
+        Route::put('/settings', [SettingsController::class, 'update'])->middleware('permission:manage settings');
+
+        // Users
+        Route::get('/users', [UserManagementController::class, 'index'])->middleware('permission:manage users');
+        Route::post('/users', [UserManagementController::class, 'store'])->middleware('permission:manage users');
+        Route::put('/users/{id}', [UserManagementController::class, 'update'])->middleware('permission:manage users');
+        Route::delete('/users/{id}', [UserManagementController::class, 'destroy'])->middleware('permission:manage users');
+
+        // API Keys
+        Route::get('/api-keys', [ApiKeyController::class, 'index'])->middleware('permission:manage settings');
+        Route::post('/api-keys', [ApiKeyController::class, 'store'])->middleware('permission:manage settings');
+        Route::put('/api-keys/{id}', [ApiKeyController::class, 'update'])->middleware('permission:manage settings');
+        Route::delete('/api-keys/{id}', [ApiKeyController::class, 'destroy'])->middleware('permission:manage settings');
+
+        // Audit Logs
+        Route::get('/audit-logs', [AuditLogController::class, 'index'])->middleware('permission:view audit logs');
 
         Route::get('/scraped-jobs', [AdminScrapedJobController::class, 'index'])->middleware('permission:view jobs');
         Route::post('/scraped-jobs/bulk-clean-ai', [AdminScrapedJobController::class, 'bulkCleanAi'])->middleware('permission:edit jobs');
