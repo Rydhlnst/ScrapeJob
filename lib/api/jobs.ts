@@ -25,6 +25,7 @@ type JobStatsResponse = {
 
 type ApiJob = Omit<Job, "category" | "categoryId" | "status" | "updatedAt"> & {
   description?: string | null
+  descriptionDoc?: Record<string, unknown> | null
   companyName?: string | null
   location?: string | null
   salaryText?: string | null
@@ -53,6 +54,7 @@ function normalizeJob(job: ApiJob, fallbackStatus: Job["status"]): Job {
     location: job.location ?? "Tidak disebutkan",
     salaryText: job.salaryText ?? null,
     description: typeof job.description === "string" ? job.description : "",
+    descriptionDoc: job.descriptionDoc ?? null,
     sourceName: job.sourceName ?? "Lowonganku",
     sourceUrl: job.sourceUrl ?? "",
     publishedAt: job.publishedAt ?? null,

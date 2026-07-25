@@ -11,7 +11,7 @@ const columns = [
     items: [
       { label: "Lowongan", href: "/jobs" },
       { label: "Perusahaan", href: "/#companies" },
-      { label: "Untuk Perusahaan", href: "/#employers" },
+      { label: "Untuk Perusahaan", href: "/contact" },
     ],
   },
   {
@@ -28,7 +28,7 @@ const columns = [
     items: [
       { label: "Tentang", href: "/#about" },
       { label: "Karier", href: "/jobs" },
-      { label: "Kontak", href: "/#employers" },
+      { label: "Kontak", href: "/contact" },
       { label: "Media", href: "/#companies" },
     ],
   },

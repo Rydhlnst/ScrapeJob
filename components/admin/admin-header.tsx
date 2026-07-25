@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 export function AdminHeader({
@@ -6,16 +5,19 @@ export function AdminHeader({
   description,
   actions,
   className,
+  sticky = true,
 }: {
   title: string
   description?: string
   actions?: React.ReactNode
   className?: string
+  sticky?: boolean
 }) {
   return (
     <header
       className={cn(
-        "border border-border bg-card px-5 py-5 md:px-6",
+        "border border-border bg-card px-5 py-4 md:px-6",
+        sticky && "z-10 mb-3 rounded-none",
         className,
       )}
     >
@@ -29,12 +31,6 @@ export function AdminHeader({
           ) : null}
         </div>
         {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
-      </div>
-
-      <div className="md:hidden">
-        <Button asChild variant="outline" className="mt-4 h-11 w-full rounded-none">
-          <a href="/">Back to Public</a>
-        </Button>
       </div>
     </header>
   )

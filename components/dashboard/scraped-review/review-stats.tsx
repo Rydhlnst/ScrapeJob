@@ -1,4 +1,4 @@
-import { CheckCheck, CircleX, FileSearch, Send } from "lucide-react"
+import { CheckCheck, CircleX, Copy, FileSearch, Send } from "lucide-react"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import type { ReviewStats } from "./types"
@@ -30,6 +30,13 @@ export function ReviewStatsCards({ stats }: { stats: ReviewStats }) {
       tone: "text-rose-600",
     },
     {
+      key: "duplicate",
+      label: "Duplicate Jobs",
+      value: stats.duplicate,
+      helper: "Matched existing data",
+      icon: Copy,
+      tone: "text-slate-600",
+    },    {
       key: "published",
       label: "Published Jobs",
       value: stats.published,
@@ -40,7 +47,7 @@ export function ReviewStatsCards({ stats }: { stats: ReviewStats }) {
   ] as const
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
       {cards.map((item) => (
         <Card key={item.key} className="border-[#e4e4e7] bg-white transition hover:shadow-sm">
           <CardHeader className="pb-2">

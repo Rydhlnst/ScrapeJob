@@ -14,14 +14,17 @@ type ApiEnvelope<T> = {
 }
 
 export async function getScrapedJobs(
-  status: ScrapedJob["status"] = "pending",
+  status: ScrapedJob["status"] | "all" | "" = "pending",
   page = 1,
   perPage = 15,
   keyword?: string,
   source?: string,
 ) {
   const query = new URLSearchParams()
-  query.set("status", status)
+  // "" or "all" ⇒ backend returns every status (no `status` filter applied).
+  if (status && status !== "all") {
+    query.set("status", status)
+  }
   query.set("page", String(page))
   query.set("perPage", String(perPage))
   if (keyword && keyword.trim() !== "") {

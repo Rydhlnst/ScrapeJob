@@ -21,6 +21,7 @@ class StoreJobRequest extends FormRequest
             'job_type' => ['nullable', 'string', 'max:100'],
             'salary_text' => ['nullable', 'string', 'max:191'],
             'description' => ['required', 'string', 'max:65535'],
+            'description_doc' => ['nullable', 'array'],
             'raw_description' => ['nullable', 'string', 'max:65535'],
             'source_url' => ['required', 'url', 'max:2048'],
             'source_name' => ['required', 'string', 'max:100'],

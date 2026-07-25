@@ -45,6 +45,7 @@ export async function updateAdminJob(
     job_type: string
     salary_text: string
     description: string
+    description_doc: unknown
     source_name: string
     source_url: string
     requirements: string[]

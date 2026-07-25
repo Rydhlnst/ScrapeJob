@@ -26,8 +26,10 @@ export const API_BASE_URL =
 
 const SERVER_BEARER_TOKEN = process.env.API_BEARER_TOKEN
 
+// Default OFF — mocks must be explicitly opted-in for local dev.
+// A missing/typo'd env value must not ship a mock-auth build to production.
 export const USE_MOCK =
-  (process.env.NEXT_PUBLIC_USE_MOCK ?? "true").toLowerCase() !== "false"
+  (process.env.NEXT_PUBLIC_USE_MOCK ?? "false").toLowerCase() === "true"
 
 export async function fetchJson<T>(
   path: string,
@@ -39,12 +41,15 @@ export async function fetchJson<T>(
       ? window.localStorage.getItem("admin_access_token")
       : null
 
+  // Precedence: explicit caller Authorization > per-request client token
+  // > server env fallback. Env token is a last-resort service credential;
+  // never let it override a real user's bearer on SSR.
   const authHeader =
     (init?.headers as Record<string, string> | undefined)?.Authorization ??
-    (SERVER_BEARER_TOKEN
-      ? `Bearer ${SERVER_BEARER_TOKEN}`
-      : clientToken
-        ? `Bearer ${clientToken}`
+    (clientToken
+      ? `Bearer ${clientToken}`
+      : SERVER_BEARER_TOKEN
+        ? `Bearer ${SERVER_BEARER_TOKEN}`
         : undefined)
 
   const res = await fetch(url, {
@@ -65,6 +70,13 @@ export async function fetchJson<T>(
       }
     } catch {
       // ignore malformed json
+    }
+    if (res.status === 401 && typeof window !== "undefined") {
+      // Backend rejected the admin bearer — clear it, drop the session cookie,
+      // and let AdminAuthGuard bounce to /admin/login.
+      window.localStorage.removeItem("admin_access_token")
+      void fetch("/api/auth/admin/session", { method: "DELETE" }).catch(() => {})
+      window.dispatchEvent(new CustomEvent("admin:auth:invalid"))
     }
     throw Object.assign(new Error(message), {
       status: res.status,

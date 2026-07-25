@@ -36,6 +36,20 @@ export function AuthLoginForm({ role }: { role: "user" | "admin" }) {
         if (role === "admin") {
           const res = await adminLogin(parsed.data)
           localStorage.setItem("admin_access_token", res.accessToken)
+          // Set HttpOnly session cookie for the Next middleware gate. If this
+          // fails, the middleware will bounce the very next navigation — so
+          // block the redirect and surface the error instead of leaving the
+          // user with a token that can't pass the server-side gate.
+          const sessionResponse = await fetch("/api/auth/admin/session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: res.accessToken }),
+          })
+          if (!sessionResponse.ok) {
+            localStorage.removeItem("admin_access_token")
+            toast.error("Login berhasil tapi sesi gagal disimpan. Coba lagi.")
+            return
+          }
           toast.success("Login admin berhasil")
           router.push("/admin/dashboard")
           return

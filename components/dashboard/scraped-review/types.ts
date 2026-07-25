@@ -4,6 +4,7 @@ export type ReviewStats = {
   pending: number
   approved: number
   rejected: number
+  duplicate: number
   published: number
 }
 

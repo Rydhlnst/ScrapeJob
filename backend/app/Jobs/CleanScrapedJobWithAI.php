@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\ScrapedJob;
+use App\Services\Jobs\JobNormalizationService;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 
 class CleanScrapedJobWithAI implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * The number of times the job may be attempted.
@@ -54,6 +56,12 @@ class CleanScrapedJobWithAI implements ShouldQueue
      */
     public function handle(): void
     {
+        // Skip early if this job is part of a batch that was cancelled while
+        // it was still queued (e.g. admin aborted bulk-clean-ai).
+        if ($this->batch()?->cancelled()) {
+            return;
+        }
+
         // 1. Check if AI Cleanup is enabled in services configuration
         $config = config('services.ai_cleanup');
         if (! ($config['enabled'] ?? true)) {
@@ -136,8 +144,15 @@ class CleanScrapedJobWithAI implements ShouldQueue
                 throw new \RuntimeException('AI Cleanup API returned invalid payload format');
             }
 
-            // 4. Update the ScrapedJob model with cleaned data
+            // 4. Update the ScrapedJob model with cleaned data.
+            // Sanitize the AI-generated description before persisting — the model
+            // may hallucinate <script> or event handlers even inside a schema.
             $cleaned = $responseData['data'];
+            $normalizer = app(JobNormalizationService::class);
+
+            $cleanedDescription = isset($cleaned['description'])
+                ? $normalizer->sanitizeDescription($cleaned['description'])
+                : $this->scrapedJob->description;
 
             $this->scrapedJob->update([
                 'title' => $cleaned['title'] ?? $this->scrapedJob->title,
@@ -145,7 +160,7 @@ class CleanScrapedJobWithAI implements ShouldQueue
                 'location' => $cleaned['location'] ?? $this->scrapedJob->location,
                 'salary' => $cleaned['salary'] ?? $this->scrapedJob->salary,
                 'employment_type' => $cleaned['employment_type'] ?? $this->scrapedJob->employment_type,
-                'description' => $cleaned['description'] ?? $this->scrapedJob->description,
+                'description' => $cleanedDescription,
                 'description_summary' => $cleaned['description_summary'] ?? $this->scrapedJob->description_summary,
                 'draft_status' => 'drafted_ai',
                 'fail_reason' => null,

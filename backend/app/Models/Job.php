@@ -39,6 +39,7 @@ class Job extends Model
         'experience_years_max',
         'education_level',
         'description',
+        'description_doc',
         'raw_description',
         'requirements',
         'responsibilities',
@@ -77,6 +78,7 @@ class Job extends Model
             'tags' => 'array',
             'company_meta' => 'array',
             'unified_payload' => 'array',
+            'description_doc' => 'array',
         ];
     }
 

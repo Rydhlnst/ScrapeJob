@@ -306,7 +306,7 @@ function FlatPanel({ items, title }: { items: CountItem[]; title: string }) {
             </Link>
           ))}
         </div>
-        <Link href="/jobs" className="mt-5 inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-sm text-white transition-opacity hover:opacity-90">
+        <Link href="/jobs" className="mt-5 flex w-full items-center justify-center gap-2 rounded-none bg-primary px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90">
           Lihat Semua Lowongan <MoveRight className="size-4" />
         </Link>
       </div>
@@ -388,7 +388,7 @@ function JobsMegaMenu({ open, menuData }: { open: boolean; menuData: ReturnType<
                 </Link>
               ))}
             </div>
-            <Link href={activeCategory.href} className="mt-5 inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-sm text-white transition-opacity hover:opacity-90">
+            <Link href={activeCategory.href} className="mt-5 flex w-full items-center justify-center gap-2 rounded-none bg-primary px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90">
               {activeCategory.count} lowongan <MoveRight className="size-4" />
             </Link>
           </div>
@@ -459,7 +459,7 @@ function CompaniesMegaMenu({ open, menuData }: { open: boolean; menuData: Return
               </Link>
             ))}
           </div>
-          <Link href={activeType.href} className="mt-5 inline-flex items-center gap-2 rounded-none bg-primary px-4 py-2 text-sm text-white transition-opacity hover:opacity-90">
+          <Link href={activeType.href} className="mt-5 flex w-full items-center justify-center gap-2 rounded-none bg-primary px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90">
             Lihat Semua {activeType.label} <MoveRight className="size-4" />
           </Link>
         </div>
@@ -570,10 +570,10 @@ export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
           <DesktopNav menuData={menuData} />
           <div className="hidden items-center gap-2 lg:flex">
             <Button asChild variant="ghost" className="h-9 rounded-none px-4 text-[13px] text-slate-600 hover:bg-[var(--brand-shell)] hover:text-primary">
-              <Link href="/admin/login">Masuk</Link>
+              <Link href="/jobs">Lowongan Terbaru</Link>
             </Button>
             <Button asChild className="h-9 rounded-none bg-primary px-5 text-[13px] text-white hover:opacity-90">
-              <Link href="/jobs">Pasang Lowongan</Link>
+              <Link href="/contact">Hubungi Kami</Link>
             </Button>
           </div>
           <MobileDrawer menuData={menuData} />

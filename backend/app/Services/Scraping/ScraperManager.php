@@ -120,6 +120,17 @@ class ScraperManager
             return array_values(array_unique($databaseSources));
         }
 
+        // Admin-configurable override (comma-separated) via /admin/settings.
+        // Takes precedence over the env fallback when the DB has no active
+        // job_source rows.
+        $settingSources = \App\Models\Setting::get('scraper_active_sources');
+        if (is_string($settingSources) && trim($settingSources) !== '') {
+            $parsed = array_values(array_filter(array_map('trim', explode(',', $settingSources))));
+            if ($parsed !== []) {
+                return array_values(array_unique(array_map('strtolower', $parsed)));
+            }
+        }
+
         $envSources = config('scraper.active_sources', ['glints', 'jobstreet']);
 
         if (is_string($envSources)) {

@@ -2,7 +2,6 @@
 
 import * as React from "react"
 
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 type AdminLanguage = "en" | "id"
@@ -50,30 +49,23 @@ export function useAdminLanguage() {
 export function AdminLanguageToggle({ className }: { className?: string }) {
   const { language, setLanguage } = useAdminLanguage()
 
+  const linkClass = (active: boolean) =>
+    cn(
+      "px-1 text-xs font-semibold uppercase tracking-[0.14em] transition-colors",
+      active ? "text-zinc-900" : "text-zinc-400 hover:text-zinc-700",
+    )
+
   return (
-    <div className={cn("inline-flex items-center gap-1 border border-[var(--brand-shell-strong)] bg-white p-1 shadow-[var(--shadow-sm)]", className)}>
-      <Button
-        type="button"
-        variant={language === "id" ? "default" : "ghost"}
-        className={cn(
-          "h-9 rounded-none px-3 text-xs font-semibold uppercase tracking-[0.14em]",
-          language === "id" ? "bg-[var(--brand-blue)] text-white hover:bg-[var(--brand-sky)]" : "text-slate-600 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-ink)]",
-        )}
-        onClick={() => setLanguage("id")}
-      >
+    <div className={cn("inline-flex items-center gap-1 text-xs", className)}>
+      <button type="button" onClick={() => setLanguage("id")} className={linkClass(language === "id")}>
         ID
-      </Button>
-      <Button
-        type="button"
-        variant={language === "en" ? "default" : "ghost"}
-        className={cn(
-          "h-9 rounded-none px-3 text-xs font-semibold uppercase tracking-[0.14em]",
-          language === "en" ? "bg-[var(--brand-blue)] text-white hover:bg-[var(--brand-sky)]" : "text-slate-600 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-ink)]",
-        )}
-        onClick={() => setLanguage("en")}
-      >
+      </button>
+      <span className="text-zinc-300" aria-hidden>
+        |
+      </span>
+      <button type="button" onClick={() => setLanguage("en")} className={linkClass(language === "en")}>
         EN
-      </Button>
+      </button>
     </div>
   )
 }

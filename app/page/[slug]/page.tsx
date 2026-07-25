@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 
 import { getPublicPageBySlug } from "@/lib/api/pages"
 import { getNavbarData } from "@/lib/api/navbar"
+import { sanitizeHtml } from "@/lib/sanitize"
 import { Footer } from "@/components/shared/Footer"
 import { Navbar } from "@/components/shared/Navbar"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
@@ -60,7 +61,7 @@ export default async function PublicPage({
                 ) : null}
                 <div
                   className="rich-text mt-8 text-sm leading-7 text-slate-700"
-                  dangerouslySetInnerHTML={{ __html: page.content ?? "" }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(page.content ?? "") }}
                 />
               </article>
             </SiteContent>

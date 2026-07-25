@@ -56,7 +56,11 @@ export default async function JobsPage({
       category,
       jobType,
       source,
-      sort: (sort as any) ?? "newest",
+      sort: (["newest", "oldest", "relevance", "company"] as const).includes(
+        sort as "newest" | "oldest" | "relevance" | "company",
+      )
+        ? (sort as "newest" | "oldest" | "relevance" | "company")
+        : "newest",
       page,
       perPage: 9,
     }),

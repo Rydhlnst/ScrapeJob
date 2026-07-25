@@ -21,6 +21,7 @@ class JobResource extends JsonResource
             'jobType' => $this->job_type,
             'salaryText' => $this->salary_text,
             'description' => $this->description,
+            'descriptionDoc' => $this->description_doc,
             'sourceUrl' => $this->source_url,
             'sourceName' => $this->source_name,
             'publishedAt' => $this->published_at,

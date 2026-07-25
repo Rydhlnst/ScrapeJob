@@ -14,11 +14,13 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             LocationSeeder::class,
             JobSourceSeeder::class,
+            LandingPageContentSeeder::class,
         ]);
 
         if (! app()->isProduction()) {
             $this->call([
                 JobSeeder::class,
+                PageSeeder::class,
             ]);
         }
     }

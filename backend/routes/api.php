@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\CategoryController as AdminCategoryController
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Api\Admin\JobSourceController as AdminJobSourceController;
+use App\Http\Controllers\Api\Admin\LocationController as AdminLocationController;
 use App\Http\Controllers\Api\Admin\LandingPageContentController as AdminLandingPageContentController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\AdminScrapedJobController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Api\Admin\ScrapeRunController;
 use App\Http\Controllers\Api\Admin\UserManagementController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
+use App\Http\Controllers\Api\Public\ContactMessageController;
 use App\Http\Controllers\Api\Public\JobController as PublicJobController;
 use App\Http\Controllers\Api\Public\LandingPageContentController as PublicLandingPageContentController;
 use App\Http\Controllers\Api\Public\LocationController as PublicLocationController;
@@ -49,6 +51,7 @@ Route::get('/scraper/logs', [PublicScraperController::class, 'logs'])->middlewar
 Route::get('/categories', [PublicCategoryController::class, 'index']);
 Route::get('/locations', [PublicLocationController::class, 'index']);
 Route::get('/landing-page-content', [PublicLandingPageContentController::class, 'show']);
+Route::post('/contact', [ContactMessageController::class, 'store'])->middleware('throttle:5,1');
 
 Route::prefix('admin')
     ->middleware(['auth:sanctum'])
@@ -71,6 +74,7 @@ Route::prefix('admin')
 
         Route::apiResource('/categories', AdminCategoryController::class)->middleware('permission:manage categories');
         Route::apiResource('/job-sources', AdminJobSourceController::class)->middleware('permission:manage sources');
+        Route::apiResource('/locations', AdminLocationController::class)->middleware('permission:manage categories');
         Route::apiResource('/pages', AdminPageController::class)->middleware('permission:manage site content');
         Route::patch('/pages/{page}/publish', [AdminPageController::class, 'publish'])->middleware('permission:manage site content');
 
@@ -101,6 +105,7 @@ Route::prefix('admin')
 
         Route::get('/scraped-jobs', [AdminScrapedJobController::class, 'index'])->middleware('permission:view jobs');
         Route::post('/scraped-jobs/bulk-clean-ai', [AdminScrapedJobController::class, 'bulkCleanAi'])->middleware('permission:edit jobs');
+        Route::get('/scraped-jobs/bulk-clean-ai/{batchId}/status', [AdminScrapedJobController::class, 'bulkCleanAiStatus'])->middleware('permission:view jobs');
         Route::post('/scraped-jobs/bulk-approve', [AdminScrapedJobController::class, 'bulkApprove'])->middleware('permission:edit jobs');
         Route::post('/scraped-jobs/bulk-reject', [AdminScrapedJobController::class, 'bulkReject'])->middleware('permission:edit jobs');
         Route::post('/scraped-jobs/bulk-publish', [AdminScrapedJobController::class, 'bulkPublish'])->middleware('permission:publish jobs');

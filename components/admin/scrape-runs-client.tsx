@@ -6,6 +6,8 @@ import { toast } from "sonner"
 
 import type { ScrapeLog, ScrapeRun } from "@/types"
 import { listJobSources, listScrapeLogs, listScrapeRuns, runScrape, type JobSourceOption } from "@/lib/api/scrape-runs"
+
+// Note: the page passes no `runs` prop — this client fetches its own data.
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -21,12 +23,13 @@ function toTitleCase(value: string) {
     .join(" ")
 }
 
-export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
-  const [runItems, setRunItems] = React.useState<ScrapeRun[]>(runs)
+export function ScrapeRunsClient() {
+  const [runItems, setRunItems] = React.useState<ScrapeRun[]>([])
   const [sources, setSources] = React.useState<JobSourceOption[]>([])
   const [sourceId, setSourceId] = React.useState<string>("")
-  const [selectedRunId, setSelectedRunId] = React.useState<string | null>(runs[0]?.id ?? null)
+  const [selectedRunId, setSelectedRunId] = React.useState<string | null>(null)
   const [logs, setLogs] = React.useState<ScrapeLog[]>([])
+  const [logsError, setLogsError] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(false)
   const [isRunningScrape, setIsRunningScrape] = React.useState(false)
   const [isRefreshing, setIsRefreshing] = React.useState(false)
@@ -41,8 +44,10 @@ export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
       if (!selectedRunId && runData[0]?.id) {
         setSelectedRunId(runData[0].id)
       }
-    } catch {
-      toast.error("Gagal memuat data scrape runs.")
+    } catch (err) {
+      console.error("[scrape-runs] failed to list runs", err)
+      const message = err instanceof Error ? err.message : "Gagal memuat data scrape runs."
+      toast.error(message)
     } finally {
       setIsRefreshing(false)
     }
@@ -59,9 +64,11 @@ export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
         if (!sourceId && data[0]?.id) {
           setSourceId(data[0].id)
         }
-      } catch {
+      } catch (err) {
         if (!alive) return
-        toast.error("Gagal memuat source scraping.")
+        console.error("[scrape-runs] failed to list sources", err)
+        const message = err instanceof Error ? err.message : "Gagal memuat source scraping."
+        toast.error(message)
       }
     }
 
@@ -77,9 +84,15 @@ export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
     async function load() {
       if (!selectedRunId) return
       setLoading(true)
+      setLogsError(null)
       try {
         const data = await listScrapeLogs(selectedRunId)
         if (alive) setLogs(data)
+      } catch (err) {
+        if (!alive) return
+        const message = err instanceof Error ? err.message : "Gagal memuat scrape logs."
+        setLogsError(message)
+        toast.error(message)
       } finally {
         if (alive) setLoading(false)
       }
@@ -203,7 +216,28 @@ export function ScrapeRunsClient({ runs }: { runs: ScrapeRun[] }) {
 
       <div className="space-y-3">
         <div className="text-sm font-semibold text-slate-900">Scrape Logs</div>
-        {loading ? <LoadingState rows={6} /> : <ScrapeLogTable logs={logs} />}
+        {loading ? (
+          <LoadingState rows={6} />
+        ) : logsError ? (
+          <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            <div className="mb-2">{logsError}</div>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                // Re-trigger the effect by toggling the run id
+                const current = selectedRunId
+                setSelectedRunId(null)
+                setTimeout(() => setSelectedRunId(current), 0)
+              }}
+            >
+              Retry
+            </Button>
+          </div>
+        ) : (
+          <ScrapeLogTable logs={logs} />
+        )}
       </div>
     </div>
   )

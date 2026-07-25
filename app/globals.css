@@ -331,10 +331,15 @@
   }
 
   .admin-modern [data-slot="button"][data-variant="default"] {
-    background: var(--brand-blue);
-    border: 1px solid var(--brand-blue);
+    background: #18181b;
+    border: 1px solid #18181b;
     color: #ffffff;
     box-shadow: var(--shadow-sm);
+  }
+
+  .admin-modern [data-slot="button"][data-variant="default"]:hover {
+    background: #27272a;
+    border-color: #27272a;
   }
 
   .admin-modern [data-slot="button"][data-variant="default"] a {

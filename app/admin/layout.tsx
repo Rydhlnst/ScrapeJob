@@ -1,7 +1,7 @@
-import { AdminLanguageProvider, AdminLanguageToggle } from "@/components/admin/admin-language"
+import { AdminLanguageProvider } from "@/components/admin/admin-language"
 import { AdminSidebar } from "@/components/admin/admin-sidebar"
 import { AdminAuthGuard } from "@/components/admin/admin-auth-guard"
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -10,22 +10,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <TooltipProvider delayDuration={120}>
         <AdminLanguageProvider>
           <SidebarProvider>
-            <div className="admin-modern flex min-h-screen w-full bg-[linear-gradient(180deg,#f8fbff_0%,#eef5ff_100%)] text-foreground">
+            <div className="admin-modern flex h-screen w-full overflow-hidden bg-zinc-50 text-foreground">
               <AdminSidebar />
-              <SidebarInset className="bg-white p-3 md:p-5 lg:p-6">
-                <div className="mb-3 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <SidebarTrigger className="rounded-none border border-border bg-white text-foreground shadow-none" />
-                    <div className="hidden text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 md:block">
-                      Admin Panel
-                    </div>
-                  </div>
-                  <AdminLanguageToggle />
-                </div>
-                <div className="min-h-full border border-[var(--brand-shell-strong)] bg-white p-4 shadow-[var(--shadow-md)] md:p-6">
+              <div className="flex min-w-0 flex-1 flex-col">
+                <header className="sticky top-0 z-30 flex h-12 flex-shrink-0 items-center gap-2 border-b border-zinc-200 bg-white px-4">
+                  <SidebarTrigger className="rounded-md border border-zinc-200 bg-white text-zinc-600 shadow-sm hover:bg-zinc-50" />
+                  <span className="text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
+                    Admin Panel
+                  </span>
+                </header>
+                <main className="flex-1 overflow-y-auto bg-zinc-50 p-3 md:p-4">
                   {children}
-                </div>
-              </SidebarInset>
+                </main>
+              </div>
             </div>
           </SidebarProvider>
         </AdminLanguageProvider>
@@ -33,4 +30,3 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </AdminAuthGuard>
   )
 }
-

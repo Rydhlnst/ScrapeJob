@@ -9,7 +9,7 @@ export default function AdminScrapeRunsPage() {
         description="Jalankan scraping manual dan lihat log status success, partial, failed, duplicate, atau skipped."
       />
       <div>
-        <ScrapeRunsClient runs={[]} />
+        <ScrapeRunsClient />
       </div>
     </div>
   )

@@ -18,6 +18,29 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
 import { Textarea } from "@/components/ui/textarea"
+import { sanitizeHtml } from "@/lib/sanitize"
+import { jobEditorSchema, jobPublishSchema } from "@/lib/validations/admin/job-editor.schema"
+import { revalidateJob } from "@/app/actions/revalidate"
+import { ConfirmButton } from "@/components/admin/confirm-button"
+
+type FieldErrors = Partial<Record<
+  | "title"
+  | "companyName"
+  | "location"
+  | "jobType"
+  | "salaryText"
+  | "categoryLabel"
+  | "sourceUrl"
+  | "seoTitle"
+  | "seoDescription"
+  | "intro",
+  string
+>>
+
+function errorLine(message?: string) {
+  if (!message) return null
+  return <p className="mt-1 text-xs text-red-600">{message}</p>
+}
 
 function stripHtml(html: string) {
   return html
@@ -138,13 +161,72 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
   const [status, setStatus] = React.useState(job.status)
   const [isSaving, setIsSaving] = React.useState(false)
   const [busyAction, setBusyAction] = React.useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = React.useState<FieldErrors>({})
+  const initialSourceUrlRef = React.useRef(job.sourceUrl)
+
+  React.useEffect(() => {
+    // Regenerate sourceContent when sourceUrl changes so the "Sumber" block
+    // matches the URL the admin actually saved (fix for stale initial value).
+    if (sourceUrl === initialSourceUrlRef.current) return
+    setSourceContent(
+      `<p><strong>Sumber:</strong> ${escapeHtml(job.sourceName)}${
+        sourceUrl
+          ? ` - <a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(sourceUrl)}</a>`
+          : ""
+      }</p>`,
+    )
+  }, [sourceUrl, job.sourceName])
+
+  function collectValues() {
+    return {
+      title,
+      companyName,
+      location,
+      jobType,
+      salaryText,
+      categoryLabel,
+      sourceUrl,
+      seoTitle,
+      seoDescription,
+      intro,
+      paragraph1,
+      paragraph2,
+      paragraph3,
+      extraParagraphs,
+      additionalInfo,
+      sourceContent,
+      requirementsText,
+      skillsText,
+      benefitsText,
+    }
+  }
+
+  function validate(mode: "save" | "publish"): boolean {
+    const schema = mode === "publish" ? jobPublishSchema : jobEditorSchema
+    const parsed = schema.safeParse(collectValues())
+    if (parsed.success) {
+      setFieldErrors({})
+      return true
+    }
+    const next: FieldErrors = {}
+    for (const issue of parsed.error.issues) {
+      const key = issue.path[0]
+      if (typeof key === "string" && !(key in next)) {
+        next[key as keyof FieldErrors] = issue.message
+      }
+    }
+    setFieldErrors(next)
+    toast.error(parsed.error.issues[0]?.message ?? "Form is invalid")
+    return false
+  }
 
   const previewHtml = React.useMemo(
     () => buildDescriptionHtml({ intro, paragraph1, paragraph2, paragraph3, extraParagraphs, additionalInfo, sourceContent }),
     [additionalInfo, extraParagraphs, intro, paragraph1, paragraph2, paragraph3, sourceContent],
   )
 
-  async function saveDraft() {
+  async function saveDraft(): Promise<boolean> {
+    if (!validate("save")) return false
     setIsSaving(true)
 
     try {
@@ -167,6 +249,10 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
         },
       }
 
+      // Fase C: description_doc is populated by the Laravel-side backfill
+      // command (jobs:backfill-description-doc) — see plan file for the
+      // reason we don't dual-write from Next.js (happy-dom's fs.readFileSync
+      // of a relative stylesheet asset breaks the webpack server bundle).
       const nextJob = await updateAdminJob(job.id, {
         title,
         company_name: companyName,
@@ -185,22 +271,28 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
 
       setStatus(nextJob.status)
       toast.success("Blog lowongan saved.")
+      void revalidateJob(job.slug)
+      return true
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to save job.")
+      return false
     } finally {
       setIsSaving(false)
     }
   }
 
   async function runAction(action: "publish" | "unpublish" | "reject" | "delete") {
+    if (action === "publish" && !validate("publish")) return
     setBusyAction(action)
 
     try {
       if (action === "publish") {
-        await saveDraft()
+        const saved = await saveDraft()
+        if (!saved) return
         const nextJob = await publishAdminJob(job.id)
         setStatus(nextJob.status)
         toast.success("Job published.")
+        void revalidateJob(job.slug)
         return
       }
 
@@ -208,6 +300,7 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
         const nextJob = await unpublishAdminJob(job.id)
         setStatus(nextJob.status)
         toast.success("Job moved back to draft.")
+        void revalidateJob(job.slug)
         return
       }
 
@@ -215,11 +308,13 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
         const nextJob = await rejectAdminJob(job.id)
         setStatus(nextJob.status)
         toast.success("Job rejected.")
+        void revalidateJob(job.slug)
         return
       }
 
       await deleteAdminJob(job.id)
       toast.success("Job deleted.")
+      void revalidateJob(job.slug)
       router.push("/admin/jobs")
     } catch (error) {
       toast.error(error instanceof Error ? error.message : `Failed to ${action} job.`)
@@ -238,8 +333,8 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
       </div>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <Field label="Judul"><Input value={title} onChange={(event) => setTitle(event.target.value)} /></Field>
-        <Field label="Company"><Input value={companyName} onChange={(event) => setCompanyName(event.target.value)} /></Field>
+        <Field label="Judul"><Input value={title} onChange={(event) => setTitle(event.target.value)} aria-invalid={Boolean(fieldErrors.title)} />{errorLine(fieldErrors.title)}</Field>
+        <Field label="Company"><Input value={companyName} onChange={(event) => setCompanyName(event.target.value)} aria-invalid={Boolean(fieldErrors.companyName)} />{errorLine(fieldErrors.companyName)}</Field>
         <Field label="Lokasi"><Input value={location} onChange={(event) => setLocation(event.target.value)} /></Field>
         <Field label="Kategori Blog"><Input value={categoryLabel} onChange={(event) => setCategoryLabel(event.target.value)} placeholder="Technology / Data / Marketing" /></Field>
         <Field label="Employment Type"><Input value={jobType} onChange={(event) => setJobType(event.target.value)} placeholder="Full-time" /></Field>
@@ -256,7 +351,7 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <Field label="Source URL metadata"><Input value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} /></Field>
+        <Field label="Source URL metadata"><Input value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} aria-invalid={Boolean(fieldErrors.sourceUrl)} placeholder="https://…" />{errorLine(fieldErrors.sourceUrl)}</Field>
         <Field label="SEO title"><Input value={seoTitle} onChange={(event) => setSeoTitle(event.target.value)} /></Field>
         <Field label="SEO description"><Textarea value={seoDescription} onChange={(event) => setSeoDescription(event.target.value)} className="min-h-24" /></Field>
         <Field label="Requirements"><Textarea value={requirementsText} onChange={(event) => setRequirementsText(event.target.value)} className="min-h-24" placeholder="Satu baris satu item" /></Field>
@@ -266,7 +361,7 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
 
       <section className="border border-border bg-white p-5">
         <div className="mb-4"><h2 className="text-base font-semibold text-[var(--brand-ink)]">Live preview</h2><p className="text-sm text-muted-foreground">HTML final yang akan tampil di halaman publik lowonganku.com.</p></div>
-        <div className="rich-text min-h-48 border border-border bg-slate-50 p-4" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+        <div className="rich-text min-h-48 border border-border bg-slate-50 p-4" dangerouslySetInnerHTML={{ __html: sanitizeHtml(previewHtml) }} />
       </section>
 
       <Accordion type="single" collapsible>
@@ -277,8 +372,24 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
         <Button type="button" variant="outline" className="rounded-none" onClick={saveDraft} disabled={isSaving}>{isSaving ? "Saving..." : "Save draft"}</Button>
         <Button type="button" className="rounded-none" onClick={() => runAction("publish")} disabled={busyAction === "publish"}>{busyAction === "publish" ? "Publishing..." : "Publish"}</Button>
         <Button type="button" variant="outline" className="rounded-none" onClick={() => runAction("unpublish")} disabled={busyAction === "unpublish"}>{busyAction === "unpublish" ? "Moving..." : "Back to draft"}</Button>
-        <Button type="button" variant="outline" className="rounded-none" onClick={() => runAction("reject")} disabled={busyAction === "reject"}>{busyAction === "reject" ? "Rejecting..." : "Reject"}</Button>
-        <Button type="button" variant="destructive" className="rounded-none" onClick={() => runAction("delete")} disabled={busyAction === "delete"}>{busyAction === "delete" ? "Deleting..." : "Delete"}</Button>
+        <ConfirmButton
+          variant="outline"
+          destructive={false}
+          disabled={busyAction === "reject"}
+          label={busyAction === "reject" ? "Rejecting..." : "Reject"}
+          title="Reject this job?"
+          description={<>&ldquo;{title || "This job"}&rdquo; will be marked as rejected and hidden from public listings.</>}
+          confirmLabel="Reject"
+          onConfirm={() => runAction("reject")}
+        />
+        <ConfirmButton
+          disabled={busyAction === "delete"}
+          label={busyAction === "delete" ? "Deleting..." : "Delete"}
+          title="Delete this job permanently?"
+          description={<>&ldquo;{title || "This job"}&rdquo; and its editorial payload will be removed. This cannot be undone.</>}
+          confirmLabel="Delete"
+          onConfirm={() => runAction("delete")}
+        />
       </div>
     </div>
   )

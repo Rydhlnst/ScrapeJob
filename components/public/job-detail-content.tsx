@@ -20,6 +20,13 @@ function stripHtml(html: string): string {
     .trim()
 }
 
+// Fase C.4 (partial): descriptionDoc is now dual-written server-side, but
+// rendering it here requires a Node-side renderer (tiptap/html + happy-dom)
+// which webpack cannot bundle cleanly (happy-dom reads a relative CSS asset
+// with fs.readFileSync). Switch will happen in a follow-up commit once we
+// either (a) install `@tiptap/static-renderer` or (b) precompute sanitized
+// HTML server-side at write time. For now the doc is stored but not used
+// for public rendering.
 function JobDescription({ text }: { text: string }) {
   const hasHtml = /<[a-z][\s\S]*>/i.test(text)
   const content = hasHtml ? stripHtml(text) : text

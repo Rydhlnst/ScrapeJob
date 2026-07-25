@@ -15,6 +15,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
 import { Textarea } from "@/components/ui/textarea"
+import { pageEditorSchema, pagePublishSchema } from "@/lib/validations/admin/page-editor.schema"
+import { revalidatePage } from "@/app/actions/revalidate"
+
+type FieldErrors = Partial<Record<"title" | "slug" | "summary" | "content" | "seoTitle" | "seoDescription", string>>
+
+function errorLine(message?: string) {
+  if (!message) return null
+  return <p className="mt-1 text-xs text-red-600">{message}</p>
+}
 
 function slugify(value: string) {
   return value
@@ -52,6 +61,7 @@ export function PageEditorForm({ page }: { page?: Page | null }) {
   const [manualSlug, setManualSlug] = React.useState(Boolean(page?.slug))
   const [isSaving, setIsSaving] = React.useState(false)
   const [isPublishing, setIsPublishing] = React.useState(false)
+  const [fieldErrors, setFieldErrors] = React.useState<FieldErrors>({})
 
   React.useEffect(() => {
     if (!manualSlug) {
@@ -59,7 +69,27 @@ export function PageEditorForm({ page }: { page?: Page | null }) {
     }
   }, [title, manualSlug])
 
+  function validate(mode: "save" | "publish"): boolean {
+    const schema = mode === "publish" ? pagePublishSchema : pageEditorSchema
+    const parsed = schema.safeParse({ title, slug, summary, content, seoTitle, seoDescription })
+    if (parsed.success) {
+      setFieldErrors({})
+      return true
+    }
+    const next: FieldErrors = {}
+    for (const issue of parsed.error.issues) {
+      const key = issue.path[0]
+      if (typeof key === "string" && !(key in next)) {
+        next[key as keyof FieldErrors] = issue.message
+      }
+    }
+    setFieldErrors(next)
+    toast.error(parsed.error.issues[0]?.message ?? "Form is invalid")
+    return false
+  }
+
   async function handleSave() {
+    if (!validate("save")) return
     setIsSaving(true)
 
     try {
@@ -78,6 +108,7 @@ export function PageEditorForm({ page }: { page?: Page | null }) {
         : await createAdminPage(payload)
 
       toast.success("Page saved.")
+      void revalidatePage(nextPage.slug ?? slug)
 
       if (!page) {
         router.replace(`/admin/pages/${nextPage.id}/edit`)
@@ -92,31 +123,32 @@ export function PageEditorForm({ page }: { page?: Page | null }) {
   }
 
   async function handlePublish() {
+    if (!validate("publish")) return
     setIsPublishing(true)
 
     try {
-      const saved = page
-        ? await updateAdminPage(page.id, {
-            title,
-            slug,
-            summary,
-            content,
-            seoTitle,
-            seoDescription,
-            status: "draft",
-          })
-        : await createAdminPage({
-            title,
-            slug,
-            summary,
-            content,
-            seoTitle,
-            seoDescription,
-            status: "draft",
-          })
+      // A.3: single-call publish. Save current fields with status=published in
+      // one request so an existing published page never briefly reverts to
+      // draft (which caused a 404 window on the public page).
+      const publishPayload = {
+        title,
+        slug,
+        summary,
+        content,
+        seoTitle,
+        seoDescription,
+        status: "published" as const,
+      }
 
-      const published = await publishAdminPage(saved.id)
+      const saved = page
+        ? await updateAdminPage(page.id, publishPayload)
+        : await createAdminPage(publishPayload)
+
+      // For new pages the backend may still require an explicit publish call to
+      // set publishedAt; do that only when the response says it's still draft.
+      const published = saved.status === "published" ? saved : await publishAdminPage(saved.id)
       toast.success("Page published.")
+      void revalidatePage(published.slug ?? slug)
 
       if (!page) {
         router.replace(`/admin/pages/${published.id}/edit`)
@@ -157,7 +189,13 @@ export function PageEditorForm({ page }: { page?: Page | null }) {
 
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Page title">
-          <Input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Contact Us" />
+          <Input
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Contact Us"
+            aria-invalid={Boolean(fieldErrors.title)}
+          />
+          {errorLine(fieldErrors.title)}
         </Field>
         <Field label="Slug">
           <Input
@@ -167,7 +205,9 @@ export function PageEditorForm({ page }: { page?: Page | null }) {
               setSlug(slugify(event.target.value))
             }}
             placeholder="contact-us"
+            aria-invalid={Boolean(fieldErrors.slug)}
           />
+          {errorLine(fieldErrors.slug)}
         </Field>
       </div>
 
@@ -181,6 +221,7 @@ export function PageEditorForm({ page }: { page?: Page | null }) {
 
       <Field label="Page content">
         <RichTextEditor value={content} onChange={setContent} />
+        {errorLine(fieldErrors.content)}
       </Field>
 
       <div className="grid gap-4 md:grid-cols-2">

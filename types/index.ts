@@ -11,6 +11,7 @@ export type Job = {
   jobType?: string | null
   salaryText?: string | null
   description: string
+  descriptionDoc?: Record<string, unknown> | null
   rawDescription?: string | null
   sourceUrl: string
   sourceName: string

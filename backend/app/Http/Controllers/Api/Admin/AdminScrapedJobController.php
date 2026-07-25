@@ -7,14 +7,19 @@ use App\Http\Resources\JobResource;
 use App\Http\Resources\ScrapedJobResource;
 use App\Models\ScrapedJob;
 use App\Jobs\CleanScrapedJobWithAI;
+use App\Services\Jobs\JobNormalizationService;
 use App\Services\Jobs\ScrapedJobPublishingService;
 use App\Support\ApiResponse;
+use Illuminate\Bus\Batch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
+use Throwable;
 
 class AdminScrapedJobController extends Controller
 {
     public function __construct(
         private readonly ScrapedJobPublishingService $publishingService,
+        private readonly JobNormalizationService $normalizer,
     ) {}
 
     public function index(Request $request)
@@ -59,6 +64,10 @@ class AdminScrapedJobController extends Controller
             'status' => ['nullable', 'in:pending,approved,rejected,duplicate,published'],
         ]);
 
+        if (array_key_exists('description', $payload) && $payload['description'] !== null) {
+            $payload['description'] = $this->normalizer->sanitizeDescription($payload['description']);
+        }
+
         $scrapedJob->update($payload);
 
         return ApiResponse::success(new ScrapedJobResource($scrapedJob->refresh()), 'Scraped job updated successfully');
@@ -99,18 +108,27 @@ class AdminScrapedJobController extends Controller
 
     public function cleanAi(ScrapedJob $scrapedJob)
     {
+        // Queue the job so the operator UI does not block on the AI provider
+        // round-trip (60s+). The client polls the row until draft_status
+        // transitions to drafted_ai or a fail_reason is recorded.
+        $scrapedJob->update([
+            'fail_reason' => null,
+        ]);
+
         try {
-            CleanScrapedJobWithAI::dispatchSync($scrapedJob);
-            $scrapedJob->refresh();
-
-            if ($scrapedJob->draft_status !== 'drafted_ai' && $scrapedJob->fail_reason) {
-                return ApiResponse::error($scrapedJob->fail_reason, 422);
-            }
-
-            return ApiResponse::success(new ScrapedJobResource($scrapedJob), 'Scraped job processed with AI successfully');
-        } catch (\Throwable $e) {
+            CleanScrapedJobWithAI::dispatch($scrapedJob);
+        } catch (Throwable $e) {
             return ApiResponse::error($e->getMessage(), 500);
         }
+
+        return ApiResponse::success(
+            [
+                'scraped_job_id' => $scrapedJob->id,
+                'status' => 'queued',
+            ],
+            'AI cleanup job queued',
+            202,
+        );
     }
 
     public function bulkCleanAi(Request $request)
@@ -125,11 +143,47 @@ class AdminScrapedJobController extends Controller
             ->where('draft_status', 'drafted_raw')
             ->get();
 
-        foreach ($jobs as $job) {
-            CleanScrapedJobWithAI::dispatch($job);
+        if ($jobs->isEmpty()) {
+            return ApiResponse::error('No eligible scraped jobs to clean.', 422);
         }
 
-        return ApiResponse::success(null, 'Bulk AI cleanup jobs dispatched successfully');
+        $userId = optional($request->user())->getKey() ?? 'system';
+
+        $batch = Bus::batch(
+            $jobs->map(fn (ScrapedJob $job) => new CleanScrapedJobWithAI($job))->all(),
+        )
+            ->name("scraped-jobs:clean-ai:{$userId}")
+            ->allowFailures()
+            ->dispatch();
+
+        return ApiResponse::success(
+            [
+                'batch_id' => $batch->id,
+                'total' => $batch->totalJobs,
+            ],
+            'Bulk AI cleanup batch dispatched',
+            202,
+        );
+    }
+
+    public function bulkCleanAiStatus(string $batchId)
+    {
+        $batch = Bus::findBatch($batchId);
+        if (! $batch instanceof Batch) {
+            return ApiResponse::error('Batch not found', 404);
+        }
+
+        return ApiResponse::success([
+            'batch_id' => $batch->id,
+            'name' => $batch->name,
+            'total' => $batch->totalJobs,
+            'pending' => $batch->pendingJobs,
+            'processed' => $batch->processedJobs(),
+            'failed' => $batch->failedJobs,
+            'progress' => $batch->progress(),
+            'finished_at' => $batch->finishedAt?->toIso8601String(),
+            'cancelled' => $batch->cancelled(),
+        ], 'Batch status retrieved');
     }
 
     public function bulkApprove(Request $request)

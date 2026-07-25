@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 
 import type { ScrapedJob, ScrapedJobStatus } from "@/types/job"
@@ -26,7 +26,7 @@ import { updateScrapedJob } from "@/src/features/admin/scraped-jobs/api/update-s
 import { approveScrapedJob } from "@/src/features/admin/scraped-jobs/api/approve-scraped-job"
 import { rejectScrapedJob } from "@/src/features/admin/scraped-jobs/api/reject-scraped-job"
 import { cleanScrapedJobWithAi } from "@/src/features/admin/scraped-jobs/api/clean-scraped-job"
-import { bulkCleanScrapedJobsWithAi } from "@/src/features/admin/scraped-jobs/api/bulk-clean-scraped-jobs"
+import { bulkCleanScrapedJobsWithAi, getBulkCleanStatus, type BulkCleanStatus } from "@/src/features/admin/scraped-jobs/api/bulk-clean-scraped-jobs"
 import { bulkApproveScrapedJobs } from "@/src/features/admin/scraped-jobs/api/bulk-approve-scraped-jobs"
 import { bulkRejectScrapedJobs } from "@/src/features/admin/scraped-jobs/api/bulk-reject-scraped-jobs"
 import { BulkActionBar } from "@/components/dashboard/scraped-review/bulk-action-bar"
@@ -37,6 +37,17 @@ import { ReviewLoadingState } from "@/components/dashboard/scraped-review/loadin
 import { ReviewStatsCards } from "@/components/dashboard/scraped-review/review-stats"
 import { ReviewTable } from "@/components/dashboard/scraped-review/review-table"
 import type { RowAction, ReviewStats } from "@/components/dashboard/scraped-review/types"
+import { draftReviewSchema } from "@/lib/validations/admin/draft-review.schema"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 function cleanJobTitle(value: string) {
   return value.replace(/^job\s*card\s*title\s*:\s*/i, "").trim()
@@ -120,6 +131,7 @@ function DraftReviewSheet({
   const [summary, setSummary] = React.useState("")
   const [description, setDescription] = React.useState("")
   const [isSaving, setIsSaving] = React.useState(false)
+  const [fieldErrors, setFieldErrors] = React.useState<Partial<Record<"title" | "company" | "description", string>>>({})
 
   React.useEffect(() => {
     if (!job) return
@@ -130,10 +142,25 @@ function DraftReviewSheet({
     setEmploymentType(job.employmentType ?? "")
     setSummary(job.descriptionSummary ?? "")
     setDescription(ensureHtml(job.description))
+    setFieldErrors({})
   }, [job])
 
   async function handleSave() {
     if (!job) return
+    const parsed = draftReviewSchema.safeParse({ title, company, location, description })
+    if (!parsed.success) {
+      const next: Partial<Record<"title" | "company" | "description", string>> = {}
+      for (const issue of parsed.error.issues) {
+        const key = issue.path[0]
+        if (typeof key === "string" && !(key in next)) {
+          next[key as "title" | "company" | "description"] = issue.message
+        }
+      }
+      setFieldErrors(next)
+      toast.error(parsed.error.issues[0]?.message ?? "Draft is invalid")
+      return
+    }
+    setFieldErrors({})
     setIsSaving(true)
     try {
       const updated = await updateScrapedJob(job.id, {
@@ -178,13 +205,15 @@ function DraftReviewSheet({
             <div className="flex-1 space-y-5 p-4">
               <div className="space-y-1.5">
                 <FieldLabel>Title</FieldLabel>
-                <Input value={title} onChange={(e) => setTitle(e.target.value)} className="rounded-none" />
+                <Input value={title} onChange={(e) => setTitle(e.target.value)} className="rounded-none" aria-invalid={Boolean(fieldErrors.title)} />
+                {fieldErrors.title ? <p className="mt-1 text-xs text-red-600">{fieldErrors.title}</p> : null}
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-1.5">
                   <FieldLabel>Company</FieldLabel>
-                  <Input value={company} onChange={(e) => setCompany(e.target.value)} className="rounded-none" />
+                  <Input value={company} onChange={(e) => setCompany(e.target.value)} className="rounded-none" aria-invalid={Boolean(fieldErrors.company)} />
+                  {fieldErrors.company ? <p className="mt-1 text-xs text-red-600">{fieldErrors.company}</p> : null}
                 </div>
                 <div className="space-y-1.5">
                   <FieldLabel>Location</FieldLabel>
@@ -223,6 +252,7 @@ function DraftReviewSheet({
                   </a>
                 </div>
                 <RichTextEditor value={description} onChange={setDescription} />
+                {fieldErrors.description ? <p className="mt-1 text-xs text-red-600">{fieldErrors.description}</p> : null}
               </div>
 
               {job.failReason ? (
@@ -247,10 +277,19 @@ function DraftReviewSheet({
   )
 }
 
+const VALID_STATUS_FILTERS: ReadonlyArray<ScrapedJobStatus | "all"> = [
+  "all",
+  "pending",
+  "approved",
+  "rejected",
+  "duplicate",
+  "published",
+]
+
 export function RawDataReviewClient() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const PER_PAGE = 15
-  const ALL_PAGE_SIZE = 100
   const [jobs, setJobs] = React.useState<ScrapedJob[]>([])
   const [page, setPage] = React.useState(1)
   const [total, setTotal] = React.useState(0)
@@ -259,6 +298,7 @@ export function RawDataReviewClient() {
     pending: 0,
     approved: 0,
     rejected: 0,
+    duplicate: 0,
     published: 0,
   })
   const [loading, setLoading] = React.useState(true)
@@ -268,61 +308,80 @@ export function RawDataReviewClient() {
   const [search, setSearch] = React.useState("")
   const [searchInput, setSearchInput] = React.useState("")
   const [sourceFilter, setSourceFilter] = React.useState("all")
-  const [statusFilter, setStatusFilter] = React.useState<ScrapedJobStatus | "all">("pending")
+  const [statusFilter, setStatusFilter] = React.useState<ScrapedJobStatus | "all">(() => {
+    // A.5: honor ?status=… deep-link from admin sidebar.
+    const initial = searchParams?.get("status")
+    if (initial && VALID_STATUS_FILTERS.includes(initial as ScrapedJobStatus | "all")) {
+      return initial as ScrapedJobStatus | "all"
+    }
+    return "pending"
+  })
   const [previewJob, setPreviewJob] = React.useState<ScrapedJob | null>(null)
+  const [pendingConfirm, setPendingConfirm] = React.useState<
+    | null
+    | { kind: "row-reject"; id: string; label: string }
+    | { kind: "bulk-reject"; ids: string[] }
+  >(null)
+  const [cleanBatch, setCleanBatch] = React.useState<BulkCleanStatus | null>(null)
+  // Monotonic epoch — increment before every refresh/refreshStats run so
+  // late responses from cancelled queries can be dropped instead of clobbering
+  // fresh state (fixes the debounced-search vs status-filter race).
+  const refreshEpochRef = React.useRef(0)
 
   const refreshStats = React.useCallback(async () => {
-    const [pending, approved, rejected, published] = await Promise.all([
+    // Fetch each bucket independently so a single failure does not leave the
+    // whole stats row stale. Any bucket that errors keeps its previous value.
+    const results = await Promise.allSettled([
       getScrapedJobs("pending", 1, 1),
       getScrapedJobs("approved", 1, 1),
       getScrapedJobs("rejected", 1, 1),
+      getScrapedJobs("duplicate", 1, 1),
       getScrapedJobs("published", 1, 1),
     ])
-    setStats({ pending: pending.total, approved: approved.total, rejected: rejected.total, published: published.total })
+    const failures = results.filter((r) => r.status === "rejected")
+    if (failures.length > 0) {
+      console.error("[raw-data-review] some stats buckets failed", failures)
+      if (failures.length === results.length) {
+        toast.error("Gagal memperbarui statistik review.")
+      }
+    }
+    setStats((prev) => ({
+      pending: results[0].status === "fulfilled" ? results[0].value.total : prev.pending,
+      approved: results[1].status === "fulfilled" ? results[1].value.total : prev.approved,
+      rejected: results[2].status === "fulfilled" ? results[2].value.total : prev.rejected,
+      duplicate: results[3].status === "fulfilled" ? results[3].value.total : prev.duplicate,
+      published: results[4].status === "fulfilled" ? results[4].value.total : prev.published,
+    }))
   }, [])
 
   const refresh = React.useCallback(
     async (nextPage = 1, currentStatus: ScrapedJobStatus | "all" = statusFilter) => {
+      const epoch = ++refreshEpochRef.current
       try {
         setLoading(true)
         setError(null)
 
-        if (currentStatus === "all") {
-          const [pending, approved, rejected, published] = await Promise.all([
-            getScrapedJobs("pending", 1, ALL_PAGE_SIZE, search, sourceFilter),
-            getScrapedJobs("approved", 1, ALL_PAGE_SIZE, search, sourceFilter),
-            getScrapedJobs("rejected", 1, ALL_PAGE_SIZE, search, sourceFilter),
-            getScrapedJobs("published", 1, ALL_PAGE_SIZE, search, sourceFilter),
-          ])
-          const merged = [...pending.data, ...approved.data, ...rejected.data, ...published.data].sort((a, b) =>
-            (b.scrapedAt ?? "").localeCompare(a.scrapedAt ?? ""),
-          )
-          const localTotal = merged.length
-          const localTotalPages = Math.max(1, Math.ceil(localTotal / PER_PAGE))
-          const safePage = Math.min(nextPage, localTotalPages)
-          const start = (safePage - 1) * PER_PAGE
-          setJobs(merged.slice(start, start + PER_PAGE))
-          setPage(safePage)
-          setTotal(localTotal)
-          setTotalPages(localTotalPages)
-        } else {
-          const result = await getScrapedJobs(currentStatus, nextPage, PER_PAGE, search, sourceFilter)
-          setJobs(result.data)
-          setPage(result.page)
-          setTotal(result.total)
-          setTotalPages(Math.max(1, result.totalPages))
-        }
+        // A.7: single server-side paginated call for every mode including
+        // "all" — empty status = backend returns rows across all buckets.
+        const result = await getScrapedJobs(currentStatus, nextPage, PER_PAGE, search, sourceFilter)
+        // B.6: drop stale response — a newer refresh has already started.
+        if (epoch !== refreshEpochRef.current) return
+        setJobs(result.data)
+        setPage(result.page)
+        setTotal(result.total)
+        setTotalPages(Math.max(1, result.totalPages))
 
         setSelected([])
       } catch (err) {
+        if (epoch !== refreshEpochRef.current) return
         const message = err instanceof Error ? err.message : "Failed to load scraped jobs."
         setError(message)
         toast.error(message)
       } finally {
-        setLoading(false)
+        if (epoch === refreshEpochRef.current) setLoading(false)
       }
     },
-    [ALL_PAGE_SIZE, PER_PAGE, search, sourceFilter, statusFilter],
+    [PER_PAGE, search, sourceFilter, statusFilter],
   )
 
   React.useEffect(() => {
@@ -331,7 +390,9 @@ export function RawDataReviewClient() {
   }, [searchInput])
 
   React.useEffect(() => {
-    void Promise.all([refresh(1, statusFilter), refreshStats()])
+    Promise.all([refresh(1, statusFilter), refreshStats()]).catch((err) => {
+      console.error("[raw-data-review] initial load failed", err)
+    })
   }, [refresh, refreshStats, statusFilter])
 
   const sources = React.useMemo(() => {
@@ -350,9 +411,17 @@ export function RawDataReviewClient() {
   }, [page, totalPages])
 
   async function runAction(id: string, action: RowAction) {
+    if (action === "reject") {
+      const target = jobs.find((j) => j.id === id)
+      setPendingConfirm({ kind: "row-reject", id, label: cleanJobTitle(target?.title ?? "This job") })
+      return
+    }
+    await performAction(id, action)
+  }
+
+  async function performAction(id: string, action: RowAction) {
     setBusyId(id)
     try {
-      let cleanedJob: ScrapedJob | null = null
       let draftId: string | null = null
 
       if (action === "approve") {
@@ -360,11 +429,25 @@ export function RawDataReviewClient() {
         draftId = draft.id
       }
       if (action === "reject") await rejectScrapedJob(id)
-      if (action === "clean_ai") cleanedJob = await cleanScrapedJobWithAi(id)
+      if (action === "clean_ai") {
+        // AI cleanup is now queued asynchronously; the caller receives 202 and
+        // must poll until draft_status flips to drafted_ai (or fail_reason).
+        await cleanScrapedJobWithAi(id)
+        toast.success("AI cleanup queued. Refreshing status...")
+        // Short polling loop — refresh a few times over ~30s so the UI doesn't
+        // hang forever if the worker crashes.
+        for (let attempt = 0; attempt < 10; attempt += 1) {
+          await new Promise((resolve) => setTimeout(resolve, 3000))
+          await refresh(page)
+          const row = jobs.find((j) => j.id === id)
+          if (!row) break
+          if (row.draftStatus === "drafted_ai" || row.failReason) break
+        }
+        return
+      }
 
       const targetPage = jobs.length === 1 && page > 1 ? page - 1 : page
       await Promise.all([refresh(targetPage), refreshStats()])
-      if (cleanedJob) setPreviewJob(cleanedJob)
 
       if (draftId) {
         toast.success("Moved to Blog Loker draft.", {
@@ -384,10 +467,44 @@ export function RawDataReviewClient() {
   }
   async function runBulkAction(action: RowAction) {
     if (!selected.length) return
+    if (action === "reject") {
+      setPendingConfirm({ kind: "bulk-reject", ids: [...selected] })
+      return
+    }
+    await performBulkAction(action)
+  }
+
+  async function pollCleanBatch(batchId: string) {
+    // Poll every 3s until the batch reports finished_at or gets cancelled.
+    // Cap total wait at ~5 minutes so a stuck worker doesn't leak the timer.
+    const maxAttempts = 100
+    for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+      try {
+        const status = await getBulkCleanStatus(batchId)
+        setCleanBatch(status)
+        if (status.finished_at || status.cancelled) {
+          await Promise.all([refresh(page), refreshStats()])
+          toast.success(`Bulk AI cleanup done — ${status.processed} processed, ${status.failed} failed.`)
+          return
+        }
+      } catch (err) {
+        console.error("[bulk-clean-ai] status poll failed", err)
+        // Keep going; the batch table may just not be ready yet.
+      }
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+    }
+    toast.message("Bulk AI cleanup is still running in the background.")
+  }
+
+  async function performBulkAction(action: RowAction) {
+    if (!selected.length) return
     setBusyId("__batch__")
     try {
       if (action === "clean_ai") {
-        await bulkCleanScrapedJobsWithAi(selected)
+        const dispatched = await bulkCleanScrapedJobsWithAi(selected)
+        toast.success(`Bulk AI cleanup queued (${dispatched.total} jobs).`)
+        void pollCleanBatch(dispatched.batch_id)
+        return
       } else if (action === "approve") {
         await bulkApproveScrapedJobs(selected)
       } else if (action === "reject") {
@@ -422,7 +539,61 @@ export function RawDataReviewClient() {
           void refresh(page)
         }}
       />
+
+      <AlertDialog open={pendingConfirm !== null} onOpenChange={(open) => !open && setPendingConfirm(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {pendingConfirm?.kind === "bulk-reject"
+                ? `Reject ${pendingConfirm.ids.length} scraped ${pendingConfirm.ids.length === 1 ? "job" : "jobs"}?`
+                : "Reject this scraped job?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {pendingConfirm?.kind === "row-reject"
+                ? `"${pendingConfirm.label}" will be marked as rejected and hidden from the pending queue.`
+                : "The selected scraped jobs will be marked as rejected. You can still find them via the Rejected filter."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 focus-visible:ring-red-600"
+              onClick={async (event) => {
+                event.preventDefault()
+                const confirmed = pendingConfirm
+                setPendingConfirm(null)
+                if (!confirmed) return
+                if (confirmed.kind === "row-reject") {
+                  await performAction(confirmed.id, "reject")
+                } else {
+                  await performBulkAction("reject")
+                }
+              }}
+            >
+              Reject
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <ReviewStatsCards stats={stats} />
+
+      {cleanBatch ? (
+        <div className="flex flex-wrap items-center justify-between gap-2 border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+          <div>
+            <div className="font-medium">Bulk AI cleanup — {cleanBatch.processed}/{cleanBatch.total} processed</div>
+            <div className="text-xs text-sky-800">
+              {cleanBatch.pending} pending · {cleanBatch.failed} failed · {cleanBatch.progress}%
+              {cleanBatch.finished_at ? " · finished" : ""}
+              {cleanBatch.cancelled ? " · cancelled" : ""}
+            </div>
+          </div>
+          {cleanBatch.finished_at || cleanBatch.cancelled ? (
+            <Button size="sm" variant="outline" className="rounded-none" onClick={() => setCleanBatch(null)}>
+              Dismiss
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
 
       <Card className="border-border shadow-sm">
         <CardHeader className="gap-4 border-b border-border bg-white">

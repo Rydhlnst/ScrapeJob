@@ -16,6 +16,15 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     setReady(true)
+
+    // If any API call sees a 401, fetchJson dispatches this event so we can
+    // bounce back to login instead of leaving the shell rendered with a stale token.
+    const onInvalid = () => {
+      setReady(false)
+      router.replace("/admin/login")
+    }
+    window.addEventListener("admin:auth:invalid", onInvalid)
+    return () => window.removeEventListener("admin:auth:invalid", onInvalid)
   }, [router])
 
   if (!ready) {

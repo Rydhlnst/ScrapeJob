@@ -13,8 +13,8 @@ return new class extends Migration
             $table->string('key')->unique();
             $table->json('draft_payload')->nullable();
             $table->json('published_payload')->nullable();
-            $table->uuid('updated_by')->nullable();
-            $table->uuid('published_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('published_by')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
 

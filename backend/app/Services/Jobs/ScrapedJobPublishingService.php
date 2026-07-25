@@ -59,6 +59,14 @@ class ScrapedJobPublishingService
         return 'created';
     }
 
+    private function shouldAutoPublish(): bool
+    {
+        // Admin can toggle this in /admin/settings — when true, approved
+        // scraped jobs skip the manual editorial pass and are published as
+        // soon as they move to draft.
+        return (bool) \App\Models\Setting::get('auto_publish_jobs', false);
+    }
+
     public function moveToDraft(ScrapedJob $scrapedJob): array
     {
         $payload = $this->toJobPayload($scrapedJob, 'draft');
@@ -110,6 +118,12 @@ class ScrapedJobPublishingService
 
         $job = Job::query()->create($payload + ['notified' => false]);
         $scrapedJob->update(['status' => 'approved']);
+
+        if ($this->shouldAutoPublish()) {
+            $this->publish($scrapedJob);
+
+            return ['result' => 'auto-published', 'job' => $job->refresh()];
+        }
 
         return ['result' => 'created', 'job' => $job];
     }

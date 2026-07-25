@@ -70,18 +70,6 @@ class AuthController extends Controller
         }
     }
 
-    public function registerAdmin(RegisterRequest $request)
-    {
-        $user = User::query()->create([
-            'name' => (string) $request->string('name'),
-            'email' => (string) $request->string('email'),
-            'password' => (string) $request->string('password'),
-        ]);
-        $user->assignRole('admin');
-
-        return $this->tokenResponse($user, 'nextjs-admin-token', 'Admin register successful', 201);
-    }
-
     public function registerUser(RegisterRequest $request)
     {
         $user = User::query()->create([

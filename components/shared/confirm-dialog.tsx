@@ -21,17 +21,21 @@ export function ConfirmDialog({
   cancelLabel = "Cancel",
   onConfirm,
   children,
+  open,
+  onOpenChange,
 }: {
   title: string
   description?: string
   confirmLabel?: string
   cancelLabel?: string
   onConfirm: () => void
-  children: React.ReactNode
+  children?: React.ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }) {
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      {children ? <AlertDialogTrigger asChild>{children}</AlertDialogTrigger> : null}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
@@ -47,4 +51,3 @@ export function ConfirmDialog({
     </AlertDialog>
   )
 }
-
