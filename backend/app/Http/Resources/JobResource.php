@@ -16,6 +16,7 @@ class JobResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'companyName' => $this->company_name,
+            'companyLogo' => $this->company_logo_url,
             'location' => $this->location,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'jobType' => $this->job_type,

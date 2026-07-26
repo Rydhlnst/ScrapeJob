@@ -88,16 +88,20 @@ class JobController extends Controller
             ->where('status', 'published')
             ->where('is_active', true)
             ->when($request->filled('keyword'), function ($query) use ($request) {
-                $keyword = $request->string('keyword');
+                $keyword = mb_strtolower(trim($request->string('keyword')->value()));
+                $like = '%'.$keyword.'%';
 
-                $query->where(function ($sub) use ($keyword) {
-                    $sub->where('title', 'like', "%{$keyword}%")
-                        ->orWhere('company_name', 'like', "%{$keyword}%")
-                        ->orWhere('location', 'like', "%{$keyword}%")
-                        ->orWhere('description', 'like', "%{$keyword}%");
+                $query->where(function ($sub) use ($like) {
+                    $sub->whereRaw('lower(title) LIKE ?', [$like])
+                        ->orWhereRaw('lower(company_name) LIKE ?', [$like])
+                        ->orWhereRaw('lower(location) LIKE ?', [$like])
+                        ->orWhereRaw('lower(description) LIKE ?', [$like]);
                 });
             })
-            ->when($request->filled('location'), fn ($query) => $query->where('location', 'like', '%'.$request->string('location').'%'))
+            ->when($request->filled('location'), function ($query) use ($request) {
+                $location = mb_strtolower(trim($request->string('location')->value()));
+                $query->whereRaw('lower(location) LIKE ?', ['%'.$location.'%']);
+            })
             ->when($request->filled('category'), function ($query) use ($request) {
                 $category = $request->string('category')->value();
                 $isUuid = Str::isUuid($category);

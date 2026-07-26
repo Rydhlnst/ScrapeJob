@@ -3,109 +3,77 @@ import { CheckCircle2, SearchCheck, ShieldCheck } from "lucide-react"
 import { Container } from "@/components/shared/Container"
 import { SectionHeader } from "@/components/shared/SectionHeader"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import type { LandingBenefitsContent } from "@/types/landing-content"
 
-const benefitIcons = [SearchCheck, ShieldCheck, CheckCircle2]
+const benefitVisuals = [
+  { icon: SearchCheck, bg: "bg-sky-50", fg: "text-sky-600" },
+  { icon: ShieldCheck, bg: "bg-emerald-50", fg: "text-emerald-600" },
+  { icon: CheckCircle2, bg: "bg-violet-50", fg: "text-violet-600" },
+]
 
 export function BenefitsSection({ content }: { content: LandingBenefitsContent }) {
   return (
-    <section
-      className="border-b py-16 md:py-20"
-      id="features"
-      style={{
-        borderColor: "var(--brand-shell-strong)",
-        backgroundColor: "var(--brand-shell)",
-      }}
-    >
+    <section className="border-b border-[var(--brand-shell-strong)] bg-white py-16 md:py-20" id="features">
       <Container>
         <div className="max-w-4xl">
           <SectionHeader
             title={content.title}
-            description="Temukan lowongan yang relevan dengan cepat dan mudah melalui satu platform terpusat."
+            description="Kami bantu proses cari lowongan jadi lebih terarah — dari filter yang relevan sampai sumber yang jelas."
           />
         </div>
 
-        <div
-          className="mt-10 grid gap-px border md:grid-cols-2"
-          style={{
-            borderColor: "var(--brand-shell-strong)",
-            backgroundColor: "var(--brand-shell-strong)",
-          }}
-        >
+        <div className="mt-10 grid gap-3 md:grid-cols-2">
           {content.items.map((benefit, index) => {
-            const Icon = benefitIcons[index] ?? CheckCircle2
+            const visual = benefitVisuals[index] ?? benefitVisuals[benefitVisuals.length - 1]
+            const Icon = visual.icon
 
             return (
-              <Card
+              <div
                 key={benefit.title + index}
-                className="rounded-none border-0 bg-white p-8 shadow-none"
+                className="rounded-2xl bg-slate-50 p-6 md:p-7"
               >
                 <div className="flex items-start gap-4">
-                  <div
-                    className="grid size-12 place-items-center border"
-                    style={{
-                      borderColor: "var(--brand-shell-strong)",
-                      backgroundColor: "var(--brand-shell)",
-                      color: "var(--brand-blue)",
-                    }}
-                  >
+                  <div className={`grid size-12 shrink-0 place-items-center rounded-xl ${visual.bg} ${visual.fg}`}>
                     <Icon className="size-5" />
                   </div>
                   <div className="min-w-0">
                     <div
-                      className="text-[1.75rem] font-medium tracking-[-0.04em]"
+                      className="text-xl font-semibold tracking-[-0.02em]"
                       style={{ color: "var(--brand-ink)" }}
                     >
                       {benefit.title}
                     </div>
-                    <p
-                      className="mt-3 max-w-xl text-sm leading-7"
-                      style={{ color: "#475569" }}
-                    >
+                    <p className="mt-2 max-w-xl text-sm leading-7 text-slate-600">
                       {benefit.description}
                     </p>
                   </div>
                 </div>
-              </Card>
+              </div>
             )
           })}
         </div>
 
-        <div
-          className="mt-10 grid gap-0 overflow-hidden border lg:grid-cols-[0.95fr_1.05fr]"
-          style={{ borderColor: "var(--brand-shell-strong)" }}
-        >
-          <div
-            className="p-8 text-white md:p-10"
-            style={{ backgroundColor: "var(--brand-blue)" }}
-          >
-            <div className="max-w-md text-4xl font-semibold leading-tight tracking-[-0.05em]">
+        <div className="mt-10 grid gap-0 overflow-hidden rounded-2xl lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="p-8 text-white md:p-10" style={{ backgroundColor: "var(--brand-blue)" }}>
+            <div className="max-w-md text-3xl font-semibold leading-tight tracking-[-0.04em] md:text-4xl">
               Temukan lowongan yang tepat, lalu lanjutkan di sumber resminya.
             </div>
-            <p className="mt-6 max-w-md text-sm leading-7 text-white/78">
+            <p className="mt-6 max-w-md text-sm leading-7 text-white/80">
               Saring pilihan dengan lebih mudah sebelum membuka postingan lengkap di sumber aslinya.
             </p>
             <div className="mt-8">
               <Button
                 asChild
-                className="h-12 rounded-none bg-white px-5 text-sm font-medium hover:opacity-90"
+                className="h-12 rounded-xl bg-white px-5 text-sm font-medium hover:opacity-90"
                 style={{ color: "var(--brand-ink)" }}
               >
                 <a href="/jobs">Jelajahi lowongan</a>
               </Button>
             </div>
           </div>
-          <div
-            className="min-h-[320px] border-t lg:border-l lg:border-t-0"
-            style={{
-              borderColor: "var(--brand-shell-strong)",
-              backgroundColor: "#ffffff",
-            }}
-          />
+          <div className="min-h-[320px] bg-slate-50" />
         </div>
       </Container>
     </section>
   )
 }
-

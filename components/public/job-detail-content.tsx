@@ -5,32 +5,42 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 
+function decodeEntities(input: string): string {
+  return input
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&apos;/gi, "'")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCharCode(parseInt(code, 16)))
+}
+
 function stripHtml(html: string): string {
-  return html
+  // Decode entities FIRST so double-escaped tags (&lt;div&gt;) get stripped
+  // instead of surviving as literal `<div>` text in the preview.
+  let out = decodeEntities(html)
+  // Second decode pass catches doubly-encoded entities from noisy scrapers.
+  out = decodeEntities(out)
+  return out
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/p>/gi, "\n\n")
     .replace(/<\/li>/gi, "\n")
     .replace(/<[^>]+>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
     .replace(/\n{3,}/g, "\n\n")
     .trim()
 }
 
-// Fase C.4 (partial): descriptionDoc is now dual-written server-side, but
-// rendering it here requires a Node-side renderer (tiptap/html + happy-dom)
-// which webpack cannot bundle cleanly (happy-dom reads a relative CSS asset
-// with fs.readFileSync). Switch will happen in a follow-up commit once we
-// either (a) install `@tiptap/static-renderer` or (b) precompute sanitized
-// HTML server-side at write time. For now the doc is stored but not used
-// for public rendering.
 function JobDescription({ text }: { text: string }) {
-  const hasHtml = /<[a-z][\s\S]*>/i.test(text)
-  const content = hasHtml ? stripHtml(text) : text
-  return <div className="whitespace-pre-wrap text-slate-700">{content}</div>
+  // Always run the sanitizer — scraped content often contains stray tags,
+  // double-encoded entities, or leaked script/style blocks even when the
+  // string doesn't obviously look like HTML.
+  return <div className="whitespace-pre-wrap text-slate-700">{stripHtml(text)}</div>
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {

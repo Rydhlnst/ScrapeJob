@@ -5,7 +5,6 @@ import type { ReadonlyURLSearchParams } from "next/navigation"
 import { useRouter, useSearchParams } from "next/navigation"
 import { MapPin, Search } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -94,59 +93,62 @@ export function JobSearchBar({
   }, [keyword, location, sort, sp, submit])
 
   return (
-    <div className="grid items-stretch gap-3 xl:grid-cols-[minmax(0,1fr)_180px]">
-      <div className="rounded-none border border-white bg-white p-2 shadow-[var(--shadow-sm)]">
-        <div className="grid items-center gap-2 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)_220px] md:gap-0">
-          <div className="relative md:pr-2 md:after:absolute md:after:right-0 md:after:top-2 md:after:h-[calc(100%-16px)] md:after:w-px md:after:bg-slate-200">
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              placeholder="Posisi / perusahaan / keyword"
-              className="h-12 border-0 bg-white pl-11 shadow-none focus-visible:ring-0"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") submit()
-              }}
-            />
-          </div>
-          <div className="relative md:px-2 md:after:absolute md:after:right-0 md:after:top-2 md:after:h-[calc(100%-16px)] md:after:w-px md:after:bg-slate-200">
-            <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Lokasi (kota/provinsi)"
-              className="h-12 border-0 bg-white pl-11 shadow-none focus-visible:ring-0"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") submit()
-              }}
-            />
-          </div>
-          <Select
-            value={sort}
-            onValueChange={(value) => {
-              setSort(value)
-              submit({ keyword, location, sort: value })
+    <div className="w-full rounded-full bg-white p-1.5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] ring-1 ring-[var(--brand-blue)]/25 focus-within:ring-2 focus-within:ring-[var(--brand-blue)]/60">
+      <div className="grid items-center gap-1 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_180px_auto] md:gap-0">
+        <div className="relative md:pr-2 md:after:absolute md:after:right-0 md:after:top-2 md:after:h-[calc(100%-16px)] md:after:w-px md:after:bg-slate-200">
+          <Search className="absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Input
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="Cari posisi, perusahaan, atau keyword"
+            className="h-12 rounded-full border-0 bg-transparent pl-12 text-sm shadow-none focus-visible:ring-0"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submit()
             }}
-          >
-            <SelectTrigger className="h-12 rounded-none border-0 bg-white px-4 shadow-none focus-visible:ring-0">
-              <SelectValue placeholder="Sort" />
-            </SelectTrigger>
-            <SelectContent className="border-[var(--brand-shell-strong)] bg-white">
-              <SelectItem value="newest">Terbaru</SelectItem>
-              <SelectItem value="oldest">Terlama</SelectItem>
-              <SelectItem value="relevance">Relevansi</SelectItem>
-              <SelectItem value="company">Nama perusahaan</SelectItem>
-            </SelectContent>
-          </Select>
+          />
         </div>
+        <div className="relative md:px-2 md:after:absolute md:after:right-0 md:after:top-2 md:after:h-[calc(100%-16px)] md:after:w-px md:after:bg-slate-200">
+          <MapPin className="absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Input
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="Lokasi"
+            className="h-12 rounded-full border-0 bg-transparent pl-12 text-sm shadow-none focus-visible:ring-0"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submit()
+            }}
+          />
+        </div>
+        <Select
+          value={sort}
+          onValueChange={(value) => {
+            setSort(value)
+            submit({ keyword, location, sort: value })
+          }}
+        >
+          <SelectTrigger className="h-12 rounded-full border-0 bg-transparent px-4 text-sm shadow-none focus-visible:ring-0">
+            <SelectValue placeholder="Urutkan" />
+          </SelectTrigger>
+          <SelectContent className="rounded-2xl border-slate-100 bg-white">
+            <SelectItem value="newest">Terbaru</SelectItem>
+            <SelectItem value="oldest">Terlama</SelectItem>
+            <SelectItem value="relevance">Relevansi</SelectItem>
+            <SelectItem value="company">Nama perusahaan</SelectItem>
+          </SelectContent>
+        </Select>
+        <button
+          type="button"
+          onClick={() => submit()}
+          aria-label="Cari lowongan"
+          className="grid h-12 min-w-12 place-items-center rounded-full bg-[var(--brand-blue)] px-5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 md:min-w-14"
+        >
+          <Search className="h-4 w-4 md:hidden" />
+          <span className="hidden items-center gap-2 md:inline-flex">
+            <Search className="h-4 w-4" />
+            Cari
+          </span>
+        </button>
       </div>
-      <Button
-        className="h-[60px] rounded-none bg-blue-600 px-8 text-sm font-semibold text-white hover:bg-blue-700"
-        onClick={() => submit()}
-      >
-        Cari
-      </Button>
     </div>
   )
 }
-

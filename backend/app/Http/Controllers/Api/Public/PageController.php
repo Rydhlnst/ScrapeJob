@@ -5,9 +5,38 @@ namespace App\Http\Controllers\Api\Public;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Support\ApiResponse;
+use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
+    public function index(Request $request)
+    {
+        $perPage = (int) $request->integer('per_page', 12);
+        $perPage = max(1, min($perPage, 50));
+
+        $pages = Page::query()
+            ->where('status', 'published')
+            ->orderByDesc('published_at')
+            ->orderByDesc('updated_at')
+            ->paginate($perPage);
+
+        $data = $pages->getCollection()->map(fn (Page $page) => [
+            'id' => $page->id,
+            'title' => $page->title,
+            'slug' => $page->slug,
+            'summary' => $page->summary,
+            'publishedAt' => optional($page->published_at)?->toIso8601String(),
+            'updatedAt' => optional($page->updated_at)?->toIso8601String(),
+        ]);
+
+        return ApiResponse::success($data, 'Pages retrieved successfully', 200, [
+            'currentPage' => $pages->currentPage(),
+            'perPage' => $pages->perPage(),
+            'total' => $pages->total(),
+            'lastPage' => $pages->lastPage(),
+        ]);
+    }
+
     public function show(string $slug)
     {
         $page = Page::query()

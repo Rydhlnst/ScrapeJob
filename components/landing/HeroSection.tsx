@@ -38,12 +38,22 @@ export function HeroJobCard({ job }: { job: Job }) {
   return (
     <Link
       href={`/jobs/${job.slug}`}
-      className="block w-full rounded-none border border-slate-200 bg-white p-4 text-left transition-all duration-200 hover:border-slate-950 hover:shadow-[var(--shadow-sm)]"
+      className="block w-full rounded-2xl bg-white p-4 text-left shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(15,23,42,0.10)]"
     >
       <div className="flex items-start gap-4">
-        <div className="grid size-11 shrink-0 place-items-center rounded-none bg-sky-50 text-xs font-semibold text-sky-700 border border-slate-100">
-          {jobInitials(companyName)}
-        </div>
+        {job.companyLogo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={job.companyLogo}
+            alt=""
+            className="size-11 shrink-0 rounded-xl bg-white object-cover ring-1 ring-slate-100"
+            loading="lazy"
+          />
+        ) : (
+          <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-sky-50 text-xs font-semibold text-sky-700">
+            {jobInitials(companyName)}
+          </div>
+        )}
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -55,16 +65,16 @@ export function HeroJobCard({ job }: { job: Job }) {
           </div>
 
           <div className="mt-2.5 flex flex-wrap gap-1.5 text-[10px]">
-            <span className="inline-flex items-center gap-1 rounded-none bg-slate-100 px-2 py-1 font-medium text-slate-600">
+            <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-1 font-medium text-slate-600">
               <MapPin className="size-3" />
               {job.location || "Lokasi tidak disebutkan"}
             </span>
-            <span className="inline-flex items-center gap-1 rounded-none bg-slate-100 px-2 py-1 font-medium text-slate-600">
+            <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-1 font-medium text-slate-600">
               <MonitorSmartphone className="size-3" />
               {inferWorkMode(job.location || "")}
             </span>
             {job.jobType ? (
-              <span className="rounded-none bg-sky-50 px-2 py-1 font-medium text-sky-700">
+              <span className="rounded-full bg-sky-50 px-2 py-1 font-medium text-sky-700">
                 {job.jobType}
               </span>
             ) : null}
@@ -96,9 +106,9 @@ export function HeroSection({
   jobs?: Job[]
 }) {
   return (
-    <section className="border-b border-[var(--brand-shell-strong)] bg-white">
-      <SiteFrame className="border-x-0 bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)]">
-        <div className="border-x border-[var(--brand-shell-strong)] px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+    <section className="border-b border-[var(--brand-shell-strong)] bg-slate-50/70">
+      <SiteFrame className="border-x-0 bg-transparent">
+        <div className="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
             <div className="max-w-3xl">
               <h1 className="text-4xl font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--brand-ink)] sm:text-5xl lg:text-[4.4rem]">
@@ -112,7 +122,7 @@ export function HeroSection({
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button
                   asChild
-                  className="h-11 rounded-none bg-[var(--brand-blue)] px-5 text-sm font-semibold text-white hover:bg-[var(--brand-sky)]"
+                  className="h-11 rounded-xl bg-[var(--brand-blue)] px-5 text-sm font-semibold text-white hover:bg-[var(--brand-sky)]"
                 >
                   <Link href={content.primaryCta.href}>
                     {content.primaryCta.label}
@@ -122,7 +132,7 @@ export function HeroSection({
                 <Button
                   asChild
                   variant="outline"
-                  className="h-11 rounded-none border-[var(--brand-shell-strong)] bg-white px-5 text-sm font-semibold text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]"
+                  className="h-11 rounded-xl border-slate-200 bg-white px-5 text-sm font-semibold text-[var(--brand-ink)] hover:bg-slate-50"
                 >
                   <Link href={content.secondaryCta.href}>{content.secondaryCta.label}</Link>
                 </Button>
@@ -132,44 +142,53 @@ export function HeroSection({
                 <JobSearchBar defaultSort="newest" />
               </div>
 
-              <div className="mt-5 flex flex-wrap gap-3 text-sm text-slate-600">
-                {content.quickLinks.map((link) => (
-                  <Link
-                    key={`${link.label}-${link.href}`}
-                    href={link.href}
-                    className="rounded-none border border-slate-200 bg-white px-4 py-2 transition-colors hover:border-slate-300 hover:text-slate-900"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+              <div className="mt-6 grid grid-cols-3 gap-3 sm:max-w-xl">
+                <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+                  <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                    <SearchCheck className="size-3.5 text-[var(--brand-blue)]" />
+                    Lowongan
+                  </div>
+                  <div className="mt-2 text-xl font-semibold tracking-[-0.02em] text-slate-950">
+                    {totalJobs.toLocaleString("id-ID")}+
+                  </div>
+                </div>
+                <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+                  <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                    <BriefcaseBusiness className="size-3.5 text-[var(--brand-blue)]" />
+                    Kategori
+                  </div>
+                  <div className="mt-2 text-xl font-semibold tracking-[-0.02em] text-slate-950">
+                    {totalCategories}
+                  </div>
+                </div>
+                <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+                  <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+                    <Building2 className="size-3.5 text-[var(--brand-blue)]" />
+                    Sumber
+                  </div>
+                  <div className="mt-2 text-xl font-semibold tracking-[-0.02em] text-slate-950">
+                    {totalSources}
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-slate-500 border-t border-slate-200/60 pt-6">
-                <div className="flex items-center gap-2">
-                  <SearchCheck className="size-4 text-[var(--brand-blue)]" />
-                  <span>
-                    <strong className="font-semibold text-slate-950">{totalJobs}+</strong> lowongan aktif
-                  </span>
+              {content.quickLinks.length ? (
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {content.quickLinks.map((link) => (
+                    <Link
+                      key={`${link.label}-${link.href}`}
+                      href={link.href}
+                      className="rounded-full bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:text-[var(--brand-blue)] hover:shadow-[0_4px_12px_rgba(15,23,42,0.08)]"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
                 </div>
-                <div className="hidden size-1 bg-slate-300 sm:block rounded-none" />
-                <div className="flex items-center gap-2">
-                  <BriefcaseBusiness className="size-4 text-[var(--brand-blue)]" />
-                  <span>
-                    <strong className="font-semibold text-slate-950">{totalCategories}</strong> kategori
-                  </span>
-                </div>
-                <div className="hidden size-1 bg-slate-300 sm:block rounded-none" />
-                <div className="flex items-center gap-2">
-                  <Building2 className="size-4 text-[var(--brand-blue)]" />
-                  <span>
-                    <strong className="font-semibold text-slate-950">{totalSources}</strong> sumber web
-                  </span>
-                </div>
-              </div>
+              ) : null}
             </div>
 
-            <div className="flex flex-col gap-4 border border-slate-200 bg-white p-5 shadow-[var(--shadow-sm)] rounded-none">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+              <div className="flex items-center justify-between pb-3">
                 <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
                   Lowongan Terbaru
                 </span>
@@ -184,10 +203,10 @@ export function HeroSection({
                   </div>
                 )}
               </div>
-              <div className="mt-2 border-t border-slate-100 pt-4">
+              <div className="mt-2 pt-4">
                 <Button
                   asChild
-                  className="h-11 w-full rounded-none bg-blue-600 px-4 text-sm font-semibold text-white hover:bg-blue-700"
+                  className="h-11 w-full rounded-xl bg-[var(--brand-blue)] px-4 text-sm font-semibold text-white hover:bg-blue-700"
                 >
                   <Link href="/jobs">
                     Lihat semua lowongan

@@ -1,10 +1,10 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef } from "react"
 import { FaAirbnb } from "@react-icons/all-files/fa/FaAirbnb"
 import { FaGoogle } from "@react-icons/all-files/fa/FaGoogle"
 import { FaSpotify } from "@react-icons/all-files/fa/FaSpotify"
-import { animate, motion, useMotionValue, useReducedMotion } from "framer-motion"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { SiCanva } from "@react-icons/all-files/si/SiCanva"
 import { SiFigma } from "@react-icons/all-files/si/SiFigma"
 import { SiNotion } from "@react-icons/all-files/si/SiNotion"
@@ -12,8 +12,7 @@ import { SiStripe } from "@react-icons/all-files/si/SiStripe"
 
 import { Container } from "@/components/shared/Container"
 import { SectionHeader } from "@/components/shared/SectionHeader"
-import { Card } from "@/components/ui/card"
-import type { LandingTrustedCompaniesContent } from "@/types/landing-content"
+import type { LandingCompanyItem, LandingTrustedCompaniesContent } from "@/types/landing-content"
 
 const companyIcons = {
   airbnb: FaAirbnb,
@@ -25,137 +24,123 @@ const companyIcons = {
   stripe: SiStripe,
 } as const
 
-function CompanyChip({
-  id,
-  name,
-  color,
-}: {
-  id: string
-  name: string
-  color: string
-}) {
-  const Icon = companyIcons[id as keyof typeof companyIcons]
+type Tier = {
+  key: "featured" | "growing" | "partners"
+  label: string
+  helper: string
+  items: LandingCompanyItem[]
+}
+
+function splitIntoTiers(items: LandingCompanyItem[]): Tier[] {
+  if (items.length === 0) return []
+  // Round-robin so each tier gets a fair mix even with short lists.
+  const buckets: LandingCompanyItem[][] = [[], [], []]
+  items.forEach((item, i) => buckets[i % 3].push(item))
+  const labels: Array<{ key: Tier["key"]; label: string; helper: string }> = [
+    { key: "featured", label: "Perusahaan Unggulan", helper: "Yang paling dicari kandidat" },
+    { key: "growing", label: "Sedang Berkembang", helper: "Tumbuh cepat, banyak lowongan" },
+    { key: "partners", label: "Partner Resmi", helper: "Sumber lowongan terverifikasi" },
+  ]
+  return buckets
+    .map((bucket, i) => ({ ...labels[i], items: bucket }))
+    .filter((tier) => tier.items.length > 0)
+}
+
+function CompanyChip({ company }: { company: LandingCompanyItem }) {
+  const Icon = companyIcons[company.id as keyof typeof companyIcons]
+  return (
+    <div className="inline-flex h-12 shrink-0 items-center gap-2.5 rounded-full bg-white px-4 text-sm font-semibold text-[var(--brand-ink)] shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+      {Icon ? (
+        <Icon className="size-4 shrink-0" style={{ color: company.brandColor }} />
+      ) : (
+        <span
+          className="grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-bold text-white"
+          style={{ backgroundColor: company.brandColor }}
+        >
+          {company.name.slice(0, 2).toUpperCase()}
+        </span>
+      )}
+      {company.name}
+    </div>
+  )
+}
+
+function TierRow({ tier }: { tier: Tier }) {
+  const scrollerRef = useRef<HTMLDivElement | null>(null)
+
+  const scrollBy = (direction: "left" | "right") => {
+    const el = scrollerRef.current
+    if (!el) return
+    const delta = Math.max(240, Math.round(el.clientWidth * 0.7))
+    el.scrollBy({ left: direction === "left" ? -delta : delta, behavior: "smooth" })
+  }
 
   return (
-    <Card className="flex h-14 items-center justify-center rounded-none border border-[var(--brand-shell-strong)] bg-white px-6 text-sm font-semibold text-[var(--brand-ink)] shadow-[var(--shadow-sm)]">
-      <div className="flex items-center gap-3">
-        {Icon ? (
-          <Icon className="size-5 shrink-0" style={{ color }} />
-        ) : (
-          <span
-            className="flex size-5 shrink-0 items-center justify-center rounded-none text-[10px] font-bold text-white"
-            style={{ backgroundColor: color }}
+    <div className="rounded-2xl bg-slate-50 p-4 md:p-5">
+      <div className="flex items-center justify-between gap-3 px-1">
+        <div>
+          <div className="text-sm font-semibold text-[var(--brand-ink)]">{tier.label}</div>
+          <div className="text-xs text-slate-500">{tier.helper}</div>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            aria-label={`Geser ${tier.label} ke kiri`}
+            onClick={() => scrollBy("left")}
+            className="grid size-8 place-items-center rounded-full bg-white text-slate-500 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-colors hover:text-[var(--brand-blue)]"
           >
-            {name.slice(0, 2).toUpperCase()}
-          </span>
-        )}
-        {name}
+            <ChevronLeft className="size-4" />
+          </button>
+          <button
+            type="button"
+            aria-label={`Geser ${tier.label} ke kanan`}
+            onClick={() => scrollBy("right")}
+            className="grid size-8 place-items-center rounded-full bg-white text-slate-500 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-colors hover:text-[var(--brand-blue)]"
+          >
+            <ChevronRight className="size-4" />
+          </button>
+        </div>
       </div>
-    </Card>
+
+      <div
+        ref={scrollerRef}
+        className="mt-3 flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {tier.items.map((company) => (
+          <div key={`${tier.key}-${company.id}`} className="snap-start">
+            <CompanyChip company={company} />
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 
 export function TrustedCompanies({ content }: { content: LandingTrustedCompaniesContent }) {
-  const reduceMotion = useReducedMotion()
-  const [paused, setPaused] = useState(false)
-
-  const items = useMemo(() => content.items, [content.items])
-  const displayItems = useMemo(
-    () => (reduceMotion ? items : [...items, ...items]),
-    [items, reduceMotion]
-  )
-
-  const trackRef = useRef<HTMLDivElement | null>(null)
-  const x = useMotionValue(0)
-
-  useEffect(() => {
-    if (reduceMotion) return
-    if (!trackRef.current) return
-
-    const el = trackRef.current
-    const totalWidth = el.scrollWidth
-    const half = totalWidth / 2
-    if (!half || Number.isNaN(half) || paused) return
-
-    const current = x.get()
-    const normalized = current <= -half ? ((current % half) + half) % half : current
-    x.set(normalized)
-
-    const controls = animate(x, -half, {
-      duration: 28,
-      ease: "linear",
-      repeat: Infinity,
-      repeatType: "loop",
-    })
-
-    return () => controls.stop()
-  }, [displayItems.length, paused, reduceMotion, x])
+  const tiers = useMemo(() => splitIntoTiers(content.items), [content.items])
 
   return (
     <section className="border-b border-[var(--brand-shell-strong)] bg-white py-16 md:py-20" id="companies">
       <Container>
-        <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-          <div className="max-w-lg">
-            <SectionHeader
-              title={content.title}
-              description="Keep the marketplace feeling credible with recognizable hiring brands and familiar job-source patterns."
-            />
-          </div>
-
-          <div
-            className="overflow-hidden border border-[var(--brand-shell-strong)] bg-[var(--brand-shell)] px-6 py-6"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-          >
-            <div className="grid gap-0 md:grid-cols-2">
-              <div className="border border-[var(--brand-shell-strong)] bg-white p-8">
-                <div className="text-5xl font-semibold tracking-[-0.05em] text-[var(--brand-blue)]">
-                  10,000+
-                </div>
-                <div className="mt-3 text-lg font-medium text-[var(--brand-ink)]">
-                  Openings indexed
-                </div>
-                <p className="mt-3 text-sm leading-7 text-slate-600">
-                  Browse roles across engineering, product, operations, sales, and support.
-                </p>
-              </div>
-              <div className="border border-[var(--brand-shell-strong)] bg-white p-8">
-                <div className="text-5xl font-semibold tracking-[-0.05em] text-[var(--brand-blue)]">
-                  200,000+
-                </div>
-                <div className="mt-3 text-lg font-medium text-[var(--brand-ink)]">
-                  Monthly job seekers
-                </div>
-                <p className="mt-3 text-sm leading-7 text-slate-600">
-                  Designed for first-time visitors who want to evaluate jobs before committing to a deeper search.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 overflow-hidden">
-              <motion.div
-                ref={trackRef}
-                className={
-                  reduceMotion
-                    ? "flex flex-wrap justify-center gap-3"
-                    : "flex gap-3 will-change-transform"
-                }
-                style={reduceMotion ? undefined : { x, width: "max-content" }}
-              >
-                {displayItems.map((company, idx) => (
-                  <CompanyChip
-                    key={reduceMotion ? company.id : `${company.id}-${idx}`}
-                    id={company.id}
-                    name={company.name}
-                    color={company.brandColor}
-                  />
-                ))}
-              </motion.div>
-            </div>
-          </div>
+        <div className="max-w-3xl">
+          <SectionHeader
+            title={content.title}
+            description="Sumber lowongan yang sudah dikenal — dari perusahaan unggulan sampai partner terverifikasi."
+          />
         </div>
+
+        {tiers.length ? (
+          <div className="mt-10 grid gap-3">
+            {tiers.map((tier) => (
+              <TierRow key={tier.key} tier={tier} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-2xl bg-slate-50 p-8 text-center text-sm text-slate-500">
+            Belum ada perusahaan yang ditampilkan.
+          </div>
+        )}
       </Container>
     </section>
   )
 }
-

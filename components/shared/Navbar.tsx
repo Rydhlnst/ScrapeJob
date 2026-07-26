@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import {
   BriefcaseBusiness,
   Building2,
@@ -470,13 +471,33 @@ function CompaniesMegaMenu({ open, menuData }: { open: boolean; menuData: Return
 
 function DesktopNav({ menuData }: { menuData: ReturnType<typeof buildNavbarData> }) {
   const [openMenu, setOpenMenu] = useState<"jobs" | "companies" | null>(null)
+  const pathname = usePathname() ?? ""
+
+  const linkClass = (active: boolean) =>
+    cn(
+      "self-center rounded-lg px-3 py-2 text-[13px] transition-colors",
+      active
+        ? "bg-sky-50 font-semibold text-[var(--brand-blue)]"
+        : "text-slate-600 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-blue)]",
+    )
+
+  const triggerClass = (active: boolean) =>
+    cn(
+      "inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] transition-colors",
+      active
+        ? "bg-sky-50 font-semibold text-[var(--brand-blue)]"
+        : "text-slate-600 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-blue)]",
+    )
+
+  const jobsActive = pathname === "/jobs" || pathname.startsWith("/jobs/")
+  const blogActive = pathname === "/blog" || pathname.startsWith("/blog/") || pathname.startsWith("/page/blog")
 
   return (
     <nav className="hidden items-stretch gap-0.5 lg:flex" onMouseLeave={() => setOpenMenu(null)}>
       <div className="relative flex items-center" onMouseEnter={() => setOpenMenu("jobs")}>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-none px-3 py-2 text-[13px] text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary"
+          className={triggerClass(jobsActive || openMenu === "jobs")}
           aria-expanded={openMenu === "jobs"}
         >
           Cari Lowongan
@@ -488,7 +509,7 @@ function DesktopNav({ menuData }: { menuData: ReturnType<typeof buildNavbarData>
       <div className="relative flex items-center" onMouseEnter={() => setOpenMenu("companies")}>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-none px-3 py-2 text-[13px] text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary"
+          className={triggerClass(openMenu === "companies")}
           aria-expanded={openMenu === "companies"}
         >
           Perusahaan
@@ -497,10 +518,10 @@ function DesktopNav({ menuData }: { menuData: ReturnType<typeof buildNavbarData>
         <CompaniesMegaMenu open={openMenu === "companies"} menuData={menuData} />
       </div>
 
-      <Link href="/jobs" className="self-center rounded-none px-3 py-2 text-[13px] text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary">
+      <Link href="/jobs" className={linkClass(jobsActive)}>
         Karier
       </Link>
-      <Link href="/page/blog" className="self-center rounded-none px-3 py-2 text-[13px] text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary">
+      <Link href="/blog" className={linkClass(blogActive)}>
         Blog
       </Link>
     </nav>
@@ -561,6 +582,8 @@ function MobileDrawer({ menuData }: { menuData: ReturnType<typeof buildNavbarDat
 
 export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
   const menuData = buildNavbarData({ jobs, categories, totalJobs })
+  const pathname = usePathname() ?? ""
+  const contactActive = pathname.startsWith("/contact")
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/95 backdrop-blur-sm">
@@ -569,10 +592,18 @@ export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
           <Logo />
           <DesktopNav menuData={menuData} />
           <div className="hidden items-center gap-2 lg:flex">
-            <Button asChild variant="ghost" className="h-9 rounded-none px-4 text-[13px] text-slate-600 hover:bg-[var(--brand-shell)] hover:text-primary">
+            <Button asChild variant="ghost" className="h-9 rounded-lg px-4 text-[13px] text-slate-600 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-blue)]">
               <Link href="/jobs">Lowongan Terbaru</Link>
             </Button>
-            <Button asChild className="h-9 rounded-none bg-primary px-5 text-[13px] text-white hover:opacity-90">
+            <Button
+              asChild
+              className={cn(
+                "h-9 rounded-lg px-5 text-[13px] text-white transition-colors",
+                contactActive
+                  ? "bg-[var(--brand-blue)] hover:bg-blue-700"
+                  : "bg-primary hover:opacity-90",
+              )}
+            >
               <Link href="/contact">Hubungi Kami</Link>
             </Button>
           </div>

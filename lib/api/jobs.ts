@@ -27,6 +27,9 @@ type ApiJob = Omit<Job, "category" | "categoryId" | "status" | "updatedAt"> & {
   description?: string | null
   descriptionDoc?: Record<string, unknown> | null
   companyName?: string | null
+  companyLogo?: string | null
+  company_logo?: string | null
+  company_logo_url?: string | null
   location?: string | null
   salaryText?: string | null
   sourceName?: string | null
@@ -51,6 +54,7 @@ function normalizeJob(job: ApiJob, fallbackStatus: Job["status"]): Job {
   return {
     ...job,
     companyName: job.companyName ?? "Company undisclosed",
+    companyLogo: job.companyLogo ?? job.company_logo_url ?? job.company_logo ?? null,
     location: job.location ?? "Tidak disebutkan",
     salaryText: job.salaryText ?? null,
     description: typeof job.description === "string" ? job.description : "",

@@ -1,6 +1,7 @@
+import { Quote } from "lucide-react"
+
 import { Container } from "@/components/shared/Container"
 import { SectionHeader } from "@/components/shared/SectionHeader"
-import { Card } from "@/components/ui/card"
 
 const testimonials = [
   {
@@ -29,54 +30,51 @@ const testimonials = [
   },
 ]
 
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("")
+}
+
 export function TestimonialsSection() {
   return (
-    <section
-      className="border-b bg-white py-16 md:py-20"
-      id="about"
-      style={{ borderColor: "var(--brand-shell-strong)" }}
-    >
+    <section className="border-b border-[var(--brand-shell-strong)] bg-white py-16 md:py-20" id="about">
       <Container>
-        <SectionHeader
-          title="What people value most"
-          description="The experience stays structured, clear, and easier to trust."
-        />
+        <div className="max-w-3xl">
+          <SectionHeader
+            title="What people value most"
+            description="The experience stays structured, clear, and easier to trust."
+          />
+        </div>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {testimonials.map((testimonial) => (
-            <Card
+            <div
               key={testimonial.name}
-              className="border p-6 shadow-none"
-              style={{
-                borderColor: "var(--brand-shell-strong)",
-                backgroundColor: "var(--brand-shell)",
-              }}
+              className="flex h-full flex-col rounded-2xl bg-slate-50 p-6"
             >
-              <p
-                className="text-sm leading-7"
-                style={{ color: "#475569" }}
-              >
-                "{testimonial.quote}"
+              <Quote className="size-6 text-[var(--brand-blue)]/70" />
+              <p className="mt-4 flex-1 text-sm leading-7 text-slate-600">
+                {testimonial.quote}
               </p>
-              <div className="mt-5">
-                <div
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--brand-ink)" }}
-                >
-                  {testimonial.name}
+              <div className="mt-5 flex items-center gap-3">
+                <div className="grid size-10 shrink-0 place-items-center rounded-full bg-sky-50 text-xs font-semibold text-sky-700">
+                  {initials(testimonial.name)}
                 </div>
-                <div
-                  className="text-xs"
-                  style={{ color: "#64748b" }}
-                >
-                  {testimonial.role}
+                <div>
+                  <div className="text-sm font-semibold text-[var(--brand-ink)]">
+                    {testimonial.name}
+                  </div>
+                  <div className="text-xs text-slate-500">{testimonial.role}</div>
                 </div>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </Container>
     </section>
   )
 }
-

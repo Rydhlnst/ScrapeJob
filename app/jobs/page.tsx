@@ -3,10 +3,9 @@ import { Suspense } from "react"
 import { listCategories } from "@/lib/api/categories"
 import { getJobStats, listJobs } from "@/lib/api/jobs"
 
-import { JobCard } from "@/components/public/job-card"
 import { JobFilterSidebar } from "@/components/public/job-filter-sidebar"
 import { JobSearchBar } from "@/components/public/job-search-bar"
-import { PaginationControls } from "@/components/public/pagination-controls"
+import { JobsListLazy } from "@/components/public/jobs-list-lazy"
 import { EmptyState } from "@/components/shared/empty-state"
 import { Footer } from "@/components/shared/Footer"
 import { Navbar } from "@/components/shared/Navbar"
@@ -49,21 +48,23 @@ export default async function JobsPage({
       ? Number(resolvedSearchParams.page)
       : 1
 
+  const normalizedSort = (["newest", "oldest", "relevance", "company"] as const).includes(
+    sort as "newest" | "oldest" | "relevance" | "company",
+  )
+    ? (sort as "newest" | "oldest" | "relevance" | "company")
+    : "newest"
+
+  const jobsQuery = {
+    keyword,
+    location,
+    category,
+    jobType,
+    source,
+    sort: normalizedSort,
+  }
+
   const [jobs, navJobs, categories, stats] = await Promise.all([
-    listJobs({
-      keyword,
-      location,
-      category,
-      jobType,
-      source,
-      sort: (["newest", "oldest", "relevance", "company"] as const).includes(
-        sort as "newest" | "oldest" | "relevance" | "company",
-      )
-        ? (sort as "newest" | "oldest" | "relevance" | "company")
-        : "newest",
-      page,
-      perPage: 9,
-    }),
+    listJobs({ ...jobsQuery, page, perPage: 9 }),
     listJobs({ page: 1, perPage: 100, sort: "newest" }),
     listCategories(),
     getJobStats(),
@@ -146,21 +147,7 @@ export default async function JobsPage({
                 </div>
 
                 {jobs.data.length ? (
-                  <>
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                      {jobs.data.map((job) => (
-                        <JobCard key={job.id} job={job} variant="compact" />
-                      ))}
-                    </div>
-                    <div className="pt-2">
-                      <Suspense fallback={<div className="h-10 w-full" />}>
-                        <PaginationControls
-                          page={jobs.page}
-                          totalPages={jobs.totalPages}
-                        />
-                      </Suspense>
-                    </div>
-                  </>
+                  <JobsListLazy initial={jobs} query={jobsQuery} />
                 ) : (
                   <EmptyState
                     title="Tidak ada lowongan ditemukan"

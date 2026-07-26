@@ -43,24 +43,44 @@ export default async function PublicPage({
       notFound()
     }
 
+    const kind = slug === "blog" || slug.startsWith("blog/") ? "Blog" : "Halaman"
+
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-white">
         <Navbar jobs={navbarData.jobs} categories={navbarData.categories} totalJobs={navbarData.totalJobs} />
-        <main className="py-8">
+        <main className="pb-16 pt-10 md:pt-14">
           <SiteFrame>
             <SiteContent>
-              <article className="border border-white bg-white p-7 shadow-[var(--shadow-md)]">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-700">
-                  Page
+              <article className="mx-auto max-w-3xl">
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <a href="/" className="hover:text-[var(--brand-blue)]">Beranda</a>
+                  <span className="text-slate-300">/</span>
+                  <span className="text-[var(--brand-blue)]">{kind}</span>
                 </div>
-                <h1 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-[var(--brand-ink)] md:text-4xl">
+
+                <h1 className="mt-5 text-3xl font-semibold leading-tight tracking-[-0.04em] text-[var(--brand-ink)] md:text-[2.75rem] md:leading-[1.15]">
                   {page.title}
                 </h1>
+
                 {page.summary ? (
-                  <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">{page.summary}</p>
+                  <p className="mt-4 text-base leading-8 text-slate-600 md:text-lg">
+                    {page.summary}
+                  </p>
                 ) : null}
+
+                <div className="mt-6 flex items-center gap-3 border-b border-slate-100 pb-6 text-xs text-slate-500">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="grid size-6 place-items-center rounded-full bg-sky-50 text-[10px] font-semibold text-sky-700">
+                      L
+                    </span>
+                    Lowonganku
+                  </span>
+                  <span className="text-slate-300">·</span>
+                  <time>{new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</time>
+                </div>
+
                 <div
-                  className="rich-text mt-8 text-sm leading-7 text-slate-700"
+                  className="rich-text mt-8 text-base leading-8 text-slate-700"
                   dangerouslySetInnerHTML={{ __html: sanitizeHtml(page.content ?? "") }}
                 />
               </article>

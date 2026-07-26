@@ -5,6 +5,7 @@ export type Job = {
   slug: string
   title: string
   companyName: string
+  companyLogo?: string | null
   location: string
   categoryId?: string | null
   category?: string | null

@@ -78,3 +78,25 @@ export async function getPublicPageBySlug(slug: string): Promise<Page | null> {
   const response = await fetchJson<PageEnvelope>(`/api/pages/${encodeURIComponent(slug)}`)
   return response.data
 }
+
+export type PublicPageSummary = {
+  id: string
+  title: string
+  slug: string
+  summary?: string | null
+  publishedAt?: string | null
+  updatedAt?: string | null
+}
+
+export async function listPublicPages(perPage = 12): Promise<Paginated<PublicPageSummary>> {
+  const response = await fetchJson<ApiEnvelope<PublicPageSummary[]>>(
+    `/api/pages?per_page=${perPage}`,
+  )
+  return {
+    data: response.data,
+    page: response.meta?.currentPage ?? 1,
+    perPage: response.meta?.perPage ?? response.data.length,
+    total: response.meta?.total ?? response.data.length,
+    totalPages: response.meta?.lastPage ?? 1,
+  }
+}

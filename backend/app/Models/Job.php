@@ -21,6 +21,7 @@ class Job extends Model
         'slug',
         'company_name',
         'company_meta',
+        'company_logo_url',
         'location',
         'location_city',
         'location_province',

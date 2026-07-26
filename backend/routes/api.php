@@ -44,6 +44,7 @@ Route::prefix('auth')->group(function () {
 Route::get('/jobs', [PublicJobController::class, 'index']);
 Route::get('/jobs/stats', [PublicJobController::class, 'stats']);
 Route::get('/jobs/{identifier}', [PublicJobController::class, 'show']);
+Route::get('/pages', [PublicPageController::class, 'index']);
 Route::get('/pages/{slug}', [PublicPageController::class, 'show']);
 Route::post('/internal/scraped-jobs/import', ScrapedJobImportController::class)->middleware('internal.token');
 Route::post('/scraper/run', [PublicScraperController::class, 'trigger'])->middleware('throttle:scrape-run');

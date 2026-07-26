@@ -141,6 +141,7 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
 
   const [title, setTitle] = React.useState(job.title)
   const [companyName, setCompanyName] = React.useState(job.companyName)
+  const [companyLogo, setCompanyLogo] = React.useState(job.companyLogo ?? "")
   const [location, setLocation] = React.useState(job.location)
   const [jobType, setJobType] = React.useState(job.jobType ?? "")
   const [salaryText, setSalaryText] = React.useState(job.salaryText ?? "")
@@ -256,6 +257,7 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
       const nextJob = await updateAdminJob(job.id, {
         title,
         company_name: companyName,
+        company_logo_url: companyLogo.trim() || null,
         location,
         job_type: jobType,
         salary_text: salaryText,
@@ -335,6 +337,23 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <Field label="Judul"><Input value={title} onChange={(event) => setTitle(event.target.value)} aria-invalid={Boolean(fieldErrors.title)} />{errorLine(fieldErrors.title)}</Field>
         <Field label="Company"><Input value={companyName} onChange={(event) => setCompanyName(event.target.value)} aria-invalid={Boolean(fieldErrors.companyName)} />{errorLine(fieldErrors.companyName)}</Field>
+        <Field label="Company logo URL">
+          <div className="flex items-center gap-3">
+            {companyLogo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={companyLogo} alt="" className="size-10 shrink-0 rounded-lg bg-white object-cover ring-1 ring-slate-200" />
+            ) : (
+              <div className="grid size-10 shrink-0 place-items-center rounded-lg bg-slate-100 text-[10px] font-semibold text-slate-400">
+                LOGO
+              </div>
+            )}
+            <Input
+              value={companyLogo}
+              onChange={(event) => setCompanyLogo(event.target.value)}
+              placeholder="https://…/logo.png"
+            />
+          </div>
+        </Field>
         <Field label="Lokasi"><Input value={location} onChange={(event) => setLocation(event.target.value)} /></Field>
         <Field label="Kategori Blog"><Input value={categoryLabel} onChange={(event) => setCategoryLabel(event.target.value)} placeholder="Technology / Data / Marketing" /></Field>
         <Field label="Employment Type"><Input value={jobType} onChange={(event) => setJobType(event.target.value)} placeholder="Full-time" /></Field>

@@ -2,14 +2,11 @@
 
 import * as React from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { SlidersHorizontal } from "lucide-react"
+import { RotateCcw, SlidersHorizontal, X } from "lucide-react"
 
 import type { Category } from "@/types"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
@@ -18,6 +15,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { cn } from "@/lib/utils"
 
 const jobTypes = ["full-time", "part-time", "contract", "freelance", "internship"]
 
@@ -26,10 +24,6 @@ function formatJobType(value: string) {
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join("-")
-}
-
-function optionId(group: string, value: string) {
-  return `${group}-${value || "all"}`
 }
 
 function toParams(sp: URLSearchParams) {
@@ -41,9 +35,53 @@ function setOrDelete(params: URLSearchParams, key: string, value: string) {
   else params.delete(key)
 }
 
+type Counts = {
+  category?: Record<string, number>
+  jobType?: Record<string, number>
+  source?: Record<string, number>
+}
+
+function FilterOptionRow({
+  active,
+  label,
+  count,
+  onClick,
+}: {
+  active: boolean
+  label: string
+  count?: number
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex w-full items-center justify-between gap-3 rounded-xl bg-white px-3.5 py-2.5 text-sm font-medium transition-colors",
+        active
+          ? "bg-sky-50 text-sky-700 ring-1 ring-sky-200"
+          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+      )}
+    >
+      <span className="truncate text-left">{label}</span>
+      {typeof count === "number" ? (
+        <span
+          className={cn(
+            "shrink-0 text-xs font-semibold tabular-nums",
+            active ? "text-sky-700" : "text-slate-400",
+          )}
+        >
+          {count}
+        </span>
+      ) : null}
+    </button>
+  )
+}
+
 function FiltersForm({
   categories,
   sourceOptions,
+  counts,
   initialCategory,
   initialJobType,
   initialSource,
@@ -51,6 +89,7 @@ function FiltersForm({
 }: {
   categories: Category[]
   sourceOptions: string[]
+  counts?: Counts
   initialCategory?: string
   initialJobType?: string
   initialSource?: string
@@ -58,143 +97,156 @@ function FiltersForm({
 }) {
   const router = useRouter()
   const sp = useSearchParams()
-  const [category, setCategory] = React.useState(initialCategory ?? "")
-  const [jobType, setJobType] = React.useState(initialJobType ?? "")
-  const [source, setSource] = React.useState(initialSource ?? "")
 
-  React.useEffect(() => {
-    setCategory(initialCategory ?? "")
-  }, [initialCategory])
+  const apply = React.useCallback(
+    (next: { category?: string; jobType?: string; source?: string }) => {
+      const params = toParams(sp)
+      setOrDelete(params, "category", next.category ?? "")
+      setOrDelete(params, "jobType", next.jobType ?? "")
+      setOrDelete(params, "source", next.source ?? "")
+      params.delete("page")
+      router.replace(`/jobs?${params.toString()}`)
+      onApplied?.()
+    },
+    [sp, router, onApplied],
+  )
 
-  React.useEffect(() => {
-    setJobType(initialJobType ?? "")
-  }, [initialJobType])
-
-  React.useEffect(() => {
-    setSource(initialSource ?? "")
-  }, [initialSource])
-
-  function apply() {
-    const params = toParams(sp)
-    setOrDelete(params, "category", category)
-    setOrDelete(params, "jobType", jobType)
-    setOrDelete(params, "source", source)
-    params.delete("page")
-    router.replace(`/jobs?${params.toString()}`)
-    onApplied?.()
-  }
-
-  function reset() {
-    const params = toParams(sp)
-    params.delete("category")
-    params.delete("jobType")
-    params.delete("source")
-    params.delete("page")
-    router.replace(`/jobs?${params.toString()}`)
-    setCategory("")
-    setJobType("")
-    setSource("")
-    onApplied?.()
-  }
+  const resetAll = React.useCallback(() => {
+    apply({ category: "", jobType: "", source: "" })
+  }, [apply])
 
   return (
     <div className="space-y-5">
-      <div className="space-y-2">
-        <div className="text-sm font-semibold text-foreground">Kategori</div>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => setCategory("")}
-            className={`relative z-10 cursor-pointer rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
-              category === ""
-                ? "border-sky-100 bg-sky-50 text-sky-700"
-                : "border-white bg-white text-slate-600 hover:bg-sky-50 hover:text-sky-700"
-            }`}
-          >
-            Semua
-          </button>
+      <div className="rounded-2xl bg-slate-50/70 p-3">
+        <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+          Kategori
+        </div>
+        <div className="space-y-1.5">
+          <FilterOptionRow
+            active={!initialCategory}
+            label="Semua kategori"
+            onClick={() => apply({ category: "", jobType: initialJobType, source: initialSource })}
+          />
           {categories.map((item) => (
-            <button
+            <FilterOptionRow
               key={item.id}
-              type="button"
-              onClick={() => setCategory(item.id)}
-              className={`relative z-10 cursor-pointer rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
-                category === item.id
-                  ? "border-sky-100 bg-sky-50 text-sky-700"
-                  : "border-white bg-white text-slate-600 hover:bg-sky-50 hover:text-sky-700"
-              }`}
-            >
-              {item.name}
-            </button>
+              active={initialCategory === item.id || initialCategory === item.slug}
+              label={item.name}
+              count={counts?.category?.[item.id] ?? counts?.category?.[item.slug]}
+              onClick={() =>
+                apply({ category: item.id, jobType: initialJobType, source: initialSource })
+              }
+            />
           ))}
         </div>
       </div>
 
       <Separator />
 
-      <div className="space-y-2">
-        <div className="text-sm font-semibold text-foreground">Tipe kerja</div>
-        <RadioGroup value={jobType} onValueChange={setJobType} className="space-y-2">
+      <div className="rounded-2xl bg-slate-50/70 p-3">
+        <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+          Tipe kerja
+        </div>
+        <div className="space-y-1.5">
+          <FilterOptionRow
+            active={!initialJobType}
+            label="Semua tipe"
+            onClick={() =>
+              apply({ category: initialCategory, jobType: "", source: initialSource })
+            }
+          />
           {jobTypes.map((value) => (
-            <Label
-              htmlFor={optionId("jobType", value)}
+            <FilterOptionRow
               key={value}
-              className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
-            >
-              <RadioGroupItem id={optionId("jobType", value)} value={value} />
-              {formatJobType(value)}
-            </Label>
+              active={initialJobType === value}
+              label={formatJobType(value)}
+              count={counts?.jobType?.[value]}
+              onClick={() =>
+                apply({ category: initialCategory, jobType: value, source: initialSource })
+              }
+            />
           ))}
-          <Label
-            htmlFor={optionId("jobType", "")}
-            className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
-          >
-            <RadioGroupItem id={optionId("jobType", "")} value="" />
-            Semua
-          </Label>
-        </RadioGroup>
+        </div>
       </div>
 
       <Separator />
 
-      <div className="space-y-2">
-        <div className="text-sm font-semibold text-foreground">Sumber</div>
-        <RadioGroup value={source} onValueChange={setSource} className="space-y-2">
+      <div className="rounded-2xl bg-slate-50/70 p-3">
+        <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+          Sumber
+        </div>
+        <div className="space-y-1.5">
+          <FilterOptionRow
+            active={!initialSource}
+            label="Semua sumber"
+            onClick={() =>
+              apply({ category: initialCategory, jobType: initialJobType, source: "" })
+            }
+          />
           {sourceOptions.map((value) => (
-            <Label
-              htmlFor={optionId("source", value)}
+            <FilterOptionRow
               key={value}
-              className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
-            >
-              <RadioGroupItem id={optionId("source", value)} value={value} />
-              {value}
-            </Label>
+              active={initialSource === value}
+              label={value}
+              count={counts?.source?.[value]}
+              onClick={() =>
+                apply({ category: initialCategory, jobType: initialJobType, source: value })
+              }
+            />
           ))}
-          <Label
-            htmlFor={optionId("source", "")}
-            className="flex cursor-pointer items-center gap-3 rounded-2xl border border-white bg-white px-3 py-3 text-sm font-normal text-slate-600 transition-colors hover:border-sky-200 hover:text-foreground"
-          >
-            <RadioGroupItem id={optionId("source", "")} value="" />
-            Semua
-          </Label>
-        </RadioGroup>
+        </div>
       </div>
 
-      <div className="flex gap-2 pt-2">
+      {initialCategory || initialJobType || initialSource ? (
         <Button
-          className="flex-1 rounded-2xl bg-[var(--brand-blue)] text-white hover:bg-blue-700"
-          onClick={apply}
-        >
-          Terapkan
-        </Button>
-        <Button
-          className="flex-1 rounded-2xl border-white bg-white hover:bg-white"
           variant="outline"
-          onClick={reset}
+          className="w-full rounded-xl border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+          onClick={resetAll}
         >
-          Reset
+          <RotateCcw className="mr-2 size-4" />
+          Reset semua filter
         </Button>
-      </div>
+      ) : null}
+    </div>
+  )
+}
+
+function ActiveFilterChip({ label, onRemove }: { label: string; onRemove: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onRemove}
+      className="inline-flex items-center gap-1.5 rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700 ring-1 ring-sky-100 transition-colors hover:bg-sky-100"
+    >
+      {label}
+      <X className="size-3" />
+    </button>
+  )
+}
+
+function ActiveFiltersBar({
+  categoryLabel,
+  jobType,
+  source,
+  onClear,
+}: {
+  categoryLabel?: string
+  jobType?: string
+  source?: string
+  onClear: (key: "category" | "jobType" | "source") => void
+}) {
+  const hasAny = categoryLabel || jobType || source
+  if (!hasAny) return null
+
+  return (
+    <div className="flex flex-wrap items-center gap-1.5 pb-3">
+      {categoryLabel ? (
+        <ActiveFilterChip label={categoryLabel} onRemove={() => onClear("category")} />
+      ) : null}
+      {jobType ? (
+        <ActiveFilterChip label={formatJobType(jobType)} onRemove={() => onClear("jobType")} />
+      ) : null}
+      {source ? <ActiveFilterChip label={source} onRemove={() => onClear("source")} /> : null}
     </div>
   )
 }
@@ -202,65 +254,77 @@ function FiltersForm({
 export function JobFilterSidebar({
   categories,
   sourceOptions,
+  counts,
   category,
   jobType,
   source,
 }: {
   categories: Category[]
   sourceOptions: string[]
+  counts?: Counts
   category?: string
   jobType?: string
   source?: string
 }) {
+  const router = useRouter()
+  const sp = useSearchParams()
   const [open, setOpen] = React.useState(false)
+
   const activeCategoryName =
-    categories.find((item) => item.id === category || item.slug === category)?.name ??
-    category
+    categories.find((item) => item.id === category || item.slug === category)?.name ?? category
+
+  const clearOne = React.useCallback(
+    (key: "category" | "jobType" | "source") => {
+      const params = toParams(sp)
+      params.delete(key)
+      params.delete("page")
+      router.replace(`/jobs?${params.toString()}`)
+    },
+    [sp, router],
+  )
 
   return (
     <>
       <div className="hidden md:block">
-        <Card className="rounded-[28px] border border-white bg-white shadow-[var(--shadow-sm)]">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold tracking-[0.12em] uppercase text-slate-500">
-              Filters
-            </CardTitle>
-            <div className="flex flex-wrap gap-2 pt-1">
-              {activeCategoryName ? (
-                <Badge variant="outline" className="rounded-full border-sky-100 bg-sky-50 text-sky-700">
-                  {activeCategoryName}
-                </Badge>
-              ) : null}
-              {jobType ? (
-                <Badge variant="outline" className="rounded-full border-white bg-white text-slate-600">
-                  {formatJobType(jobType)}
-                </Badge>
-              ) : null}
-              {source ? (
-                <Badge variant="outline" className="rounded-full border-white bg-white text-slate-600">
-                  {source}
-                </Badge>
-              ) : null}
-            </div>
-          </CardHeader>
-          <CardContent>
-            <FiltersForm
-              categories={categories}
-              sourceOptions={sourceOptions}
-              initialCategory={category}
-              initialJobType={jobType}
-              initialSource={source}
-            />
-          </CardContent>
-        </Card>
+        <div className="sticky top-24">
+          <Card className="rounded-2xl border-0 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-sm font-semibold tracking-[0.12em] uppercase text-slate-500">
+                <SlidersHorizontal className="size-4" />
+                Filter
+              </CardTitle>
+              <ActiveFiltersBar
+                categoryLabel={activeCategoryName}
+                jobType={jobType}
+                source={source}
+                onClear={clearOne}
+              />
+            </CardHeader>
+            <CardContent>
+              <FiltersForm
+                categories={categories}
+                sourceOptions={sourceOptions}
+                counts={counts}
+                initialCategory={category}
+                initialJobType={jobType}
+                initialSource={source}
+              />
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       <div className="md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" className="w-full rounded-[22px] border-white bg-white">
+            <Button variant="outline" className="w-full rounded-xl border-slate-200 bg-white">
               <SlidersHorizontal className="mr-2 size-4" />
               Filter
+              {(activeCategoryName ? 1 : 0) + (jobType ? 1 : 0) + (source ? 1 : 0) > 0 ? (
+                <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sky-600 px-1.5 text-xs font-semibold text-white">
+                  {(activeCategoryName ? 1 : 0) + (jobType ? 1 : 0) + (source ? 1 : 0)}
+                </span>
+              ) : null}
             </Button>
           </SheetTrigger>
           <SheetContent side="bottom" className="max-h-[85vh] overflow-auto rounded-t-3xl">
@@ -268,9 +332,16 @@ export function JobFilterSidebar({
               <SheetTitle>Filter Lowongan</SheetTitle>
             </SheetHeader>
             <div className="mt-4">
+              <ActiveFiltersBar
+                categoryLabel={activeCategoryName}
+                jobType={jobType}
+                source={source}
+                onClear={clearOne}
+              />
               <FiltersForm
                 categories={categories}
                 sourceOptions={sourceOptions}
+                counts={counts}
                 initialCategory={category}
                 initialJobType={jobType}
                 initialSource={source}
@@ -283,4 +354,3 @@ export function JobFilterSidebar({
     </>
   )
 }
-

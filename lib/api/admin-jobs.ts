@@ -41,6 +41,7 @@ export async function updateAdminJob(
   payload: Partial<{
     title: string
     company_name: string
+    company_logo_url: string | null
     location: string
     job_type: string
     salary_text: string
