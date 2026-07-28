@@ -373,9 +373,9 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
         <Field label="Source URL metadata"><Input value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} aria-invalid={Boolean(fieldErrors.sourceUrl)} placeholder="https://…" />{errorLine(fieldErrors.sourceUrl)}</Field>
         <Field label="SEO title"><Input value={seoTitle} onChange={(event) => setSeoTitle(event.target.value)} /></Field>
         <Field label="SEO description"><Textarea value={seoDescription} onChange={(event) => setSeoDescription(event.target.value)} className="min-h-24" /></Field>
-        <Field label="Requirements"><Textarea value={requirementsText} onChange={(event) => setRequirementsText(event.target.value)} className="min-h-24" placeholder="Satu baris satu item" /></Field>
-        <Field label="Skills"><Textarea value={skillsText} onChange={(event) => setSkillsText(event.target.value)} className="min-h-24" placeholder="Skills" /></Field>
-        <Field label="Benefits"><Textarea value={benefitsText} onChange={(event) => setBenefitsText(event.target.value)} className="min-h-24" placeholder="Benefits" /></Field>
+        <Field label="Requirements"><Textarea value={requirementsText} onChange={(event) => setRequirementsText(event.target.value)} className="min-h-24 rounded-xl border-blue-200 bg-blue-50/40 focus-visible:border-blue-400 focus-visible:ring-blue-100" placeholder="Satu baris satu item" /></Field>
+        <Field label="Skills"><Textarea value={skillsText} onChange={(event) => setSkillsText(event.target.value)} className="min-h-24 rounded-xl border-blue-200 bg-blue-50/40 focus-visible:border-blue-400 focus-visible:ring-blue-100" placeholder="Skills" /></Field>
+        <Field label="Benefits"><Textarea value={benefitsText} onChange={(event) => setBenefitsText(event.target.value)} className="min-h-24 rounded-xl border-blue-200 bg-blue-50/40 focus-visible:border-blue-400 focus-visible:ring-blue-100" placeholder="Benefits" /></Field>
       </section>
 
       <section className="border border-border bg-white p-5">

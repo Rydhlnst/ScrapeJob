@@ -19,6 +19,8 @@ export type JobsQuery = {
 type JobStatsResponse = {
   totalActive: number
   totalBySource: Record<string, number>
+  totalByCategory?: Record<string, number>
+  totalByJobType?: Record<string, number>
   newToday: number
   remoteJobs: number
 }

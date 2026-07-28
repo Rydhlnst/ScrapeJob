@@ -25,6 +25,12 @@ class PageController extends Controller
                         ->orWhere('summary', 'like', "%{$keyword}%");
                 });
             })
+            ->when($request->filled('status'), function ($query) use ($request) {
+                $status = $request->string('status')->value();
+                if (in_array($status, ['draft', 'published'], true)) {
+                    $query->where('status', $status);
+                }
+            })
             ->orderByDesc('updated_at')
             ->paginate($perPage)
             ->withQueryString();

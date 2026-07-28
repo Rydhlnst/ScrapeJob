@@ -74,6 +74,13 @@ export default async function JobsPage({
     a.localeCompare(b),
   )
 
+  const quickFilters = [
+    { label: "S1 Jakarta", keyword: "S1 Jakarta" },
+    { label: "Fresh Graduate", keyword: "Fresh Graduate" },
+    { label: "Remote", keyword: "Remote" },
+    { label: "Full Time", keyword: "Full Time" },
+  ]
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar jobs={navJobs.data} categories={categories} totalJobs={jobs.total} />
@@ -82,26 +89,51 @@ export default async function JobsPage({
         <SiteFrame>
           <SiteContent>
           <div className="space-y-8">
-            <section className="brand-shell overflow-hidden rounded-[36px] border border-white p-5 shadow-[var(--shadow-lg)] md:p-7">
-              <div className="space-y-5">
-                <div className="inline-flex rounded-full border border-sky-200 bg-white px-3 py-2 text-xs font-semibold tracking-[0.16em] text-sky-700 uppercase shadow-[var(--shadow-sm)]">
-                  Papan lowongan
+            <section className="rounded-3xl bg-slate-50 p-8 md:p-12">
+              <div className="space-y-6 text-center">
+                <h1 className="text-4xl font-bold tracking-[-0.04em] text-[var(--brand-ink)] md:text-5xl">
+                  Temukan lowongan yang tepat, bukan sekadar banyak
+                </h1>
+                <p className="mx-auto max-w-xl text-base leading-7 text-slate-500">
+                  Ribuan lowongan terverifikasi, diperbarui tiap hari — hanya yang relevan untukmu.
+                </p>
+
+                <div className="mx-auto max-w-2xl">
+                  <Suspense fallback={<div className="h-[60px] w-full" />}>
+                    <JobSearchBar
+                      defaultKeyword={keyword}
+                      defaultLocation={location}
+                      defaultSort={sort}
+                    />
+                  </Suspense>
                 </div>
-                <div>
-                  <h1 className="text-4xl font-semibold tracking-[-0.05em] text-[var(--brand-ink)] md:text-5xl">
-                    Temukan lowongan yang tepat untukmu.
-                  </h1>
-                  <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">
-                    Ribuan lowongan dari berbagai sumber dikumpulkan dan diperbarui setiap hari. Gunakan filter untuk mempersempit pencarian.
-                  </p>
+
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  {quickFilters.map((filter) => (
+                    <a
+                      key={filter.label}
+                      href={`/jobs?keyword=${encodeURIComponent(filter.keyword)}`}
+                      className="rounded-full bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-colors hover:bg-slate-100"
+                    >
+                      {filter.label}
+                    </a>
+                  ))}
                 </div>
-                <Suspense fallback={<div className="h-[60px] w-full" />}>
-                  <JobSearchBar
-                    defaultKeyword={keyword}
-                    defaultLocation={location}
-                    defaultSort={sort}
-                  />
-                </Suspense>
+
+                <div className="flex items-center justify-center gap-8 text-sm">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-[var(--brand-ink)]">{stats.totalActive.toLocaleString("id-ID")}+</div>
+                    <div className="text-xs text-slate-400">lowongan aktif</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-[var(--brand-ink)]">200.000+</div>
+                    <div className="text-xs text-slate-400">pencari kerja</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-[var(--brand-ink)]">{Object.keys(stats.totalBySource).length}</div>
+                    <div className="text-xs text-slate-400">sumber terverifikasi</div>
+                  </div>
+                </div>
               </div>
             </section>
 
@@ -110,6 +142,11 @@ export default async function JobsPage({
                 <JobFilterSidebar
                   categories={categories}
                   sourceOptions={sourceOptions}
+                  counts={{
+                    category: stats.totalByCategory,
+                    jobType: stats.totalByJobType,
+                    source: stats.totalBySource,
+                  }}
                   category={category}
                   jobType={jobType}
                   source={source}

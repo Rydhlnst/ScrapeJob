@@ -1,11 +1,10 @@
 import Link from "next/link"
-import { ArrowRight, BadgeCheck, Bookmark, MapPin } from "lucide-react"
+import { ArrowRight, BadgeCheck, MapPin } from "lucide-react"
 
 import type { Job } from "@/types"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { cn, formatDate } from "@/lib/utils"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 import { categoryColor, jobTypeColor } from "./color-tags"
 import { JobStatusPill } from "./job-status-pill"
@@ -48,6 +47,7 @@ function CompanyLogo({
 function summaryFromDescription(description: string | null | undefined) {
   if (!description) return null
   const cleaned = description
+    .replace(/<[^>]*>/g, " ")
     .replace(/[#*_`>~\-]+/g, " ")
     .replace(/\s+/g, " ")
     .trim()
@@ -95,7 +95,7 @@ function CompactJobCard({
     <Link
       href={detailHref}
       className={cn(
-        "group relative block h-full rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-200",
+        "group relative block h-full rounded-[14px] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-200",
         "hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(15,23,42,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2",
         className,
       )}
@@ -103,23 +103,9 @@ function CompactJobCard({
       <div className="flex h-full flex-col p-5">
         <div className="flex items-start justify-between gap-3">
           <CompanyLogo logo={job.companyLogo} fallback={initials(companyName)} />
-          <div className="flex items-center gap-2">
-            {showStatus ? (
-              <JobStatusPill status={job.status} />
-            ) : (
-              <button
-                type="button"
-                aria-label="Simpan lowongan"
-                onClick={(event) => {
-                  event.preventDefault()
-                  event.stopPropagation()
-                }}
-                className="grid size-9 place-items-center rounded-full text-slate-400 transition-colors hover:bg-slate-50 hover:text-[var(--brand-blue)]"
-              >
-                <Bookmark className="size-4" />
-              </button>
-            )}
-          </div>
+          {showStatus ? (
+            <JobStatusPill status={job.status} />
+          ) : null}
         </div>
 
         <div className="mt-4 min-w-0">
@@ -160,9 +146,9 @@ function CompactJobCard({
 
         <div className="mt-4 flex items-center justify-between gap-3 pt-3 text-xs text-slate-500">
           <span>{formatDate(job.scrapedAt) ?? "Baru ditemukan"}</span>
-          <span className="inline-flex items-center gap-1 font-semibold text-[var(--brand-blue)] transition-transform group-hover:translate-x-0.5">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--brand-blue)] px-3 py-1.5 text-[11px] font-semibold text-white transition-colors group-hover:bg-blue-700">
             Lihat detail
-            <ArrowRight className="size-3.5" />
+            <ArrowRight className="size-3" />
           </span>
         </div>
       </div>
@@ -181,91 +167,68 @@ function DefaultJobCard({
 }) {
   const companyName = job.companyName || "Perusahaan tidak diketahui"
   const location = job.location || "Lokasi tidak disebutkan"
+  const summary = summaryFromDescription(job.description)
+  const detailHref = `/jobs/${job.slug}`
 
   return (
-    <Card
+    <Link
+      href={detailHref}
       className={cn(
-        "group flex h-full flex-col overflow-hidden rounded-2xl border-0 bg-white p-0 shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(15,23,42,0.10)]",
+        "group flex h-full flex-col rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(15,23,42,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2",
         className,
       )}
     >
-      <CardHeader className="p-6 pb-3">
-        <div className="flex items-start justify-between gap-3">
-          <CompanyLogo logo={job.companyLogo} fallback={initials(companyName)} size="size-11" />
-          {showStatus ? (
-            <JobStatusPill status={job.status} />
-          ) : (
-            <button
-              type="button"
-              aria-label="Simpan lowongan"
-              className="grid size-9 place-items-center rounded-full text-slate-400 transition-colors hover:bg-slate-50 hover:text-[var(--brand-blue)]"
-            >
-              <Bookmark className="size-4" />
-            </button>
-          )}
-        </div>
-
-        <div className="mt-5 min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            {job.jobType ? (
-              <Badge variant="outline" className={cn("rounded-full font-medium", jobTypeColor(job.jobType))}>
-                {job.jobType}
-              </Badge>
-            ) : null}
-            {job.category ? (
-              <Badge variant="outline" className={cn("rounded-full font-medium", categoryColor(job.category))}>
-                {job.category}
-              </Badge>
-            ) : null}
-          </div>
-
-          <h3 className="mt-4 line-clamp-2 text-xl font-semibold leading-8 tracking-[-0.03em] text-slate-950">
-            <Link href={`/jobs/${job.slug}`} className="transition-opacity hover:opacity-75">
-              {job.title}
-            </Link>
+      <div className="flex items-start gap-4">
+        <CompanyLogo logo={job.companyLogo} fallback={initials(companyName)} size="size-12" />
+        <div className="min-w-0 flex-1">
+          <h3 className="line-clamp-1 text-base font-semibold leading-6 tracking-[-0.01em] text-slate-900 group-hover:text-[var(--brand-blue)]">
+            {job.title}
           </h3>
-
-          <div className="mt-2 text-sm font-medium text-slate-700">{companyName}</div>
-          <div className="mt-1 flex items-center gap-2 text-sm text-slate-600">
-            <MapPin className="size-4" />
-            <span className="line-clamp-1">{location}</span>
+          <div className="mt-1 flex items-center gap-1.5 text-sm text-slate-500">
+            <span className="font-medium text-slate-700">{companyName}</span>
+            <span className="text-slate-300">·</span>
+            <span>{location}</span>
           </div>
         </div>
-      </CardHeader>
+        {showStatus ? <JobStatusPill status={job.status} /> : null}
+      </div>
 
-      <CardContent className="p-6 pt-0">
-        <p className="line-clamp-3 text-sm leading-7 text-slate-600">{job.description}</p>
+      {summary ? (
+        <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-500">{summary}</p>
+      ) : null}
 
-        <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-600">
-          <span className="rounded-full bg-slate-50 px-3 py-1.5 font-medium">{job.sourceName}</span>
-          <span className="rounded-full bg-slate-50 px-3 py-1.5 font-medium">
-            {formatDate(job.scrapedAt) ?? "Baru ditemukan"}
-          </span>
-        </div>
-
-        <div className="mt-5 text-sm font-semibold text-[var(--brand-blue)]">
-          {job.salaryText || "Gaji tidak disebutkan"}
-        </div>
-      </CardContent>
-
-      <CardFooter className="mt-auto flex w-full flex-col items-center gap-3 p-6">
-        {job.sourceUrl ? (
-          <Button
-            asChild
-            className="h-11 w-full rounded-xl bg-[var(--brand-blue)] font-semibold text-white hover:bg-blue-700"
-          >
-            <a href={job.sourceUrl} target="_blank" rel="noreferrer">
-              Lamar di sumber
-            </a>
-          </Button>
+      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        {job.jobType ? (
+          <Badge variant="outline" className={cn("rounded-full text-[11px] font-medium", jobTypeColor(job.jobType))}>
+            {job.jobType}
+          </Badge>
         ) : null}
-        <Link
-          href={`/jobs/${job.slug}`}
-          className="text-sm font-medium text-slate-700 underline-offset-2 hover:underline"
+        {job.category ? (
+          <Badge variant="outline" className={cn("rounded-full text-[11px] font-medium", categoryColor(job.category))}>
+            {job.category}
+          </Badge>
+        ) : null}
+        <Badge
+          variant="outline"
+          className="rounded-full border-emerald-100 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700"
         >
-          Lihat detail lengkap
-        </Link>
-      </CardFooter>
-    </Card>
+          Sumber terverifikasi
+        </Badge>
+      </div>
+
+      <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+        <div>
+          <div className="text-sm font-semibold text-[var(--brand-ink)]">
+            {job.salaryText || "Gaji tidak disebutkan"}
+          </div>
+          <div className="mt-0.5 text-xs text-slate-400">
+            {formatDate(job.scrapedAt) ?? "Baru ditemukan"}
+          </div>
+        </div>
+        <span className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-xs font-semibold text-white transition-colors group-hover:bg-blue-700">
+          Lihat detail
+        </span>
+      </div>
+    </Link>
   )
 }

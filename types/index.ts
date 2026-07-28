@@ -22,6 +22,9 @@ export type Job = {
   publishedAt?: string | null
   createdAt: string
   updatedAt: string
+  requirements?: string[]
+  skills?: string[]
+  benefits?: string[]
 }
 
 export type Category = {
@@ -70,6 +73,8 @@ export type Paginated<T> = {
 export type JobStats = {
   totalActive: number
   totalBySource: Record<string, number>
+  totalByCategory?: Record<string, number>
+  totalByJobType?: Record<string, number>
   newToday: number
   remoteJobs: number
 }

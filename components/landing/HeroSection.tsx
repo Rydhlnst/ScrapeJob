@@ -3,11 +3,11 @@
 import Link from "next/link"
 import {
   ArrowRight,
-  BriefcaseBusiness,
   Building2,
   MapPin,
   MonitorSmartphone,
   SearchCheck,
+  Users,
 } from "lucide-react"
 
 import type { Job } from "@/types"
@@ -15,6 +15,9 @@ import type { LandingHeroContent } from "@/types/landing-content"
 import { SiteFrame } from "@/components/shared/SiteShell"
 import { JobSearchBar } from "@/components/public/job-search-bar"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
+import { categoryColor, jobTypeColor } from "@/components/public/color-tags"
 
 function jobInitials(name: string) {
   return name
@@ -25,68 +28,53 @@ function jobInitials(name: string) {
     .join("")
 }
 
-function inferWorkMode(location: string) {
-  const value = location.toLowerCase()
-  if (value.includes("remote")) return "Remote"
-  if (value.includes("hybrid")) return "Hybrid"
-  return "On-site"
-}
-
 export function HeroJobCard({ job }: { job: Job }) {
   const companyName = job.companyName || "Perusahaan tidak diketahui"
+  const location = job.location || "Lokasi tidak disebutkan"
 
   return (
     <Link
       href={`/jobs/${job.slug}`}
-      className="block w-full rounded-2xl bg-white p-4 text-left shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(15,23,42,0.10)]"
+      className="group flex h-full flex-col rounded-[14px] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(15,23,42,0.10)]"
     >
-      <div className="flex items-start gap-4">
+      <div className="flex items-start gap-2">
         {job.companyLogo ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={job.companyLogo}
             alt=""
-            className="size-11 shrink-0 rounded-xl bg-white object-cover ring-1 ring-slate-100"
+            className="size-10 shrink-0 rounded-xl bg-white object-cover"
             loading="lazy"
           />
         ) : (
-          <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-sky-50 text-xs font-semibold text-sky-700">
+          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-sky-50 text-xs font-semibold text-sky-700">
             {jobInitials(companyName)}
           </div>
         )}
-        <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <div className="line-clamp-1 text-sm font-semibold leading-5 text-slate-950">
-                {job.title}
-              </div>
-              <div className="mt-0.5 text-xs font-medium text-slate-500">{companyName}</div>
-            </div>
-          </div>
+      </div>
 
-          <div className="mt-2.5 flex flex-wrap gap-1.5 text-[10px]">
-            <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-1 font-medium text-slate-600">
-              <MapPin className="size-3" />
-              {job.location || "Lokasi tidak disebutkan"}
-            </span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2 py-1 font-medium text-slate-600">
-              <MonitorSmartphone className="size-3" />
-              {inferWorkMode(job.location || "")}
-            </span>
-            {job.jobType ? (
-              <span className="rounded-full bg-sky-50 px-2 py-1 font-medium text-sky-700">
-                {job.jobType}
-              </span>
-            ) : null}
-          </div>
-
-          <div className="mt-2.5 flex items-center justify-between gap-4">
-            <div className="text-xs font-semibold text-slate-950">
-              {job.salaryText || "Gaji tidak disebutkan"}
-            </div>
-            <div className="text-[10px] text-slate-400">{job.sourceName}</div>
-          </div>
+      <div className="mt-3 min-w-0 flex-1">
+        <h3 className="line-clamp-1 text-sm font-semibold leading-5 text-slate-900 group-hover:text-[var(--brand-blue)]">
+          {job.title}
+        </h3>
+        <div className="mt-1 text-xs text-slate-500">
+          {companyName} · {location}
         </div>
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {job.jobType ? (
+          <Badge variant="outline" className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", jobTypeColor(job.jobType))}>
+            {job.jobType}
+          </Badge>
+        ) : null}
+        <Badge variant="outline" className="rounded-full border-slate-100 bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-500">
+          On-site
+        </Badge>
+      </div>
+
+      <div className="mt-3 text-sm font-semibold text-[var(--brand-ink)]">
+        {job.salaryText || "Gaji tidak disebutkan"}
       </div>
     </Link>
   )
@@ -122,7 +110,7 @@ export function HeroSection({
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button
                   asChild
-                  className="h-11 rounded-xl bg-[var(--brand-blue)] px-5 text-sm font-semibold text-white hover:bg-[var(--brand-sky)]"
+                  className="h-12 rounded-full bg-[var(--brand-blue)] px-6 text-sm font-semibold text-white hover:bg-blue-700"
                 >
                   <Link href={content.primaryCta.href}>
                     {content.primaryCta.label}
@@ -132,7 +120,7 @@ export function HeroSection({
                 <Button
                   asChild
                   variant="outline"
-                  className="h-11 rounded-xl border-slate-200 bg-white px-5 text-sm font-semibold text-[var(--brand-ink)] hover:bg-slate-50"
+                  className="h-12 rounded-full border-slate-200 bg-white px-6 text-sm font-semibold text-[var(--brand-ink)] hover:bg-slate-50"
                 >
                   <Link href={content.secondaryCta.href}>{content.secondaryCta.label}</Link>
                 </Button>
@@ -154,11 +142,11 @@ export function HeroSection({
                 </div>
                 <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
                   <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                    <BriefcaseBusiness className="size-3.5 text-[var(--brand-blue)]" />
-                    Kategori
+                    <Users className="size-3.5 text-[var(--brand-blue)]" />
+                    Pencari kerja
                   </div>
                   <div className="mt-2 text-xl font-semibold tracking-[-0.02em] text-slate-950">
-                    {totalCategories}
+                    200.000+
                   </div>
                 </div>
                 <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
@@ -190,15 +178,15 @@ export function HeroSection({
             <div className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
               <div className="flex items-center justify-between pb-3">
                 <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-                  Lowongan Terbaru
+                  Lowongan terbaru untukmu
                 </span>
               </div>
-              <div className="grid gap-3">
+              <div className="grid gap-4 md:grid-cols-3">
                 {jobs.map((job) => (
                   <HeroJobCard key={job.id} job={job} />
                 ))}
                 {jobs.length === 0 && (
-                  <div className="py-8 text-center text-xs text-slate-400">
+                  <div className="col-span-3 py-8 text-center text-xs text-slate-400">
                     Tidak ada lowongan terbaru saat ini.
                   </div>
                 )}
@@ -206,7 +194,7 @@ export function HeroSection({
               <div className="mt-2 pt-4">
                 <Button
                   asChild
-                  className="h-11 w-full rounded-xl bg-[var(--brand-blue)] px-4 text-sm font-semibold text-white hover:bg-blue-700"
+                  className="h-11 w-full rounded-full bg-[var(--brand-blue)] px-4 text-sm font-semibold text-white hover:bg-blue-700"
                 >
                   <Link href="/jobs">
                     Lihat semua lowongan

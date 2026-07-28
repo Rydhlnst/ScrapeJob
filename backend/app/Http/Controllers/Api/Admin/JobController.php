@@ -82,13 +82,14 @@ class JobController extends Controller
             ])
             ->with('category')
             ->when($request->filled('keyword'), function ($query) use ($request) {
-                $keyword = $request->string('keyword');
+                $keyword = mb_strtolower(trim($request->string('keyword')->value()));
+                $like = '%'.$keyword.'%';
 
-                $query->where(function ($sub) use ($keyword) {
-                    $sub->where('title', 'like', "%{$keyword}%")
-                        ->orWhere('company_name', 'like', "%{$keyword}%")
-                        ->orWhere('location', 'like', "%{$keyword}%")
-                        ->orWhere('description', 'like', "%{$keyword}%");
+                $query->where(function ($sub) use ($like) {
+                    $sub->whereRaw('lower(title) LIKE ?', [$like])
+                        ->orWhereRaw('lower(company_name) LIKE ?', [$like])
+                        ->orWhereRaw('lower(location) LIKE ?', [$like])
+                        ->orWhereRaw('lower(description) LIKE ?', [$like]);
                 });
             })
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))

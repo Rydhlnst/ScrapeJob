@@ -372,7 +372,7 @@ function JobsMegaMenu({ open, menuData }: { open: boolean; menuData: ReturnType<
             <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">
               Peran di {activeCategory.label}
             </p>
-            <div className="grid max-h-[260px] gap-0.5 overflow-y-auto pr-1">
+            <div className="grid gap-0.5">
               {activeCategory.roles.map((role) => <CountLink key={role.href} item={role} />)}
             </div>
           </div>
@@ -598,10 +598,10 @@ export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
             <Button
               asChild
               className={cn(
-                "h-9 rounded-lg px-5 text-[13px] text-white transition-colors",
+                "h-9 rounded-full px-5 text-[13px] font-semibold text-white transition-colors",
                 contactActive
                   ? "bg-[var(--brand-blue)] hover:bg-blue-700"
-                  : "bg-primary hover:opacity-90",
+                  : "bg-[var(--brand-blue)] hover:bg-blue-700",
               )}
             >
               <Link href="/contact">Hubungi Kami</Link>

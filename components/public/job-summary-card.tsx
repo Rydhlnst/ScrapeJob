@@ -5,24 +5,41 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { formatDate } from "@/lib/utils"
 
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/).slice(0, 2)
+  return parts.map((part) => part[0]?.toUpperCase()).join("")
+}
+
 export function JobSummaryCard({ job }: { job: Job }) {
   const hasSourceUrl = Boolean(job.sourceUrl)
+  const companyName = job.companyName || "Tidak diketahui"
 
   return (
     <Card className="sticky top-24 rounded-[30px] border border-white bg-white shadow-[var(--shadow-md)]">
       <CardHeader>
-        <CardTitle className="text-base font-semibold tracking-[0.12em] uppercase text-slate-500">
-          Ringkasan
-        </CardTitle>
+        <div className="flex items-center gap-4">
+          {job.companyLogo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={job.companyLogo}
+              alt={companyName}
+              className="size-14 shrink-0 rounded-2xl bg-white object-cover ring-1 ring-slate-100"
+            />
+          ) : (
+            <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-sky-50 text-lg font-semibold text-sky-700">
+              {initials(companyName)}
+            </div>
+          )}
+          <div>
+            <CardTitle className="text-base font-semibold tracking-[0.12em] uppercase text-slate-500">
+              Ringkasan
+            </CardTitle>
+            <p className="mt-1 text-sm font-medium text-foreground">{companyName}</p>
+          </div>
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="space-y-3 text-sm text-muted-foreground">
-          <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-[var(--brand-shell)] px-4 py-3">
-            <span>Perusahaan</span>
-            <span className="text-right font-medium text-foreground">
-              {job.companyName || "Tidak diketahui"}
-            </span>
-          </div>
           <div className="flex items-center justify-between gap-3 rounded-2xl border border-white bg-[var(--brand-shell)] px-4 py-3">
             <span>Lokasi</span>
             <span className="text-right text-foreground">

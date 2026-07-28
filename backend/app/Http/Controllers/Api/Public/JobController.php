@@ -177,9 +177,23 @@ class JobController extends Controller
             ->groupBy('source_name')
             ->pluck('total', 'source_name');
 
+        $totalByCategory = (clone $base)
+            ->join('categories', 'jobs.category_id', '=', 'categories.id')
+            ->selectRaw('categories.slug as slug, COUNT(*) as total')
+            ->groupBy('categories.slug')
+            ->pluck('total', 'slug');
+
+        $totalByJobType = (clone $base)
+            ->whereNotNull('job_type')
+            ->selectRaw('job_type, COUNT(*) as total')
+            ->groupBy('job_type')
+            ->pluck('total', 'job_type');
+
         return ApiResponse::success([
             'totalActive' => (clone $base)->count(),
             'totalBySource' => $totalBySource,
+            'totalByCategory' => $totalByCategory,
+            'totalByJobType' => $totalByJobType,
             'newToday' => (clone $base)->whereDate('created_at', today())->count(),
             'remoteJobs' => (clone $base)->whereIn('job_type', ['remote', 'hybrid'])->count(),
         ], 'Job stats retrieved successfully');

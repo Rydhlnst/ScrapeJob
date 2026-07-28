@@ -57,7 +57,7 @@ function FilterOptionRow({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex w-full items-center justify-between gap-3 rounded-xl bg-white px-3.5 py-2.5 text-sm font-medium transition-colors",
+        "flex w-full items-center justify-between gap-3 rounded-xl bg-white px-3.5 py-1.5 text-sm font-medium transition-colors",
         active
           ? "bg-sky-50 text-sky-700 ring-1 ring-sky-200"
           : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
@@ -121,7 +121,7 @@ function FiltersForm({
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
           Kategori
         </div>
-        <div className="space-y-1.5">
+        <div className="space-y-0.5">
           <FilterOptionRow
             active={!initialCategory}
             label="Semua kategori"
@@ -147,7 +147,7 @@ function FiltersForm({
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
           Tipe kerja
         </div>
-        <div className="space-y-1.5">
+        <div className="space-y-0.5">
           <FilterOptionRow
             active={!initialJobType}
             label="Semua tipe"
@@ -175,7 +175,7 @@ function FiltersForm({
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
           Sumber
         </div>
-        <div className="space-y-1.5">
+        <div className="space-y-0.5">
           <FilterOptionRow
             active={!initialSource}
             label="Semua sumber"

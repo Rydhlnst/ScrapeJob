@@ -5,8 +5,15 @@ import { ApiEnvelope, fetchJson } from "./client"
 
 type PageEnvelope = ApiEnvelope<Page>
 
-export async function listAdminPages(): Promise<Paginated<Page>> {
-  const response = await fetchJson<ApiEnvelope<Page[]>>("/api/admin/pages?perPage=100")
+export async function listAdminPages(
+  options: { status?: string } = {},
+): Promise<Paginated<Page>> {
+  const params = new URLSearchParams({ perPage: "100" })
+  if (options.status) params.set("status", options.status)
+
+  const response = await fetchJson<ApiEnvelope<Page[]>>(
+    `/api/admin/pages?${params.toString()}`,
+  )
 
   return {
     data: response.data,
