@@ -67,14 +67,14 @@ export function Footer() {
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Button
                     asChild
-                    className="h-11 rounded-none bg-[var(--brand-blue)] px-5 text-white hover:bg-[var(--brand-sky)]"
+                    className="h-11 rounded-xl bg-[var(--brand-blue)] px-5 text-white hover:bg-[var(--brand-sky)]"
                   >
                     <Link href="/jobs">Cari lowongan</Link>
                   </Button>
                   <Button
                     asChild
                     variant="outline"
-                    className="h-11 rounded-none border-[var(--brand-shell-strong)] bg-white px-5 text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]"
+                    className="h-11 rounded-xl border-[var(--brand-shell-strong)] bg-white px-5 text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]"
                   >
                     <Link href="/#how">Pelajari cara kerja</Link>
                   </Button>
@@ -99,7 +99,7 @@ export function Footer() {
                         asChild
                         size="icon"
                         variant="ghost"
-                        className="rounded-none border border-[var(--brand-shell-strong)] bg-white text-slate-500 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-ink)]"
+                        className="rounded-xl border border-[var(--brand-shell-strong)] bg-white text-slate-500 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-ink)]"
                       >
                         <Link href={item.href} aria-label={item.label}>
                           <Icon className="size-4" />

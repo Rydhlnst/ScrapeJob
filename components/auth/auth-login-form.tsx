@@ -84,7 +84,7 @@ export function AuthLoginForm({ role }: { role: "user" | "admin" }) {
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="your@email.com"
-              className="h-11 rounded-none border-[#d8e4f6] bg-white px-3 text-foreground shadow-none"
+              className="h-11 rounded-xl border-[#d8e4f6] bg-white px-3 text-foreground shadow-none"
             />
           </div>
         )}
@@ -102,7 +102,7 @@ export function AuthLoginForm({ role }: { role: "user" | "admin" }) {
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="********"
-              className="h-11 rounded-none border-[#d8e4f6] bg-white px-3 text-foreground shadow-none"
+              className="h-11 rounded-xl border-[#d8e4f6] bg-white px-3 text-foreground shadow-none"
             />
           </div>
         )}
@@ -112,7 +112,7 @@ export function AuthLoginForm({ role }: { role: "user" | "admin" }) {
         selector={(state) => [state.isSubmitting]}
         children={([isSubmitting]) => (
           <Button
-            className="h-11 w-full rounded-none bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700"
+            className="h-11 w-full rounded-xl bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700"
             type="submit"
             disabled={isSubmitting}
           >

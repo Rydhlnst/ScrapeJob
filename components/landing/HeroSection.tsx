@@ -37,7 +37,17 @@ export function HeroJobCard({ job }: { job: Job }) {
       href={`/jobs/${job.slug}`}
       className="group flex h-full flex-col rounded-[14px] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(15,23,42,0.10)]"
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-1.5">
+          {job.jobType ? (
+            <Badge variant="outline" className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", jobTypeColor(job.jobType))}>
+              {job.jobType}
+            </Badge>
+          ) : null}
+          <Badge variant="outline" className="rounded-full border-border bg-card px-2 py-0.5 text-[10px] font-medium text-card-foreground">
+            On-site
+          </Badge>
+        </div>
         {job.companyLogo ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -60,17 +70,6 @@ export function HeroJobCard({ job }: { job: Job }) {
         <div className="mt-1 text-xs text-slate-500">
           {companyName} · {location}
         </div>
-      </div>
-
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {job.jobType ? (
-          <Badge variant="outline" className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", jobTypeColor(job.jobType))}>
-            {job.jobType}
-          </Badge>
-        ) : null}
-        <Badge variant="outline" className="rounded-full border-border bg-card px-2 py-0.5 text-[10px] font-medium text-card-foreground">
-          On-site
-        </Badge>
       </div>
 
       <div className="mt-3 text-sm font-semibold text-[var(--brand-ink)]">

@@ -101,14 +101,7 @@ function CompactJobCard({
       )}
     >
       <div className="flex h-full flex-col p-5">
-        <div className="flex items-start justify-between gap-3">
-          <CompanyLogo logo={job.companyLogo} fallback={initials(companyName)} />
-          {showStatus ? (
-            <JobStatusPill status={job.status} />
-          ) : null}
-        </div>
-
-        <div className="mt-4 min-w-0">
+        <div className="flex items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-1.5">
             <Badge
               variant="outline"
@@ -128,6 +121,10 @@ function CompactJobCard({
               </Badge>
             ) : null}
           </div>
+          <CompanyLogo logo={job.companyLogo} fallback={initials(companyName)} />
+        </div>
+
+        <div className="mt-4 min-w-0">
 
           <h3 className="mt-3 line-clamp-2 text-[1.05rem] font-semibold leading-6 tracking-[-0.02em] text-slate-900 group-hover:text-[var(--brand-blue)]">
             {job.title}

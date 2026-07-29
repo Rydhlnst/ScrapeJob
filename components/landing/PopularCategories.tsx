@@ -35,7 +35,7 @@ export function PopularCategories({ categories }: { categories: Category[] }) {
           {categories.slice(0, 8).map((cat) => (
             <Card
               key={cat.id}
-              className="group rounded-none border bg-white p-5 shadow-none transition-colors duration-200"
+              className="group rounded-xl border bg-white p-5 shadow-none transition-colors duration-200"
               style={{ borderColor: "var(--brand-shell-strong)" }}
             >
               <div className="flex items-start gap-4">

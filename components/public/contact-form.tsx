@@ -41,7 +41,7 @@ export function ContactForm() {
       <Field label="Pesan" error={state.fieldErrors?.message}>
         <Textarea name="message" rows={7} required />
       </Field>
-      <Button type="submit" disabled={pending} className="h-11 rounded-none bg-primary px-6 text-white">
+      <Button type="submit" disabled={pending} className="h-11 rounded-xl bg-primary px-6 text-white">
         {pending ? "Mengirim..." : "Kirim Pesan"}
       </Button>
     </form>

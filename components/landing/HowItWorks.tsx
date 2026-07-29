@@ -250,8 +250,8 @@ export function HowItWorks() {
           </CarouselContent>
 
           <div className="mt-5 flex items-center justify-end gap-3">
-            <CarouselPrevious className="static translate-y-0 rounded-none border-[var(--brand-shell-strong)] bg-white text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]" />
-            <CarouselNext className="static translate-y-0 rounded-none border-[var(--brand-shell-strong)] bg-white text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]" />
+            <CarouselPrevious className="static translate-y-0 rounded-xl border-[var(--brand-shell-strong)] bg-white text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]" />
+            <CarouselNext className="static translate-y-0 rounded-xl border-[var(--brand-shell-strong)] bg-white text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]" />
           </div>
         </Carousel>
       </Container>

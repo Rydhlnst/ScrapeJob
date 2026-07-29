@@ -77,7 +77,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
 
   if (!editor) {
     return (
-      <div className="min-h-[220px] w-full rounded-none border border-zinc-200 bg-zinc-50 animate-pulse" />
+      <div className="min-h-[220px] w-full rounded-lg border border-zinc-200 bg-zinc-50 animate-pulse" />
     )
   }
 
@@ -87,21 +87,21 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
 
   const modeBtn = (active: boolean) =>
     cn(
-      "inline-flex items-center gap-1.5 rounded-none border border-transparent px-2.5 py-1 text-xs font-semibold",
+      "inline-flex items-center gap-1.5 rounded-lg border border-transparent px-2.5 py-1 text-xs font-semibold",
       active
         ? "bg-zinc-900 text-white"
         : "text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900",
     )
 
   return (
-    <div className={cn("w-full rounded-none border border-zinc-200 bg-white", className)}>
+    <div className={cn("w-full rounded-lg border border-zinc-200 bg-white", className)}>
       <div className="flex flex-wrap items-center gap-0.5 border-b border-zinc-200 bg-zinc-50 p-1">
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={!isWysiwyg || !editor.can().chain().focus().toggleBold().run()}
           className={cn(
-            "grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
             editor.isActive("bold") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
           )}
           title="Bold"
@@ -114,7 +114,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
           onClick={() => editor.chain().focus().toggleItalic().run()}
           disabled={!isWysiwyg || !editor.can().chain().focus().toggleItalic().run()}
           className={cn(
-            "grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
             editor.isActive("italic") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
           )}
           title="Italic"
@@ -127,7 +127,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
           onClick={() => editor.chain().focus().toggleStrike().run()}
           disabled={!isWysiwyg || !editor.can().chain().focus().toggleStrike().run()}
           className={cn(
-            "grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
             editor.isActive("strike") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
           )}
           title="Strikethrough"
@@ -143,7 +143,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
             editor.chain().focus().toggleCode().run()
           }}
           className={cn(
-            "grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
             editor.isActive("code") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
           )}
           title="Inline Code"
@@ -158,7 +158,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           disabled={!isWysiwyg}
           className={cn(
-            "grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
             editor.isActive("heading", { level: 2 }) && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
           )}
           title="Heading 2"
@@ -171,7 +171,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
           disabled={!isWysiwyg}
           className={cn(
-            "grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
             editor.isActive("heading", { level: 3 }) && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
           )}
           title="Heading 3"
@@ -186,7 +186,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           disabled={!isWysiwyg}
           className={cn(
-            "grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
             editor.isActive("bulletList") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
           )}
           title="Bullet List"
@@ -199,7 +199,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           disabled={!isWysiwyg}
           className={cn(
-            "grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
             editor.isActive("orderedList") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
           )}
           title="Numbered List"
@@ -212,7 +212,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           disabled={!isWysiwyg}
           className={cn(
-            "grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
             editor.isActive("blockquote") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
           )}
           title="Blockquote"
@@ -224,7 +224,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
           type="button"
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
           disabled={!isWysiwyg}
-          className="grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40"
+          className="grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40"
           title="Horizontal Rule"
         >
           <div className="w-4 h-0.5 bg-current" />
@@ -251,7 +251,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
             editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run()
           }}
           className={cn(
-            "grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
             editor.isActive("link") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
           )}
           title="Insert / edit link"
@@ -273,7 +273,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
             }
             editor.chain().focus().setImage({ src: url }).run()
           }}
-          className="grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40"
+          className="grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40"
           title="Insert image"
         >
           <ImageIcon className="size-4" />
@@ -285,7 +285,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
           type="button"
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!isWysiwyg || !editor.can().chain().focus().undo().run()}
-          className="grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40"
+          className="grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40"
           title="Undo"
         >
           <Undo2 className="size-4" />
@@ -295,7 +295,7 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
           type="button"
           onClick={() => editor.chain().focus().redo().run()}
           disabled={!isWysiwyg || !editor.can().chain().focus().redo().run()}
-          className="grid size-8 place-items-center rounded-none border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40"
+          className="grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40"
           title="Redo"
         >
           <Redo2 className="size-4" />
