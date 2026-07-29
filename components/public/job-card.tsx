@@ -38,7 +38,7 @@ function CompanyLogo({
   }
 
   return (
-    <div className={`grid ${size} ${radius} shrink-0 place-items-center bg-sky-50 text-sm font-semibold text-sky-700`}>
+    <div className={`grid ${size} ${radius} shrink-0 place-items-center bg-accent text-sm font-semibold text-accent-foreground`}>
       {fallback}
     </div>
   )
@@ -112,7 +112,7 @@ function CompactJobCard({
           <div className="flex flex-wrap items-center gap-1.5">
             <Badge
               variant="outline"
-              className="rounded-full border-emerald-100 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-700"
+              className="rounded-full border-success/20 bg-success/10 px-2.5 py-0.5 text-[11px] font-medium text-success"
             >
               <BadgeCheck className="mr-1 size-3" />
               Sumber terverifikasi
@@ -144,9 +144,9 @@ function CompactJobCard({
           <p className="mt-3 line-clamp-1 text-sm leading-6 text-slate-500">{summary}</p>
         ) : null}
 
-        <div className="mt-4 flex items-center justify-between gap-3 pt-3 text-xs text-slate-500">
+        <div className="mt-4 flex items-center justify-between gap-3 pt-3 text-xs text-muted-foreground">
           <span>{formatDate(job.scrapedAt) ?? "Baru ditemukan"}</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--brand-blue)] px-3 py-1.5 text-[11px] font-semibold text-white transition-colors group-hover:bg-blue-700">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-[11px] font-semibold text-primary-foreground transition-colors group-hover:bg-primary/90">
             Lihat detail
             <ArrowRight className="size-3" />
           </span>
@@ -210,7 +210,7 @@ function DefaultJobCard({
         ) : null}
         <Badge
           variant="outline"
-          className="rounded-full border-emerald-100 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700"
+          className="rounded-full border-success/20 bg-success/10 px-2 py-0.5 text-[11px] font-medium text-success"
         >
           Sumber terverifikasi
         </Badge>
@@ -225,7 +225,7 @@ function DefaultJobCard({
             {formatDate(job.scrapedAt) ?? "Baru ditemukan"}
           </div>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--brand-blue)] px-4 py-2 text-xs font-semibold text-white transition-colors group-hover:bg-blue-700">
+        <span className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition-colors group-hover:bg-primary/90">
           Lihat detail
         </span>
       </div>

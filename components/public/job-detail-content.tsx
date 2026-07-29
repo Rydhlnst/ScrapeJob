@@ -90,7 +90,7 @@ function CompanyLogo({
   }
 
   return (
-    <div className="grid size-16 shrink-0 place-items-center rounded-2xl bg-sky-50 text-lg font-semibold text-sky-700">
+    <div className="grid size-16 shrink-0 place-items-center rounded-2xl bg-accent text-lg font-semibold text-accent-foreground">
       {initials(companyName)}
     </div>
   )
@@ -104,7 +104,7 @@ export function JobDetailContent({ job }: { job: Job }) {
     <Card className="rounded-[30px] border border-white bg-white p-7 shadow-[var(--shadow-md)]">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <div className="inline-flex w-fit rounded-full border border-sky-100 bg-sky-50 px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-sky-700 uppercase">
+          <div className="inline-flex w-fit rounded-full border border-accent bg-accent px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-accent-foreground uppercase">
             Detail lowongan
           </div>
 
@@ -118,19 +118,19 @@ export function JobDetailContent({ job }: { job: Job }) {
 
           <div className="mt-6 flex flex-wrap gap-2">
             {job.jobType ? (
-              <Badge variant="outline" className="rounded-full border-sky-100 bg-sky-50 text-sky-700">
+              <Badge variant="outline" className="rounded-full border-accent bg-accent text-accent-foreground">
                 {job.jobType}
               </Badge>
             ) : null}
             {job.category ? (
-              <Badge variant="outline" className="rounded-full border-white bg-white text-slate-600">
+              <Badge variant="outline" className="rounded-full border-border bg-card text-card-foreground">
                 {job.category}
               </Badge>
             ) : null}
-            <Badge variant="outline" className="rounded-full border-amber-100 bg-amber-50 text-amber-700">
+            <Badge variant="outline" className="rounded-full border-warning/20 bg-warning/10 text-warning">
               {job.salaryText || "Gaji tidak disebutkan"}
             </Badge>
-            <Badge variant="outline" className="rounded-full border-white bg-white text-slate-600">
+            <Badge variant="outline" className="rounded-full border-border bg-card text-card-foreground">
               Sumber: {job.sourceName}
             </Badge>
           </div>

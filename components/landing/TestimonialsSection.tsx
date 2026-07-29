@@ -61,7 +61,7 @@ export function TestimonialsSection() {
                 {testimonial.quote}
               </p>
               <div className="mt-5 flex items-center gap-3">
-                <div className="grid size-10 shrink-0 place-items-center rounded-full bg-sky-50 text-xs font-semibold text-sky-700">
+                <div className="grid size-10 shrink-0 place-items-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">
                   {initials(testimonial.name)}
                 </div>
                 <div>

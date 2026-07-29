@@ -170,12 +170,12 @@ export default async function JobsPage({
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {keyword ? (
-                        <Badge variant="outline" className="rounded-full border-sky-100 bg-sky-50 text-sky-700">
+                        <Badge variant="outline" className="rounded-full border-accent bg-accent text-accent-foreground">
                           keyword: {keyword}
                         </Badge>
                       ) : null}
                       {location ? (
-                        <Badge variant="outline" className="rounded-full border-white bg-white text-slate-600">
+                        <Badge variant="outline" className="rounded-full border-border bg-card text-card-foreground">
                           lokasi: {location}
                         </Badge>
                       ) : null}

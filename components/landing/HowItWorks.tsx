@@ -132,11 +132,11 @@ export function HowItWorks() {
               style={{
                 borderColor:
                   audience === "job-seekers"
-                    ? "var(--brand-blue)"
-                    : "var(--brand-shell-strong)",
+                    ? "hsl(var(--primary))"
+                    : "hsl(var(--border))",
                 backgroundColor:
-                  audience === "job-seekers" ? "var(--brand-blue)" : "#ffffff",
-                color: audience === "job-seekers" ? "#ffffff" : "var(--brand-ink)",
+                  audience === "job-seekers" ? "hsl(var(--primary))" : "hsl(var(--card))",
+                color: audience === "job-seekers" ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",
               }}
             >
               Job Seekers
@@ -148,11 +148,11 @@ export function HowItWorks() {
               style={{
                 borderColor:
                   audience === "employers"
-                    ? "var(--brand-blue)"
-                    : "var(--brand-shell-strong)",
+                    ? "hsl(var(--primary))"
+                    : "hsl(var(--border))",
                 backgroundColor:
-                  audience === "employers" ? "var(--brand-blue)" : "#ffffff",
-                color: audience === "employers" ? "#ffffff" : "var(--brand-ink)",
+                  audience === "employers" ? "hsl(var(--primary))" : "hsl(var(--card))",
+                color: audience === "employers" ? "hsl(var(--primary-foreground))" : "hsl(var(--foreground))",
               }}
             >
               Employers
@@ -166,7 +166,7 @@ export function HowItWorks() {
                 type="button"
                 aria-label={`Go to step ${index + 1}`}
                 className="h-2.5 w-10 transition-opacity"
-                style={{ backgroundColor: index === activeIndex ? "var(--brand-blue)" : "#bfdbfe" }}
+                style={{ backgroundColor: index === activeIndex ? "hsl(var(--primary))" : "hsl(var(--muted))" }}
                 onClick={() => api?.scrollTo(index)}
               />
             ))}
@@ -193,13 +193,13 @@ export function HowItWorks() {
                   >
                     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
                       <div className="flex min-h-full flex-col">
-                        <div className="text-5xl font-medium tracking-[-0.05em] text-blue-100">
+                        <div className="text-5xl font-medium tracking-[-0.05em] text-primary-foreground/50">
                           {step.step}
                         </div>
                         <div className="mt-8 max-w-3xl text-4xl font-semibold leading-tight tracking-[-0.05em] md:text-5xl">
                           {step.title}
                         </div>
-                        <p className="mt-8 max-w-2xl text-base leading-8 text-blue-100">
+                        <p className="mt-8 max-w-2xl text-base leading-8 text-primary-foreground/80">
                           {step.description}
                         </p>
                       </div>
@@ -217,7 +217,7 @@ export function HowItWorks() {
                         />
                         <div
                           className="mt-6 text-sm"
-                          style={{ color: "#64748b" }}
+                          style={{ color: "hsl(var(--muted-foreground))" }}
                         >
                           {step.meta}
                         </div>
@@ -226,7 +226,7 @@ export function HowItWorks() {
                         </div>
                         <div
                           className="mt-2 text-sm"
-                          style={{ color: "#475569" }}
+                          style={{ color: "hsl(var(--foreground))" }}
                         >
                           {step.sampleSubtitle}
                         </div>

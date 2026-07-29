@@ -46,7 +46,7 @@ export default async function ContactPage() {
                         key={item.label}
                         className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4"
                       >
-                        <div className="grid size-11 place-items-center rounded-xl bg-sky-50 text-sky-600">
+                        <div className="grid size-11 place-items-center rounded-xl bg-accent text-accent-foreground">
                           <Icon className="size-5" />
                         </div>
                         <div>

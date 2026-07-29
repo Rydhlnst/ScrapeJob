@@ -47,7 +47,7 @@ export function HeroJobCard({ job }: { job: Job }) {
             loading="lazy"
           />
         ) : (
-          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-sky-50 text-xs font-semibold text-sky-700">
+          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-accent text-xs font-semibold text-accent-foreground">
             {jobInitials(companyName)}
           </div>
         )}
@@ -68,7 +68,7 @@ export function HeroJobCard({ job }: { job: Job }) {
             {job.jobType}
           </Badge>
         ) : null}
-        <Badge variant="outline" className="rounded-full border-slate-100 bg-slate-50 px-2 py-0.5 text-[10px] font-medium text-slate-500">
+        <Badge variant="outline" className="rounded-full border-border bg-card px-2 py-0.5 text-[10px] font-medium text-card-foreground">
           On-site
         </Badge>
       </div>
@@ -110,7 +110,7 @@ export function HeroSection({
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button
                   asChild
-                  className="h-12 rounded-full bg-[var(--brand-blue)] px-6 text-sm font-semibold text-white hover:bg-blue-700"
+                  className="h-12 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
                 >
                   <Link href={content.primaryCta.href}>
                     {content.primaryCta.label}
@@ -194,7 +194,7 @@ export function HeroSection({
               <div className="mt-2 pt-4">
                 <Button
                   asChild
-                  className="h-11 w-full rounded-full bg-[var(--brand-blue)] px-4 text-sm font-semibold text-white hover:bg-blue-700"
+                  className="h-11 w-full rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
                 >
                   <Link href="/jobs">
                     Lihat semua lowongan

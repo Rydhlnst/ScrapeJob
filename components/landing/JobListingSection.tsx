@@ -22,8 +22,8 @@ export function JobListingSection({
       <Container>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-              <Sparkles className="size-3.5 text-sky-600" />
+            <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground shadow-sm">
+              <Sparkles className="size-3.5 text-primary" />
               Lowongan pilihan
             </div>
             <h2 className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-slate-950 md:text-4xl">

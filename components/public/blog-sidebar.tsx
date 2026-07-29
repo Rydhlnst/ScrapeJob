@@ -116,14 +116,14 @@ export function RecentPostsSidebar({ currentSlug }: { currentSlug: string }) {
 
 export function UpdateGratisCTA() {
   return (
-    <div className="rounded-2xl bg-[var(--brand-blue)] p-5 text-white">
+    <div className="rounded-2xl bg-primary p-5 text-primary-foreground">
       <h3 className="text-lg font-bold">Update Gratis</h3>
-      <p className="mt-2 text-xs leading-5 text-blue-100">
+      <p className="mt-2 text-xs leading-5 text-primary-foreground/80">
         Dapatkan info lowongan terbaru dan tips karier langsung ke WhatsApp Anda.
       </p>
       <a
         href="/jobs"
-        className="mt-4 block w-full rounded-xl bg-white py-2.5 text-center text-sm font-semibold text-[var(--brand-blue)] transition-colors hover:bg-blue-50"
+        className="mt-4 block w-full rounded-full bg-white py-2.5 text-center text-sm font-semibold text-primary transition-colors hover:bg-white/90"
       >
         Cari Lowongan
       </a>

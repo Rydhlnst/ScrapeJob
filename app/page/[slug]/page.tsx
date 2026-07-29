@@ -34,13 +34,13 @@ export async function generateMetadata({
 
 function CTASection() {
   return (
-    <div className="mt-12 rounded-2xl bg-[var(--brand-blue)] p-8 text-center text-white">
+    <div className="mt-12 rounded-2xl bg-primary p-8 text-center text-primary-foreground">
       <h3 className="text-2xl font-bold">Lowongan terbaru, langsung ke inboxmu</h3>
-      <p className="mt-2 text-sm text-blue-100">
+      <p className="mt-2 text-sm text-primary-foreground/80">
         Dapatkan info lowongan terbaru dan tips karier dari Lowonganku.
       </p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button asChild className="rounded-xl bg-white text-[var(--brand-blue)] hover:bg-blue-50">
+        <Button asChild className="rounded-full bg-white text-primary hover:bg-muted">
           <Link href="/jobs">
             <Search className="mr-2 size-4" />
             Cari Lowongan
@@ -72,12 +72,12 @@ function WhyLowongankuSection() {
         {features.map((feature) => {
           const Icon = feature.icon
           return (
-            <div key={feature.title} className="rounded-[14px] bg-slate-50 p-4">
-              <div className="grid size-10 place-items-center rounded-xl bg-sky-100 text-sky-600">
+            <div key={feature.title} className="rounded-[14px] bg-muted p-4">
+              <div className="grid size-10 place-items-center rounded-xl bg-accent text-accent-foreground">
                 <Icon className="size-5" />
               </div>
-              <h4 className="mt-3 text-sm font-semibold text-slate-900">{feature.title}</h4>
-              <p className="mt-1 text-xs text-slate-500">{feature.description}</p>
+              <h4 className="mt-3 text-sm font-semibold text-foreground">{feature.title}</h4>
+              <p className="mt-1 text-xs text-muted-foreground">{feature.description}</p>
             </div>
           )
         })}
@@ -134,7 +134,7 @@ export default async function PublicPage({
 
                 <article className="min-w-0">
                   {isBlog ? (
-                    <Badge variant="outline" className="rounded-full border-sky-100 bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700">
+                    <Badge variant="outline" className="rounded-full border-accent bg-accent px-3 py-1 text-xs font-medium text-accent-foreground">
                       <Tag className="mr-1.5 size-3" />
                       Artikel
                     </Badge>

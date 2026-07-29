@@ -477,16 +477,16 @@ function DesktopNav({ menuData }: { menuData: ReturnType<typeof buildNavbarData>
     cn(
       "self-center rounded-lg px-3 py-2 text-[13px] transition-colors",
       active
-        ? "bg-sky-50 font-semibold text-[var(--brand-blue)]"
-        : "text-slate-600 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-blue)]",
+        ? "bg-accent font-semibold text-accent-foreground"
+        : "text-muted-foreground hover:bg-muted hover:text-foreground",
     )
 
   const triggerClass = (active: boolean) =>
     cn(
       "inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] transition-colors",
       active
-        ? "bg-sky-50 font-semibold text-[var(--brand-blue)]"
-        : "text-slate-600 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-blue)]",
+        ? "bg-accent font-semibold text-accent-foreground"
+        : "text-muted-foreground hover:bg-muted hover:text-foreground",
     )
 
   const jobsActive = pathname === "/jobs" || pathname.startsWith("/jobs/")
@@ -597,12 +597,7 @@ export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
             </Button>
             <Button
               asChild
-              className={cn(
-                "h-9 rounded-full px-5 text-[13px] font-semibold text-white transition-colors",
-                contactActive
-                  ? "bg-[var(--brand-blue)] hover:bg-blue-700"
-                  : "bg-[var(--brand-blue)] hover:bg-blue-700",
-              )}
+              className="h-9 rounded-full bg-primary px-5 text-[13px] font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               <Link href="/contact">Hubungi Kami</Link>
             </Button>

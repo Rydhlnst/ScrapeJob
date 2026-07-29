@@ -105,7 +105,7 @@ export function JobsListLazy({
             </Button>
           )}
           {error ? (
-            <div className="text-sm text-red-600">{error}</div>
+            <div className="text-sm text-destructive">{error}</div>
           ) : null}
         </div>
       ) : jobs.length > PER_PAGE ? (

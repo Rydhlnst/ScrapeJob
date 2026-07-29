@@ -37,12 +37,12 @@ function WhatsappIcon({ className }: { className?: string }) {
 export function ShareButtons({ title, slug }: { title: string; slug: string }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-slate-500">Bagikan:</span>
+      <span className="text-sm font-medium text-muted-foreground">Bagikan:</span>
       <a
         href={`https://www.facebook.com/sharer/sharer.php?u=${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}`}
         target="_blank"
         rel="noreferrer"
-        className="grid size-9 place-items-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-blue-100 hover:text-blue-600"
+        className="grid size-9 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
       >
         <FacebookIcon className="size-4" />
       </a>
@@ -50,7 +50,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
         href={`https://twitter.com/intent/tweet?url=${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}&text=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noreferrer"
-        className="grid size-9 place-items-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-sky-100 hover:text-sky-600"
+        className="grid size-9 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
       >
         <TwitterIcon className="size-4" />
       </a>
@@ -58,7 +58,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
         href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title)}%20${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}`}
         target="_blank"
         rel="noreferrer"
-        className="grid size-9 place-items-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-green-100 hover:text-green-600"
+        className="grid size-9 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-success/10 hover:text-success"
       >
         <WhatsappIcon className="size-4" />
       </a>
@@ -66,7 +66,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
         href={`https://www.linkedin.com/shareArticle?mini=true&url=${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}&title=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noreferrer"
-        className="grid size-9 place-items-center rounded-full bg-slate-100 text-slate-500 transition-colors hover:bg-blue-100 hover:text-blue-700"
+        className="grid size-9 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
       >
         <LinkedinIcon className="size-4" />
       </a>

@@ -26,7 +26,7 @@ export function JobSummaryCard({ job }: { job: Job }) {
               className="size-14 shrink-0 rounded-2xl bg-white object-cover ring-1 ring-slate-100"
             />
           ) : (
-            <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-sky-50 text-lg font-semibold text-sky-700">
+            <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-accent text-lg font-semibold text-accent-foreground">
               {initials(companyName)}
             </div>
           )}
@@ -66,7 +66,7 @@ export function JobSummaryCard({ job }: { job: Job }) {
         <Separator />
 
         {hasSourceUrl ? (
-          <Button asChild className="w-full rounded-2xl bg-blue-600 text-white hover:bg-blue-700">
+          <Button asChild className="w-full rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
             <a href={job.sourceUrl} target="_blank" rel="noreferrer">
               Lihat Sumber Lowongan
             </a>

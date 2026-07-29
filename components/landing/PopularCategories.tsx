@@ -60,7 +60,7 @@ export function PopularCategories({ categories }: { categories: Category[] }) {
                   </div>
                   <div
                     className="mt-1 text-sm"
-                    style={{ color: "#475569" }}
+                    style={{ color: "hsl(var(--muted-foreground))" }}
                   >
                     {cat.totalJobs ? `${cat.totalJobs} jobs` : "Browse roles"}
                   </div>

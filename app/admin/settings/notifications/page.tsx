@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Plus, Trash2, Save, Bell } from "lucide-react"
+import { toast } from "sonner"
 
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminShell } from "@/components/admin/admin-shell"
@@ -16,7 +17,6 @@ export default function NotificationsSettingsPage() {
   const [loading, setLoading] = React.useState(true)
   const [saving, setSaving] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
-  const [success, setSuccess] = React.useState(false)
 
   React.useEffect(() => {
     getSettings()
@@ -34,24 +34,26 @@ export default function NotificationsSettingsPage() {
     if (!e || emails.includes(e)) return
     setEmails((prev) => [...prev, e])
     setNewEmail("")
+    toast.success("Email ditambahkan.")
   }
 
   function removeEmail(e: string) {
     setEmails((prev) => prev.filter((x) => x !== e))
+    toast.success("Email dihapus.")
   }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
-    setSaving(true); setError(null); setSuccess(false)
+    setSaving(true); setError(null)
     try {
       await saveSettings([
         { key: "notify_on_scrape", value: notifyOnScrape ? "1" : "0" },
         { key: "notify_emails", value: emails.join(",") || null },
       ])
-      setSuccess(true)
-      setTimeout(() => setSuccess(false), 3000)
+      toast.success("Pengaturan notifikasi berhasil disimpan.")
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Gagal menyimpan")
+      toast.error(e instanceof Error ? e.message : "Gagal menyimpan pengaturan.")
     } finally {
       setSaving(false)
     }
@@ -61,7 +63,7 @@ export default function NotificationsSettingsPage() {
     <AdminShell>
       <AdminHeader title="Notifikasi" description="Atur kapan dan kemana notifikasi email dikirim untuk aktivitas sistem." />
 
-      {error && <div className="border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>}
+      {error && <div className="border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive">{error}</div>}
 
       {loading ? (
         <div className="border border-border bg-card p-4 text-sm text-muted-foreground">Memuat pengaturan...</div>
@@ -120,7 +122,7 @@ export default function NotificationsSettingsPage() {
                 {emails.map((email) => (
                   <li key={email} className="flex items-center justify-between rounded border border-border bg-muted/30 px-3 py-2 text-sm">
                     <span>{email}</span>
-                    <button type="button" onClick={() => removeEmail(email)} className="text-red-400 hover:text-red-600">
+                    <button type="button" onClick={() => removeEmail(email)} className="text-destructive hover:text-destructive/80">
                       <Trash2 className="size-4" />
                     </button>
                   </li>
@@ -130,11 +132,10 @@ export default function NotificationsSettingsPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button type="submit" disabled={saving} className="h-9 gap-2 rounded-none bg-primary px-5 text-sm text-white">
+            <Button type="submit" disabled={saving} className="h-9 gap-2 rounded-none bg-primary px-5 text-sm text-primary-foreground">
               <Save className="size-4" />
               {saving ? "Menyimpan..." : "Simpan Pengaturan"}
             </Button>
-            {success && <span className="text-sm text-green-600">Tersimpan!</span>}
           </div>
         </form>
       )}

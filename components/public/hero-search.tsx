@@ -49,7 +49,7 @@ export function HeroSearch() {
           />
         </div>
         <Button
-          className="h-12 bg-blue-600 px-8 hover:bg-blue-700"
+          className="h-12 bg-primary px-8 text-primary-foreground hover:bg-primary/90"
           onClick={() => go()}
         >
           Cari Lowongan
@@ -63,7 +63,7 @@ export function HeroSearch() {
               key={s.label}
               type="button"
               onClick={() => go(s.label)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+              className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground transition hover:bg-accent/80"
             >
               {s.label}
             </button>

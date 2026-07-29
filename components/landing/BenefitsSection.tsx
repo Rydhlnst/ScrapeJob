@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button"
 import type { LandingBenefitsContent } from "@/types/landing-content"
 
 const benefitVisuals = [
-  { icon: Shield, bg: "bg-sky-100", fg: "text-sky-600" },
-  { icon: Clock, bg: "bg-amber-100", fg: "text-amber-600" },
-  { icon: Search, bg: "bg-emerald-100", fg: "text-emerald-600" },
-  { icon: Briefcase, bg: "bg-violet-100", fg: "text-violet-600" },
+  { icon: Shield, bg: "bg-accent", fg: "text-accent-foreground" },
+  { icon: Clock, bg: "bg-muted", fg: "text-muted-foreground" },
+  { icon: Search, bg: "bg-accent", fg: "text-accent-foreground" },
+  { icon: Briefcase, bg: "bg-muted", fg: "text-muted-foreground" },
 ]
 
 export function BenefitsSection({ content }: { content: LandingBenefitsContent }) {
@@ -60,7 +60,7 @@ export function BenefitsSection({ content }: { content: LandingBenefitsContent }
             <div className="mt-8">
               <Button
                 asChild
-                className="h-12 rounded-full bg-white px-6 text-sm font-semibold text-[var(--brand-blue)] hover:bg-blue-50"
+                className="h-12 rounded-full bg-white px-6 text-sm font-semibold text-primary hover:bg-muted"
               >
                 <a href="/jobs">Jelajahi lowongan</a>
               </Button>

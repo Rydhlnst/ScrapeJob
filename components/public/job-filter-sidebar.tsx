@@ -59,8 +59,8 @@ function FilterOptionRow({
       className={cn(
         "flex w-full items-center justify-between gap-3 rounded-xl bg-white px-3.5 py-1.5 text-sm font-medium transition-colors",
         active
-          ? "bg-sky-50 text-sky-700 ring-1 ring-sky-200"
-          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+          ? "bg-accent text-accent-foreground ring-1 ring-accent"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground",
       )}
     >
       <span className="truncate text-left">{label}</span>
@@ -68,7 +68,7 @@ function FilterOptionRow({
         <span
           className={cn(
             "shrink-0 text-xs font-semibold tabular-nums",
-            active ? "text-sky-700" : "text-slate-400",
+            active ? "text-accent-foreground" : "text-muted-foreground",
           )}
         >
           {count}
@@ -216,7 +216,7 @@ function ActiveFilterChip({ label, onRemove }: { label: string; onRemove: () => 
     <button
       type="button"
       onClick={onRemove}
-      className="inline-flex items-center gap-1.5 rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700 ring-1 ring-sky-100 transition-colors hover:bg-sky-100"
+      className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground ring-1 ring-accent transition-colors hover:bg-accent/80"
     >
       {label}
       <X className="size-3" />
@@ -321,7 +321,7 @@ export function JobFilterSidebar({
               <SlidersHorizontal className="mr-2 size-4" />
               Filter
               {(activeCategoryName ? 1 : 0) + (jobType ? 1 : 0) + (source ? 1 : 0) > 0 ? (
-                <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-sky-600 px-1.5 text-xs font-semibold text-white">
+                <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-semibold text-primary-foreground">
                   {(activeCategoryName ? 1 : 0) + (jobType ? 1 : 0) + (source ? 1 : 0)}
                 </span>
               ) : null}

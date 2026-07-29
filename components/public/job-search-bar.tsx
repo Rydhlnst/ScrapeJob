@@ -93,7 +93,7 @@ export function JobSearchBar({
   }, [keyword, location, sort, sp, submit])
 
   return (
-    <div className="w-full rounded-full bg-white p-1.5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] ring-1 ring-slate-200/60 focus-within:ring-2 focus-within:ring-[var(--brand-blue)]/50 focus-within:shadow-[0_2px_12px_rgba(59,130,246,0.15)]">
+    <div className="w-full rounded-full bg-white p-1.5 shadow-md ring-1 ring-border focus-within:ring-2 focus-within:ring-primary/50 focus-within:shadow-lg">
       <div className="grid items-center gap-1 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_180px_auto] md:gap-0">
         <div className="relative md:pr-2 md:after:absolute md:after:right-0 md:after:top-2 md:after:h-[calc(100%-16px)] md:after:w-px md:after:bg-slate-200">
           <Search className="absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -140,7 +140,7 @@ export function JobSearchBar({
           type="button"
           onClick={() => submit()}
           aria-label="Cari lowongan"
-          className="grid h-12 min-w-12 place-items-center rounded-full bg-[var(--brand-blue)] px-6 text-sm font-semibold text-white transition-colors hover:bg-blue-700 md:min-w-14"
+          className="grid h-12 min-w-12 place-items-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 md:min-w-14"
         >
           <Search className="h-4 w-4 md:hidden" />
           <span className="hidden items-center gap-2 md:inline-flex">

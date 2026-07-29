@@ -9,22 +9,22 @@ function hashToIndex(input: string, modulo: number) {
 }
 
 export const categoryColor = (category?: string | null) => {
-  if (!category) return "bg-slate-100 text-slate-600 border-slate-200"
-  return "bg-slate-100 text-slate-600 border-slate-200"
+  if (!category) return "bg-muted text-muted-foreground border-border"
+  return "bg-muted text-muted-foreground border-border"
 }
 
 export const jobTypeColor = (jobType?: string | null) => {
-  if (!jobType) return "bg-slate-100 text-slate-600 border-slate-200"
+  if (!jobType) return "bg-muted text-muted-foreground border-border"
 
   const normalized = jobType.toLowerCase()
 
-  if (normalized.includes("remote")) return "bg-[var(--brand-blue)]/10 text-[var(--brand-blue)] border-[var(--brand-blue)]/20"
-  if (normalized.includes("full")) return "bg-slate-100 text-slate-600 border-slate-200"
-  if (normalized.includes("part")) return "bg-slate-100 text-slate-600 border-slate-200"
-  if (normalized.includes("contract")) return "bg-slate-100 text-slate-600 border-slate-200"
-  if (normalized.includes("freelance")) return "bg-[var(--brand-blue)]/10 text-[var(--brand-blue)] border-[var(--brand-blue)]/20"
-  if (normalized.includes("intern")) return "bg-slate-100 text-slate-600 border-slate-200"
+  if (normalized.includes("remote")) return "bg-accent text-accent-foreground border-accent"
+  if (normalized.includes("full")) return "bg-muted text-muted-foreground border-border"
+  if (normalized.includes("part")) return "bg-muted text-muted-foreground border-border"
+  if (normalized.includes("contract")) return "bg-muted text-muted-foreground border-border"
+  if (normalized.includes("freelance")) return "bg-accent text-accent-foreground border-accent"
+  if (normalized.includes("intern")) return "bg-muted text-muted-foreground border-border"
 
-  return "bg-slate-100 text-slate-600 border-slate-200"
+  return "bg-muted text-muted-foreground border-border"
 }
 

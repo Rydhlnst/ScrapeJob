@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Save } from "lucide-react"
+import { toast } from "sonner"
 
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminShell } from "@/components/admin/admin-shell"
@@ -22,7 +23,6 @@ export default function GeneralSettingsPage() {
   const [loading, setLoading] = React.useState(true)
   const [saving, setSaving] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
-  const [success, setSuccess] = React.useState(false)
 
   React.useEffect(() => {
     getSettings()
@@ -39,17 +39,16 @@ export default function GeneralSettingsPage() {
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
     setSaving(true)
-    setSuccess(false)
     setError(null)
     try {
       await saveSettings([
         ...FIELDS.map(({ key }) => ({ key, value: values[key] || null })),
         { key: "auto_publish_jobs", value: autoPublish ? "1" : "0" },
       ])
-      setSuccess(true)
-      setTimeout(() => setSuccess(false), 3000)
+      toast.success("Pengaturan berhasil disimpan.")
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Gagal menyimpan")
+      toast.error(e instanceof Error ? e.message : "Gagal menyimpan pengaturan.")
     } finally {
       setSaving(false)
     }
@@ -58,7 +57,7 @@ export default function GeneralSettingsPage() {
   return (
     <AdminShell>
       <AdminHeader title="General Settings" description="Konfigurasi dasar platform: nama situs, tagline, dan perilaku default." />
-      {error && <div className="border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>}
+      {error && <div className="border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive">{error}</div>}
       {loading ? (
         <div className="border border-border bg-card p-4 text-sm text-muted-foreground">Memuat pengaturan...</div>
       ) : (
@@ -99,11 +98,10 @@ export default function GeneralSettingsPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button type="submit" disabled={saving} className="h-9 gap-2 rounded-none bg-primary px-5 text-sm text-white">
+            <Button type="submit" disabled={saving} className="h-9 gap-2 rounded-none bg-primary px-5 text-sm text-primary-foreground">
               <Save className="size-4" />
               {saving ? "Menyimpan..." : "Simpan Perubahan"}
             </Button>
-            {success && <span className="text-sm text-green-600">Tersimpan!</span>}
           </div>
         </form>
       )}
