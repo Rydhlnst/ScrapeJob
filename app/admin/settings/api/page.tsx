@@ -126,7 +126,7 @@ export default function ApiSettingsPage() {
                 placeholder="https://yourapp.com/api/internal/clean-job"
                 value={aiUrl}
                 onChange={(e) => setAiUrl(e.target.value)}
-                className="h-9 rounded-none font-mono text-sm"
+                className="h-9 rounded-lg font-mono text-sm"
               />
             </div>
             <div className="flex flex-col gap-1.5">
@@ -138,7 +138,7 @@ export default function ApiSettingsPage() {
                   placeholder="sk-••••••••••••••••"
                   value={aiToken}
                   onChange={(e) => setAiToken(e.target.value)}
-                  className="h-9 rounded-none pr-10 font-mono text-sm"
+                  className="h-9 rounded-lg pr-10 font-mono text-sm"
                 />
                 <button type="button" onClick={() => setShowToken((s) => !s)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
@@ -150,7 +150,7 @@ export default function ApiSettingsPage() {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <Button type="submit" disabled={aiSaving} className="h-9 rounded-none bg-primary px-5 text-sm text-white">
+              <Button type="submit" disabled={aiSaving} className="h-9 rounded-lg bg-primary px-5 text-sm text-white">
                 {aiSaving ? "Menyimpan..." : "Simpan Konfigurasi AI"}
               </Button>
               {aiSuccess && <span className="text-sm text-green-600">Tersimpan!</span>}
@@ -168,7 +168,7 @@ export default function ApiSettingsPage() {
               Key untuk sistem eksternal yang ingin mengimpor lowongan via API.
             </p>
           </div>
-          <Button onClick={() => setShowCreate(true)} className="h-9 gap-2 rounded-none bg-primary px-4 text-sm text-white">
+          <Button onClick={() => setShowCreate(true)} className="h-9 gap-2 rounded-lg bg-primary px-4 text-sm text-white">
             <Plus className="size-4" /> Generate Key
           </Button>
         </div>
@@ -218,7 +218,7 @@ export default function ApiSettingsPage() {
                     </td>
                     <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{key.prefix}_****</td>
                     <td className="px-4 py-3">
-                      <Badge variant="outline" className={`rounded-none text-xs ${key.is_active ? "border-green-200 bg-green-50 text-green-700" : "border-slate-200 bg-slate-100 text-slate-500"}`}>
+                      <Badge variant="outline" className={`rounded-lg text-xs ${key.is_active ? "border-green-200 bg-green-50 text-green-700" : "border-slate-200 bg-slate-100 text-slate-500"}`}>
                         {key.is_active ? "Aktif" : "Nonaktif"}
                       </Badge>
                     </td>
@@ -262,15 +262,15 @@ export default function ApiSettingsPage() {
             <form onSubmit={handleCreateKey} className="space-y-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="k-name" className="text-xs">Nama Key</Label>
-                <Input id="k-name" placeholder="Contoh: Scraper Service v2" value={newKeyName} onChange={(e) => setNewKeyName(e.target.value)} required className="h-9 rounded-none text-sm" />
+                <Input id="k-name" placeholder="Contoh: Scraper Service v2" value={newKeyName} onChange={(e) => setNewKeyName(e.target.value)} required className="h-9 rounded-lg text-sm" />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="k-desc" className="text-xs">Deskripsi (opsional)</Label>
-                <Input id="k-desc" placeholder="Untuk apa key ini digunakan" value={newKeyDesc} onChange={(e) => setNewKeyDesc(e.target.value)} className="h-9 rounded-none text-sm" />
+                <Input id="k-desc" placeholder="Untuk apa key ini digunakan" value={newKeyDesc} onChange={(e) => setNewKeyDesc(e.target.value)} className="h-9 rounded-lg text-sm" />
               </div>
               <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" className="h-9 rounded-none text-sm" onClick={() => setShowCreate(false)}>Batal</Button>
-                <Button type="submit" disabled={creating} className="h-9 rounded-none bg-primary px-5 text-sm text-white">
+                <Button type="button" variant="outline" className="h-9 rounded-lg text-sm" onClick={() => setShowCreate(false)}>Batal</Button>
+                <Button type="submit" disabled={creating} className="h-9 rounded-lg bg-primary px-5 text-sm text-white">
                   {creating ? "Membuat..." : "Generate"}
                 </Button>
               </div>

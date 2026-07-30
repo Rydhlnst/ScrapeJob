@@ -46,7 +46,7 @@ export function ConfirmButton({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button type="button" variant={variant} className={cn("rounded-none", className)} disabled={disabled}>
+        <Button type="button" variant={variant} className={cn("rounded-lg", className)} disabled={disabled}>
           {label}
         </Button>
       </AlertDialogTrigger>

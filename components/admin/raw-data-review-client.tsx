@@ -190,7 +190,7 @@ function DraftReviewSheet({
               <div className="flex flex-wrap items-center gap-2">
                 <Badge
                   variant="outline"
-                  className={job.draftStatus === "drafted_ai" ? "rounded-none border-sky-100 bg-sky-50 text-sky-700" : "rounded-none border-slate-200 bg-slate-100 text-slate-600"}
+                  className={job.draftStatus === "drafted_ai" ? "rounded-lg border-sky-100 bg-sky-50 text-sky-700" : "rounded-lg border-slate-200 bg-slate-100 text-slate-600"}
                 >
                   {job.draftStatus === "drafted_ai" ? "Drafted by AI" : "Drafted Raw"}
                 </Badge>
@@ -205,27 +205,27 @@ function DraftReviewSheet({
             <div className="flex-1 space-y-5 p-4">
               <div className="space-y-1.5">
                 <FieldLabel>Title</FieldLabel>
-                <Input value={title} onChange={(e) => setTitle(e.target.value)} className="rounded-none" aria-invalid={Boolean(fieldErrors.title)} />
+                <Input value={title} onChange={(e) => setTitle(e.target.value)} className="rounded-lg" aria-invalid={Boolean(fieldErrors.title)} />
                 {fieldErrors.title ? <p className="mt-1 text-xs text-red-600">{fieldErrors.title}</p> : null}
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-1.5">
                   <FieldLabel>Company</FieldLabel>
-                  <Input value={company} onChange={(e) => setCompany(e.target.value)} className="rounded-none" aria-invalid={Boolean(fieldErrors.company)} />
+                  <Input value={company} onChange={(e) => setCompany(e.target.value)} className="rounded-lg" aria-invalid={Boolean(fieldErrors.company)} />
                   {fieldErrors.company ? <p className="mt-1 text-xs text-red-600">{fieldErrors.company}</p> : null}
                 </div>
                 <div className="space-y-1.5">
                   <FieldLabel>Location</FieldLabel>
-                  <Input value={location} onChange={(e) => setLocation(e.target.value)} className="rounded-none" placeholder="e.g. Jakarta" />
+                  <Input value={location} onChange={(e) => setLocation(e.target.value)} className="rounded-lg" placeholder="e.g. Jakarta" />
                 </div>
                 <div className="space-y-1.5">
                   <FieldLabel>Employment Type</FieldLabel>
-                  <Input value={employmentType} onChange={(e) => setEmploymentType(e.target.value)} className="rounded-none" placeholder="e.g. Full-time" />
+                  <Input value={employmentType} onChange={(e) => setEmploymentType(e.target.value)} className="rounded-lg" placeholder="e.g. Full-time" />
                 </div>
                 <div className="space-y-1.5">
                   <FieldLabel>Salary</FieldLabel>
-                  <Input value={salary} onChange={(e) => setSalary(e.target.value)} className="rounded-none" placeholder="e.g. Rp 6jt–10jt" />
+                  <Input value={salary} onChange={(e) => setSalary(e.target.value)} className="rounded-lg" placeholder="e.g. Rp 6jt–10jt" />
                 </div>
               </div>
 
@@ -234,7 +234,7 @@ function DraftReviewSheet({
                 <Textarea
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
-                  className="min-h-[80px] rounded-none"
+                  className="min-h-[80px] rounded-lg"
                   placeholder="Short AI-generated summary of the job"
                 />
               </div>
@@ -256,16 +256,16 @@ function DraftReviewSheet({
               </div>
 
               {job.failReason ? (
-                <div className="rounded-none border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                   AI failed: {job.failReason}
                 </div>
               ) : null}
 
               <div className="flex gap-2 border-t border-border pt-4">
-                <Button type="button" className="rounded-none" onClick={handleSave} disabled={isSaving}>
+                <Button type="button" className="rounded-lg" onClick={handleSave} disabled={isSaving}>
                   {isSaving ? "Saving..." : "Save draft"}
                 </Button>
-                <Button type="button" variant="outline" className="rounded-none" onClick={() => onOpenChange(false)}>
+                <Button type="button" variant="outline" className="rounded-lg" onClick={() => onOpenChange(false)}>
                   Close
                 </Button>
               </div>
@@ -588,7 +588,7 @@ export function RawDataReviewClient() {
             </div>
           </div>
           {cleanBatch.finished_at || cleanBatch.cancelled ? (
-            <Button size="sm" variant="outline" className="rounded-none" onClick={() => setCleanBatch(null)}>
+            <Button size="sm" variant="outline" className="rounded-lg" onClick={() => setCleanBatch(null)}>
               Dismiss
             </Button>
           ) : null}

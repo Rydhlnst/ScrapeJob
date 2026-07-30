@@ -326,7 +326,7 @@ export function JobsTable({
                       <TableCell className="py-3 text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="ghost" className="rounded-none">
+                            <Button size="icon" variant="ghost" className="rounded-lg">
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -385,7 +385,7 @@ export function JobsTable({
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0 rounded-none">
+                      <Button size="icon" variant="ghost" className="h-8 w-8 shrink-0 rounded-lg">
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>

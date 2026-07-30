@@ -515,7 +515,7 @@ export function AdminSidebar() {
             alt="Lowonganku logo"
             width={28}
             height={28}
-            className="h-7 w-7 shrink-0 rounded-none object-contain"
+            className="h-7 w-7 shrink-0 rounded-lg object-contain"
           />
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
             <div className="truncate text-sm font-semibold tracking-[-0.01em] text-zinc-900">Lowonganku</div>

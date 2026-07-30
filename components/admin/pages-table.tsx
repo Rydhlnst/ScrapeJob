@@ -63,13 +63,13 @@ export function PagesTable({
               <TableCell>{new Date(page.updatedAt).toLocaleString("id-ID")}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Button asChild variant="outline" className="rounded-none">
+                  <Button asChild variant="outline" className="rounded-lg">
                     <Link href={`/admin/pages/${page.id}/edit`}>Edit</Link>
                   </Button>
-                  <Button type="button" variant="outline" className="rounded-none" onClick={() => handlePublish(page.id)}>
+                  <Button type="button" variant="outline" className="rounded-lg" onClick={() => handlePublish(page.id)}>
                     Publish
                   </Button>
-                  <Button type="button" variant="destructive" className="rounded-none" onClick={() => handleDelete(page.id)}>
+                  <Button type="button" variant="destructive" className="rounded-lg" onClick={() => handleDelete(page.id)}>
                     Delete
                   </Button>
                 </div>

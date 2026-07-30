@@ -67,11 +67,11 @@ export function ReviewTable({
                       <div className="flex items-center gap-1.5">
                         <p className="truncate text-sm font-semibold text-foreground">{title}</p>
                         {job.draftStatus === "drafted_ai" ? (
-                          <Badge variant="outline" className="shrink-0 rounded-none border-sky-100 bg-sky-50 px-1.5 py-0.5 text-[10px] font-semibold text-sky-700">
+                          <Badge variant="outline" className="shrink-0 rounded-lg border-sky-100 bg-sky-50 px-1.5 py-0.5 text-[10px] font-semibold text-sky-700">
                             AI
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="shrink-0 rounded-none border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
+                          <Badge variant="outline" className="shrink-0 rounded-lg border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
                             Raw
                           </Badge>
                         )}
@@ -140,11 +140,11 @@ export function ReviewTable({
                     <div className="flex flex-wrap items-center gap-1.5">
                       <p className="max-w-[150px] truncate text-sm font-semibold">{title}</p>
                       {job.draftStatus === "drafted_ai" ? (
-                        <Badge variant="outline" className="shrink-0 rounded-none border-sky-100 bg-sky-50 px-1 py-0 text-[9px] font-medium text-sky-700">
+                        <Badge variant="outline" className="shrink-0 rounded-lg border-sky-100 bg-sky-50 px-1 py-0 text-[9px] font-medium text-sky-700">
                           AI
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="shrink-0 rounded-none border-slate-200 bg-slate-100 px-1 py-0 text-[9px] font-medium text-slate-600">
+                        <Badge variant="outline" className="shrink-0 rounded-lg border-slate-200 bg-slate-100 px-1 py-0 text-[9px] font-medium text-slate-600">
                           Raw
                         </Badge>
                       )}

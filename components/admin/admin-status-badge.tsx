@@ -21,7 +21,7 @@ export function AdminStatusBadge({
   return (
     <Badge
       variant="outline"
-      className={cn("rounded-none border px-2 py-1 capitalize", tone[status] ?? tone.empty, className)}
+      className={cn("rounded-lg border px-2 py-1 capitalize", tone[status] ?? tone.empty, className)}
     >
       {status}
     </Badge>

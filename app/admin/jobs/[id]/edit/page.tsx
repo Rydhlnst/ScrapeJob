@@ -49,10 +49,10 @@ export default function AdminJobEditPage() {
         actions={
           job ? (
             <>
-              <Button asChild variant="outline" className="rounded-none">
+              <Button asChild variant="outline" className="rounded-lg">
                 <Link href={`/admin/jobs/${job.id}/preview`}>Preview Admin</Link>
               </Button>
-              <Button asChild className="rounded-none">
+              <Button asChild className="rounded-lg">
                 <Link href={`/jobs/${job.slug}`} target="_blank">Open Public</Link>
               </Button>
             </>

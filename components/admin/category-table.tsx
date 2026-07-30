@@ -28,7 +28,7 @@ export function CategoryTable({ categories }: { categories: Category[] }) {
         <div className="text-sm font-semibold text-slate-900">Categories</div>
         <div className="flex w-full gap-2 md:w-auto">
           <Input placeholder="Search (mock)" />
-          <Button onClick={() => console.log("create-category")} className="rounded-none bg-zinc-900 text-white hover:bg-zinc-800">
+          <Button onClick={() => console.log("create-category")} className="rounded-lg bg-zinc-900 text-white hover:bg-zinc-800">
             <Plus className="mr-2 h-4 w-4" />
             New
           </Button>
@@ -55,7 +55,7 @@ export function CategoryTable({ categories }: { categories: Category[] }) {
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="ghost" className="rounded-none">
+                      <Button size="icon" variant="ghost" className="rounded-lg">
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>

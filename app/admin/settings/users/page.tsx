@@ -110,7 +110,7 @@ export default function UsersSettingsPage() {
       ) : (
         <div className="space-y-4">
           <div className="flex justify-end">
-            <Button onClick={openCreate} className="h-9 gap-2 rounded-none bg-primary px-4 text-sm text-white">
+            <Button onClick={openCreate} className="h-9 gap-2 rounded-lg bg-primary px-4 text-sm text-white">
               <Plus className="size-4" /> Tambah User
             </Button>
           </div>
@@ -133,7 +133,7 @@ export default function UsersSettingsPage() {
                     <td className="px-4 py-3 text-muted-foreground">{user.email}</td>
                     <td className="px-4 py-3">
                       {user.role ? (
-                        <Badge variant="outline" className={`rounded-none text-xs ${ROLE_COLORS[user.role] ?? "bg-slate-100 text-slate-600"}`}>
+                        <Badge variant="outline" className={`rounded-lg text-xs ${ROLE_COLORS[user.role] ?? "bg-slate-100 text-slate-600"}`}>
                           {user.role}
                         </Badge>
                       ) : <span className="text-muted-foreground">—</span>}
@@ -190,29 +190,29 @@ export default function UsersSettingsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="u-name" className="text-xs">Nama</Label>
-                <Input id="u-name" value={name} onChange={(e) => setName(e.target.value)} required className="h-9 rounded-none text-sm" />
+                <Input id="u-name" value={name} onChange={(e) => setName(e.target.value)} required className="h-9 rounded-lg text-sm" />
               </div>
               {formMode.type === "create" && (
                 <div className="flex flex-col gap-1.5">
                   <Label htmlFor="u-email" className="text-xs">Email</Label>
-                  <Input id="u-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="h-9 rounded-none text-sm" />
+                  <Input id="u-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="h-9 rounded-lg text-sm" />
                 </div>
               )}
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="u-pw" className="text-xs">
                   {formMode.type === "edit" ? "Password Baru (kosongkan jika tidak diubah)" : "Password"}
                 </Label>
-                <Input id="u-pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required={formMode.type === "create"} className="h-9 rounded-none text-sm" />
+                <Input id="u-pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required={formMode.type === "create"} className="h-9 rounded-lg text-sm" />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="u-role" className="text-xs">Role</Label>
-                <select id="u-role" value={role} onChange={(e) => setRole(e.target.value)} className="h-9 rounded-none border border-input bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
+                <select id="u-role" value={role} onChange={(e) => setRole(e.target.value)} className="h-9 rounded-lg border border-input bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary">
                   {roles.map((r) => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
               <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" className="h-9 rounded-none text-sm" onClick={closeForm}>Batal</Button>
-                <Button type="submit" disabled={busy} className="h-9 rounded-none bg-primary px-5 text-sm text-white">
+                <Button type="button" variant="outline" className="h-9 rounded-lg text-sm" onClick={closeForm}>Batal</Button>
+                <Button type="submit" disabled={busy} className="h-9 rounded-lg bg-primary px-5 text-sm text-white">
                   {busy ? "Menyimpan..." : "Simpan"}
                 </Button>
               </div>

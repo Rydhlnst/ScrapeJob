@@ -331,7 +331,7 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
         <div className="border border-border bg-white p-4"><div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Status</div><div className="mt-3 text-lg font-semibold text-[var(--brand-ink)]">{status}</div></div>
         <div className="border border-border bg-white p-4"><div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Format</div><div className="mt-3 text-lg font-semibold text-[var(--brand-ink)]">Blog article</div></div>
         <div className="border border-border bg-white p-4"><div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Route</div><div className="mt-3 break-all text-sm text-slate-700">/jobs/{job.slug}</div></div>
-        <div className="border border-border bg-white p-4"><div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Public</div><div className="mt-3"><Button asChild variant="outline" className="rounded-none"><Link href={`/jobs/${job.slug}`} target="_blank">Open page</Link></Button></div></div>
+        <div className="border border-border bg-white p-4"><div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Public</div><div className="mt-3"><Button asChild variant="outline" className="rounded-lg"><Link href={`/jobs/${job.slug}`} target="_blank">Open page</Link></Button></div></div>
       </div>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -364,7 +364,7 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
         <div><h2 className="text-base font-semibold text-[var(--brand-ink)]">Body Article</h2><p className="text-sm text-muted-foreground">Bagian isi blog sekarang memakai tiptap editor untuk tiap blok konten.</p></div>
         <Field label="Intro"><RichTextEditor value={intro} onChange={setIntro} /></Field>
         <div className="grid gap-4 md:grid-cols-3"><Field label="Paragraf 1"><RichTextEditor value={paragraph1} onChange={setParagraph1} /></Field><Field label="Paragraf 2"><RichTextEditor value={paragraph2} onChange={setParagraph2} /></Field><Field label="Paragraf 3"><RichTextEditor value={paragraph3} onChange={setParagraph3} /></Field></div>
-        <div className="space-y-3"><div className="flex items-center justify-between"><div className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Paragraf lain</div><Button type="button" variant="outline" className="rounded-none" onClick={() => setExtraParagraphs((current) => [...current, "<p></p>"])}>Add paragraph</Button></div>{extraParagraphs.map((paragraph, index) => (<div key={index} className="space-y-2"><RichTextEditor value={paragraph} onChange={(value) => setExtraParagraphs((current) => current.map((item, currentIndex) => (currentIndex === index ? value : item)))} /><div className="flex justify-end"><Button type="button" variant="destructive" className="rounded-none" onClick={() => setExtraParagraphs((current) => current.filter((_, currentIndex) => currentIndex !== index))}>Remove</Button></div></div>))}</div>
+        <div className="space-y-3"><div className="flex items-center justify-between"><div className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Paragraf lain</div><Button type="button" variant="outline" className="rounded-lg" onClick={() => setExtraParagraphs((current) => [...current, "<p></p>"])}>Add paragraph</Button></div>{extraParagraphs.map((paragraph, index) => (<div key={index} className="space-y-2"><RichTextEditor value={paragraph} onChange={(value) => setExtraParagraphs((current) => current.map((item, currentIndex) => (currentIndex === index ? value : item)))} /><div className="flex justify-end"><Button type="button" variant="destructive" className="rounded-lg" onClick={() => setExtraParagraphs((current) => current.filter((_, currentIndex) => currentIndex !== index))}>Remove</Button></div></div>))}</div>
         <Field label="Tambahan informasi"><RichTextEditor value={additionalInfo} onChange={setAdditionalInfo} /></Field>
         <Field label="Source"><RichTextEditor value={sourceContent} onChange={setSourceContent} /></Field>
       </section>
@@ -384,13 +384,13 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
       </section>
 
       <Accordion type="single" collapsible>
-        <AccordionItem value="raw"><AccordionTrigger>Raw description (readonly)</AccordionTrigger><AccordionContent><div className="rounded-none border bg-slate-50 p-3 text-sm text-slate-700 whitespace-pre-wrap">{job.rawDescription ? job.rawDescription : <span className="text-slate-500">No raw description.</span>}</div></AccordionContent></AccordionItem>
+        <AccordionItem value="raw"><AccordionTrigger>Raw description (readonly)</AccordionTrigger><AccordionContent><div className="rounded-lg border bg-slate-50 p-3 text-sm text-slate-700 whitespace-pre-wrap">{job.rawDescription ? job.rawDescription : <span className="text-slate-500">No raw description.</span>}</div></AccordionContent></AccordionItem>
       </Accordion>
 
       <div className="flex flex-wrap gap-2">
-        <Button type="button" variant="outline" className="rounded-none" onClick={saveDraft} disabled={isSaving}>{isSaving ? "Saving..." : "Save draft"}</Button>
-        <Button type="button" className="rounded-none" onClick={() => runAction("publish")} disabled={busyAction === "publish"}>{busyAction === "publish" ? "Publishing..." : "Publish"}</Button>
-        <Button type="button" variant="outline" className="rounded-none" onClick={() => runAction("unpublish")} disabled={busyAction === "unpublish"}>{busyAction === "unpublish" ? "Moving..." : "Back to draft"}</Button>
+        <Button type="button" variant="outline" className="rounded-lg" onClick={saveDraft} disabled={isSaving}>{isSaving ? "Saving..." : "Save draft"}</Button>
+        <Button type="button" className="rounded-lg" onClick={() => runAction("publish")} disabled={busyAction === "publish"}>{busyAction === "publish" ? "Publishing..." : "Publish"}</Button>
+        <Button type="button" variant="outline" className="rounded-lg" onClick={() => runAction("unpublish")} disabled={busyAction === "unpublish"}>{busyAction === "unpublish" ? "Moving..." : "Back to draft"}</Button>
         <ConfirmButton
           variant="outline"
           destructive={false}

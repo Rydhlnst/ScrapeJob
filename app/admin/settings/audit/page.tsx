@@ -21,7 +21,7 @@ const ACTION_COLORS: Record<string, string> = {
 
 function ActionBadge({ action }: { action: string }) {
   const cls = ACTION_COLORS[action] ?? "bg-slate-50 text-slate-600 border-slate-200"
-  return <Badge variant="outline" className={`rounded-none font-mono text-[11px] ${cls}`}>{action}</Badge>
+  return <Badge variant="outline" className={`rounded-lg font-mono text-[11px] ${cls}`}>{action}</Badge>
 }
 
 function ChangesCell({ before, after }: { before: Record<string, unknown> | null; after: Record<string, unknown> | null }) {
@@ -96,7 +96,7 @@ export default function AuditLogPage() {
       <div className="flex items-center gap-3">
         <Button
           variant="outline"
-          className="h-9 gap-2 rounded-none text-sm"
+          className="h-9 gap-2 rounded-lg text-sm"
           onClick={() => setShowFilter((v) => !v)}
         >
           <Filter className="size-4" /> Filter
@@ -108,18 +108,18 @@ export default function AuditLogPage() {
         <form onSubmit={applyFilter} className="flex flex-wrap items-end gap-3 border border-border bg-muted/30 p-4">
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Action</label>
-            <Input placeholder="contoh: user.create" value={filterAction} onChange={(e) => setFilterAction(e.target.value)} className="h-9 w-44 rounded-none text-sm" />
+            <Input placeholder="contoh: user.create" value={filterAction} onChange={(e) => setFilterAction(e.target.value)} className="h-9 w-44 rounded-lg text-sm" />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Dari</label>
-            <Input type="date" value={filterFrom} onChange={(e) => setFilterFrom(e.target.value)} className="h-9 rounded-none text-sm" />
+            <Input type="date" value={filterFrom} onChange={(e) => setFilterFrom(e.target.value)} className="h-9 rounded-lg text-sm" />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs text-muted-foreground">Sampai</label>
-            <Input type="date" value={filterTo} onChange={(e) => setFilterTo(e.target.value)} className="h-9 rounded-none text-sm" />
+            <Input type="date" value={filterTo} onChange={(e) => setFilterTo(e.target.value)} className="h-9 rounded-lg text-sm" />
           </div>
-          <Button type="submit" className="h-9 rounded-none bg-primary px-4 text-sm text-white">Terapkan</Button>
-          <Button type="button" variant="ghost" className="h-9 rounded-none text-sm" onClick={() => { setFilterAction(""); setFilterFrom(""); setFilterTo(""); setTimeout(() => loadLogs(1), 50) }}>
+          <Button type="submit" className="h-9 rounded-lg bg-primary px-4 text-sm text-white">Terapkan</Button>
+          <Button type="button" variant="ghost" className="h-9 rounded-lg text-sm" onClick={() => { setFilterAction(""); setFilterFrom(""); setFilterTo(""); setTimeout(() => loadLogs(1), 50) }}>
             Reset
           </Button>
         </form>
@@ -174,10 +174,10 @@ export default function AuditLogPage() {
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">Halaman {page} dari {lastPage}</span>
               <div className="flex gap-2">
-                <Button variant="outline" size="icon" className="size-8 rounded-none" disabled={page <= 1} onClick={() => loadLogs(page - 1)}>
+                <Button variant="outline" size="icon" className="size-8 rounded-lg" disabled={page <= 1} onClick={() => loadLogs(page - 1)}>
                   <ChevronLeft className="size-4" />
                 </Button>
-                <Button variant="outline" size="icon" className="size-8 rounded-none" disabled={page >= lastPage} onClick={() => loadLogs(page + 1)}>
+                <Button variant="outline" size="icon" className="size-8 rounded-lg" disabled={page >= lastPage} onClick={() => loadLogs(page + 1)}>
                   <ChevronRight className="size-4" />
                 </Button>
               </div>

@@ -178,7 +178,7 @@ export function PageEditorForm({ page }: { page?: Page | null }) {
         <div className="border border-border bg-white p-4">
           <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Preview</div>
           <div className="mt-3">
-            <Button asChild variant="outline" className="rounded-none">
+            <Button asChild variant="outline" className="rounded-lg">
               <Link href={`/page/${slug || ""}`} target="_blank">
                 Open public page
               </Link>
@@ -234,10 +234,10 @@ export function PageEditorForm({ page }: { page?: Page | null }) {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button type="button" variant="outline" className="rounded-none" onClick={handleSave} disabled={isSaving}>
+        <Button type="button" variant="outline" className="rounded-lg" onClick={handleSave} disabled={isSaving}>
           {isSaving ? "Saving..." : "Save draft"}
         </Button>
-        <Button type="button" className="rounded-none" onClick={handlePublish} disabled={isPublishing}>
+        <Button type="button" className="rounded-lg" onClick={handlePublish} disabled={isPublishing}>
           {isPublishing ? "Publishing..." : "Publish page"}
         </Button>
       </div>

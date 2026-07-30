@@ -147,7 +147,7 @@ export default function AdminJobSourcesPage() {
       <div className="flex justify-end">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="rounded-none" onClick={openCreate}>
+            <Button className="rounded-lg" onClick={openCreate}>
               + Add source
             </Button>
           </DialogTrigger>
@@ -208,10 +208,10 @@ export default function AdminJobSourcesPage() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" className="rounded-none" onClick={() => setDialogOpen(false)}>
+              <Button variant="outline" className="rounded-lg" onClick={() => setDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button className="rounded-none" onClick={submitForm} disabled={submitting}>
+              <Button className="rounded-lg" onClick={submitForm} disabled={submitting}>
                 {submitting ? "Saving..." : editingId ? "Save changes" : "Create source"}
               </Button>
             </DialogFooter>
@@ -255,7 +255,7 @@ export default function AdminJobSourcesPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="inline-flex gap-2">
-                        <Button size="sm" variant="outline" className="rounded-none" onClick={() => openEdit(row)}>
+                        <Button size="sm" variant="outline" className="rounded-lg" onClick={() => openEdit(row)}>
                           Edit
                         </Button>
                         <ConfirmButton

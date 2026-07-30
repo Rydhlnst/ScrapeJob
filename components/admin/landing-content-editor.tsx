@@ -106,8 +106,8 @@ export function LandingContentEditor({ initialRecord }: { initialRecord: AdminLa
               <AdminStatusBadge status={record.status} />
               {record.updatedAt ? <div className="text-xs text-muted-foreground">Updated {new Date(record.updatedAt).toLocaleString("id-ID")}</div> : null}
             </div>
-            <Button type="button" variant="outline" className="rounded-none" onClick={handleSave} disabled={isSaving}>{isSaving ? "Saving..." : "Save draft"}</Button>
-            <Button type="button" className="rounded-none" onClick={handlePublish} disabled={isPublishing}>{isPublishing ? "Publishing..." : "Publish changes"}</Button>
+            <Button type="button" variant="outline" className="rounded-lg" onClick={handleSave} disabled={isSaving}>{isSaving ? "Saving..." : "Save draft"}</Button>
+            <Button type="button" className="rounded-lg" onClick={handlePublish} disabled={isPublishing}>{isPublishing ? "Publishing..." : "Publish changes"}</Button>
           </>
         }
       />

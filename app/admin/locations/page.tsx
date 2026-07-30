@@ -134,7 +134,7 @@ export default function AdminLocationsPage() {
       <div className="flex justify-end">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="rounded-none" onClick={openCreate}>
+            <Button className="rounded-lg" onClick={openCreate}>
               + Add location
             </Button>
           </DialogTrigger>
@@ -157,10 +157,10 @@ export default function AdminLocationsPage() {
               </label>
             </div>
             <DialogFooter>
-              <Button variant="outline" className="rounded-none" onClick={() => setDialogOpen(false)}>
+              <Button variant="outline" className="rounded-lg" onClick={() => setDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button className="rounded-none" onClick={submitForm} disabled={submitting}>
+              <Button className="rounded-lg" onClick={submitForm} disabled={submitting}>
                 {submitting ? "Saving..." : editingId ? "Save changes" : "Create location"}
               </Button>
             </DialogFooter>
@@ -198,7 +198,7 @@ export default function AdminLocationsPage() {
                     <TableCell>{row.province ?? "—"}</TableCell>
                     <TableCell className="text-right">
                       <div className="inline-flex gap-2">
-                        <Button size="sm" variant="outline" className="rounded-none" onClick={() => openEdit(row)}>
+                        <Button size="sm" variant="outline" className="rounded-lg" onClick={() => openEdit(row)}>
                           Edit
                         </Button>
                         <ConfirmButton

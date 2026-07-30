@@ -17,7 +17,7 @@ export function AdminHeader({
     <header
       className={cn(
         "border border-border bg-card px-5 py-4 md:px-6",
-        sticky && "z-10 mb-3 rounded-none",
+        sticky && "z-10 mb-3 rounded-lg",
         className,
       )}
     >

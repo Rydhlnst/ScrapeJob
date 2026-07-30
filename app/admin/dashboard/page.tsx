@@ -172,7 +172,7 @@ export default function AdminDashboardPage() {
         <section className="border border-red-200 bg-red-50 p-5 text-sm text-red-700 shadow-[var(--shadow-sm)]">
           <div className="text-lg font-semibold text-red-800">{t.failedTitle}</div>
           <p className="mt-2">{error}</p>
-          <Button className="mt-4 rounded-none" onClick={() => window.location.reload()}>
+          <Button className="mt-4 rounded-lg" onClick={() => window.location.reload()}>
             {t.reload}
           </Button>
         </section>
@@ -200,13 +200,13 @@ export default function AdminDashboardPage() {
             description={t.heroDescription}
           />
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button asChild className="h-11 rounded-none">
+            <Button asChild className="h-11 rounded-lg">
               <Link href="/admin/raw-data">{t.reviewJobs}</Link>
             </Button>
-            <Button asChild variant="outline" className="h-11 rounded-none">
+            <Button asChild variant="outline" className="h-11 rounded-lg">
               <Link href="/admin/content">{t.editCms}</Link>
             </Button>
-            <Button asChild variant="outline" className="h-11 rounded-none">
+            <Button asChild variant="outline" className="h-11 rounded-lg">
               <Link href="/admin/scrape-runs">{t.scraperRuns}</Link>
             </Button>
           </div>
@@ -231,10 +231,10 @@ export default function AdminDashboardPage() {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Button asChild className="h-11 rounded-none">
+              <Button asChild className="h-11 rounded-lg">
                 <Link href="/admin/content">{t.openCms}</Link>
               </Button>
-              <Button asChild variant="outline" className="h-11 rounded-none">
+              <Button asChild variant="outline" className="h-11 rounded-lg">
                 <Link href="/">{t.previewLanding}</Link>
               </Button>
             </div>
@@ -308,7 +308,7 @@ export default function AdminDashboardPage() {
           title={t.queueNeedsReviewTitle}
           description={t.queueNeedsReviewDescription}
           action={
-            <Button asChild variant="outline" className="rounded-none">
+            <Button asChild variant="outline" className="rounded-lg">
               <Link href="/admin/raw-data">{t.openReviewQueue}</Link>
             </Button>
           }
@@ -335,7 +335,7 @@ export default function AdminDashboardPage() {
           title={t.queueReadyTitle}
           description={t.queueReadyDescription}
           action={
-            <Button asChild variant="outline" className="rounded-none">
+            <Button asChild variant="outline" className="rounded-lg">
               <Link href="/admin/jobs">{t.openJobDrafts}</Link>
             </Button>
           }
@@ -362,7 +362,7 @@ export default function AdminDashboardPage() {
           title={t.landingContentTitle}
           description={t.landingContentDescription}
           action={
-            <Button asChild variant="outline" className="rounded-none">
+            <Button asChild variant="outline" className="rounded-lg">
               <Link href="/admin/content">{t.openContentEditor}</Link>
             </Button>
           }

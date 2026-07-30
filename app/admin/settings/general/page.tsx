@@ -74,7 +74,7 @@ export default function GeneralSettingsPage() {
                     placeholder={placeholder}
                     value={values[key] ?? ""}
                     onChange={(e) => setValues((prev) => ({ ...prev, [key]: e.target.value }))}
-                    className="h-9 rounded-none text-sm"
+                    className="h-9 rounded-lg text-sm"
                   />
                 </div>
               ))}
@@ -98,7 +98,7 @@ export default function GeneralSettingsPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button type="submit" disabled={saving} className="h-9 gap-2 rounded-none bg-primary px-5 text-sm text-primary-foreground">
+            <Button type="submit" disabled={saving} className="h-9 gap-2 rounded-lg bg-primary px-5 text-sm text-primary-foreground">
               <Save className="size-4" />
               {saving ? "Menyimpan..." : "Simpan Perubahan"}
             </Button>

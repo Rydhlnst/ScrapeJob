@@ -53,7 +53,7 @@ function AdminPagesPageInner() {
         title={heading}
         description="Buat halaman statis seperti Contact Us, FAQ, disclaimer, dan halaman informasi lain di `/page/[slug]`."
         actions={
-          <Button asChild className="rounded-none">
+          <Button asChild className="rounded-lg">
             <Link href="/admin/pages/new">Add page</Link>
           </Button>
         }
