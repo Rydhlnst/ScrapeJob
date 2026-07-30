@@ -11,13 +11,17 @@ const ALLOWED_TAGS = [
   "a", "img",
   "table", "thead", "tbody", "tr", "th", "td",
   "span", "div",
+  "mark", "sub", "sup",
+  "input",
 ]
 
 const ALLOWED_ATTR = [
   "href", "target", "rel",
   "src", "alt", "title", "width", "height",
   "colspan", "rowspan", "align",
-  "class",
+  "class", "style",
+  "data-checked", "data-type",
+  "type", "checked", "disabled",
 ]
 
 // Force safe defaults on anchors even if editor omitted them.
@@ -25,6 +29,31 @@ DOMPurify.addHook?.("afterSanitizeAttributes", (node) => {
   if (node.tagName === "A") {
     node.setAttribute("target", "_blank")
     node.setAttribute("rel", "noopener noreferrer nofollow")
+  }
+  // Only allow safe CSS properties in style attributes.
+  if (node.hasAttribute("style")) {
+    const style = node.getAttribute("style") ?? ""
+    const safe = style
+      .split(";")
+      .map((s) => s.trim())
+      .filter((s) => {
+        if (!s) return false
+        const prop = s.split(":")[0]?.trim().toLowerCase() ?? ""
+        return [
+          "text-align",
+          "color",
+          "background-color",
+          "font-weight",
+          "font-style",
+          "text-decoration",
+        ].includes(prop)
+      })
+      .join("; ")
+    if (safe) {
+      node.setAttribute("style", safe)
+    } else {
+      node.removeAttribute("style")
+    }
   }
 })
 
@@ -34,7 +63,7 @@ export function sanitizeHtml(html: string): string {
     ALLOWED_TAGS,
     ALLOWED_ATTR,
     ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
-    FORBID_TAGS: ["script", "iframe", "object", "embed", "style"],
-    FORBID_ATTR: ["onerror", "onload", "onclick", "onmouseover", "style"],
+    FORBID_TAGS: ["script", "iframe", "object", "embed"],
+    FORBID_ATTR: ["onerror", "onload", "onclick", "onmouseover"],
   })
 }

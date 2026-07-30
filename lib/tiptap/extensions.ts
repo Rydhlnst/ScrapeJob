@@ -6,6 +6,15 @@ import { TableRow } from "@tiptap/extension-table-row"
 import { TableCell } from "@tiptap/extension-table-cell"
 import { TableHeader } from "@tiptap/extension-table-header"
 import { CodeBlock } from "@tiptap/extension-code-block"
+import { Underline } from "@tiptap/extension-underline"
+import { TextAlign } from "@tiptap/extension-text-align"
+import { Highlight } from "@tiptap/extension-highlight"
+import { Subscript } from "@tiptap/extension-subscript"
+import { Superscript } from "@tiptap/extension-superscript"
+import { TaskList } from "@tiptap/extension-task-list"
+import { TaskItem } from "@tiptap/extension-task-item"
+import { TextStyle } from "@tiptap/extension-text-style"
+import { Color } from "@tiptap/extension-color"
 
 // Single source of truth for the extension list. Client editor, server-side
 // generateHTML/generateJSON, and any migration scripts must all import from here
@@ -13,8 +22,19 @@ import { CodeBlock } from "@tiptap/extension-code-block"
 export const tiptapExtensions = [
   StarterKit.configure({
     heading: { levels: [2, 3] },
-    codeBlock: false, // we register the standalone CodeBlock below
+    codeBlock: false,
   }),
+  Underline,
+  TextStyle,
+  Color,
+  TextAlign.configure({
+    types: ["heading", "paragraph"],
+  }),
+  Highlight.configure({ multicolor: false }),
+  Subscript,
+  Superscript,
+  TaskList,
+  TaskItem.configure({ nested: true }),
   Link.configure({
     openOnClick: false,
     autolink: true,
@@ -22,7 +42,6 @@ export const tiptapExtensions = [
       rel: "noopener noreferrer nofollow",
       target: "_blank",
     },
-    // Reject javascript:/data: — Link only allows the schemes below.
     protocols: ["http", "https", "mailto", "tel"],
   }),
   Image.configure({

@@ -3,21 +3,29 @@
 import { useEffect, useRef, useState } from "react"
 import { useEditor, EditorContent } from "@tiptap/react"
 import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
   Bold,
   Code2,
   Eye,
   Heading2,
   Heading3,
+  Highlighter,
   Image as ImageIcon,
   Italic,
   Link as LinkIcon,
   List,
   ListOrdered,
+  ListChecks,
   Pencil,
   Quote,
   Redo2,
   RemoveFormatting,
   Strikethrough,
+  Subscript,
+  Superscript,
+  Underline as UnderlineIcon,
   Undo2,
 } from "lucide-react"
 
@@ -137,6 +145,58 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
 
         <button
           type="button"
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          disabled={!isWysiwyg || !editor.can().chain().focus().toggleUnderline().run()}
+          className={cn(
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            editor.isActive("underline") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
+          )}
+          title="Underline"
+        >
+          <UnderlineIcon className="size-4" />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleHighlight().run()}
+          disabled={!isWysiwyg || !editor.can().chain().focus().toggleHighlight().run()}
+          className={cn(
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            editor.isActive("highlight") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
+          )}
+          title="Highlight"
+        >
+          <Highlighter className="size-4" />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleSubscript().run()}
+          disabled={!isWysiwyg || !editor.can().chain().focus().toggleSubscript().run()}
+          className={cn(
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            editor.isActive("subscript") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
+          )}
+          title="Subscript"
+        >
+          <Subscript className="size-4" />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleSuperscript().run()}
+          disabled={!isWysiwyg || !editor.can().chain().focus().toggleSuperscript().run()}
+          className={cn(
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            editor.isActive("superscript") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
+          )}
+          title="Superscript"
+        >
+          <Superscript className="size-4" />
+        </button>
+
+        <button
+          type="button"
           disabled={!isWysiwyg}
           onClick={() => {
             const previous = editor.getAttributes("code").class as string | undefined
@@ -222,12 +282,76 @@ export function RichTextEditor({ value, onChange, className }: RichTextEditorPro
 
         <button
           type="button"
+          onClick={() => editor.chain().focus().toggleTaskList().run()}
+          disabled={!isWysiwyg}
+          className={cn(
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            editor.isActive("taskList") && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
+          )}
+          title="Task List"
+        >
+          <ListChecks className="size-4" />
+        </button>
+
+        <button
+          type="button"
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
           disabled={!isWysiwyg}
           className="grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40"
           title="Horizontal Rule"
         >
           <div className="w-4 h-0.5 bg-current" />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().unsetAllMarks().run()}
+          disabled={!isWysiwyg}
+          className="grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40"
+          title="Clear Formatting"
+        >
+          <RemoveFormatting className="size-4" />
+        </button>
+
+        <div className="mx-1 h-5 w-px bg-zinc-300 self-center" />
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().setTextAlign("left").run()}
+          disabled={!isWysiwyg}
+          className={cn(
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            editor.isActive({ textAlign: "left" }) && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
+          )}
+          title="Align Left"
+        >
+          <AlignLeft className="size-4" />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().setTextAlign("center").run()}
+          disabled={!isWysiwyg}
+          className={cn(
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            editor.isActive({ textAlign: "center" }) && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
+          )}
+          title="Align Center"
+        >
+          <AlignCenter className="size-4" />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().setTextAlign("right").run()}
+          disabled={!isWysiwyg}
+          className={cn(
+            "grid size-8 place-items-center rounded-lg border border-transparent text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900 disabled:opacity-40",
+            editor.isActive({ textAlign: "right" }) && "bg-zinc-200 border-zinc-300 text-zinc-900 font-semibold",
+          )}
+          title="Align Right"
+        >
+          <AlignRight className="size-4" />
         </button>
 
         <div className="mx-1 h-5 w-px bg-zinc-300 self-center" />
