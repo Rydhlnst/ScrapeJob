@@ -1,6 +1,8 @@
 import { Mail, MapPin, Phone } from "lucide-react"
 
 import { ContactForm } from "@/components/public/contact-form"
+
+export const dynamic = "force-dynamic"
 import { Container } from "@/components/shared/Container"
 import { Footer } from "@/components/shared/Footer"
 import { Navbar } from "@/components/shared/Navbar"
