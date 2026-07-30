@@ -108,44 +108,42 @@ export default async function BlogIndexPage() {
       <main className="pb-16 pt-10 md:pt-14">
         <SiteFrame>
           <SiteContent>
-            <div className="mx-auto max-w-5xl">
-              <div className="flex items-center gap-2 text-xs text-slate-500">
-                <Link href="/" className="hover:text-[var(--brand-blue)]">
-                  Beranda
-                </Link>
-                <span className="text-slate-300">/</span>
-                <span className="text-[var(--brand-blue)]">Blog</span>
-              </div>
-
-              <h1 className="mt-4 text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-[var(--brand-ink)] md:text-5xl">
-                Blog Lowonganku
-              </h1>
-              <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 md:text-lg">
-                Panduan pencarian kerja, insight karier, dan cerita seputar dunia kerja — ditulis untuk membantu langkah berikutnya.
-              </p>
-
-              {articles.data.length === 0 ? (
-                <div className="mt-10 rounded-2xl bg-slate-50 p-10 text-center">
-                  <div className="text-lg font-semibold text-[var(--brand-ink)]">
-                    Belum ada artikel
-                  </div>
-                  <p className="mt-2 text-sm text-slate-600">
-                    Artikel akan tampil di sini begitu tim publikasikan tulisan pertama.
-                  </p>
-                </div>
-              ) : (
-                <div className="mt-10 space-y-6">
-                  {featured ? <ArticleCard article={featured} featured /> : null}
-                  {rest.length ? (
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                      {rest.map((article) => (
-                        <ArticleCard key={article.id} article={article} />
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
-              )}
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <Link href="/" className="hover:text-[var(--brand-blue)]">
+                Beranda
+              </Link>
+              <span className="text-slate-300">/</span>
+              <span className="text-[var(--brand-blue)]">Blog</span>
             </div>
+
+            <h1 className="mt-4 text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-[var(--brand-ink)] md:text-5xl">
+              Blog Lowonganku
+            </h1>
+            <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 md:text-lg">
+              Panduan pencarian kerja, insight karier, dan cerita seputar dunia kerja — ditulis untuk membantu langkah berikutnya.
+            </p>
+
+            {articles.data.length === 0 ? (
+              <div className="mt-10 rounded-2xl bg-slate-50 p-10 text-center">
+                <div className="text-lg font-semibold text-[var(--brand-ink)]">
+                  Belum ada artikel
+                </div>
+                <p className="mt-2 text-sm text-slate-600">
+                  Artikel akan tampil di sini begitu tim publikasikan tulisan pertama.
+                </p>
+              </div>
+            ) : (
+              <div className="mt-10 space-y-6">
+                {featured ? <ArticleCard article={featured} featured /> : null}
+                {rest.length ? (
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {rest.map((article) => (
+                      <ArticleCard key={article.id} article={article} />
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            )}
           </SiteContent>
         </SiteFrame>
       </main>

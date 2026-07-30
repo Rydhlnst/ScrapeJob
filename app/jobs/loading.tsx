@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton"
+import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
 
 function JobCardSkeleton() {
   return (
@@ -39,7 +40,8 @@ export default function JobsLoading() {
       <div className="h-16 border-b border-slate-100 bg-white" />
 
       <main className="py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SiteFrame>
+          <SiteContent>
           <div className="space-y-8">
             <section className="rounded-[36px] bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] md:p-7">
               <Skeleton className="h-6 w-40 rounded-full" />
@@ -79,7 +81,8 @@ export default function JobsLoading() {
               </div>
             </div>
           </div>
-        </div>
+          </SiteContent>
+        </SiteFrame>
       </main>
     </div>
   )

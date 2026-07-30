@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 
 import { cn } from "@/lib/utils"
 
-export const SITE_CONTENT_CLASS = "mx-auto w-full max-w-[1480px] px-4 sm:px-6 lg:px-8"
+export const SITE_CONTENT_CLASS = "mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8"
 
 export function SiteFrame({
   children,
