@@ -1,154 +1,71 @@
-# Coolify Deployment
+# Coolify Deployment — Simplified
 
-Use a single Coolify Docker Compose resource.
+One resource, one compose file, one env paste. Done.
 
-Compose file:
-- `docker-compose.coolify.yml`
+- Frontend: `https://scrape.beres.io`
+- Backend: `https://scrapejob.beres.io`
 
-Do not split `web`, `queue`, `scheduler`, and `infra` into separate resources unless you also manage cross-resource networking yourself.
+---
 
-## 1. Create Resource
+## 1. Create Resource (once)
 
-Create 1 Coolify Docker Compose resource from the same repository and branch.
+1. Coolify Dashboard → **+ New Resource** → **Docker Compose** (from Git).
+2. Pick your repo & branch.
+3. Compose file location: `docker-compose.coolify.yml` *(no leading `/`)*.
 
-1. `app`
-   - Compose file: `docker-compose.coolify.yml`
+That's the only file you need. It defines all 6 services:
+`frontend`, `backend`, `queue`, `scheduler`, `db`, `redis` — env for backend/queue/scheduler is shared via a single YAML anchor, so there is nothing to keep in sync.
 
-Use the repo-relative path in Coolify.
-Do not prefix the compose file path with `/`.
+## 2. Set Domains (in Coolify UI)
 
-## 2. Domains
+| Service  | Domain                     | Port |
+|----------|----------------------------|------|
+| frontend | `https://scrape.beres.io`   | 3000 |
+| backend  | `https://scrapejob.beres.io`| 80   |
 
-Public domains:
-- `frontend` -> `https://jobs.yourdomain.com`
-- `backend` -> `https://api.yourdomain.com`
+Leave `queue`, `scheduler`, `db`, `redis` without domains.
 
-No public domains:
-- `queue`
-- `scheduler`
-- `db`
-- `redis`
+## 3. Paste Environment Variables
 
-## 3. Recommended Order
+Copy the entire contents of **`.env.coolify`** from the repo root into Coolify's
+**Environment Variables → Bulk Import** (or paste manually).
 
-1. Configure environment variables
-2. Deploy `app`
-3. Verify `frontend`, `backend`, `db`, `redis`, `queue`, and `scheduler` are healthy
-4. Run migrations and seeders manually in `backend`
+The file is final for both domains — secrets (`APP_KEY`, `POSTGRES_PASSWORD`,
+`SCRAPER_INTERNAL_API_TOKEN`, `ADMIN_PASSWORD`) are already generated.
 
-## 4. Environment
+> Keep `RUN_MIGRATIONS=true` for the first deploy — it auto-runs
+> `migrate` + role & admin seeding. After the first successful deploy,
+> set it to `false` and redeploy.
 
-Use this core application configuration:
+## 4. Deploy
 
-```env
-APP_NAME=Job Loker API
-APP_ENV=production
-APP_DEBUG=false
-APP_KEY=base64:GENERATE_WITH_php_artisan_key_generate_show
-APP_URL=https://api.yourdomain.com
-FRONTEND_URL=https://jobs.yourdomain.com
-SESSION_DRIVER=database
-SESSION_DOMAIN=.yourdomain.com
-SANCTUM_STATEFUL_DOMAINS=jobs.yourdomain.com
-CACHE_STORE=database
-QUEUE_CONNECTION=database
-SCRAPER_INTERNAL_API_TOKEN=use-a-long-random-token
-SCRAPER_PYTHON_MODE=local
-SCRAPER_PYTHON_BIN=python3
-LOG_CHANNEL=stack
-LOG_STACK=single
-LOG_LEVEL=warning
-ENABLE_LARAVEL_CACHE_WARMUP=true
-```
+Click **Deploy** and wait until all 6 services are healthy.
 
-## 5. Database and Redis
+First build takes a while (PHP extensions + Playwright/Chromium).
+Subsequent builds are cached.
 
-With the single Compose resource, use the internal service names directly:
+## 5. Verify
 
-```env
-DB_CONNECTION=pgsql
-DB_HOST=db
-DB_PORT=5432
-DB_DATABASE=job_platform
-DB_USERNAME=postgres
-DB_PASSWORD=your-password
+- [ ] `https://scrape.beres.io` loads the homepage
+- [ ] `https://scrapejob.beres.io/api/healthz` returns `{"status":"ok"}`
+- [ ] `https://scrape.beres.io/admin` — login with `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `.env.coolify`
+- [ ] `queue` & `scheduler` containers healthy
 
-REDIS_CLIENT=phpredis
-REDIS_HOST=redis
-REDIS_PORT=6379
-REDIS_PASSWORD=
-```
+## Troubleshooting
 
-Set the matching Postgres container values too:
+| Symptom | Fix |
+|---|---|
+| Backend unhealthy | Check `APP_KEY` and `POSTGRES_PASSWORD` are set (entrypoint exits if missing) |
+| Frontend can't reach API | `NEXT_PUBLIC_API_BASE_URL` must be `https://scrapejob.beres.io` (also a build arg — rebuild after changing) |
+| Migrations didn't run | Set `RUN_MIGRATIONS=true`, redeploy, then set back to `false` |
+| 502 after deploy | Wait for healthchecks (60s start period), then check service logs |
 
-```env
-POSTGRES_DB=job_platform
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=your-password
-```
+---
 
-## 6. Required Variables
+## Files (reference)
 
-Required for `docker-compose.coolify.yml`:
-
-```env
-NEXT_PUBLIC_API_BASE_URL=https://api.yourdomain.com
-INTERNAL_API_BASE_URL=http://backend
-NEXT_PUBLIC_USE_MOCK=false
-RUN_MIGRATIONS=false
-AI_CLEANUP_ENABLED=false
-AI_CLEANUP_URL=http://frontend:3000/api/internal/clean-job
-```
-
-Notes:
-- `NEXT_PUBLIC_API_BASE_URL` is build-time. Rebuild after changing it.
-- Keep `RUN_MIGRATIONS=false` for first deploy.
-- Run migrations manually from the `backend` terminal after the stack is healthy.
-- Keep `RUN_MIGRATIONS=false` after migration unless you intentionally need startup-time migration on a later deploy.
-
-## 7. Queue and Scheduler Variables
-
-```env
-QUEUE_TRIES=3
-QUEUE_TIMEOUT=900
-SCRAPER_SCHEDULE_ENABLED=true
-SCRAPER_SCHEDULE_CRON=0 */8 * * *
-SCRAPER_SCHEDULE_TIMEZONE=Asia/Jakarta
-```
-
-## 8. First-Time Setup
-
-Use `.env.coolify.example` as the starting point for the resource environment.
-
-After the stack is healthy, open the `backend` terminal and run:
-
-```bash
-php artisan migrate --force
-php artisan db:seed --class=RolePermissionSeeder --force
-php artisan db:seed --class=AdminUserSeeder --force
-php artisan optimize:clear
-```
-
-Do not enable `RUN_MIGRATIONS` for the initial deploy.
-
-If you temporarily enable it for a later schema rollout, turn it back to:
-
-```env
-RUN_MIGRATIONS=false
-```
-
-after the deployment completes and redeploy the stack.
-
-## 9. Rollback
-
-- If deploy fails before migration, redeploy the previous image/config.
-- If migration fails, stop the rollout, restore the database from backup or snapshot, and redeploy the last known good stack.
-
-## 10. Verification
-
-Check:
-- frontend homepage works
-- `https://api.yourdomain.com/api/healthz` returns success
-- admin login works
-- `queue` stays running
-- `scheduler` stays running
+| File | Purpose |
+|---|---|
+| `docker-compose.coolify.yml` | The single Coolify compose file (all services) |
+| `.env.coolify` | Final env with real secrets — **never commit** (gitignored) |
+| `.env.coolify.example` | Committed template with placeholders |

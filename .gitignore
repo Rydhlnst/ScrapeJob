@@ -11,6 +11,7 @@ Thumbs.db
 
 .env
 .env.*.local
+.env.coolify
 
 npm-debug.log*
 pnpm-debug.log*

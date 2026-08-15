@@ -1,13 +1,50 @@
+# Shared Laravel environment for backend / queue / scheduler.
+# Single source of truth — edit here once, applies to all three services.
+x-laravel-env: &laravel-env
+  APP_NAME: ${APP_NAME:-Job Loker API}
+  APP_ENV: production
+  APP_KEY: ${APP_KEY}
+  APP_DEBUG: "false"
+  APP_URL: ${APP_URL:-https://scrapejob.beres.io}
+  FRONTEND_URL: ${FRONTEND_URL:-https://scrape.beres.io}
+  DB_CONNECTION: pgsql
+  DB_HOST: db
+  DB_PORT: 5432
+  DB_DATABASE: ${POSTGRES_DB:-job_platform}
+  DB_USERNAME: ${POSTGRES_USER:-postgres}
+  DB_PASSWORD: ${POSTGRES_PASSWORD}
+  REDIS_CLIENT: phpredis
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+  SESSION_DRIVER: ${SESSION_DRIVER:-database}
+  SESSION_DOMAIN: ${SESSION_DOMAIN:-.beres.io}
+  SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS:-scrape.beres.io}
+  CACHE_STORE: ${CACHE_STORE:-database}
+  QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
+  SCRAPER_ACTIVE_SOURCES: ${SCRAPER_ACTIVE_SOURCES:-glints,jobstreet}
+  SCRAPER_SCHEDULE_ENABLED: "true"
+  SCRAPER_SCHEDULE_CRON: ${SCRAPER_SCHEDULE_CRON:-0 */8 * * *}
+  SCRAPER_SCHEDULE_TIMEZONE: ${SCRAPER_SCHEDULE_TIMEZONE:-Asia/Jakarta}
+  SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
+  SCRAPER_PYTHON_MODE: local
+  SCRAPER_PYTHON_BIN: python3
+  WAIT_FOR_DB: "true"
+  AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-false}
+  AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
+  LOG_CHANNEL: ${LOG_CHANNEL:-stack}
+  LOG_LEVEL: ${LOG_LEVEL:-warning}
+
 services:
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-https://scrapejob.beres.io}
         NEXT_PUBLIC_USE_MOCK: ${NEXT_PUBLIC_USE_MOCK:-false}
     environment:
-      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-https://scrapejob.beres.io}
       INTERNAL_API_BASE_URL: ${INTERNAL_API_BASE_URL:-http://backend}
       NEXT_PUBLIC_USE_MOCK: ${NEXT_PUBLIC_USE_MOCK:-false}
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-}
@@ -34,44 +71,12 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     environment:
-      APP_NAME: ${APP_NAME:-Job Loker API}
-      APP_ENV: production
-      APP_KEY: ${APP_KEY}
-      APP_DEBUG: "false"
-      APP_URL: ${APP_URL}
-      FRONTEND_URL: ${FRONTEND_URL}
-      DB_CONNECTION: pgsql
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_DATABASE: ${POSTGRES_DB:-job_platform}
-      DB_USERNAME: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      REDIS_CLIENT: phpredis
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
-      SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS}
-      SESSION_DRIVER: ${SESSION_DRIVER:-database}
-      SESSION_DOMAIN: ${SESSION_DOMAIN:-}
-      CACHE_STORE: ${CACHE_STORE:-database}
-      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
-      SCRAPER_ACTIVE_SOURCES: ${SCRAPER_ACTIVE_SOURCES:-glints,jobstreet}
-      SCRAPER_SCHEDULE_ENABLED: "true"
-      SCRAPER_SCHEDULE_CRON: ${SCRAPER_SCHEDULE_CRON:-0 */8 * * *}
-      SCRAPER_SCHEDULE_TIMEZONE: ${SCRAPER_SCHEDULE_TIMEZONE:-Asia/Jakarta}
-      SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
-      SCRAPER_PYTHON_MODE: local
-      SCRAPER_PYTHON_BIN: python3
-      WAIT_FOR_DB: "true"
+      <<: *laravel-env
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-false}
       ENABLE_LARAVEL_CACHE_WARMUP: "true"
-      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-true}
-      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@beres.io}
       ADMIN_NAME: "${ADMIN_NAME:-Super Admin}"
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
-      AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
-      AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
-      LOG_CHANNEL: ${LOG_CHANNEL:-stack}
-      LOG_LEVEL: ${LOG_LEVEL:-warning}
     depends_on:
       db:
         condition: service_healthy
@@ -89,35 +94,9 @@ services:
     image: scrapejob-backend:coolify
     user: www-data
     environment:
-      APP_NAME: ${APP_NAME:-Job Loker API}
-      APP_ENV: production
-      APP_KEY: ${APP_KEY}
-      APP_DEBUG: "false"
-      APP_URL: ${APP_URL}
-      FRONTEND_URL: ${FRONTEND_URL}
-      DB_CONNECTION: pgsql
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_DATABASE: ${POSTGRES_DB:-job_platform}
-      DB_USERNAME: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      REDIS_CLIENT: phpredis
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
-      SESSION_DRIVER: ${SESSION_DRIVER:-database}
-      CACHE_STORE: ${CACHE_STORE:-database}
-      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
+      <<: *laravel-env
       QUEUE_TRIES: ${QUEUE_TRIES:-3}
       QUEUE_TIMEOUT: ${QUEUE_TIMEOUT:-900}
-      SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
-      SCRAPER_PYTHON_MODE: local
-      SCRAPER_PYTHON_BIN: python3
-      WAIT_FOR_DB: "true"
-      AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
-      AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
-      LOG_CHANNEL: ${LOG_CHANNEL:-stack}
-      LOG_LEVEL: ${LOG_LEVEL:-warning}
     command: ["/var/www/html/docker/start-worker.sh"]
     depends_on:
       db:
@@ -132,36 +111,7 @@ services:
     image: scrapejob-backend:coolify
     user: www-data
     environment:
-      APP_NAME: ${APP_NAME:-Job Loker API}
-      APP_ENV: production
-      APP_KEY: ${APP_KEY}
-      APP_DEBUG: "false"
-      APP_URL: ${APP_URL}
-      FRONTEND_URL: ${FRONTEND_URL}
-      DB_CONNECTION: pgsql
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_DATABASE: ${POSTGRES_DB:-job_platform}
-      DB_USERNAME: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      REDIS_CLIENT: phpredis
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
-      SESSION_DRIVER: ${SESSION_DRIVER:-database}
-      CACHE_STORE: ${CACHE_STORE:-database}
-      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
-      SCRAPER_SCHEDULE_ENABLED: "true"
-      SCRAPER_SCHEDULE_CRON: ${SCRAPER_SCHEDULE_CRON:-0 */8 * * *}
-      SCRAPER_SCHEDULE_TIMEZONE: ${SCRAPER_SCHEDULE_TIMEZONE:-Asia/Jakarta}
-      SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
-      SCRAPER_PYTHON_MODE: local
-      SCRAPER_PYTHON_BIN: python3
-      WAIT_FOR_DB: "true"
-      AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
-      AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
-      LOG_CHANNEL: ${LOG_CHANNEL:-stack}
-      LOG_LEVEL: ${LOG_LEVEL:-warning}
+      <<: *laravel-env
     command: ["/var/www/html/docker/start-scheduler.sh"]
     depends_on:
       db:
