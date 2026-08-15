@@ -39,10 +39,25 @@ The file is final for both domains — secrets (`APP_KEY`, `POSTGRES_PASSWORD`,
 
 ## 4. Deploy
 
-Click **Deploy** and wait until all 6 services are healthy.
+Click **Deploy** dan tunggu semua 6 service healthy.
 
-First build takes a while (PHP extensions + Playwright/Chromium).
-Subsequent builds are cached.
+Build pertama butuh waktu (PHP extensions + Playwright/Chromium). Build berikutnya pakai cache.
+
+## 4.5. Set `API_BEARER_TOKEN` (setelah deploy pertama)
+
+`API_BEARER_TOKEN` adalah Sanctum token yang dipakai Next.js (SSR) untuk call backend tanpa user login.
+Harus diisi **setelah** database jalan, bukan sebelum.
+
+1. Di Coolify, buka terminal container **backend**.
+2. Jalankan:
+   ```bash
+   php artisan sanctum:create-token scrape-frontend
+   ```
+3. Copy token yang muncul.
+4. Di Coolify **Environment Variables**, set `API_BEARER_TOKEN` = token tersebut.
+5. **Redeploy hanya service `frontend`** (bukan full redeploy).
+
+> **Catatan:** Untuk deploy selanjutnya, token ini sudah tersimpan — tidak perlu diulang.
 
 ## 5. Verify
 
