@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import { listCategories } from "@/lib/api/categories"
+import { listAdminCategories } from "@/lib/api/admin-categories"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminShell } from "@/components/admin/admin-shell"
 import { CategoryTable } from "@/components/admin/category-table"
@@ -16,7 +16,7 @@ export default function AdminCategoriesPage() {
   React.useEffect(() => {
     let active = true
 
-    listCategories()
+    listAdminCategories()
       .then((result) => {
         if (active) {
           setCategories(result)

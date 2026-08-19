@@ -8,6 +8,7 @@ import { JobPreviewBar } from "@/components/admin/job-preview-bar"
 import { JobDetailContent } from "@/components/public/job-detail-content"
 import { JobSummaryCard } from "@/components/public/job-summary-card"
 import type { Job } from "@/types"
+import type { AdminJobRecord } from "@/lib/api/admin-jobs"
 
 export default function AdminJobPreviewPage() {
   const params = useParams<{ id: string }>()
@@ -49,7 +50,10 @@ export default function AdminJobPreviewPage() {
 
   return (
     <div className="space-y-4">
-      <JobPreviewBar jobId={job.id} />
+      <JobPreviewBar
+        jobId={job.id}
+        onChanged={(updated: AdminJobRecord) => setJob(updated)}
+      />
       <main className="mx-auto max-w-6xl">
         <div className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
           <JobDetailContent job={job} />
