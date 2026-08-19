@@ -14,7 +14,7 @@ export function SiteFrame({
   return (
     <div
       className={cn(
-        "w-screen max-w-none",
+        "w-full max-w-none",
         className,
       )}
     >

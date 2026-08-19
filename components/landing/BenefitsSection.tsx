@@ -14,7 +14,7 @@ export function BenefitsSection({ content, copy, visualCopy, jobs = [] }: { cont
     <section className="overflow-hidden bg-white py-20 md:py-28" id="features">
       <Container>
         <div className="grid items-center gap-12 lg:grid-cols-[.85fr_1.15fr] lg:gap-20">
-          <Reveal>
+          <Reveal className="min-w-0">
             <LandingEyebrow>{copy.eyebrow}</LandingEyebrow>
             <h2 className="mt-5 max-w-xl text-4xl font-extrabold leading-[1.05] tracking-[-.06em] text-[#171717] md:text-6xl">{content.title}</h2>
             <p className="mt-6 max-w-lg text-base leading-7 text-slate-500">{content.items[0]?.description ?? "Cari lowongan dari banyak sumber tanpa kehilangan konteks penting sebelum kamu melamar."}</p>
@@ -35,7 +35,7 @@ export function BenefitsSection({ content, copy, visualCopy, jobs = [] }: { cont
             </div>
           </Reveal>
 
-          <Reveal delay={0.1} className="relative min-h-[430px] overflow-hidden rounded-[34px] bg-[#dceeff] p-6 sm:min-h-[500px] sm:p-10">
+          <Reveal delay={0.1} className="relative min-w-0 min-h-[430px] overflow-hidden rounded-[34px] bg-[#dceeff] p-6 sm:min-h-[500px] sm:p-10">
             <div className="absolute -right-20 -top-20 size-[310px] rounded-full bg-[#ffd36a] opacity-85" />
             <div className="absolute -bottom-24 -left-12 size-[310px] rounded-full bg-[#3f95e8]" />
             <div className="relative mx-auto mt-5 max-w-[500px] rounded-[24px] border border-white/70 bg-white/95 p-4 shadow-[0_20px_0_rgba(23,23,23,.08)] sm:p-5">

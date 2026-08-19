@@ -56,7 +56,7 @@ export function FAQSection({ content }: { content: LandingSectionCopy["faq"] }) 
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <section className="w-screen max-w-none bg-[#fffdf8] py-16 md:py-24" id="faq">
+    <section className="w-full max-w-none bg-[#fffdf8] py-16 md:py-24" id="faq">
       <Container>
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.35fr] lg:gap-24">
           {/* Left: Heading */}

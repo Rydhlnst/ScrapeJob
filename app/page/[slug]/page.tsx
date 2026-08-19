@@ -110,9 +110,9 @@ export default async function PublicPage({
       : new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })
 
     return (
-      <div className="min-h-screen w-screen max-w-none overflow-x-hidden bg-[#fffdf8]">
+      <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#fffdf8]">
         <Navbar jobs={navbarData.jobs} categories={navbarData.categories} totalJobs={navbarData.totalJobs} />
-        <main className="w-full max-w-screen overflow-x-hidden bg-[#fffdf8] pb-16 pt-0">
+        <main className="w-full max-w-screen overflow-x-hidden bg-[#fffdf8] pb-16 pt-24">
           <SiteFrame>
             <SiteContent>
               <Link

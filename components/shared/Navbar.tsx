@@ -27,7 +27,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { SiteFrame } from "@/components/shared/SiteShell"
+import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
 import { cn } from "@/lib/utils"
 import type { Category as SiteCategory, Job as SiteJob } from "@/types"
 
@@ -623,9 +623,9 @@ export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
   const contactActive = pathname.startsWith("/contact")
 
   return (
-    <header className={cn("sticky inset-x-0 top-0 z-50 w-full border-b border-black/10", isHome ? "bg-[#fffdf8]/95 backdrop-blur-md" : "bg-white/95 backdrop-blur-sm")}>
+    <header className={cn("fixed inset-x-0 top-0 z-50 w-full border-b border-black/10", isHome ? "bg-[#fffdf8]/95 backdrop-blur-md" : "bg-white/95 backdrop-blur-sm")}>
       <SiteFrame className={cn(isHome && "bg-[#fffdf8]")}>
-        <div className="flex h-24 items-center justify-between px-4 sm:px-6 lg:px-8">
+        <SiteContent className="flex h-24 items-center justify-between">
           <Logo />
           <DesktopNav menuData={menuData} />
           <div className="hidden items-center gap-2 lg:flex">
@@ -640,7 +640,7 @@ export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
             </Button>
           </div>
           <MobileDrawer menuData={menuData} />
-        </div>
+        </SiteContent>
       </SiteFrame>
     </header>
   )

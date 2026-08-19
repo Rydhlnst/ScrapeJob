@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import type { LandingSectionCopy } from "@/types/landing-content"
+import { SiteContent } from "@/components/shared/SiteShell"
 
 const fallbackContent: LandingSectionCopy["footer"] = {
   eyebrow: "Siap menemukan peluang berikutnya?", title: "Jelajahi lowongan", description: "Explore job opportunities with more clarity, more confidence, and less noise.", columns: [
@@ -14,11 +15,11 @@ const fallbackContent: LandingSectionCopy["footer"] = {
 export function Footer({ content }: { content?: LandingSectionCopy["footer"] }) {
   const footer = content ?? fallbackContent
   return (
-    <footer className="relative w-screen overflow-hidden bg-[#1f5f9f] text-white">
+    <footer className="relative w-full overflow-hidden bg-[#1f5f9f] text-white">
       <div className="pointer-events-none absolute -right-20 -top-28 size-[430px] rounded-full border-[62px] border-white/10" />
       <div className="pointer-events-none absolute right-20 top-16 h-2 w-32 rounded-full bg-[#ffd36a]" />
       <div className="pointer-events-none absolute -bottom-48 right-[18%] size-[410px] -rotate-45 border-[82px] border-white/10" />
-      <div className="relative mx-auto max-w-[1400px] px-7 py-16 sm:px-12 lg:px-16 lg:py-20">
+      <SiteContent className="relative py-16 lg:py-20">
         <div className="max-w-2xl">
           <p className="text-sm font-semibold text-[#ffd36a]">{footer.eyebrow}</p>
           <Link href="/jobs" className="group mt-3 inline-flex items-center gap-3 border-b border-white/55 pb-3 text-4xl font-extrabold tracking-[-.065em] text-white transition-colors hover:text-[#ffd36a] sm:text-5xl">{footer.title} <ArrowRight className="size-9 transition-transform group-hover:translate-x-1" /></Link>
@@ -39,7 +40,7 @@ export function Footer({ content }: { content?: LandingSectionCopy["footer"] }) 
           ))}
         </div>
         <div className="mt-12 border-t border-white/20 pt-6 text-xs text-white/55">© {new Date().getFullYear()} Lowonganku. All rights reserved.</div>
-      </div>
+      </SiteContent>
     </footer>
   )
 }

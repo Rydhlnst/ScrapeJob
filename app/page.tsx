@@ -42,9 +42,9 @@ export default async function HomePage() {
   const sourcesCount = new Set(homepageJobs.map((job) => job.sourceName)).size
 
   return (
-    <div className="min-h-screen w-screen max-w-none overflow-x-hidden bg-[#fffdf8]">
+    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#fffdf8]">
       <Navbar jobs={navJobsRes.data} categories={categories} totalJobs={jobsRes.total} />
-      <main className="w-full pt-0">
+      <main className="w-full pt-24">
         {/* 1. Hero — bold headline, search, stats, illustration */}
         <HeroSection
           totalJobs={jobsRes.total || homepageJobs.length}

@@ -101,10 +101,10 @@ export default async function JobsPage({
   ]
 
   return (
-    <div className="min-h-screen w-screen max-w-none overflow-x-hidden bg-[#fffdf8]">
+    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#fffdf8]">
       <Navbar jobs={navJobs.data} categories={categories} totalJobs={jobs.total} />
 
-      <main className="min-h-screen w-full bg-[#fffdf8] pt-0 pb-16">
+      <main className="min-h-screen w-full bg-[#fffdf8] pt-24 pb-16">
         <SiteFrame>
           <SiteContent>
           <div className="space-y-8">

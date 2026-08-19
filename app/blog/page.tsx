@@ -98,14 +98,14 @@ export default async function BlogIndexPage() {
   const [featured, ...rest] = articles.data
 
   return (
-    <div className="min-h-screen w-screen max-w-none overflow-x-hidden bg-[#fffdf8]">
+    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#fffdf8]">
       <Navbar
         jobs={navbarData.jobs}
         categories={navbarData.categories}
         totalJobs={navbarData.totalJobs}
       />
 
-      <main className="w-full bg-[#fffdf8] pb-16 pt-0">
+      <main className="w-full bg-[#fffdf8] pb-16 pt-24">
         <SiteFrame>
           <SiteContent>
             <div className="flex items-center gap-2 text-xs text-slate-500">

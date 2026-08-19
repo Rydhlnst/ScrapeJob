@@ -26,8 +26,8 @@ export function HeroSection({
 }) {
   return (
     <section className="w-full overflow-hidden bg-[#fffdf8] pt-0">
-      <div className="mx-auto grid max-w-[1400px] overflow-hidden border-y border-black/10 bg-[#fffdf8] lg:grid-cols-[.94fr_1.06fr] lg:border-x">
-        <Reveal className="flex min-h-[590px] flex-col justify-center px-6 py-14 sm:px-12 lg:px-16 lg:py-20">
+      <div className="mx-auto grid w-full max-w-[1400px] overflow-hidden border-y border-black/10 bg-[#fffdf8] lg:grid-cols-[.94fr_1.06fr] lg:border-x">
+        <Reveal className="flex min-w-0 flex-col justify-center px-6 py-14 sm:px-12 lg:px-16 lg:py-20">
           <LandingEyebrow>{copy.eyebrow}</LandingEyebrow>
           <h1 className="mt-6 max-w-xl text-5xl font-extrabold leading-[.96] tracking-[-.075em] text-[#171717] sm:text-6xl lg:text-7xl">
             {content.title}
@@ -58,7 +58,7 @@ export function HeroSection({
           </div>
         </Reveal>
 
-        <Reveal delay={0.1} className="relative isolate min-h-[470px] overflow-hidden bg-[#1f5f9f] sm:min-h-[590px] lg:min-h-full">
+        <Reveal delay={0.1} className="relative isolate min-h-[470px] min-w-0 overflow-hidden bg-[#1f5f9f] sm:min-h-[590px] lg:min-h-full">
           <div className="absolute -right-20 -top-16 h-[52%] w-[42%] -skew-x-12 bg-[#ffd36a] opacity-75" />
           <div className="absolute -left-10 bottom-0 h-[28%] w-[54%] -skew-x-12 bg-white/10" />
           <div className="absolute bottom-8 right-8 grid grid-cols-4 gap-2 opacity-25 sm:bottom-12 sm:right-12">
@@ -86,7 +86,7 @@ export function HeroSection({
         </Reveal>
       </div>
 
-      <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-center gap-x-12 gap-y-4 border-b border-black/10 bg-white px-6 py-8 text-xl font-extrabold tracking-[-.06em] text-[#171717] sm:justify-between sm:px-12 lg:px-16">
+      <div className="mx-auto flex w-full max-w-[1400px] flex-wrap items-center justify-center gap-x-12 gap-y-4 border-b border-black/10 bg-white px-6 py-8 text-xl font-extrabold tracking-[-.06em] text-[#171717] sm:justify-between sm:px-12 lg:px-16">
         {(companies.length ? companies : []).slice(0, 5).map((company) => <span key={company.id}>{company.name}</span>)}
       </div>
     </section>

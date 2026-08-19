@@ -39,7 +39,7 @@ export function HowItWorks({ content }: { content: LandingSectionCopy["how"] }) 
             const design = icons[index] ?? icons[0]
             const Icon = design.icon
             return (
-              <Reveal key={step.title} delay={index * 0.08}>
+              <Reveal key={step.title} delay={index * 0.08} className="min-w-0">
                 <article className="relative rounded-[28px] border border-black/10 bg-white px-7 pb-8 pt-12 text-center shadow-[0_8px_0_rgba(23,23,23,.04)] transition-transform duration-200 hover:-translate-y-1">
                 <div className={`absolute -top-7 left-1/2 grid size-14 -translate-x-1/2 place-items-center rounded-full border-4 border-[#f6f9fc] ${design.color}`}><Icon className="size-6" /></div>
                 <h3 className="text-xl font-extrabold tracking-[-.04em] text-[#171717]">{step.title}</h3>

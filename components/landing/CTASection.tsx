@@ -12,7 +12,7 @@ export function CTASection({ content, copy, visualCopy, jobs = [] }: { content: 
     <section className="overflow-hidden bg-[#1f5f9f] py-20 text-white md:py-28">
       <Container>
         <div className="grid items-center gap-14 lg:grid-cols-[.88fr_1.12fr] lg:gap-20">
-          <Reveal>
+          <Reveal className="min-w-0">
             <LandingEyebrow><span className="text-[#ffd36a]">{copy.eyebrow}</span></LandingEyebrow>
             <h2 className="mt-5 max-w-xl text-4xl font-extrabold leading-[1.05] tracking-[-.065em] text-white md:text-6xl">{content.title}</h2>
             <p className="mt-6 max-w-lg text-base leading-7 text-white/75">{content.body}</p>
@@ -22,7 +22,7 @@ export function CTASection({ content, copy, visualCopy, jobs = [] }: { content: 
             </div>
           </Reveal>
 
-          <Reveal delay={0.1} className="relative min-h-[350px] sm:min-h-[390px]">
+          <Reveal delay={0.1} className="relative min-w-0 min-h-[350px] sm:min-h-[390px]">
             <div className="absolute left-[8%] top-[15%] h-[70%] border-l-2 border-dashed border-white/60" />
             <div className="absolute left-[4.3%] top-[12%] grid size-12 place-items-center rounded-full border border-white/30 bg-[#ffd36a] text-[#171717]"><Search className="size-5" /></div>
             <div className="absolute bottom-[10%] left-[4.3%] grid size-12 place-items-center rounded-full border border-white/30 bg-[#dceeff] text-[#2479d1]"><CheckCircle2 className="size-5" /></div>

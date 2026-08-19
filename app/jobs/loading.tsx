@@ -36,8 +36,8 @@ function FilterOptionSkeleton() {
 
 export default function JobsLoading() {
   return (
-    <div className="min-h-screen w-screen max-w-none overflow-x-hidden bg-[#fffdf8]">
-      <div className="h-20 border-b border-black/10 bg-white" />
+    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#fffdf8]">
+      <div className="h-24 border-b border-black/10 bg-white" />
 
       <main className="w-full pb-8 pt-0">
         <SiteFrame>
