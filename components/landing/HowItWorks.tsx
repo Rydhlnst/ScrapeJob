@@ -13,7 +13,7 @@ const icons = [
   },
   {
     icon: Sparkles,
-    color: "bg-[#fff0c6] text-[#9a6700]",
+    color: "bg-white text-[#2479d1]",
   },
   {
     icon: BriefcaseBusiness,

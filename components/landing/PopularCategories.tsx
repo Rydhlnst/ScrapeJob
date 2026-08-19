@@ -8,13 +8,13 @@ import type { LandingSectionCopy } from "@/types/landing-content"
 export function PopularCategories({ categories, content }: { categories: Category[]; content: LandingSectionCopy["categories"] }) {
   return (
     <section
-      className="relative overflow-hidden border-b border-black/10 bg-[#fffdf8] py-20 md:py-28"
+      className="relative overflow-hidden border-b border-black/10 bg-white py-20 md:py-28"
       id="categories"
     >
       <Container>
         <div className="mx-auto max-w-3xl text-center">
-          <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#ffd36a] bg-[#fff0c6] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9a6700]">
+          <div className="mx-auto w-full max-w-xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#3f95e8]/30 bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2479d1]">
               <Sparkles className="size-3.5" />
               {content.eyebrow}
             </div>
@@ -32,7 +32,7 @@ export function PopularCategories({ categories, content }: { categories: Categor
             // Cycle through accent colors for variety
             const colors = [
               { bg: "bg-[#dceeff]", fg: "text-[#2479d1]", border: "border-[#b9ddff]" },
-              { bg: "bg-[#fff0c6]", fg: "text-[#9a6700]", border: "border-[#ffe19a]" },
+              { bg: "bg-white", fg: "text-[#2479d1]", border: "border-[#3f95e8]/30" },
               { bg: "bg-[#eaf5ff]", fg: "text-[#2479d1]", border: "border-[#d1e9ff]" },
             ]
             const color = colors[index % colors.length]

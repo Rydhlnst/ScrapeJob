@@ -17,7 +17,6 @@ export function Footer({ content }: { content?: LandingSectionCopy["footer"] }) 
   return (
     <footer className="relative w-full overflow-hidden bg-[#1f5f9f] text-white">
       <div className="pointer-events-none absolute -right-20 -top-28 size-[430px] rounded-full border-[62px] border-white/10" />
-      <div className="pointer-events-none absolute right-20 top-16 h-2 w-32 rounded-full bg-[#ffd36a]" />
       <div className="pointer-events-none absolute -bottom-48 right-[18%] size-[410px] -rotate-45 border-[82px] border-white/10" />
       <SiteContent className="relative py-16 lg:py-20">
         <div className="max-w-2xl">

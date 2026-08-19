@@ -26,7 +26,7 @@ export function BenefitsSection({ content, copy, visualCopy, jobs = [] }: { cont
               {content.items.slice(0, 3).map((item, index) => {
                 const Icon = icons[index] ?? Search
                 return (
-                  <div key={item.title} className="rounded-2xl border border-black/10 bg-[#fffdf8] p-4 shadow-[0_4px_0_rgba(23,23,23,.03)] transition-all duration-200 hover:-translate-y-1 hover:border-[#3f95e8]/40 hover:bg-white hover:shadow-[0_10px_24px_rgba(31,95,159,.10)]">
+                  <div key={item.title} className="rounded-2xl border border-black/10 bg-white p-4 shadow-[0_4px_0_rgba(23,23,23,.03)] transition-all duration-200 hover:-translate-y-1 hover:border-[#3f95e8]/40 hover:bg-white hover:shadow-[0_10px_24px_rgba(31,95,159,.10)]">
                     <Icon className="size-5 text-[#2479d1]" />
                     <p className="mt-3 text-sm font-extrabold tracking-[-.03em] text-[#171717]">{item.title}</p>
                   </div>
@@ -36,10 +36,10 @@ export function BenefitsSection({ content, copy, visualCopy, jobs = [] }: { cont
           </Reveal>
 
           <Reveal delay={0.1} className="relative min-w-0 min-h-[430px] overflow-hidden rounded-[34px] bg-[#dceeff] p-6 sm:min-h-[500px] sm:p-10">
-            <div className="absolute -right-20 -top-20 size-[310px] rounded-full bg-[#ffd36a] opacity-85" />
+            <div className="absolute -right-20 -top-20 size-[310px] rounded-full border border-white/60 bg-white/40" />
             <div className="absolute -bottom-24 -left-12 size-[310px] rounded-full bg-[#3f95e8]" />
             <div className="relative mx-auto mt-5 max-w-[500px] rounded-[24px] border border-white/70 bg-white/95 p-4 shadow-[0_20px_0_rgba(23,23,23,.08)] sm:p-5">
-              <div className="flex items-center gap-3 rounded-xl border border-black/10 bg-[#fffdf8] p-3 text-sm text-slate-400"><Search className="size-4 text-[#2479d1]" /><span className="flex-1">{copy.searchPlaceholder}</span><span className="rounded-lg bg-[#3f95e8] px-4 py-2 text-xs font-bold text-white">{copy.searchLabel}</span></div>
+              <div className="flex items-center gap-3 rounded-xl border border-black/10 bg-white p-3 text-sm text-slate-400"><Search className="size-4 text-[#2479d1]" /><span className="flex-1">{copy.searchPlaceholder}</span><span className="rounded-lg bg-[#3f95e8] px-4 py-2 text-xs font-bold text-white">{copy.searchLabel}</span></div>
               <div className="mt-4 space-y-3"><JobPreviewCard job={jobs[0]} index={0} copy={visualCopy} /><JobPreviewCard job={jobs[1]} index={1} compact copy={visualCopy} /><JobPreviewCard job={jobs[2]} index={2} compact copy={visualCopy} /></div>
             </div>
             <div className="absolute bottom-7 left-5 w-[46%] -rotate-6 rounded-2xl border border-black/10 bg-white p-4 shadow-[0_10px_0_rgba(23,23,23,.08)] sm:bottom-10 sm:left-8">
