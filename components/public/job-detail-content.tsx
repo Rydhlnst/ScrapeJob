@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { CheckCircle2, Lightbulb, Gift } from "lucide-react"
+import { sanitizeHtml } from "@/lib/sanitize"
 
 function decodeEntities(input: string): string {
   return input
@@ -35,14 +36,15 @@ function stripHtml(html: string): string {
 }
 
 function JobDescription({ text }: { text: string }) {
-  return <div className="whitespace-pre-wrap text-slate-700">{stripHtml(text)}</div>
+  const html = text.includes("<") ? text : `<p>${text.replace(/\n+/g, "</p><p>")}</p>`
+  return <div className="rich-text job-detail-copy" dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }} />
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="space-y-3">
-      <h2 className="text-base font-semibold text-foreground">{title}</h2>
-      <div className="text-sm leading-7 text-muted-foreground">{children}</div>
+      <h2 className="text-xl font-extrabold tracking-[-.03em] text-[#171717]">{title}</h2>
+      <div className="text-sm leading-7 text-slate-600">{children}</div>
     </section>
   )
 }
@@ -51,11 +53,11 @@ function ListSection({ title, items, icon: Icon }: { title: string; items: strin
   if (!items || items.length === 0) return null
   return (
     <section className="space-y-3">
-      <h2 className="text-base font-semibold text-foreground">{title}</h2>
-      <div className="rounded-xl bg-slate-50 p-4">
+      <h2 className="text-xl font-extrabold tracking-[-.03em] text-[#171717]">{title}</h2>
+      <div className="rounded-2xl border border-black/10 border-l-4 border-l-[#ffd36a] bg-white p-4">
         <ul className="space-y-2">
           {items.map((item, index) => (
-            <li key={index} className="flex items-start gap-2.5 text-sm text-slate-600">
+            <li key={index} className="flex items-start gap-2.5 text-sm leading-6 text-slate-600">
               <Icon className="mt-0.5 size-4 shrink-0 text-[var(--brand-blue)]" />
               <span>{item}</span>
             </li>
@@ -90,7 +92,7 @@ function CompanyLogo({
   }
 
   return (
-    <div className="grid size-16 shrink-0 place-items-center rounded-2xl bg-accent text-lg font-semibold text-accent-foreground">
+    <div className="grid size-16 shrink-0 place-items-center rounded-2xl border border-[#ffd36a] bg-white text-lg font-semibold text-[#2479d1]">
       {initials(companyName)}
     </div>
   )
@@ -101,14 +103,14 @@ export function JobDetailContent({ job }: { job: Job }) {
   const companyName = job.companyName || "Perusahaan tidak diketahui"
 
   return (
-    <Card className="rounded-[30px] border border-white bg-white p-7 shadow-[var(--shadow-md)]">
+    <Card className="min-w-0 rounded-[30px] border border-black/10 bg-white p-7 shadow-[0_8px_0_rgba(23,23,23,.04)] md:p-9">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <div className="inline-flex w-fit rounded-full border border-accent bg-accent px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-accent-foreground uppercase">
+          <div className="inline-flex w-fit rounded-full border border-[#ffd36a] bg-white px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-[#2479d1] uppercase">
             Detail lowongan
           </div>
 
-          <h1 className="mt-5 text-3xl font-semibold tracking-[-0.04em] text-[var(--brand-ink)] md:text-4xl">
+          <h1 className="jobkan-section-title mt-5 text-4xl font-extrabold tracking-[-0.06em] text-[#171717] md:text-6xl">
             {job.title}
           </h1>
           <p className="mt-3 text-sm text-slate-600">
@@ -118,19 +120,19 @@ export function JobDetailContent({ job }: { job: Job }) {
 
           <div className="mt-6 flex flex-wrap gap-2">
             {job.jobType ? (
-              <Badge variant="outline" className="rounded-full border-accent bg-accent text-accent-foreground">
+              <Badge variant="outline" className="rounded-full border-black/10 bg-white text-slate-700">
                 {job.jobType}
               </Badge>
             ) : null}
             {job.category ? (
-              <Badge variant="outline" className="rounded-full border-border bg-card text-card-foreground">
+              <Badge variant="outline" className="rounded-full border-black/10 bg-white text-slate-700">
                 {job.category}
               </Badge>
             ) : null}
-            <Badge variant="outline" className="rounded-full border-warning/20 bg-warning/10 text-warning">
+            <Badge variant="outline" className="rounded-full border-[#ffd36a] bg-white text-[#171717]">
               {job.salaryText || "Gaji tidak disebutkan"}
             </Badge>
-            <Badge variant="outline" className="rounded-full border-border bg-card text-card-foreground">
+            <Badge variant="outline" className="rounded-full border-black/10 bg-white text-slate-700">
               Sumber: {job.sourceName}
             </Badge>
           </div>
@@ -145,7 +147,7 @@ export function JobDetailContent({ job }: { job: Job }) {
         {description ? (
           <JobDescription text={description} />
         ) : (
-          <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-slate-600">
+          <div className="rounded-2xl border border-dashed border-black/15 bg-white px-4 py-5 text-slate-600">
             Deskripsi lowongan tidak tersedia.
           </div>
         )}

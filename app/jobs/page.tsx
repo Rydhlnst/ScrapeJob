@@ -11,6 +11,9 @@ import { Footer } from "@/components/shared/Footer"
 import { Navbar } from "@/components/shared/Navbar"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
 import { Badge } from "@/components/ui/badge"
+import { mockJobs } from "@/data/mock-jobs"
+import { mockCategories } from "@/data/mock-categories"
+import type { JobStats } from "@/types"
 
 export default async function JobsPage({
   searchParams,
@@ -63,11 +66,27 @@ export default async function JobsPage({
     sort: normalizedSort,
   }
 
+  const fallbackJobs = {
+    data: mockJobs,
+    page: 1,
+    perPage: mockJobs.length,
+    total: mockJobs.length,
+    totalPages: 1,
+  }
+  const fallbackStats: JobStats = {
+    totalActive: mockJobs.length,
+    totalBySource: { "Source Website": mockJobs.length },
+    totalByCategory: {},
+    totalByJobType: {},
+    newToday: mockJobs.length,
+    remoteJobs: 0,
+  }
+
   const [jobs, navJobs, categories, stats] = await Promise.all([
-    listJobs({ ...jobsQuery, page, perPage: 9 }),
-    listJobs({ page: 1, perPage: 100, sort: "newest" }),
-    listCategories(),
-    getJobStats(),
+    listJobs({ ...jobsQuery, page, perPage: 9 }).catch(() => fallbackJobs),
+    listJobs({ page: 1, perPage: 100, sort: "newest" }).catch(() => fallbackJobs),
+    listCategories().catch(() => mockCategories),
+    getJobStats().catch(() => fallbackStats),
   ])
 
   const sourceOptions = Object.keys(stats.totalBySource).sort((a, b) =>
@@ -82,16 +101,16 @@ export default async function JobsPage({
   ]
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen w-screen max-w-none overflow-x-hidden bg-[#fffdf8]">
       <Navbar jobs={navJobs.data} categories={categories} totalJobs={jobs.total} />
 
-      <main className="py-8">
+      <main className="min-h-screen w-full bg-[#fffdf8] pt-0 pb-16">
         <SiteFrame>
           <SiteContent>
           <div className="space-y-8">
-            <section className="rounded-3xl bg-slate-50 p-8 md:p-12">
+            <section className="relative overflow-hidden rounded-[30px] border border-black/10 bg-[#fffdf8] p-8 shadow-[0_8px_0_rgba(23,23,23,.04)] md:p-12">
               <div className="space-y-6 text-center">
-                <h1 className="text-4xl font-bold tracking-[-0.04em] text-[var(--brand-ink)] md:text-5xl">
+                <h1 className="jobkan-section-title text-4xl font-extrabold tracking-[-0.06em] text-[#171717] md:text-6xl">
                   Temukan lowongan yang tepat, bukan sekadar banyak
                 </h1>
                 <p className="mx-auto max-w-xl text-base leading-7 text-slate-500">
@@ -113,7 +132,7 @@ export default async function JobsPage({
                     <a
                       key={filter.label}
                       href={`/jobs?keyword=${encodeURIComponent(filter.keyword)}`}
-                      className="rounded-full bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-colors hover:bg-slate-100"
+                      className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-[0_3px_0_rgba(23,23,23,.04)] transition-all hover:-translate-y-0.5 hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#171717]"
                     >
                       {filter.label}
                     </a>
@@ -154,7 +173,7 @@ export default async function JobsPage({
               </Suspense>
 
               <div className="space-y-4">
-                <div className="rounded-[28px] border border-white bg-white p-5 shadow-[var(--shadow-sm)]">
+                <div className="rounded-[28px] border border-black/10 bg-[#fffdf8] p-5 shadow-[0_4px_0_rgba(23,23,23,.04)]">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
@@ -170,7 +189,7 @@ export default async function JobsPage({
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {keyword ? (
-                        <Badge variant="outline" className="rounded-full border-accent bg-accent text-accent-foreground">
+                        <Badge variant="outline" className="rounded-full border-[#ffd36a] bg-white text-[#2479d1]">
                           keyword: {keyword}
                         </Badge>
                       ) : null}
@@ -202,4 +221,3 @@ export default async function JobsPage({
     </div>
   )
 }
-

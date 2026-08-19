@@ -54,10 +54,10 @@ class LandingPageContentSeeder extends Seeder
                 ],
             ],
             'cta' => [
-                'title' => 'Siap Menemukan Karier Impianmu?',
-                'body' => 'Buat akun gratis dan mulai lamar dalam hitungan menit.',
-                'primaryButton' => ['label' => 'Mulai Sekarang', 'href' => '/register'],
-                'secondaryButton' => ['label' => 'Hubungi Kami', 'href' => '/contact'],
+                'title' => 'Temukan lowongan terbaik untuk langkah berikutnya.',
+                'body' => 'Cari, bandingkan, lalu lanjutkan ke sumber resmi ketika kamu menemukan peran yang tepat.',
+                'primaryButton' => ['label' => 'Cari Lowongan', 'href' => '/jobs'],
+                'secondaryButton' => ['label' => 'Jelajahi Kategori', 'href' => '#categories'],
             ],
         ];
 

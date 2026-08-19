@@ -26,7 +26,7 @@ export function ContactForm() {
   }, [state])
 
   return (
-    <form ref={formRef} action={action} className="space-y-5 border border-[var(--brand-shell-strong)] bg-white p-5 shadow-[var(--shadow-sm)]">
+    <form ref={formRef} action={action} className="space-y-5 rounded-[28px] border border-black/10 bg-white p-6 shadow-[0_8px_0_rgba(23,23,23,.04)] md:p-7">
       <div className="grid gap-4 md:grid-cols-2">
         <Field label="Nama" error={state.fieldErrors?.name}>
           <Input name="name" autoComplete="name" required />
@@ -41,7 +41,7 @@ export function ContactForm() {
       <Field label="Pesan" error={state.fieldErrors?.message}>
         <Textarea name="message" rows={7} required />
       </Field>
-      <Button type="submit" disabled={pending} className="h-11 rounded-xl bg-primary px-6 text-white">
+      <Button type="submit" disabled={pending} className="h-11 rounded-xl bg-[#1f5f9f] px-6 text-white shadow-[0_3px_0_rgba(23,23,23,.12)] transition-colors hover:bg-[#2479d1]">
         {pending ? "Mengirim..." : "Kirim Pesan"}
       </Button>
     </form>

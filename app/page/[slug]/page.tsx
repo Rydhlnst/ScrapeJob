@@ -34,19 +34,19 @@ export async function generateMetadata({
 
 function CTASection() {
   return (
-    <div className="mt-12 rounded-2xl bg-primary p-8 text-center text-primary-foreground">
+    <div className="mt-12 rounded-[26px] bg-[#1f5f9f] p-8 text-center text-white shadow-[0_6px_0_rgba(23,23,23,.08)]">
       <h3 className="text-2xl font-bold">Lowongan terbaru, langsung ke inboxmu</h3>
-      <p className="mt-2 text-sm text-primary-foreground/80">
+      <p className="mt-2 text-sm text-white/75">
         Dapatkan info lowongan terbaru dan tips karier dari Lowonganku.
       </p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button asChild className="rounded-full bg-white text-primary hover:bg-muted">
+        <Button asChild className="rounded-full bg-white text-[#1f5f9f] hover:bg-[#ffd36a] hover:text-[#171717]">
           <Link href="/jobs">
             <Search className="mr-2 size-4" />
             Cari Lowongan
           </Link>
         </Button>
-        <Button asChild variant="outline" className="rounded-xl border-white/30 text-white hover:bg-white/10">
+        <Button asChild variant="outline" className="rounded-xl border-white/40 text-white hover:bg-white/10">
           <Link href="/blog">
             Baca Artikel Lain
           </Link>
@@ -72,8 +72,8 @@ function WhyLowongankuSection() {
         {features.map((feature) => {
           const Icon = feature.icon
           return (
-            <div key={feature.title} className="rounded-[14px] bg-muted p-4">
-              <div className="grid size-10 place-items-center rounded-xl bg-accent text-accent-foreground">
+            <div key={feature.title} className="rounded-[20px] border border-black/10 bg-white p-4 shadow-[0_4px_0_rgba(23,23,23,.04)]">
+              <div className="grid size-10 place-items-center rounded-xl border border-[#3f95e8] bg-white text-[#2479d1]">
                 <Icon className="size-5" />
               </div>
               <h4 className="mt-3 text-sm font-semibold text-foreground">{feature.title}</h4>
@@ -110,9 +110,9 @@ export default async function PublicPage({
       : new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })
 
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen w-screen max-w-none overflow-x-hidden bg-[#fffdf8]">
         <Navbar jobs={navbarData.jobs} categories={navbarData.categories} totalJobs={navbarData.totalJobs} />
-        <main className="pb-16 pt-6 md:pt-10">
+        <main className="w-full max-w-screen overflow-x-hidden bg-[#fffdf8] pb-16 pt-0">
           <SiteFrame>
             <SiteContent>
               <Link
@@ -132,21 +132,21 @@ export default async function PublicPage({
                   </div>
                 ) : null}
 
-                <article className="min-w-0">
+                <article className="min-w-0 rounded-[30px] border border-black/10 bg-[#fffdf8] p-7 shadow-[0_8px_0_rgba(23,23,23,.04)] md:p-10">
                   {isBlog ? (
-                    <Badge variant="outline" className="rounded-full border-accent bg-accent px-3 py-1 text-xs font-medium text-accent-foreground">
+                    <Badge variant="outline" className="rounded-full border-[#ffd36a] bg-white px-3 py-1 text-xs font-medium text-[#2479d1]">
                       <Tag className="mr-1.5 size-3" />
                       Artikel
                     </Badge>
                   ) : null}
 
-                  <h1 className="mt-4 text-3xl font-bold leading-tight tracking-[-0.03em] text-[var(--brand-ink)] md:text-[2.75rem] md:leading-[1.15]">
+                  <h1 className="jobkan-section-title mt-4 text-4xl font-extrabold leading-tight tracking-[-0.06em] text-[#171717] md:text-6xl md:leading-[1.08]">
                     {page.title}
                   </h1>
 
                   <div className="mt-5 flex items-center gap-4 border-b border-slate-100 pb-6">
                     <div className="flex items-center gap-3">
-                      <div className="grid size-10 place-items-center rounded-full bg-slate-100 text-sm text-slate-500">
+                        <div className="grid size-10 place-items-center rounded-full border border-black/10 bg-white text-sm text-slate-500">
                         <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                           <circle cx="12" cy="7" r="4" />
@@ -160,7 +160,7 @@ export default async function PublicPage({
                   </div>
 
                   {isBlog && page.summary ? (
-                    <div className="mt-6 rounded-xl bg-slate-50 px-5 py-4 text-sm leading-7 text-slate-600">
+                    <div className="mt-6 rounded-2xl border border-black/10 border-l-4 border-l-[#ffd36a] bg-white px-5 py-4 text-sm leading-7 text-slate-600">
                       {page.summary}
                     </div>
                   ) : null}
@@ -201,4 +201,3 @@ export default async function PublicPage({
     notFound()
   }
 }
-

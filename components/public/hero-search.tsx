@@ -30,7 +30,7 @@ export function HeroSearch() {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg md:p-6">
+    <div className="rounded-[24px] border border-black/10 bg-white p-5 shadow-[0_6px_0_rgba(23,23,23,.04)] md:p-6">
       <div className="flex flex-col gap-3 md:flex-row">
         <div className="flex-1">
           <Input
@@ -49,7 +49,7 @@ export function HeroSearch() {
           />
         </div>
         <Button
-          className="h-12 bg-primary px-8 text-primary-foreground hover:bg-primary/90"
+          className="h-12 bg-[#1f5f9f] px-8 text-white shadow-[0_3px_0_rgba(23,23,23,.12)] hover:bg-[#2479d1]"
           onClick={() => go()}
         >
           Cari Lowongan
@@ -63,7 +63,7 @@ export function HeroSearch() {
               key={s.label}
               type="button"
               onClick={() => go(s.label)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground transition hover:bg-accent/80"
+              className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-[#ffd36a] hover:bg-[#ffd36a] hover:text-[#171717]"
             >
               {s.label}
             </button>

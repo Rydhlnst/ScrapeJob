@@ -34,7 +34,7 @@ function ArticleCard({ article, featured = false }: { article: PublicPageSummary
     return (
       <Link
         href={`/page/${article.slug}`}
-        className="group relative block overflow-hidden rounded-2xl bg-slate-50 p-8 transition-colors hover:bg-slate-100 md:p-10"
+        className="group relative block overflow-hidden rounded-[30px] border border-black/10 bg-[#fffdf8] p-8 shadow-[0_8px_0_rgba(23,23,23,.04)] transition-all hover:-translate-y-1 hover:border-[#ffd36a] hover:bg-white hover:shadow-[0_12px_28px_rgba(63,149,232,.12)] md:p-10"
       >
         <div className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--brand-blue)]">
           Artikel Pilihan
@@ -62,7 +62,7 @@ function ArticleCard({ article, featured = false }: { article: PublicPageSummary
   return (
     <Link
       href={`/page/${article.slug}`}
-      className="group flex h-full flex-col rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(15,23,42,0.10)]"
+      className="group flex h-full flex-col rounded-[22px] border border-black/10 bg-[#fffdf8] p-5 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-200 hover:-translate-y-1 hover:border-[#ffd36a] hover:bg-white hover:shadow-[0_10px_24px_rgba(63,149,232,.14)]"
     >
       {date ? (
         <div className="text-xs text-slate-500">
@@ -98,14 +98,14 @@ export default async function BlogIndexPage() {
   const [featured, ...rest] = articles.data
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen w-screen max-w-none overflow-x-hidden bg-[#fffdf8]">
       <Navbar
         jobs={navbarData.jobs}
         categories={navbarData.categories}
         totalJobs={navbarData.totalJobs}
       />
 
-      <main className="pb-16 pt-10 md:pt-14">
+      <main className="w-full bg-[#fffdf8] pb-16 pt-0">
         <SiteFrame>
           <SiteContent>
             <div className="flex items-center gap-2 text-xs text-slate-500">
@@ -116,7 +116,7 @@ export default async function BlogIndexPage() {
               <span className="text-[var(--brand-blue)]">Blog</span>
             </div>
 
-            <h1 className="mt-4 text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-[var(--brand-ink)] md:text-5xl">
+            <h1 className="jobkan-section-title mt-4 text-4xl font-extrabold leading-[1.05] tracking-[-0.06em] text-[#171717] md:text-6xl">
               Blog Lowonganku
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 md:text-lg">
@@ -124,7 +124,7 @@ export default async function BlogIndexPage() {
             </p>
 
             {articles.data.length === 0 ? (
-              <div className="mt-10 rounded-2xl bg-slate-50 p-10 text-center">
+              <div className="mt-10 rounded-[24px] border border-black/10 bg-white p-10 text-center shadow-[0_4px_0_rgba(23,23,23,.04)]">
                 <div className="text-lg font-semibold text-[var(--brand-ink)]">
                   Belum ada artikel
                 </div>

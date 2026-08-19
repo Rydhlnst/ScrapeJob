@@ -27,7 +27,7 @@ export function TableOfContents() {
   if (headings.length === 0) return null
 
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+    <div className="rounded-[22px] border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)]">
       <button
         type="button"
         onClick={() => setOpen(!open)}
@@ -59,7 +59,7 @@ export function ArticleSearch() {
   const [query, setQuery] = React.useState("")
 
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+    <div className="rounded-[22px] border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)]">
       <h3 className="text-sm font-semibold text-slate-900">Cari Artikel</h3>
       <div className="relative mt-3">
         <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
@@ -68,7 +68,7 @@ export function ArticleSearch() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Ketik kata kunci..."
-          className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-4 text-xs text-slate-700 outline-none transition-colors focus:border-[var(--brand-blue)] focus:bg-white"
+          className="w-full rounded-xl border border-black/10 bg-white py-2.5 pl-9 pr-4 text-xs text-slate-700 outline-none transition-colors placeholder:text-slate-400 hover:border-[#3f95e8] focus:border-[#3f95e8] focus:ring-2 focus:ring-[#3f95e8]/15"
         />
       </div>
     </div>
@@ -87,7 +87,7 @@ export function RecentPostsSidebar({ currentSlug }: { currentSlug: string }) {
   if (pages.length === 0) return null
 
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+    <div className="rounded-[22px] border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)]">
       <h3 className="text-sm font-semibold text-slate-900">Recent Post</h3>
       <div className="mt-3 space-y-3">
         {pages.map((page) => (
@@ -96,7 +96,7 @@ export function RecentPostsSidebar({ currentSlug }: { currentSlug: string }) {
             href={`/page/${page.slug}`}
             className="group flex gap-3"
           >
-            <div className="size-16 shrink-0 rounded-xl bg-slate-100" />
+            <div className="size-16 shrink-0 rounded-xl border border-black/10 bg-[#f7f9fb]" />
             <div className="min-w-0 flex-1">
               <h4 className="line-clamp-2 text-xs font-semibold text-slate-900 group-hover:text-[var(--brand-blue)]">
                 {page.title}
@@ -116,14 +116,14 @@ export function RecentPostsSidebar({ currentSlug }: { currentSlug: string }) {
 
 export function UpdateGratisCTA() {
   return (
-    <div className="rounded-2xl bg-primary p-5 text-primary-foreground">
+    <div className="rounded-[22px] bg-[#1f5f9f] p-5 text-white shadow-[0_5px_0_rgba(23,23,23,.08)]">
       <h3 className="text-lg font-bold">Update Gratis</h3>
-      <p className="mt-2 text-xs leading-5 text-primary-foreground/80">
+      <p className="mt-2 text-xs leading-5 text-white/75">
         Dapatkan info lowongan terbaru dan tips karier langsung ke WhatsApp Anda.
       </p>
       <a
         href="/jobs"
-        className="mt-4 block w-full rounded-full bg-white py-2.5 text-center text-sm font-semibold text-primary transition-colors hover:bg-white/90"
+        className="mt-4 block w-full rounded-full bg-white py-2.5 text-center text-sm font-semibold text-[#1f5f9f] transition-colors hover:bg-[#ffd36a] hover:text-[#171717]"
       >
         Cari Lowongan
       </a>

@@ -1,155 +1,45 @@
+import Image from "next/image"
 import Link from "next/link"
-import { BriefcaseBusiness, Globe, ShieldCheck } from "lucide-react"
+import { ArrowRight } from "lucide-react"
+import type { LandingSectionCopy } from "@/types/landing-content"
 
-import { Container } from "@/components/shared/Container"
-import { SiteFrame } from "@/components/shared/SiteShell"
-import { Button } from "@/components/ui/button"
+const fallbackContent: LandingSectionCopy["footer"] = {
+  eyebrow: "Siap menemukan peluang berikutnya?", title: "Jelajahi lowongan", description: "Explore job opportunities with more clarity, more confidence, and less noise.", columns: [
+  { title: "Explore", links: [{ label: "Jobs", href: "/jobs" }, { label: "Categories", href: "/#categories" }, { label: "Career guide", href: "/#how" }] },
+  { title: "Company", links: [{ label: "About", href: "/#about" }, { label: "Contact", href: "/contact" }, { label: "Blog", href: "/blog" }] },
+  { title: "Resources", links: [{ label: "Help center", href: "/contact" }, { label: "Privacy", href: "/#about" }, { label: "Terms", href: "/#about" }] },
+  ],
+}
 
-const columns = [
-  {
-    title: "Produk",
-    items: [
-      { label: "Lowongan", href: "/jobs" },
-      { label: "Perusahaan", href: "/#companies" },
-      { label: "Untuk Perusahaan", href: "/contact" },
-    ],
-  },
-  {
-    title: "Resource",
-    items: [
-      { label: "Panduan", href: "/#how" },
-      { label: "Tips Karier", href: "/#jobs" },
-      { label: "Bantuan", href: "/#how" },
-      { label: "Status", href: "/#companies" },
-    ],
-  },
-  {
-    title: "Perusahaan",
-    items: [
-      { label: "Tentang", href: "/#about" },
-      { label: "Karier", href: "/jobs" },
-      { label: "Kontak", href: "/contact" },
-      { label: "Media", href: "/#companies" },
-    ],
-  },
-  {
-    title: "Legal",
-    items: [
-      { label: "Privasi", href: "/#about" },
-      { label: "Ketentuan", href: "/#about" },
-      { label: "Cookie", href: "/#about" },
-      { label: "Keamanan", href: "/#about" },
-    ],
-  },
-]
-
-const iconLinks = [
-  { label: "Website", href: "/", icon: Globe },
-  { label: "Career", href: "/jobs", icon: BriefcaseBusiness },
-  { label: "Trust", href: "/#about", icon: ShieldCheck },
-]
-
-export function Footer() {
+export function Footer({ content }: { content?: LandingSectionCopy["footer"] }) {
+  const footer = content ?? fallbackContent
   return (
-    <footer className="border-t border-[var(--brand-shell-strong)] bg-white">
-      <SiteFrame className="border-t-0 bg-white">
-        <Container className="py-14">
-          <div className="grid gap-12 border border-[var(--brand-shell-strong)] bg-[var(--brand-shell)] p-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] md:p-10 lg:gap-16">
-            <div className="flex flex-col justify-between gap-10">
-              <div className="max-w-2xl">
-                <div className="text-4xl font-semibold leading-none tracking-[-0.06em] text-[var(--brand-ink)] md:text-6xl">
-                  Find work. Share work. All in one place.
-                </div>
-                <p className="mt-5 max-w-xl text-sm leading-7 text-slate-600 md:text-base">
-                  Temukan lowongan terbaru dari berbagai sumber, bandingkan pilihan,
-                  lalu lanjutkan ke sumber resmi dengan pengalaman yang lebih jelas.
-                </p>
-                <div className="mt-7 flex flex-wrap gap-3">
-                  <Button
-                    asChild
-                    className="h-11 rounded-xl bg-[var(--brand-blue)] px-5 text-white hover:bg-[var(--brand-sky)]"
-                  >
-                    <Link href="/jobs">Cari lowongan</Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="h-11 rounded-xl border-[var(--brand-shell-strong)] bg-white px-5 text-[var(--brand-ink)] hover:bg-[var(--brand-shell)]"
-                  >
-                    <Link href="/#how">Pelajari cara kerja</Link>
-                  </Button>
-                </div>
-              </div>
+    <footer className="relative w-screen overflow-hidden bg-[#1f5f9f] text-white">
+      <div className="pointer-events-none absolute -right-20 -top-28 size-[430px] rounded-full border-[62px] border-white/10" />
+      <div className="pointer-events-none absolute right-20 top-16 h-2 w-32 rounded-full bg-[#ffd36a]" />
+      <div className="pointer-events-none absolute -bottom-48 right-[18%] size-[410px] -rotate-45 border-[82px] border-white/10" />
+      <div className="relative mx-auto max-w-[1400px] px-7 py-16 sm:px-12 lg:px-16 lg:py-20">
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold text-[#ffd36a]">{footer.eyebrow}</p>
+          <Link href="/jobs" className="group mt-3 inline-flex items-center gap-3 border-b border-white/55 pb-3 text-4xl font-extrabold tracking-[-.065em] text-white transition-colors hover:text-[#ffd36a] sm:text-5xl">{footer.title} <ArrowRight className="size-9 transition-transform group-hover:translate-x-1" /></Link>
+        </div>
 
-              <div className="space-y-4">
-                <div className="text-sm font-semibold tracking-tight text-[var(--brand-ink)]">
-                  Lowonganku
-                </div>
-                <p className="max-w-sm text-sm leading-7 text-slate-600">
-                  Platform pencarian kerja untuk Indonesia dengan fokus pada listing
-                  yang lebih jelas, rapi, dan cepat dibaca.
-                </p>
-                <div className="flex items-center gap-2">
-                  {iconLinks.map((item) => {
-                    const Icon = item.icon
-
-                    return (
-                      <Button
-                        key={item.label}
-                        asChild
-                        size="icon"
-                        variant="ghost"
-                        className="rounded-xl border border-[var(--brand-shell-strong)] bg-white text-slate-500 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-ink)]"
-                      >
-                        <Link href={item.href} aria-label={item.label}>
-                          <Icon className="size-4" />
-                        </Link>
-                      </Button>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-8 sm:grid-cols-2">
-              {columns.map((col) => (
-                <div key={col.title} className="space-y-4">
-                  <div className="text-sm font-semibold tracking-tight text-[var(--brand-ink)]">
-                    {col.title}
-                  </div>
-                  <ul className="space-y-3">
-                    {col.items.map((item) => (
-                      <li key={item.label}>
-                        <Link
-                          href={item.href}
-                          className="text-sm leading-6 text-slate-600 transition-colors hover:text-[var(--brand-blue)]"
-                        >
-                          {item.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+        <div className="mt-16 grid gap-12 border-t border-white/20 pt-12 md:grid-cols-[1.35fr_repeat(3,1fr)]">
+          <div>
+            <Link href="/" className="flex items-center gap-2.5"><Image src="/logo.png" alt="Lowonganku" width={34} height={34} className="size-8 object-contain brightness-0 invert" /><span className="font-extrabold tracking-[-.04em] text-white">Lowonganku</span></Link>
+            <p className="mt-5 max-w-xs text-sm leading-6 text-white/70">{footer.description}</p>
           </div>
-
-          <div className="mt-10 flex flex-col gap-3 border-t border-[var(--brand-shell-strong)] pt-6 text-xs text-slate-500 md:flex-row md:items-center md:justify-between">
-            <div>(c) {new Date().getFullYear()} Lowonganku. Hak cipta dilindungi.</div>
-            <div className="flex flex-wrap items-center gap-4">
-              <Link href="/#about" className="hover:text-[var(--brand-ink)]">
-                Privasi
-              </Link>
-              <Link href="/#about" className="hover:text-[var(--brand-ink)]">
-                Ketentuan
-              </Link>
-              <Link href="/#about" className="hover:text-[var(--brand-ink)]">
-                Cookie
-              </Link>
+          {footer.columns.map((column) => (
+            <div key={column.title}>
+              <h2 className="text-sm font-extrabold text-white">{column.title}</h2>
+              <ul className="mt-4 space-y-3">
+                {column.links.map((link) => <li key={link.label}><Link href={link.href} className="text-sm text-white/65 transition-colors hover:text-[#ffd36a]">{link.label}</Link></li>)}
+              </ul>
             </div>
-          </div>
-        </Container>
-      </SiteFrame>
+          ))}
+        </div>
+        <div className="mt-12 border-t border-white/20 pt-6 text-xs text-white/55">© {new Date().getFullYear()} Lowonganku. All rights reserved.</div>
+      </div>
     </footer>
   )
 }

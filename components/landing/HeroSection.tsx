@@ -1,210 +1,94 @@
-"use client"
-
 import Link from "next/link"
-import {
-  ArrowRight,
-  Building2,
-  MapPin,
-  MonitorSmartphone,
-  SearchCheck,
-  Users,
-} from "lucide-react"
+import { ArrowRight, Search } from "lucide-react"
 
 import type { Job } from "@/types"
-import type { LandingHeroContent } from "@/types/landing-content"
-import { SiteFrame } from "@/components/shared/SiteShell"
-import { JobSearchBar } from "@/components/public/job-search-bar"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import { categoryColor, jobTypeColor } from "@/components/public/color-tags"
-
-function jobInitials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("")
-}
-
-export function HeroJobCard({ job }: { job: Job }) {
-  const companyName = job.companyName || "Perusahaan tidak diketahui"
-  const location = job.location || "Lokasi tidak disebutkan"
-
-  return (
-    <Link
-      href={`/jobs/${job.slug}`}
-      className="group flex h-full flex-col rounded-[14px] bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(15,23,42,0.10)]"
-    >
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex flex-wrap gap-1.5">
-          {job.jobType ? (
-            <Badge variant="outline" className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", jobTypeColor(job.jobType))}>
-              {job.jobType}
-            </Badge>
-          ) : null}
-          <Badge variant="outline" className="rounded-full border-border bg-card px-2 py-0.5 text-[10px] font-medium text-card-foreground">
-            On-site
-          </Badge>
-        </div>
-        {job.companyLogo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={job.companyLogo}
-            alt=""
-            className="size-10 shrink-0 rounded-xl bg-white object-cover"
-            loading="lazy"
-          />
-        ) : (
-          <div className="grid size-10 shrink-0 place-items-center rounded-xl bg-accent text-xs font-semibold text-accent-foreground">
-            {jobInitials(companyName)}
-          </div>
-        )}
-      </div>
-
-      <div className="mt-3 min-w-0 flex-1">
-        <h3 className="line-clamp-1 text-sm font-semibold leading-5 text-slate-900 group-hover:text-[var(--brand-blue)]">
-          {job.title}
-        </h3>
-        <div className="mt-1 text-xs text-slate-500">
-          {companyName} · {location}
-        </div>
-      </div>
-
-      <div className="mt-3 text-sm font-semibold text-[var(--brand-ink)]">
-        {job.salaryText || "Gaji tidak disebutkan"}
-      </div>
-    </Link>
-  )
-}
+import type { LandingCompanyItem, LandingHeroContent, LandingSectionCopy } from "@/types/landing-content"
+import { JobPreviewCard, LandingEyebrow, PeopleArtwork } from "@/components/landing/JobkanVisuals"
+import { Float, Reveal } from "@/components/landing/LandingMotion"
 
 export function HeroSection({
   totalJobs,
   totalCategories,
-  totalSources,
   content,
+  copy,
+  visualCopy,
+  companies,
   jobs = [],
 }: {
   totalJobs: number
   totalCategories: number
   totalSources: number
   content: LandingHeroContent
+  copy: LandingSectionCopy["hero"]
+  visualCopy: LandingSectionCopy["visuals"]
+  companies: LandingCompanyItem[]
   jobs?: Job[]
 }) {
   return (
-    <section className="border-b border-[var(--brand-shell-strong)] bg-slate-50/70">
-      <SiteFrame className="border-x-0 bg-transparent">
-        <div className="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-            <div className="max-w-3xl">
-              <h1 className="text-4xl font-semibold leading-[1.02] tracking-[-0.06em] text-[var(--brand-ink)] sm:text-5xl lg:text-[4.4rem]">
-                {content.title}
-              </h1>
+    <section className="w-full overflow-hidden bg-[#fffdf8] pt-0">
+      <div className="mx-auto grid max-w-[1400px] overflow-hidden border-y border-black/10 bg-[#fffdf8] lg:grid-cols-[.94fr_1.06fr] lg:border-x">
+        <Reveal className="flex min-h-[590px] flex-col justify-center px-6 py-14 sm:px-12 lg:px-16 lg:py-20">
+          <LandingEyebrow>{copy.eyebrow}</LandingEyebrow>
+          <h1 className="mt-6 max-w-xl text-5xl font-extrabold leading-[.96] tracking-[-.075em] text-[#171717] sm:text-6xl lg:text-7xl">
+            {content.title}
+          </h1>
+          <p className="mt-6 max-w-md text-base leading-7 text-slate-500 sm:text-lg">
+            {content.description}
+          </p>
 
-              <p className="mt-5 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
-                {content.description}
-              </p>
+          <Link
+            href={content.primaryCta.href}
+            className="group mt-8 flex w-full max-w-md items-center gap-3 rounded-2xl border border-black/10 bg-white p-2 shadow-[0_7px_0_rgba(23,23,23,.05)] transition-all hover:-translate-y-0.5 hover:border-[#ffd36a] hover:shadow-[0_10px_24px_rgba(63,149,232,.14)]"
+          >
+            <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#eaf5ff] text-[#2479d1]"><Search className="size-5" /></span>
+            <span className="min-w-0 flex-1 text-left text-sm text-slate-400">{copy.searchPlaceholder}</span>
+            <span className="inline-flex h-11 shrink-0 items-center rounded-xl bg-[#3f95e8] px-5 text-sm font-extrabold text-white transition-colors group-hover:bg-[#2479d1]">{copy.searchLabel}</span>
+          </Link>
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Button
-                  asChild
-                  className="h-12 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-                >
-                  <Link href={content.primaryCta.href}>
-                    {content.primaryCta.label}
-                    <ArrowRight className="ml-2 size-4" />
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-12 rounded-full border-slate-200 bg-white px-6 text-sm font-semibold text-[var(--brand-ink)] hover:bg-slate-50"
-                >
-                  <Link href={content.secondaryCta.href}>{content.secondaryCta.label}</Link>
-                </Button>
-              </div>
-
-              <div className="mt-8">
-                <JobSearchBar defaultSort="newest" />
-              </div>
-
-              <div className="mt-6 grid grid-cols-3 gap-3 sm:max-w-xl">
-                <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-                  <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                    <SearchCheck className="size-3.5 text-[var(--brand-blue)]" />
-                    Lowongan
-                  </div>
-                  <div className="mt-2 text-xl font-semibold tracking-[-0.02em] text-slate-950">
-                    {totalJobs.toLocaleString("id-ID")}+
-                  </div>
-                </div>
-                <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-                  <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                    <Users className="size-3.5 text-[var(--brand-blue)]" />
-                    Pencari kerja
-                  </div>
-                  <div className="mt-2 text-xl font-semibold tracking-[-0.02em] text-slate-950">
-                    200.000+
-                  </div>
-                </div>
-                <div className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-                  <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                    <Building2 className="size-3.5 text-[var(--brand-blue)]" />
-                    Sumber
-                  </div>
-                  <div className="mt-2 text-xl font-semibold tracking-[-0.02em] text-slate-950">
-                    {totalSources}
-                  </div>
-                </div>
-              </div>
-
-              {content.quickLinks.length ? (
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {content.quickLinks.map((link) => (
-                    <Link
-                      key={`${link.label}-${link.href}`}
-                      href={link.href}
-                      className="rounded-full bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-[0_1px_3px_rgba(0,0,0,0.05)] transition-all hover:-translate-y-0.5 hover:text-[var(--brand-blue)] hover:shadow-[0_4px_12px_rgba(15,23,42,0.08)]"
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              ) : null}
+          <div className="mt-10 flex items-center gap-4">
+            <div className="rounded-2xl bg-[#fff0c6] px-5 py-4 text-center shadow-[0_5px_0_rgba(23,23,23,.04)]">
+              <strong className="block text-3xl font-extrabold tracking-[-.07em] text-[#171717]">{totalJobs.toLocaleString("id-ID")}+</strong>
+              <span className="mt-1 block text-[10px] font-bold uppercase tracking-[.14em] text-[#9a6700]">{copy.statLabel}</span>
             </div>
-
-            <div className="flex flex-col gap-3 rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
-              <div className="flex items-center justify-between pb-3">
-                <span className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
-                  Lowongan terbaru untukmu
-                </span>
-              </div>
-              <div className="grid gap-4 md:grid-cols-3">
-                {jobs.map((job) => (
-                  <HeroJobCard key={job.id} job={job} />
-                ))}
-                {jobs.length === 0 && (
-                  <div className="col-span-3 py-8 text-center text-xs text-slate-400">
-                    Tidak ada lowongan terbaru saat ini.
-                  </div>
-                )}
-              </div>
-              <div className="mt-2 pt-4">
-                <Button
-                  asChild
-                  className="h-11 w-full rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
-                >
-                  <Link href="/jobs">
-                    Lihat semua lowongan
-                    <ArrowRight className="ml-2 size-4" />
-                  </Link>
-                </Button>
-              </div>
+            <div>
+              <p className="text-lg font-extrabold tracking-[-.04em] text-[#171717]">{copy.statTitle}</p>
+              <p className="mt-1 max-w-[230px] text-sm leading-5 text-slate-500">{totalCategories}+ {copy.statDescription}</p>
+              <Link href={content.secondaryCta.href} className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-[#2479d1] underline decoration-[#ffd36a] decoration-2 underline-offset-4 hover:text-[#171717]">{content.secondaryCta.label}<ArrowRight className="size-4" /></Link>
             </div>
           </div>
-        </div>
-      </SiteFrame>
+        </Reveal>
+
+        <Reveal delay={0.1} className="relative isolate min-h-[470px] overflow-hidden bg-[#1f5f9f] sm:min-h-[590px] lg:min-h-full">
+          <div className="absolute -right-20 -top-16 h-[52%] w-[42%] -skew-x-12 bg-[#ffd36a] opacity-75" />
+          <div className="absolute -left-10 bottom-0 h-[28%] w-[54%] -skew-x-12 bg-white/10" />
+          <div className="absolute bottom-8 right-8 grid grid-cols-4 gap-2 opacity-25 sm:bottom-12 sm:right-12">
+            {Array.from({ length: 16 }, (_, index) => <span key={index} className="size-1.5 rounded-full bg-white" />)}
+          </div>
+          <div className="absolute inset-x-[12%] top-[16%] bottom-[11%] overflow-hidden rounded-[28px] border border-white/50 bg-white p-5 shadow-[0_18px_0_rgba(23,23,23,.14)] sm:p-7">
+            <div className="flex items-center justify-between gap-3 border-b border-black/10 pb-4">
+              <div>
+                <p className="text-sm font-extrabold tracking-[-.03em] text-[#171717]">{visualCopy.boardTitle}</p>
+                <p className="mt-1 text-[10px] uppercase tracking-[.14em] text-slate-400">{visualCopy.boardEyebrow}</p>
+              </div>
+              <Link href="/jobs" className="text-[10px] font-bold text-[#2479d1] transition-colors hover:text-[#171717]">{visualCopy.boardLinkLabel}</Link>
+            </div>
+            <div className="mt-4 space-y-3">
+              {jobs.slice(0, 4).map((job, index) => <JobPreviewCard key={job.id} job={job} index={index} compact copy={visualCopy} />)}
+            </div>
+          </div>
+          <Float className="pointer-events-none absolute -bottom-3 right-[3%] hidden w-[38%] drop-shadow-[0_12px_0_rgba(23,23,23,.12)] md:block"><PeopleArtwork className="w-full" /></Float>
+          <div className="absolute left-[5%] top-[22%] w-[46%] sm:left-[3%] sm:w-[40%]"><JobPreviewCard job={jobs[0]} index={0} compact copy={visualCopy} /></div>
+          <div className="absolute bottom-[7%] left-[7%] w-[52%] -rotate-3 rounded-2xl border border-black/10 bg-white px-4 py-3 shadow-[0_10px_0_rgba(23,23,23,.1)] sm:left-[4%] sm:w-[46%]">
+            <p className="text-sm font-extrabold tracking-[-.03em] text-[#171717]">{copy.floatingTitle}</p>
+            <p className="mt-1 text-xs text-slate-500">{copy.floatingDescription}</p>
+          </div>
+          <div className="absolute right-[5%] top-[12%] w-[37%] rotate-2 sm:right-[3%] sm:w-[32%]"><JobPreviewCard job={jobs[1]} index={1} compact copy={visualCopy} /></div>
+        </Reveal>
+      </div>
+
+      <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-center gap-x-12 gap-y-4 border-b border-black/10 bg-white px-6 py-8 text-xl font-extrabold tracking-[-.06em] text-[#171717] sm:justify-between sm:px-12 lg:px-16">
+        {(companies.length ? companies : []).slice(0, 5).map((company) => <span key={company.id}>{company.name}</span>)}
+      </div>
     </section>
   )
 }

@@ -1,72 +1,52 @@
-import { CheckCircle2, SearchCheck, ShieldCheck, Briefcase, Clock, Search, Shield } from "lucide-react"
+import Link from "next/link"
+import { ArrowRight, Bookmark, CheckCircle2, Search } from "lucide-react"
 
+import { JobPreviewCard, LandingEyebrow } from "@/components/landing/JobkanVisuals"
+import { Reveal } from "@/components/landing/LandingMotion"
 import { Container } from "@/components/shared/Container"
-import { SectionHeader } from "@/components/shared/SectionHeader"
-import { Button } from "@/components/ui/button"
-import type { LandingBenefitsContent } from "@/types/landing-content"
+import type { LandingBenefitsContent, LandingSectionCopy } from "@/types/landing-content"
+import type { Job } from "@/types"
 
-const benefitVisuals = [
-  { icon: Shield, bg: "bg-accent", fg: "text-accent-foreground" },
-  { icon: Clock, bg: "bg-muted", fg: "text-muted-foreground" },
-  { icon: Search, bg: "bg-accent", fg: "text-accent-foreground" },
-  { icon: Briefcase, bg: "bg-muted", fg: "text-muted-foreground" },
-]
+const icons = [Search, CheckCircle2, Bookmark]
 
-export function BenefitsSection({ content }: { content: LandingBenefitsContent }) {
+export function BenefitsSection({ content, copy, visualCopy, jobs = [] }: { content: LandingBenefitsContent; copy: LandingSectionCopy["features"]; visualCopy: LandingSectionCopy["visuals"]; jobs?: Job[] }) {
   return (
-    <section className="border-b border-[var(--brand-shell-strong)] bg-white py-16 md:py-20" id="features">
+    <section className="overflow-hidden bg-white py-20 md:py-28" id="features">
       <Container>
-        <div className="max-w-4xl">
-          <SectionHeader
-            title={content.title}
-            description="Dirancang supaya pencarian kerjamu lebih cepat dan lebih tenang."
-          />
-        </div>
+        <div className="grid items-center gap-12 lg:grid-cols-[.85fr_1.15fr] lg:gap-20">
+          <Reveal>
+            <LandingEyebrow>{copy.eyebrow}</LandingEyebrow>
+            <h2 className="mt-5 max-w-xl text-4xl font-extrabold leading-[1.05] tracking-[-.06em] text-[#171717] md:text-6xl">{content.title}</h2>
+            <p className="mt-6 max-w-lg text-base leading-7 text-slate-500">{content.items[0]?.description ?? "Cari lowongan dari banyak sumber tanpa kehilangan konteks penting sebelum kamu melamar."}</p>
+            <Link href="/jobs" className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-[#3f95e8] px-6 text-sm font-extrabold text-white shadow-[0_4px_0_rgba(23,23,23,.13)] transition-all hover:-translate-y-0.5 hover:bg-[#2479d1]">
+              {copy.actionLabel} <ArrowRight className="size-4" />
+            </Link>
 
-        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {content.items.map((benefit, index) => {
-            const visual = benefitVisuals[index] ?? benefitVisuals[benefitVisuals.length - 1]
-            const Icon = visual.icon
-
-            return (
-              <div
-                key={benefit.title + index}
-                className="rounded-[14px] bg-slate-50 p-5"
-              >
-                <div className={`grid size-11 shrink-0 place-items-center rounded-xl ${visual.bg} ${visual.fg}`}>
-                  <Icon className="size-5" />
-                </div>
-                <div className="mt-4">
-                  <div className="text-sm font-semibold text-slate-900">
-                    {benefit.title}
+            <div className="mt-11 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              {content.items.slice(0, 3).map((item, index) => {
+                const Icon = icons[index] ?? Search
+                return (
+                  <div key={item.title} className="rounded-2xl border border-black/10 bg-[#fffdf8] p-4 shadow-[0_4px_0_rgba(23,23,23,.03)] transition-all duration-200 hover:-translate-y-1 hover:border-[#3f95e8]/40 hover:bg-white hover:shadow-[0_10px_24px_rgba(31,95,159,.10)]">
+                    <Icon className="size-5 text-[#2479d1]" />
+                    <p className="mt-3 text-sm font-extrabold tracking-[-.03em] text-[#171717]">{item.title}</p>
                   </div>
-                  <p className="mt-1.5 text-xs leading-6 text-slate-500">
-                    {benefit.description}
-                  </p>
-                </div>
-              </div>
-            )
-          })}
-        </div>
+                )
+              })}
+            </div>
+          </Reveal>
 
-        <div className="mt-10 grid gap-0 overflow-hidden rounded-2xl lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="p-8 text-white md:p-10" style={{ backgroundColor: "var(--brand-blue)" }}>
-            <div className="max-w-md text-3xl font-semibold leading-tight tracking-[-0.04em] md:text-4xl">
-              Temukan lowongan yang tepat, lalu lanjutkan di sumber resminya.
+          <Reveal delay={0.1} className="relative min-h-[430px] overflow-hidden rounded-[34px] bg-[#dceeff] p-6 sm:min-h-[500px] sm:p-10">
+            <div className="absolute -right-20 -top-20 size-[310px] rounded-full bg-[#ffd36a] opacity-85" />
+            <div className="absolute -bottom-24 -left-12 size-[310px] rounded-full bg-[#3f95e8]" />
+            <div className="relative mx-auto mt-5 max-w-[500px] rounded-[24px] border border-white/70 bg-white/95 p-4 shadow-[0_20px_0_rgba(23,23,23,.08)] sm:p-5">
+              <div className="flex items-center gap-3 rounded-xl border border-black/10 bg-[#fffdf8] p-3 text-sm text-slate-400"><Search className="size-4 text-[#2479d1]" /><span className="flex-1">{copy.searchPlaceholder}</span><span className="rounded-lg bg-[#3f95e8] px-4 py-2 text-xs font-bold text-white">{copy.searchLabel}</span></div>
+              <div className="mt-4 space-y-3"><JobPreviewCard job={jobs[0]} index={0} copy={visualCopy} /><JobPreviewCard job={jobs[1]} index={1} compact copy={visualCopy} /><JobPreviewCard job={jobs[2]} index={2} compact copy={visualCopy} /></div>
             </div>
-            <p className="mt-6 max-w-md text-sm leading-7 text-white/80">
-              Saring pilihan dengan lebih mudah sebelum membuka postingan lengkap di sumber aslinya.
-            </p>
-            <div className="mt-8">
-              <Button
-                asChild
-                className="h-12 rounded-full bg-white px-6 text-sm font-semibold text-primary hover:bg-muted"
-              >
-                <a href="/jobs">Jelajahi lowongan</a>
-              </Button>
+            <div className="absolute bottom-7 left-5 w-[46%] -rotate-6 rounded-2xl border border-black/10 bg-white p-4 shadow-[0_10px_0_rgba(23,23,23,.08)] sm:bottom-10 sm:left-8">
+              <p className="text-xs font-extrabold text-[#171717]">{copy.savedTitle}</p><p className="mt-1 text-[11px] leading-4 text-slate-500">{copy.savedDescription}</p>
             </div>
-          </div>
-          <div className="min-h-[320px] bg-slate-50" />
+            <div className="absolute right-4 top-8 rounded-xl bg-[#1c0d0d] px-4 py-3 text-xs font-bold text-white shadow-lg sm:right-8">{copy.sourceLabel}</div>
+          </Reveal>
         </div>
       </Container>
     </section>

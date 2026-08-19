@@ -54,6 +54,7 @@ export async function fetchJson<T>(
 
   const res = await fetch(url, {
     ...init,
+    signal: init?.signal ?? AbortSignal.timeout(8_000),
     headers: {
       "Content-Type": "application/json",
       ...(authHeader ? { Authorization: authHeader } : {}),

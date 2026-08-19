@@ -1,76 +1,69 @@
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Sparkles } from "lucide-react"
 
 import type { Category } from "@/types"
 import { Container } from "@/components/shared/Container"
-import { SectionHeader } from "@/components/shared/SectionHeader"
-import { Card } from "@/components/ui/card"
+import type { LandingSectionCopy } from "@/types/landing-content"
 
-export function PopularCategories({ categories }: { categories: Category[] }) {
+export function PopularCategories({ categories, content }: { categories: Category[]; content: LandingSectionCopy["categories"] }) {
   return (
     <section
-      className="border-b bg-white py-16 md:py-20"
+      className="relative overflow-hidden border-b border-black/10 bg-[#fffdf8] py-20 md:py-28"
       id="categories"
-      style={{ borderColor: "var(--brand-shell-strong)" }}
     >
       <Container>
-        <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
-          <SectionHeader
-            title="Explore categories after you browse live openings"
-            description="Jump into the roles people usually search first, from software and design to operations and customer teams."
-          />
-          <Link
-            href="/jobs"
-            className="inline-flex items-center gap-2 border bg-white px-4 py-3 text-sm font-medium hover:opacity-90"
-            style={{
-              borderColor: "var(--brand-shell-strong)",
-              color: "var(--brand-ink)",
-            }}
-          >
-            Browse all jobs <ArrowRight className="size-4" />
-          </Link>
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="max-w-xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#ffd36a] bg-[#fff0c6] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9a6700]">
+              <Sparkles className="size-3.5" />
+              {content.eyebrow}
+            </div>
+            <h2 className="jobkan-section-title mt-5 text-4xl font-extrabold leading-[1.05] tracking-[-0.06em] text-[#171717] md:text-6xl">
+              {content.title}
+            </h2>
+            <p className="mt-3 text-sm leading-[1.8] text-slate-500">
+              {content.description}
+            </p>
+          </div>
         </div>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.slice(0, 8).map((cat) => (
-            <Card
-              key={cat.id}
-              className="group rounded-xl border bg-white p-5 shadow-none transition-colors duration-200"
-              style={{ borderColor: "var(--brand-shell-strong)" }}
-            >
-              <div className="flex items-start gap-4">
+        <div className="mx-auto mt-12 grid max-w-6xl gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {categories.slice(0, 8).map((cat, index) => {
+            // Cycle through accent colors for variety
+            const colors = [
+              { bg: "bg-[#dceeff]", fg: "text-[#2479d1]", border: "border-[#b9ddff]" },
+              { bg: "bg-[#fff0c6]", fg: "text-[#9a6700]", border: "border-[#ffe19a]" },
+              { bg: "bg-[#eaf5ff]", fg: "text-[#2479d1]", border: "border-[#d1e9ff]" },
+            ]
+            const color = colors[index % colors.length]
+
+            return (
+              <Link
+                key={cat.id}
+                href={`/jobs?category=${cat.slug}`}
+                className="group flex items-center gap-4 rounded-2xl border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#ffd36a] hover:shadow-[0_10px_24px_rgba(63,149,232,.14)]"
+              >
                 <div
-                  className="grid size-12 place-items-center border"
-                  style={{
-                    borderColor: "var(--brand-shell-strong)",
-                    backgroundColor: "var(--brand-shell)",
-                    color: "var(--brand-blue)",
-                  }}
+                  className={`grid size-12 shrink-0 place-items-center rounded-xl ${color.bg} ${color.fg} border ${color.border}`}
                 >
-                  <span className="text-sm font-semibold">
+                  <span className="text-base font-bold">
                     {cat.name.slice(0, 1).toUpperCase()}
                   </span>
                 </div>
                 <div className="min-w-0">
-                  <div
-                    className="text-base font-semibold"
-                    style={{ color: "var(--brand-ink)" }}
-                  >
+                  <div className="truncate text-sm font-semibold text-[var(--brand-ink)] group-hover:text-[var(--brand-blue)]">
                     {cat.name}
                   </div>
-                  <div
-                    className="mt-1 text-sm"
-                    style={{ color: "hsl(var(--muted-foreground))" }}
-                  >
-                    {cat.totalJobs ? `${cat.totalJobs} jobs` : "Browse roles"}
+                  <div className="mt-0.5 text-xs text-slate-400">
+                    {cat.totalJobs ? `${cat.totalJobs.toLocaleString("id-ID")} lowongan` : "Jelajahi peran"}
                   </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Link>
+            )
+          })}
         </div>
+        <div className="mt-10 text-center"><Link href="/jobs" className="inline-flex items-center gap-2 rounded-xl bg-[#3f95e8] px-6 py-3 text-sm font-extrabold text-white shadow-[0_4px_0_rgba(23,23,23,.13)] transition-all hover:-translate-y-0.5 hover:bg-[#2479d1]">{content.buttonLabel} <ArrowRight className="size-4" /></Link></div>
       </Container>
     </section>
   )
 }
-

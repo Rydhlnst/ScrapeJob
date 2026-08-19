@@ -42,7 +42,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
         href={`https://www.facebook.com/sharer/sharer.php?u=${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}`}
         target="_blank"
         rel="noreferrer"
-        className="grid size-9 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+        className="grid size-9 place-items-center rounded-full border border-black/10 bg-white text-slate-500 transition-colors hover:border-[#3f95e8] hover:bg-[#f2f7fb] hover:text-[#2479d1]"
       >
         <FacebookIcon className="size-4" />
       </a>
@@ -50,7 +50,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
         href={`https://twitter.com/intent/tweet?url=${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}&text=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noreferrer"
-        className="grid size-9 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+        className="grid size-9 place-items-center rounded-full border border-black/10 bg-white text-slate-500 transition-colors hover:border-[#3f95e8] hover:bg-[#f2f7fb] hover:text-[#2479d1]"
       >
         <TwitterIcon className="size-4" />
       </a>
@@ -58,7 +58,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
         href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title)}%20${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}`}
         target="_blank"
         rel="noreferrer"
-        className="grid size-9 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-success/10 hover:text-success"
+        className="grid size-9 place-items-center rounded-full border border-black/10 bg-white text-slate-500 transition-colors hover:border-[#3f95e8] hover:bg-[#f2f7fb] hover:text-[#2479d1]"
       >
         <WhatsappIcon className="size-4" />
       </a>
@@ -66,7 +66,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
         href={`https://www.linkedin.com/shareArticle?mini=true&url=${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}&title=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noreferrer"
-        className="grid size-9 place-items-center rounded-full bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+        className="grid size-9 place-items-center rounded-full border border-black/10 bg-white text-slate-500 transition-colors hover:border-[#3f95e8] hover:bg-[#f2f7fb] hover:text-[#2479d1]"
       >
         <LinkedinIcon className="size-4" />
       </a>

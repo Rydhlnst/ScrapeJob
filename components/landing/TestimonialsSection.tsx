@@ -1,78 +1,30 @@
 import { Quote } from "lucide-react"
 
+import { LandingEyebrow } from "@/components/landing/JobkanVisuals"
 import { Container } from "@/components/shared/Container"
-import { SectionHeader } from "@/components/shared/SectionHeader"
+import type { LandingSectionCopy } from "@/types/landing-content"
 
-const testimonials = [
-  {
-    name: "Raka Pratama",
-    role: "Product Designer",
-    quote:
-      "UI-nya rapi dan cepat. Aku bisa shortlist lowongan yang relevan tanpa kebanyakan distraksi.",
-  },
-  {
-    name: "Nadia Aulia",
-    role: "Frontend Engineer",
-    quote:
-      "Rekomendasinya terasa pas. Proses cari kerja jadi lebih terstruktur dan nggak bikin capek.",
-  },
-  {
-    name: "Bagas Wicaksono",
-    role: "Data Analyst",
-    quote:
-      "Filter dan ringkasan lowongan jelas. Enak buat compare beberapa perusahaan sekaligus.",
-  },
-  {
-    name: "Salsa Maharani",
-    role: "HR Specialist",
-    quote:
-      "Dari sisi perusahaan, kualitas listing konsisten dan tampil profesional. Kandidat juga lebih engaged.",
-  },
-]
+export function TestimonialsSection({ content }: { content: LandingSectionCopy["testimonials"] }) {
+  const [featured, ...supporting] = content.items
 
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("")
-}
-
-export function TestimonialsSection() {
   return (
-    <section className="border-b border-[var(--brand-shell-strong)] bg-white py-16 md:py-20" id="about">
+    <section className="relative overflow-hidden bg-white py-20 md:py-28" id="about">
       <Container>
-        <div className="max-w-3xl">
-          <SectionHeader
-            title="What people value most"
-            description="The experience stays structured, clear, and easier to trust."
-          />
+        <div className="mx-auto max-w-3xl text-center">
+          <LandingEyebrow>{content.eyebrow}</LandingEyebrow>
+          <h2 className="jobkan-section-title mt-5 text-4xl font-extrabold leading-[1.08] tracking-[-.055em] text-[#171717] md:text-6xl">{content.title}</h2>
+          <p className="mt-5 text-slate-500">{content.description}</p>
         </div>
 
-        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {testimonials.map((testimonial) => (
-            <div
-              key={testimonial.name}
-              className="flex h-full flex-col rounded-2xl bg-slate-50 p-6"
-            >
-              <Quote className="size-6 text-[var(--brand-blue)]/70" />
-              <p className="mt-4 flex-1 text-sm leading-7 text-slate-600">
-                {testimonial.quote}
-              </p>
-              <div className="mt-5 flex items-center gap-3">
-                <div className="grid size-10 shrink-0 place-items-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">
-                  {initials(testimonial.name)}
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-[var(--brand-ink)]">
-                    {testimonial.name}
-                  </div>
-                  <div className="text-xs text-slate-500">{testimonial.role}</div>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="mx-auto mt-14 grid max-w-5xl gap-5 lg:grid-cols-[.72fr_1.28fr_.72fr] lg:items-center">
+          <article className="rounded-[24px] border border-black/10 bg-[#f6f9fc] p-6 text-left"><p className="text-sm leading-6 text-slate-600">“{supporting[0]?.quote}”</p><p className="mt-5 text-sm font-extrabold text-[#171717]">{supporting[0]?.name}</p></article>
+          <article className="order-first rounded-[30px] border border-black/10 bg-[#fffdf8] p-8 text-center shadow-[0_10px_0_rgba(23,23,23,.05)] lg:order-none">
+            <div className="mx-auto grid size-14 place-items-center rounded-full bg-[#3f95e8] text-white"><Quote className="size-6 fill-current" /></div>
+            <p className="mt-6 text-lg leading-8 tracking-[-.02em] text-[#171717] md:text-xl">“{featured?.quote}”</p>
+            <p className="mt-6 text-sm font-extrabold text-[#171717]">{featured?.name}</p>
+            <p className="mt-1 text-xs text-slate-500">{content.featuredRole}</p>
+          </article>
+          <article className="rounded-[24px] border border-black/10 bg-[#f6f9fc] p-6 text-left"><p className="text-sm leading-6 text-slate-600">“{supporting[1]?.quote}”</p><p className="mt-5 text-sm font-extrabold text-[#171717]">{supporting[1]?.name}</p></article>
         </div>
       </Container>
     </section>

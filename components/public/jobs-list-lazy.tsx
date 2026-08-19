@@ -98,14 +98,14 @@ export function JobsListLazy({
           ) : (
             <Button
               variant="outline"
-              className="rounded-xl border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+              className="rounded-full border-black/10 bg-white text-slate-700 shadow-[0_3px_0_rgba(23,23,23,.04)] hover:-translate-y-0.5 hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#171717]"
               onClick={loadMore}
             >
               Muat lebih banyak
             </Button>
           )}
           {error ? (
-            <div className="text-sm text-destructive">{error}</div>
+            <div className="rounded-full border border-[#ffd36a] bg-white px-4 py-2 text-sm font-semibold text-[#9a6700]">Tidak dapat memuat lowongan berikutnya. Coba lagi.</div>
           ) : null}
         </div>
       ) : jobs.length > PER_PAGE ? (

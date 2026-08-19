@@ -23,17 +23,17 @@ export default async function ContactPage() {
   ])
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen w-screen max-w-none overflow-x-hidden bg-[#fffdf8]">
       <Navbar jobs={navJobs.data} categories={categories} totalJobs={navJobs.total} />
 
-      <main>
+      <main className="w-full bg-[#fffdf8] pt-0">
         <SiteFrame>
           <Container className="py-14 md:py-20">
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <section className="space-y-8">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Hubungi Kami</p>
-                  <h1 className="mt-4 max-w-xl text-4xl font-semibold tracking-[-0.05em] text-[var(--brand-ink)] md:text-6xl">
+                  <p className="inline-flex rounded-full border border-[#ffd36a] bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-[#2479d1]">Hubungi Kami</p>
+                  <h1 className="jobkan-section-title mt-4 max-w-xl text-4xl font-extrabold tracking-[-0.06em] text-[#171717] md:text-6xl">
                     Ada pertanyaan tentang Lowonganku?
                   </h1>
                   <p className="mt-5 max-w-lg text-base leading-8 text-slate-600">
@@ -46,9 +46,9 @@ export default async function ContactPage() {
                     return (
                       <div
                         key={item.label}
-                        className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4"
+                        className="flex items-center gap-3 rounded-2xl border border-black/10 bg-[#fffdf8] p-4 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-colors hover:border-[#ffd36a] hover:bg-white"
                       >
-                        <div className="grid size-11 place-items-center rounded-xl bg-accent text-accent-foreground">
+                        <div className="grid size-11 place-items-center rounded-xl bg-[#dceeff] text-[#2479d1]">
                           <Icon className="size-5" />
                         </div>
                         <div>

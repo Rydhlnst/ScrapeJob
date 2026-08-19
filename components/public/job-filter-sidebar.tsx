@@ -57,10 +57,10 @@ function FilterOptionRow({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex w-full items-center justify-between gap-3 rounded-xl bg-white px-3.5 py-1.5 text-sm font-medium transition-colors",
+        "flex w-full items-center justify-between gap-3 rounded-xl px-3.5 py-2 text-sm font-medium transition-colors",
         active
-          ? "bg-accent text-accent-foreground ring-1 ring-accent"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+          ? "bg-[#f2f7fb] text-[#171717] ring-1 ring-[#3f95e8]"
+          : "text-slate-500 hover:bg-[#f7f9fb] hover:text-[#2479d1]",
       )}
     >
       <span className="truncate text-left">{label}</span>
@@ -68,7 +68,7 @@ function FilterOptionRow({
         <span
           className={cn(
             "shrink-0 text-xs font-semibold tabular-nums",
-            active ? "text-accent-foreground" : "text-muted-foreground",
+            active ? "text-[#2479d1]" : "text-slate-400",
           )}
         >
           {count}
@@ -117,7 +117,7 @@ function FiltersForm({
 
   return (
     <div className="space-y-5">
-      <div className="rounded-2xl bg-slate-50/70 p-3">
+      <div className="rounded-[20px] border border-black/10 bg-white p-3">
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
           Kategori
         </div>
@@ -141,9 +141,9 @@ function FiltersForm({
         </div>
       </div>
 
-      <Separator />
+      <Separator className="bg-[#e6edf4]" />
 
-      <div className="rounded-2xl bg-slate-50/70 p-3">
+      <div className="rounded-[20px] border border-black/10 bg-white p-3">
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
           Tipe kerja
         </div>
@@ -169,9 +169,9 @@ function FiltersForm({
         </div>
       </div>
 
-      <Separator />
+      <Separator className="bg-[#e6edf4]" />
 
-      <div className="rounded-2xl bg-slate-50/70 p-3">
+      <div className="rounded-[20px] border border-black/10 bg-white p-3">
         <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
           Sumber
         </div>
@@ -200,7 +200,7 @@ function FiltersForm({
       {initialCategory || initialJobType || initialSource ? (
         <Button
           variant="outline"
-          className="w-full rounded-xl border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+          className="w-full rounded-xl border-black/10 bg-white text-slate-600 hover:border-[#3f95e8] hover:bg-[#f7f9fb]"
           onClick={resetAll}
         >
           <RotateCcw className="mr-2 size-4" />
@@ -216,7 +216,7 @@ function ActiveFilterChip({ label, onRemove }: { label: string; onRemove: () => 
     <button
       type="button"
       onClick={onRemove}
-      className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground ring-1 ring-accent transition-colors hover:bg-accent/80"
+      className="inline-flex items-center gap-1.5 rounded-full border border-[#ffd36a] bg-white px-3 py-1 text-xs font-medium text-[#171717] transition-colors hover:bg-[#ffd36a]"
     >
       {label}
       <X className="size-3" />
@@ -287,7 +287,7 @@ export function JobFilterSidebar({
     <>
       <div className="hidden md:block">
         <div className="sticky top-24">
-          <Card className="rounded-2xl border-0 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
+          <Card className="rounded-[24px] border border-black/10 bg-white shadow-[0_6px_0_rgba(23,23,23,.04)]">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-sm font-semibold tracking-[0.12em] uppercase text-slate-500">
                 <SlidersHorizontal className="size-4" />
@@ -317,7 +317,7 @@ export function JobFilterSidebar({
       <div className="md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" className="w-full rounded-xl border-slate-200 bg-white">
+            <Button variant="outline" className="w-full rounded-xl border-black/10 bg-white hover:border-[#3f95e8] hover:bg-[#f7f9fb]">
               <SlidersHorizontal className="mr-2 size-4" />
               Filter
               {(activeCategoryName ? 1 : 0) + (jobType ? 1 : 0) + (source ? 1 : 0) > 0 ? (
@@ -327,7 +327,7 @@ export function JobFilterSidebar({
               ) : null}
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom" className="max-h-[85vh] overflow-auto rounded-t-3xl">
+          <SheetContent side="bottom" className="max-h-[85vh] overflow-auto rounded-t-[28px] border-black/10 bg-white">
             <SheetHeader>
               <SheetTitle>Filter Lowongan</SheetTitle>
             </SheetHeader>

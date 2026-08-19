@@ -33,6 +33,59 @@ const defaultCompanies: LandingCompanyItem[] = companies.map((company) => ({
   brandColor: company.brandColor,
 }))
 
+const defaultSections = {
+  visuals: {
+    boardTitle: "Lowonganku — jobs for you",
+    boardEyebrow: "Peluang terbaru",
+    boardLinkLabel: "Lihat semua",
+    cardStatusLabel: "Baru",
+    cardDetailLabel: "Lihat detail",
+    sideTitle: "Start with the right role",
+    sideDescription: "Search thousands of verified openings in one simple place.",
+    sideActionLabel: "Explore jobs",
+    quizTitle: "What kind of work suits you?",
+    freshTitle: "Fresh roles, every day.",
+  },
+  hero: { eyebrow: "Find work that fits you", searchPlaceholder: "Cari posisi, skill, atau perusahaan", searchLabel: "Cari", statLabel: "Lowongan aktif", statTitle: "Buka peluang baru", statDescription: "kategori untuk kamu jelajahi setiap hari.", floatingTitle: "Pilihan baru untukmu", floatingDescription: "Lowongan terverifikasi, diperbarui rutin." },
+  features: { eyebrow: "Why choose Lowonganku", actionLabel: "Jelajahi lowongan", searchPlaceholder: "Cari lowongan", searchLabel: "Search", savedTitle: "Simpan yang relevan", savedDescription: "Kembali ke peluang terbaik kapan pun.", sourceLabel: "✓ Sumber jelas" },
+  how: {
+    eyebrow: "How it works", title: "Pencarian kerja yang terasa lebih sederhana.", description: "Tiga langkah ringan untuk menemukan pekerjaan yang sesuai dengan tujuanmu.",
+    steps: [
+      { title: "Cari dengan jelas", description: "Mulai dari posisi, skill, lokasi, atau tipe kerja yang benar-benar kamu cari.", linkLabel: "Jelajahi lowongan" },
+      { title: "Bandingkan peluang", description: "Lihat informasi penting dan sumber asli tanpa harus berpindah dari satu situs ke situs lain.", linkLabel: "Jelajahi lowongan" },
+      { title: "Lamar dengan yakin", description: "Simpan pekerjaan yang relevan, lalu lanjutkan proses lamaran langsung ke sumber resminya.", linkLabel: "Jelajahi lowongan" },
+    ],
+  },
+  categories: { eyebrow: "Kategori Populer", title: "Jelajahi berdasarkan kategori", description: "Temukan peran yang paling sering dicari, dari teknologi dan desain hingga operasional dan layanan pelanggan.", buttonLabel: "Lihat semua lowongan" },
+  featured: { eyebrow: "Fresh opportunities", buttonLabel: "Browse all jobs" },
+  cta: { eyebrow: "Search with confidence", prompt: "Cari posisi yang sesuai dengan skill dan tujuanmu.", response: "Siap. Ini beberapa lowongan yang bisa kamu cek.", cardTitle: "Peluang yang layak dilihat" },
+  testimonials: {
+    eyebrow: "Testimonials", title: "A calmer, clearer job search.", description: "A few notes from people using Lowonganku to make their next move with more confidence.", featuredRole: "Job seeker",
+    items: [
+      { name: "Raka Pratama", quote: "The roles are easy to compare and the original source is always clear." },
+      { name: "Nadia Aulia", quote: "I found relevant roles without jumping between five different platforms." },
+      { name: "Bagas Wicaksono", quote: "A clean job search experience that makes it easier to choose where to apply." },
+    ],
+  },
+  faq: {
+    eyebrow: "FAQ", title: "Pertanyaan yang sering ditanyakan", description: "Punya pertanyaan tentang platform kami? Temukan jawabannya di sini.", contactLabel: "Hubungi tim support →",
+    items: [
+      { question: "Apa itu platform pencarian kerja ini?", answer: "Lowonganku mengumpulkan lowongan dari berbagai sumber terpercaya di Indonesia dan menyajikan informasi yang jelas untuk membantu kamu menemukan peluang yang relevan." },
+      { question: "Apakah perlu membuat akun untuk mencari lowongan?", answer: "Tidak. Kamu bisa langsung menjelajahi dan mencari lowongan tanpa login atau signup." },
+      { question: "Dari mana sumber lowongan ditampilkan?", answer: "Kami menampilkan lowongan dari sumber terpercaya dan selalu menautkan kamu kembali ke sumber resmi saat melamar." },
+      { question: "Seberapa sering lowongan diperbarui?", answer: "Lowongan diperbarui secara berkala agar kamu bisa menemukan peluang terbaru." },
+    ],
+  },
+  footer: {
+    eyebrow: "Siap menemukan peluang berikutnya?", title: "Jelajahi lowongan", description: "Explore job opportunities with more clarity, more confidence, and less noise.",
+    columns: [
+      { title: "Explore", links: [{ label: "Jobs", href: "/jobs" }, { label: "Categories", href: "/#categories" }, { label: "Career guide", href: "/#how" }] },
+      { title: "Company", links: [{ label: "About", href: "/#about" }, { label: "Contact", href: "/contact" }, { label: "Blog", href: "/blog" }] },
+      { title: "Resources", links: [{ label: "Help center", href: "/contact" }, { label: "Privacy", href: "/#about" }, { label: "Terms", href: "/#about" }] },
+    ],
+  },
+}
+
 export const defaultLandingPageContent: LandingPageContent = {
   hero: {
     title: "Start browsing jobs the moment you land.",
@@ -73,6 +126,7 @@ export const defaultLandingPageContent: LandingPageContent = {
     primaryButton: { label: "Find work", href: "/jobs" },
     secondaryButton: { label: "See categories", href: "#categories" },
   },
+  sections: defaultSections,
 }
 
 function cloneContent(content: LandingPageContent): LandingPageContent {
@@ -132,9 +186,23 @@ export function normalizeLandingPageContent(
       ...base.cta,
       ...content.cta,
       primaryButton: { ...base.cta.primaryButton, ...content.cta?.primaryButton },
-      secondaryButton: { ...base.cta.secondaryButton, ...content.cta?.secondaryButton },
-    },
-  }
+    secondaryButton: { ...base.cta.secondaryButton, ...content.cta?.secondaryButton },
+  },
+  sections: {
+    ...base.sections,
+    ...content.sections,
+    visuals: { ...base.sections.visuals, ...content.sections?.visuals },
+    hero: { ...base.sections.hero, ...content.sections?.hero },
+    features: { ...base.sections.features, ...content.sections?.features },
+    how: { ...base.sections.how, ...content.sections?.how, steps: content.sections?.how?.steps?.filter((item) => item?.title && item?.description && item?.linkLabel) ?? base.sections.how.steps },
+    categories: { ...base.sections.categories, ...content.sections?.categories },
+    featured: { ...base.sections.featured, ...content.sections?.featured },
+    cta: { ...base.sections.cta, ...content.sections?.cta },
+    testimonials: { ...base.sections.testimonials, ...content.sections?.testimonials, items: content.sections?.testimonials?.items?.filter((item) => item?.name && item?.quote) ?? base.sections.testimonials.items },
+    faq: { ...base.sections.faq, ...content.sections?.faq, items: content.sections?.faq?.items?.filter((item) => item?.question && item?.answer) ?? base.sections.faq.items },
+    footer: { ...base.sections.footer, ...content.sections?.footer, columns: content.sections?.footer?.columns?.filter((item) => item?.title && Array.isArray(item.links)) ?? base.sections.footer.columns },
+  },
+}
 }
 
 export function resolveAdminLandingEditorContent(

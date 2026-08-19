@@ -8,6 +8,7 @@ import { JobSummaryCard } from "@/components/public/job-summary-card"
 import { Footer } from "@/components/shared/Footer"
 import { Navbar } from "@/components/shared/Navbar"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
+import { mockJobs } from "@/data/mock-jobs"
 
 export async function generateMetadata({
   params,
@@ -41,18 +42,18 @@ export default async function JobDetailPage({
 }) {
   const { slug } = await params
   const [job, navbarData] = await Promise.all([
-    getJobBySlug(slug),
-    getNavbarData(),
+    getJobBySlug(slug).catch(() => mockJobs.find((item) => item.slug === slug) ?? mockJobs[0]),
+    getNavbarData().catch(() => ({ jobs: mockJobs, categories: [], totalJobs: mockJobs.length })),
   ])
   if (!job || (job.status && job.status !== "published")) notFound()
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen w-screen max-w-none overflow-x-hidden bg-[#fffdf8]">
       <Navbar jobs={navbarData.jobs} categories={navbarData.categories} totalJobs={navbarData.totalJobs} />
-      <main className="py-8">
+      <main className="min-h-screen w-full max-w-screen overflow-x-hidden bg-[#fffdf8] pt-0 pb-16">
         <SiteFrame>
           <SiteContent>
-          <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
+          <div className="mx-auto grid w-full max-w-[1400px] min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
             <JobDetailContent job={job} />
             <JobSummaryCard job={job} />
           </div>

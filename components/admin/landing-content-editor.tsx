@@ -16,6 +16,7 @@ import {
   saveAdminLandingPageDraft,
 } from "@/lib/api/landing-page-content"
 import { resolveAdminLandingEditorContent } from "@/lib/landing-page-content"
+import { landingPageContentSchema, landingPageSectionsSchema } from "@/types/landing-content"
 import type {
   AdminLandingPageContentRecord,
   LandingBenefitItem,
@@ -51,6 +52,7 @@ const sections = [
   { value: "benefits", label: "Benefit", description: "Benefit cards landing page" },
   { value: "companies", label: "Perusahaan Terpercaya", description: "Strip logo dan brand color" },
   { value: "cta", label: "CTA", description: "Penutup dan call to action" },
+  { value: "sections", label: "Section Copy", description: "Visual labels, how-it-works, categories, testimonials, FAQ, and footer" },
 ] as const
 
 export function LandingContentEditor({ initialRecord }: { initialRecord: AdminLandingPageContentRecord }) {
@@ -65,13 +67,22 @@ export function LandingContentEditor({ initialRecord }: { initialRecord: AdminLa
   const [draft, setDraft] = useState<LandingPageContent>(resolveAdminLandingEditorContent(initialRecord))
   const [isSaving, setIsSaving] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
+  const [sectionsJson, setSectionsJson] = useState(() => JSON.stringify(resolveAdminLandingEditorContent(initialRecord).sections, null, 2))
+  const [sectionsError, setSectionsError] = useState<string | null>(null)
 
   async function handleSave() {
+    const validation = landingPageContentSchema.safeParse(draft)
+    if (sectionsError || !validation.success) {
+      toast.error("Fix the Section Copy JSON before saving.")
+      return
+    }
     setIsSaving(true)
     try {
       const nextRecord = await saveAdminLandingPageDraft(draft)
       setRecord(nextRecord)
-      setDraft(resolveAdminLandingEditorContent(nextRecord))
+      const nextDraft = resolveAdminLandingEditorContent(nextRecord)
+      setDraft(nextDraft)
+      setSectionsJson(JSON.stringify(nextDraft.sections, null, 2))
       toast.success("Landing content draft saved.")
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to save draft.")
@@ -81,11 +92,18 @@ export function LandingContentEditor({ initialRecord }: { initialRecord: AdminLa
   }
 
   async function handlePublish() {
+    const validation = landingPageContentSchema.safeParse(draft)
+    if (sectionsError || !validation.success) {
+      toast.error("Fix the Section Copy JSON before publishing.")
+      return
+    }
     setIsPublishing(true)
     try {
       const nextRecord = await publishAdminLandingPageDraft()
       setRecord(nextRecord)
-      setDraft(resolveAdminLandingEditorContent(nextRecord))
+      const nextDraft = resolveAdminLandingEditorContent(nextRecord)
+      setDraft(nextDraft)
+      setSectionsJson(JSON.stringify(nextDraft.sections, null, 2))
       toast.success("Landing content published.")
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to publish content.")
@@ -106,8 +124,8 @@ export function LandingContentEditor({ initialRecord }: { initialRecord: AdminLa
               <AdminStatusBadge status={record.status} />
               {record.updatedAt ? <div className="text-xs text-muted-foreground">Updated {new Date(record.updatedAt).toLocaleString("id-ID")}</div> : null}
             </div>
-            <Button type="button" variant="outline" className="rounded-lg" onClick={handleSave} disabled={isSaving}>{isSaving ? "Saving..." : "Save draft"}</Button>
-            <Button type="button" className="rounded-lg" onClick={handlePublish} disabled={isPublishing}>{isPublishing ? "Publishing..." : "Publish changes"}</Button>
+            <Button type="button" variant="outline" className="rounded-lg" onClick={handleSave} disabled={isSaving || Boolean(sectionsError)}>{isSaving ? "Saving..." : "Save draft"}</Button>
+            <Button type="button" className="rounded-lg" onClick={handlePublish} disabled={isPublishing || Boolean(sectionsError)}>{isPublishing ? "Publishing..." : "Publish changes"}</Button>
           </>
         }
       />
@@ -118,6 +136,7 @@ export function LandingContentEditor({ initialRecord }: { initialRecord: AdminLa
           {activeTab === "benefits" ? (<AdminEditorSectionCard title="Benefits" description="Structured benefits cards shown after the featured jobs section."><Field label="Section title"><Input value={draft.benefits.title} onChange={(event) => setDraft((current) => ({ ...current, benefits: { ...current.benefits, title: event.target.value } }))} /></Field><div className="grid gap-4">{draft.benefits.items.map((item, index) => (<div key={`${item.title}-${index}`} className="grid gap-4"><Field label={`Benefit ${index + 1} title`}><Input value={item.title} onChange={(event) => setDraft((current) => ({ ...current, benefits: { ...current.benefits, items: setBenefitValue(current.benefits.items, index, "title", event.target.value) } }))} /></Field><Field label={`Benefit ${index + 1} description`}><Textarea value={item.description} onChange={(event) => setDraft((current) => ({ ...current, benefits: { ...current.benefits, items: setBenefitValue(current.benefits.items, index, "description", event.target.value) } }))} /></Field></div>))}</div></AdminEditorSectionCard>) : null}
           {activeTab === "companies" ? (<AdminEditorSectionCard title="Trusted companies" description="Structured company strip for the credibility section."><Field label="Section title"><Input value={draft.trustedCompanies.title} onChange={(event) => setDraft((current) => ({ ...current, trustedCompanies: { ...current.trustedCompanies, title: event.target.value } }))} /></Field><div className="grid gap-4">{draft.trustedCompanies.items.map((item, index) => (<div key={`${item.id}-${index}`} className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"><Field label={`Company ${index + 1} ID`}><Input value={item.id} onChange={(event) => setDraft((current) => ({ ...current, trustedCompanies: { ...current.trustedCompanies, items: setCompanyValue(current.trustedCompanies.items, index, "id", event.target.value) } }))} /></Field><Field label={`Company ${index + 1} Name`}><Input value={item.name} onChange={(event) => setDraft((current) => ({ ...current, trustedCompanies: { ...current.trustedCompanies, items: setCompanyValue(current.trustedCompanies.items, index, "name", event.target.value) } }))} /></Field><Field label={`Company ${index + 1} URL`}><Input value={item.url} onChange={(event) => setDraft((current) => ({ ...current, trustedCompanies: { ...current.trustedCompanies, items: setCompanyValue(current.trustedCompanies.items, index, "url", event.target.value) } }))} /></Field><Field label={`Company ${index + 1} Color`}><Input value={item.brandColor} onChange={(event) => setDraft((current) => ({ ...current, trustedCompanies: { ...current.trustedCompanies, items: setCompanyValue(current.trustedCompanies.items, index, "brandColor", event.target.value) } }))} /></Field></div>))}</div></AdminEditorSectionCard>) : null}
           {activeTab === "cta" ? (<AdminEditorSectionCard title="CTA" description="Closing call-to-action that anchors the bottom of the landing page."><div className="grid gap-4"><Field label="Title"><Textarea value={draft.cta.title} onChange={(event) => setDraft((current) => ({ ...current, cta: { ...current.cta, title: event.target.value } }))} /></Field><Field label="Body"><Textarea value={draft.cta.body} onChange={(event) => setDraft((current) => ({ ...current, cta: { ...current.cta, body: event.target.value } }))} /></Field><Field label="Primary button label"><Input value={draft.cta.primaryButton.label} onChange={(event) => setDraft((current) => ({ ...current, cta: { ...current.cta, primaryButton: { ...current.cta.primaryButton, label: event.target.value } } }))} /></Field><Field label="Primary button link"><Input value={draft.cta.primaryButton.href} onChange={(event) => setDraft((current) => ({ ...current, cta: { ...current.cta, primaryButton: { ...current.cta.primaryButton, href: event.target.value } } }))} /></Field></div></AdminEditorSectionCard>) : null}
+          {activeTab === "sections" ? (<AdminEditorSectionCard title="Section copy" description="All remaining visible homepage text, including the hero artwork labels. Edit this structured content, save the draft, then publish."><Field label="Homepage section content (JSON schema validated)"><Textarea className="min-h-[680px] font-mono text-xs leading-5" value={sectionsJson} onChange={(event) => { const value = event.target.value; setSectionsJson(value); try { const parsed = JSON.parse(value); const validation = landingPageSectionsSchema.safeParse(parsed); if (!validation.success) { setSectionsError(validation.error.issues[0]?.message ?? "Section copy does not match the landing schema."); return } setDraft((current) => ({ ...current, sections: validation.data })); setSectionsError(null) } catch { setSectionsError("JSON is not valid yet. Fix it before saving.") } }} /></Field>{sectionsError ? <p className="text-sm text-destructive">{sectionsError}</p> : null}</AdminEditorSectionCard>) : null}
       </div>
     </div>
   )

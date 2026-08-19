@@ -80,6 +80,10 @@
     --brand-ink: #172554;
     --brand-shell: #f8fafc;
     --brand-shell-strong: #f1f5f9;
+    --jobkan-blue: #3f95e8;
+    --jobkan-blue-dark: #2479d1;
+    --jobkan-yellow: #ffd36a;
+    --jobkan-ink: #171717;
 
     --surface: 210 20% 98%;
     --surface-foreground: 215 25% 27%;
@@ -147,6 +151,8 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+    max-width: 100vw;
+    overflow-x: hidden;
     font-family: var(--font-plus-jakarta-sans), system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     text-rendering: optimizeLegibility;
@@ -207,12 +213,14 @@
 
   .rich-text, .ProseMirror {
     font-family: inherit;
-    line-height: 1.8;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    line-height: 1.65;
     color: hsl(var(--foreground));
   }
 
   .rich-text p, .ProseMirror p {
-    margin-bottom: 1.1rem;
+    margin: 0 0 0.9rem;
   }
 
   .rich-text p:last-child, .ProseMirror p:last-child {
@@ -224,8 +232,8 @@
     font-weight: 650;
     letter-spacing: -0.02em;
     color: var(--brand-ink);
-    margin-top: 2.25rem;
-    margin-bottom: 0.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
   }
 
   .rich-text h3, .ProseMirror h3 {
@@ -233,24 +241,24 @@
     font-weight: 600;
     letter-spacing: -0.01em;
     color: var(--brand-ink);
-    margin-top: 1.75rem;
+    margin-top: 1.25rem;
     margin-bottom: 0.5rem;
   }
 
   .rich-text ul, .ProseMirror ul {
     list-style-type: disc;
     padding-left: 1.4rem;
-    margin-bottom: 1.1rem;
+    margin: 0.75rem 0 1rem;
   }
 
   .rich-text ol, .ProseMirror ol {
     list-style-type: decimal;
     padding-left: 1.4rem;
-    margin-bottom: 1.1rem;
+    margin: 0.75rem 0 1rem;
   }
 
   .rich-text li, .ProseMirror li {
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.25rem;
   }
 
   .rich-text strong, .ProseMirror strong {
@@ -317,6 +325,23 @@
     margin: 2rem 0;
   }
 
+  .job-detail-copy h2,
+  .job-detail-copy h3 {
+    border-left: 4px solid var(--jobkan-yellow);
+    padding-left: 0.75rem;
+  }
+
+  .job-detail-copy ul,
+  .job-detail-copy ol {
+    padding-left: 1.5rem;
+  }
+
+  .job-detail-copy pre,
+  .job-detail-copy table {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
   .ProseMirror:focus {
     outline: none;
   }
@@ -334,6 +359,38 @@
 
   .brand-image-slot {
     background: var(--brand-shell);
+  }
+
+  .jobkan-panel {
+    border: 1px solid rgba(23, 23, 23, .1);
+    border-radius: 28px;
+    background: #fff;
+    box-shadow: 0 12px 0 rgba(23, 23, 23, .035);
+  }
+
+  .jobkan-label {
+    display: inline-flex;
+    align-items: center;
+    border-bottom: 2px solid var(--jobkan-yellow);
+    color: var(--jobkan-blue);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: .02em;
+  }
+
+  .jobkan-section-title {
+    position: relative;
+  }
+
+  .jobkan-section-title::after {
+    content: "";
+    display: block;
+    width: 4.5rem;
+    height: 0.28rem;
+    margin: 1.25rem auto 0;
+    border-radius: 999px;
+    background: var(--jobkan-yellow);
+    transform: rotate(-2deg);
   }
 }
 
@@ -474,4 +531,3 @@
     color: #52525b;
   }
 }
-

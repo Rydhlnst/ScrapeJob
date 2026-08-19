@@ -41,9 +41,9 @@ export function TrustedCompanies({ content }: { content: LandingTrustedCompanies
   const row3 = companyNames.slice(4, 10)
 
   return (
-    <section className="border-b border-[var(--brand-shell-strong)] bg-slate-50/70 py-12 md:py-16" id="companies">
+    <section className="border-b border-slate-100 bg-white py-12 md:py-16" id="companies">
       <Container>
-        <p className="text-center text-sm text-slate-500">
+        <p className="text-center text-sm font-medium text-slate-400">
           Dipercaya oleh pencari kerja yang melamar ke perusahaan seperti
         </p>
 

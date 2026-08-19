@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 
 import { cn } from "@/lib/utils"
 
-export const SITE_CONTENT_CLASS = "mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8"
+export const SITE_CONTENT_CLASS = "mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-8"
 
 export function SiteFrame({
   children,
@@ -14,7 +14,7 @@ export function SiteFrame({
   return (
     <div
       className={cn(
-        "mx-auto w-full max-w-[1600px] border-x border-[var(--brand-shell-strong)]",
+        "w-screen max-w-none",
         className,
       )}
     >

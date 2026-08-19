@@ -100,7 +100,7 @@ export function JobSearchBar({
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           placeholder="Posisi, perusahaan, atau kata kunci..."
-          className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-sm text-slate-900 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-colors placeholder:text-slate-400 hover:border-slate-300 focus-visible:border-slate-400 focus-visible:ring-0"
+          className="h-12 w-full rounded-xl border border-black/10 bg-white pl-11 pr-4 text-sm text-slate-900 shadow-none transition-colors placeholder:text-slate-400 hover:border-[#3f95e8] focus-visible:border-[#3f95e8] focus-visible:ring-2 focus-visible:ring-[#3f95e8]/15"
           onKeyDown={(e) => {
             if (e.key === "Enter") submit()
           }}
@@ -112,7 +112,7 @@ export function JobSearchBar({
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           placeholder="Lokasi (kota/provinsi)"
-          className="h-12 w-full rounded-xl border border-slate-200 bg-white pl-11 pr-4 text-sm text-slate-900 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-colors placeholder:text-slate-400 hover:border-slate-300 focus-visible:border-slate-400 focus-visible:ring-0"
+          className="h-12 w-full rounded-xl border border-black/10 bg-white pl-11 pr-4 text-sm text-slate-900 shadow-none transition-colors placeholder:text-slate-400 hover:border-[#3f95e8] focus-visible:border-[#3f95e8] focus-visible:ring-2 focus-visible:ring-[#3f95e8]/15"
           onKeyDown={(e) => {
             if (e.key === "Enter") submit()
           }}
@@ -125,10 +125,10 @@ export function JobSearchBar({
           submit({ keyword, location, sort: value })
         }}
       >
-        <SelectTrigger className="!h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-700 shadow-[0_1px_2px_rgba(15,23,42,0.03)] transition-colors hover:border-slate-300 focus-visible:border-slate-400 focus-visible:ring-0 [&>svg]:text-slate-400">
+        <SelectTrigger className="!h-12 w-full rounded-xl border border-black/10 bg-white px-4 text-sm text-slate-700 shadow-none transition-colors hover:border-[#3f95e8] focus-visible:border-[#3f95e8] focus-visible:ring-2 focus-visible:ring-[#3f95e8]/15 [&>svg]:text-slate-400">
           <SelectValue placeholder="Urutkan" />
         </SelectTrigger>
-        <SelectContent className="rounded-xl border-slate-200 bg-white">
+        <SelectContent className="rounded-xl border-black/10 bg-white">
           <SelectItem value="newest">Terbaru</SelectItem>
           <SelectItem value="oldest">Terlama</SelectItem>
           <SelectItem value="relevance">Relevansi</SelectItem>
@@ -139,7 +139,7 @@ export function JobSearchBar({
         type="button"
         onClick={() => submit()}
         aria-label="Cari lowongan"
-        className="inline-flex h-12 min-w-12 items-center justify-center gap-2 rounded-xl bg-[var(--brand-blue)] px-6 text-sm font-semibold text-white transition-colors hover:bg-blue-700 md:min-w-14"
+        className="inline-flex h-12 min-w-12 items-center justify-center gap-2 rounded-xl bg-[#1f5f9f] px-6 text-sm font-semibold text-white shadow-[0_3px_0_rgba(23,23,23,.12)] transition-colors hover:bg-[#2479d1] md:min-w-14"
       >
         <Search className="h-4 w-4 md:hidden" />
         <span className="hidden md:inline">Cari</span>

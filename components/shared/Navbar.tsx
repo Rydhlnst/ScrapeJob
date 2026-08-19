@@ -17,7 +17,7 @@ import {
   Search,
   X,
 } from "lucide-react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -276,8 +276,8 @@ function CountLink({ item, active = false }: { item: CountItem; active?: boolean
     <Link
       href={item.href}
       className={cn(
-        "flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary",
-        active && "bg-[var(--brand-shell-strong)] text-primary",
+        "flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-[#f7f9fb] hover:text-[#2479d1]",
+        active && "bg-[#f2f7fb] text-[#171717] ring-1 ring-[#3f95e8]/30",
       )}
     >
       <span className="flex items-center gap-2">
@@ -302,12 +302,12 @@ function FlatPanel({ items, title }: { items: CountItem[]; title: string }) {
         <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Kombinasi Populer</p>
         <div className="flex flex-wrap gap-2 px-3">
           {quickLinks.map((link) => (
-            <Link key={link} href={`/jobs?q=${encodeURIComponent(link)}`} className="rounded-lg bg-[var(--brand-shell)] px-3 py-1 text-xs text-slate-600 transition-colors hover:bg-[var(--brand-shell-strong)] hover:text-primary">
+            <Link key={link} href={`/jobs?q=${encodeURIComponent(link)}`} className="rounded-lg border border-black/10 bg-white px-3 py-1 text-xs text-slate-600 transition-colors hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#2479d1]">
               {link}
             </Link>
           ))}
         </div>
-        <Link href="/jobs" className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90">
+        <Link href="/jobs" className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-[#1f5f9f] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#2479d1]">
           Lihat Semua Lowongan <MoveRight className="size-4" />
         </Link>
       </div>
@@ -315,13 +315,23 @@ function FlatPanel({ items, title }: { items: CountItem[]; title: string }) {
   )
 }
 
-function JobsMegaMenu({ open, menuData }: { open: boolean; menuData: ReturnType<typeof buildNavbarData> }) {
+function JobsMegaMenu({
+  open,
+  menuData,
+  onMouseEnter,
+  onMouseLeave,
+}: {
+  open: boolean
+  menuData: ReturnType<typeof buildNavbarData>
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
+}) {
   const [activeFacet, setActiveFacet] = useState<Facet["id"]>("kategori")
   const [activeCategory, setActiveCategory] = useState(menuData.categories[0])
 
   return (
-    <div className={cn(
-      "absolute left-1/2 top-full hidden w-[min(960px,95vw)] -translate-x-1/2 rounded-xl bg-white shadow-[var(--shadow-lg)] ring-1 ring-slate-100",
+    <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className={cn(
+      "fixed left-1/2 top-24 hidden w-[min(1080px,95vw)] -translate-x-1/2 rounded-2xl border border-black/10 bg-white shadow-[0_18px_50px_rgba(23,23,23,.16)]",
       open && "block",
     )}>
       <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-3.5">
@@ -345,8 +355,8 @@ function JobsMegaMenu({ open, menuData }: { open: boolean; menuData: ReturnType<
                 if (activeFacet !== facet.id) { e.preventDefault(); setActiveFacet(facet.id) }
               }}
               className={cn(
-                "mb-[-1px] inline-flex shrink-0 items-center gap-1.5 border-b-2 border-transparent px-3 py-3 text-[13px] text-slate-500 transition-colors hover:text-slate-800",
-                activeFacet === facet.id && "border-primary text-primary",
+                  "mb-[-1px] inline-flex shrink-0 items-center gap-1.5 border-b-2 border-transparent px-3 py-3 text-[13px] text-slate-500 transition-colors hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#2479d1]",
+                activeFacet === facet.id && "border-[#2479d1] bg-[#f2f7fb] text-[#2479d1]",
               )}
             >
               <Icon className="size-3.5" />
@@ -383,13 +393,13 @@ function JobsMegaMenu({ open, menuData }: { open: boolean; menuData: ReturnType<
                 <Link
                   key={link}
                   href={`/jobs?q=${encodeURIComponent(`${activeCategory.label} ${link}`)}`}
-                  className="rounded-lg bg-[var(--brand-shell)] px-3 py-1 text-xs text-slate-600 transition-colors hover:bg-[var(--brand-shell-strong)] hover:text-primary"
+                  className="rounded-lg border border-black/10 bg-white px-3 py-1 text-xs text-slate-600 transition-colors hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#2479d1]"
                 >
                   {link}
                 </Link>
               ))}
             </div>
-            <Link href={activeCategory.href} className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90">
+            <Link href={activeCategory.href} className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-[#1f5f9f] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#2479d1]">
               {activeCategory.count} lowongan <MoveRight className="size-4" />
             </Link>
           </div>
@@ -407,7 +417,7 @@ function JobsMegaMenu({ open, menuData }: { open: boolean; menuData: ReturnType<
           <span><span className="font-semibold text-slate-800">{formatCount(menuData.totalLocations)}</span> kota</span>
           <span><span className="font-semibold text-slate-800">{formatCount(menuData.totalCompanies)}</span> perusahaan</span>
         </div>
-        <Link href="/jobs" className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm text-white transition-opacity hover:opacity-90">
+        <Link href="/jobs" className="inline-flex items-center gap-2 rounded-lg bg-[#1f5f9f] px-4 py-2 text-sm text-white transition-colors hover:bg-[#2479d1]">
           Buka Pencarian <MoveRight className="size-4" />
         </Link>
       </div>
@@ -415,12 +425,22 @@ function JobsMegaMenu({ open, menuData }: { open: boolean; menuData: ReturnType<
   )
 }
 
-function CompaniesMegaMenu({ open, menuData }: { open: boolean; menuData: ReturnType<typeof buildNavbarData> }) {
+function CompaniesMegaMenu({
+  open,
+  menuData,
+  onMouseEnter,
+  onMouseLeave,
+}: {
+  open: boolean
+  menuData: ReturnType<typeof buildNavbarData>
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
+}) {
   const [activeType, setActiveType] = useState(menuData.companyTypes[0])
 
   return (
-    <div className={cn(
-      "absolute left-1/2 top-full hidden w-[min(720px,92vw)] -translate-x-1/2 rounded-lg bg-white shadow-[var(--shadow-lg)] ring-1 ring-slate-100",
+    <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className={cn(
+      "fixed left-1/2 top-24 hidden w-[min(760px,92vw)] -translate-x-1/2 rounded-2xl border border-black/10 bg-white shadow-[0_18px_50px_rgba(23,23,23,.16)]",
       open && "block",
     )}>
       <div className="grid min-h-[280px] grid-cols-[1fr_1.6fr]">
@@ -433,8 +453,8 @@ function CompaniesMegaMenu({ open, menuData }: { open: boolean; menuData: Return
                 href={type.href}
                 onMouseEnter={() => setActiveType(type)}
                 className={cn(
-                  "flex items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-[var(--brand-shell)] hover:text-primary",
-                  activeType.href === type.href && "bg-[var(--brand-shell-strong)] text-primary",
+                  "flex items-center justify-between rounded-xl px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-[#f7f9fb] hover:text-[#2479d1]",
+                  activeType.href === type.href && "bg-[#f2f7fb] text-[#171717] ring-1 ring-[#3f95e8]/30",
                 )}
               >
                 {type.label}
@@ -450,9 +470,9 @@ function CompaniesMegaMenu({ open, menuData }: { open: boolean; menuData: Return
               <Link
                 key={company}
                 href={activeType.href}
-                className="flex items-center gap-2.5 rounded-lg bg-[var(--brand-shell)] px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-[var(--brand-shell-strong)] hover:text-primary"
+                className="flex items-center gap-2.5 rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-slate-700 transition-colors hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#2479d1]"
               >
-                <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-primary/10 text-xs font-semibold text-primary">
+                <span className="grid size-7 shrink-0 place-items-center rounded-lg border border-[#3f95e8]/25 bg-[#f2f7fb] text-xs font-semibold text-[#2479d1]">
                   {company.charAt(0)}
                 </span>
                 <span className="min-w-0 flex-1 truncate text-xs">{company}</span>
@@ -460,7 +480,7 @@ function CompaniesMegaMenu({ open, menuData }: { open: boolean; menuData: Return
               </Link>
             ))}
           </div>
-          <Link href={activeType.href} className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90">
+          <Link href={activeType.href} className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-[#1f5f9f] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#2479d1]">
             Lihat Semua {activeType.label} <MoveRight className="size-4" />
           </Link>
         </div>
@@ -471,30 +491,46 @@ function CompaniesMegaMenu({ open, menuData }: { open: boolean; menuData: Return
 
 function DesktopNav({ menuData }: { menuData: ReturnType<typeof buildNavbarData> }) {
   const [openMenu, setOpenMenu] = useState<"jobs" | "companies" | null>(null)
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pathname = usePathname() ?? ""
+
+  const cancelClose = () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+    closeTimerRef.current = null
+  }
+
+  const scheduleClose = () => {
+    cancelClose()
+    closeTimerRef.current = setTimeout(() => setOpenMenu(null), 180)
+  }
+
+  const open = (menu: "jobs" | "companies") => {
+    cancelClose()
+    setOpenMenu(menu)
+  }
 
   const linkClass = (active: boolean) =>
     cn(
       "self-center rounded-lg px-3 py-2 text-[13px] transition-colors",
       active
-        ? "bg-accent font-semibold text-accent-foreground"
-        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+        ? "bg-[#f2f7fb] font-semibold text-[#2479d1]"
+        : "text-muted-foreground hover:bg-[#f7f9fb] hover:text-[#2479d1]",
     )
 
   const triggerClass = (active: boolean) =>
     cn(
       "inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] transition-colors",
       active
-        ? "bg-accent font-semibold text-accent-foreground"
-        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+        ? "bg-[#f2f7fb] font-semibold text-[#2479d1]"
+        : "text-muted-foreground hover:bg-[#f7f9fb] hover:text-[#2479d1]",
     )
 
   const jobsActive = pathname === "/jobs" || pathname.startsWith("/jobs/")
   const blogActive = pathname === "/blog" || pathname.startsWith("/blog/") || pathname.startsWith("/page/blog")
 
   return (
-    <nav className="hidden items-stretch gap-0.5 lg:flex" onMouseLeave={() => setOpenMenu(null)}>
-      <div className="relative flex items-center" onMouseEnter={() => setOpenMenu("jobs")}>
+    <nav className="hidden items-stretch gap-0.5 lg:flex" onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
+      <div className="relative flex items-center" onMouseEnter={() => open("jobs")}>
         <button
           type="button"
           className={triggerClass(jobsActive || openMenu === "jobs")}
@@ -503,10 +539,10 @@ function DesktopNav({ menuData }: { menuData: ReturnType<typeof buildNavbarData>
           Cari Lowongan
           <ChevronDown className={cn("size-3.5 text-slate-400 transition-transform", openMenu === "jobs" && "rotate-180")} />
         </button>
-        <JobsMegaMenu open={openMenu === "jobs"} menuData={menuData} />
+        <JobsMegaMenu open={openMenu === "jobs"} menuData={menuData} onMouseEnter={cancelClose} onMouseLeave={scheduleClose} />
       </div>
 
-      <div className="relative flex items-center" onMouseEnter={() => setOpenMenu("companies")}>
+      <div className="relative flex items-center" onMouseEnter={() => open("companies")}>
         <button
           type="button"
           className={triggerClass(openMenu === "companies")}
@@ -515,7 +551,7 @@ function DesktopNav({ menuData }: { menuData: ReturnType<typeof buildNavbarData>
           Perusahaan
           <ChevronDown className={cn("size-3.5 text-slate-400 transition-transform", openMenu === "companies" && "rotate-180")} />
         </button>
-        <CompaniesMegaMenu open={openMenu === "companies"} menuData={menuData} />
+        <CompaniesMegaMenu open={openMenu === "companies"} menuData={menuData} onMouseEnter={cancelClose} onMouseLeave={scheduleClose} />
       </div>
 
       <Link href="/jobs" className={linkClass(jobsActive)}>
@@ -559,7 +595,7 @@ function MobileDrawer({ menuData }: { menuData: ReturnType<typeof buildNavbarDat
           {mobileGroups.map((group) => {
             const Icon = group.icon
             return (
-              <details key={group.title} className="rounded-lg open:bg-[var(--brand-shell)]" open={group.title === "Kategori"}>
+              <details key={group.title} className="rounded-lg open:bg-[#f7f9fb]" open={group.title === "Kategori"}>
                 <summary className="flex cursor-pointer list-none items-center gap-3 px-3 py-3 text-[13px] text-slate-700 [&::-webkit-details-marker]:hidden">
                   <Icon className="size-4 text-primary" />
                   {group.title}
@@ -571,7 +607,7 @@ function MobileDrawer({ menuData }: { menuData: ReturnType<typeof buildNavbarDat
               </details>
             )
           })}
-          <Button asChild className="mt-4 h-11 rounded-lg bg-primary text-sm text-white hover:opacity-90">
+          <Button asChild className="mt-4 h-11 rounded-lg bg-[#1f5f9f] text-sm text-white hover:bg-[#2479d1]">
             <Link href="/jobs">Cari Lowongan</Link>
           </Button>
         </div>
@@ -583,21 +619,22 @@ function MobileDrawer({ menuData }: { menuData: ReturnType<typeof buildNavbarDat
 export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
   const menuData = buildNavbarData({ jobs, categories, totalJobs })
   const pathname = usePathname() ?? ""
+  const isHome = pathname === "/"
   const contactActive = pathname.startsWith("/contact")
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/95 backdrop-blur-sm">
-      <SiteFrame>
-        <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className={cn("sticky inset-x-0 top-0 z-50 w-full border-b border-black/10", isHome ? "bg-[#fffdf8]/95 backdrop-blur-md" : "bg-white/95 backdrop-blur-sm")}>
+      <SiteFrame className={cn(isHome && "bg-[#fffdf8]")}>
+        <div className="flex h-24 items-center justify-between px-4 sm:px-6 lg:px-8">
           <Logo />
           <DesktopNav menuData={menuData} />
           <div className="hidden items-center gap-2 lg:flex">
-            <Button asChild variant="ghost" className="h-9 rounded-lg px-4 text-[13px] text-slate-600 hover:bg-[var(--brand-shell)] hover:text-[var(--brand-blue)]">
+              <Button asChild variant="ghost" className="h-9 rounded-lg px-4 text-[13px] text-slate-600 hover:bg-[#f7f9fb] hover:text-[#2479d1]">
               <Link href="/jobs">Lowongan Terbaru</Link>
             </Button>
             <Button
               asChild
-              className="h-9 rounded-full bg-primary px-5 text-[13px] font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+              className={cn("h-9 rounded-full px-5 text-[13px] font-semibold transition-colors", isHome ? "bg-[#1c0d0d] text-white hover:bg-[#342020]" : "bg-[#1f5f9f] text-white hover:bg-[#2479d1]")}
             >
               <Link href="/contact">Hubungi Kami</Link>
             </Button>
@@ -608,4 +645,3 @@ export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
     </header>
   )
 }
-

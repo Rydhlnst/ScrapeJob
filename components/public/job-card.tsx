@@ -38,7 +38,7 @@ function CompanyLogo({
   }
 
   return (
-    <div className={`grid ${size} ${radius} shrink-0 place-items-center bg-accent text-sm font-semibold text-accent-foreground`}>
+    <div className={`grid ${size} ${radius} shrink-0 place-items-center border border-[#ffd36a] bg-white text-sm font-semibold text-[#2479d1]`}>
       {fallback}
     </div>
   )
@@ -95,8 +95,8 @@ function CompactJobCard({
     <Link
       href={detailHref}
       className={cn(
-        "group relative block h-full rounded-[14px] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-200",
-        "hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(15,23,42,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2",
+        "group relative block h-full min-w-0 rounded-[22px] border border-black/10 bg-white shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-200",
+        "hover:-translate-y-1 hover:border-[#ffd36a] hover:bg-white hover:shadow-[0_10px_24px_rgba(63,149,232,.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2",
         className,
       )}
     >
@@ -105,7 +105,7 @@ function CompactJobCard({
           <div className="flex flex-wrap items-center gap-1.5">
             <Badge
               variant="outline"
-              className="rounded-full border-success/20 bg-success/10 px-2.5 py-0.5 text-[11px] font-medium text-success"
+              className="rounded-full border border-[#3f95e8]/30 bg-white px-2.5 py-0.5 text-[11px] font-medium text-[#2479d1]"
             >
               <BadgeCheck className="mr-1 size-3" />
               Sumber terverifikasi
@@ -143,7 +143,7 @@ function CompactJobCard({
 
         <div className="mt-4 flex items-center justify-between gap-3 pt-3 text-xs text-muted-foreground">
           <span>{formatDate(job.scrapedAt) ?? "Baru ditemukan"}</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-[11px] font-semibold text-primary-foreground transition-colors group-hover:bg-primary/90">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#3f95e8] px-3 py-1.5 text-[11px] font-semibold text-white transition-colors group-hover:bg-[#2479d1]">
             Lihat detail
             <ArrowRight className="size-3" />
           </span>
@@ -171,7 +171,7 @@ function DefaultJobCard({
     <Link
       href={detailHref}
       className={cn(
-        "group flex h-full flex-col rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(15,23,42,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2",
+        "group flex h-full min-w-0 flex-col rounded-[22px] border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-200 hover:-translate-y-1 hover:border-[#ffd36a] hover:bg-white hover:shadow-[0_10px_24px_rgba(63,149,232,.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2",
         className,
       )}
     >
@@ -207,7 +207,7 @@ function DefaultJobCard({
         ) : null}
         <Badge
           variant="outline"
-          className="rounded-full border-success/20 bg-success/10 px-2 py-0.5 text-[11px] font-medium text-success"
+          className="rounded-full border border-[#3f95e8]/30 bg-white px-2 py-0.5 text-[11px] font-medium text-[#2479d1]"
         >
           Sumber terverifikasi
         </Badge>
@@ -222,7 +222,7 @@ function DefaultJobCard({
             {formatDate(job.scrapedAt) ?? "Baru ditemukan"}
           </div>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition-colors group-hover:bg-primary/90">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#3f95e8] px-4 py-2 text-xs font-semibold text-white transition-colors group-hover:bg-[#2479d1]">
           Lihat detail
         </span>
       </div>

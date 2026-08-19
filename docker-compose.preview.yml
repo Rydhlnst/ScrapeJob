@@ -1,0 +1,8 @@
+services:
+  frontend:
+    image: scrapejob-frontend-preview
+    build:
+      context: .
+      dockerfile: Dockerfile.preview
+    ports: !override
+      - "3001:3000"
