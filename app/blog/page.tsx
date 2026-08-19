@@ -34,7 +34,7 @@ function ArticleCard({ article, featured = false }: { article: PublicPageSummary
     return (
       <Link
         href={`/page/${article.slug}`}
-        className="group relative block overflow-hidden rounded-[30px] border border-black/10 bg-[#fffdf8] p-8 shadow-[0_8px_0_rgba(23,23,23,.04)] transition-all hover:-translate-y-1 hover:border-[#ffd36a] hover:bg-white hover:shadow-[0_12px_28px_rgba(63,149,232,.12)] md:p-10"
+        className="group relative block overflow-hidden rounded-[30px] border border-black/10 bg-white p-8 shadow-[0_8px_0_rgba(23,23,23,.04)] transition-all hover:-translate-y-1 hover:border-[#3f95e8]/50 hover:shadow-[0_12px_28px_rgba(63,149,232,.12)] md:p-10"
       >
         <div className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--brand-blue)]">
           Artikel Pilihan
@@ -62,7 +62,7 @@ function ArticleCard({ article, featured = false }: { article: PublicPageSummary
   return (
     <Link
       href={`/page/${article.slug}`}
-      className="group flex h-full flex-col rounded-[22px] border border-black/10 bg-[#fffdf8] p-5 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-200 hover:-translate-y-1 hover:border-[#ffd36a] hover:bg-white hover:shadow-[0_10px_24px_rgba(63,149,232,.14)]"
+      className="group flex h-full flex-col rounded-[22px] border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-200 hover:-translate-y-1 hover:border-[#3f95e8]/50 hover:shadow-[0_10px_24px_rgba(63,149,232,.14)]"
     >
       {date ? (
         <div className="text-xs text-slate-500">
@@ -98,14 +98,14 @@ export default async function BlogIndexPage() {
   const [featured, ...rest] = articles.data
 
   return (
-    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#fffdf8]">
+    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-white">
       <Navbar
         jobs={navbarData.jobs}
         categories={navbarData.categories}
         totalJobs={navbarData.totalJobs}
       />
 
-      <main className="w-full bg-[#fffdf8] pb-16 pt-24">
+      <main className="w-full bg-white pb-16 pt-24">
         <SiteFrame>
           <SiteContent>
             <div className="flex items-center gap-2 text-xs text-slate-500">

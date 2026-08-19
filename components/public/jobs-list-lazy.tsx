@@ -98,7 +98,7 @@ export function JobsListLazy({
           ) : (
             <Button
               variant="outline"
-              className="rounded-full border-black/10 bg-white text-slate-700 shadow-[0_3px_0_rgba(23,23,23,.04)] hover:-translate-y-0.5 hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#171717]"
+              className="rounded-full border-black/10 bg-white text-slate-700 shadow-[0_3px_0_rgba(23,23,23,.04)] hover:-translate-y-0.5 hover:border-[#3f95e8]/50 hover:bg-[#f7f9fb] hover:text-[#171717]"
               onClick={loadMore}
             >
               Muat lebih banyak

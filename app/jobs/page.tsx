@@ -101,14 +101,14 @@ export default async function JobsPage({
   ]
 
   return (
-    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#fffdf8]">
+    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-white">
       <Navbar jobs={navJobs.data} categories={categories} totalJobs={jobs.total} />
 
-      <main className="min-h-screen w-full bg-[#fffdf8] pt-24 pb-16">
+      <main className="min-h-screen w-full bg-white pt-24 pb-16">
         <SiteFrame>
           <SiteContent>
           <div className="space-y-8">
-            <section className="relative overflow-hidden rounded-[30px] border border-black/10 bg-[#fffdf8] p-8 shadow-[0_8px_0_rgba(23,23,23,.04)] md:p-12">
+            <section className="relative overflow-hidden rounded-[30px] border border-black/10 bg-white p-8 shadow-[0_8px_0_rgba(23,23,23,.04)] md:p-12">
               <div className="space-y-6 text-center">
                 <h1 className="jobkan-section-title text-4xl font-extrabold tracking-[-0.06em] text-[#171717] md:text-6xl">
                   Temukan lowongan yang tepat, bukan sekadar banyak
@@ -132,7 +132,7 @@ export default async function JobsPage({
                     <a
                       key={filter.label}
                       href={`/jobs?keyword=${encodeURIComponent(filter.keyword)}`}
-                      className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-[0_3px_0_rgba(23,23,23,.04)] transition-all hover:-translate-y-0.5 hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#171717]"
+                      className="rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-[0_3px_0_rgba(23,23,23,.04)] transition-all hover:-translate-y-0.5 hover:border-[#3f95e8]/50 hover:bg-[#f7f9fb] hover:text-[#171717]"
                     >
                       {filter.label}
                     </a>
@@ -173,7 +173,7 @@ export default async function JobsPage({
               </Suspense>
 
               <div className="space-y-4">
-                <div className="rounded-[28px] border border-black/10 bg-[#fffdf8] p-5 shadow-[0_4px_0_rgba(23,23,23,.04)]">
+                <div className="rounded-[28px] border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)]">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                       <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">

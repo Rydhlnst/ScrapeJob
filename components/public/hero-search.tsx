@@ -63,7 +63,7 @@ export function HeroSearch() {
               key={s.label}
               type="button"
               onClick={() => go(s.label)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-[#ffd36a] hover:bg-[#ffd36a] hover:text-[#171717]"
+              className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-[#3f95e8]/50 hover:bg-[#f7f9fb] hover:text-[#171717]"
             >
               {s.label}
             </button>

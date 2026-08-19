@@ -11,9 +11,9 @@ export default async function NotFound() {
   const navbarData = await getNavbarData().catch(() => ({ jobs: [], categories: [], totalJobs: 0 }))
 
   return (
-    <div className="flex min-h-screen w-full max-w-none flex-col overflow-x-hidden bg-[#fffdf8]">
+    <div className="flex min-h-screen w-full max-w-none flex-col overflow-x-hidden bg-white">
       <Navbar jobs={navbarData.jobs} categories={navbarData.categories} totalJobs={navbarData.totalJobs} />
-      <main className="flex min-h-[calc(100vh-6rem)] w-full flex-1 items-center bg-[#fffdf8] pb-16 pt-24 md:pb-24">
+      <main className="flex min-h-[calc(100vh-6rem)] w-full flex-1 items-center bg-white pb-16 pt-24 md:pb-24">
         <SiteFrame className="w-full">
           <SiteContent>
             <div className="mx-auto max-w-[920px] text-center">

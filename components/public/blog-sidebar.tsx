@@ -123,7 +123,7 @@ export function UpdateGratisCTA() {
       </p>
       <a
         href="/jobs"
-        className="mt-4 block w-full rounded-full bg-white py-2.5 text-center text-sm font-semibold text-[#1f5f9f] transition-colors hover:bg-[#ffd36a] hover:text-[#171717]"
+        className="mt-4 block w-full rounded-full bg-white py-2.5 text-center text-sm font-semibold text-[#1f5f9f] transition-colors hover:bg-[#f7f9fb] hover:text-[#2479d1]"
       >
         Cari Lowongan
       </a>

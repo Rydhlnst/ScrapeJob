@@ -216,7 +216,7 @@ function ActiveFilterChip({ label, onRemove }: { label: string; onRemove: () => 
     <button
       type="button"
       onClick={onRemove}
-      className="inline-flex items-center gap-1.5 rounded-full border border-[#ffd36a] bg-white px-3 py-1 text-xs font-medium text-[#171717] transition-colors hover:bg-[#ffd36a]"
+      className="inline-flex items-center gap-1.5 rounded-full border border-[#3f95e8]/40 bg-white px-3 py-1 text-xs font-medium text-[#2479d1] transition-colors hover:bg-[#f7f9fb]"
     >
       {label}
       <X className="size-3" />

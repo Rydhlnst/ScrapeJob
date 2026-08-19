@@ -327,7 +327,7 @@
 
   .job-detail-copy h2,
   .job-detail-copy h3 {
-    border-left: 4px solid var(--jobkan-yellow);
+    border-left: 4px solid var(--jobkan-blue);
     padding-left: 0.75rem;
   }
 
@@ -371,7 +371,6 @@
   .jobkan-label {
     display: inline-flex;
     align-items: center;
-    border-bottom: 2px solid var(--jobkan-yellow);
     color: var(--jobkan-blue);
     font-size: 0.8rem;
     font-weight: 800;
@@ -383,14 +382,7 @@
   }
 
   .jobkan-section-title::after {
-    content: "";
-    display: block;
-    width: 4.5rem;
-    height: 0.28rem;
-    margin: 1.25rem auto 0;
-    border-radius: 999px;
-    background: var(--jobkan-yellow);
-    transform: rotate(-2deg);
+    display: none;
   }
 }
 

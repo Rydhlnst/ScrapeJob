@@ -96,7 +96,7 @@ function CompactJobCard({
       href={detailHref}
       className={cn(
         "group relative block h-full min-w-0 rounded-[22px] border border-black/10 bg-white shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-200",
-        "hover:-translate-y-1 hover:border-[#ffd36a] hover:bg-white hover:shadow-[0_10px_24px_rgba(63,149,232,.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2",
+        "hover:-translate-y-1 hover:border-[#3f95e8]/50 hover:bg-white hover:shadow-[0_10px_24px_rgba(63,149,232,.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2",
         className,
       )}
     >
@@ -171,7 +171,7 @@ function DefaultJobCard({
     <Link
       href={detailHref}
       className={cn(
-        "group flex h-full min-w-0 flex-col rounded-[22px] border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-200 hover:-translate-y-1 hover:border-[#ffd36a] hover:bg-white hover:shadow-[0_10px_24px_rgba(63,149,232,.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2",
+        "group flex h-full min-w-0 flex-col rounded-[22px] border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-200 hover:-translate-y-1 hover:border-[#3f95e8]/50 hover:bg-white hover:shadow-[0_10px_24px_rgba(63,149,232,.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2",
         className,
       )}
     >

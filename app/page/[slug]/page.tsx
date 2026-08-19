@@ -40,7 +40,7 @@ function CTASection() {
         Dapatkan info lowongan terbaru dan tips karier dari Lowonganku.
       </p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button asChild className="rounded-full bg-white text-[#1f5f9f] hover:bg-[#ffd36a] hover:text-[#171717]">
+        <Button asChild className="rounded-full bg-white text-[#1f5f9f] hover:bg-[#f7f9fb] hover:text-[#2479d1]">
           <Link href="/jobs">
             <Search className="mr-2 size-4" />
             Cari Lowongan
@@ -110,9 +110,9 @@ export default async function PublicPage({
       : new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })
 
     return (
-      <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#fffdf8]">
+      <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-white">
         <Navbar jobs={navbarData.jobs} categories={navbarData.categories} totalJobs={navbarData.totalJobs} />
-        <main className="w-full max-w-screen overflow-x-hidden bg-[#fffdf8] pb-16 pt-24">
+        <main className="w-full max-w-screen overflow-x-hidden bg-white pb-16 pt-24">
           <SiteFrame>
             <SiteContent>
               <Link
@@ -132,7 +132,7 @@ export default async function PublicPage({
                   </div>
                 ) : null}
 
-                <article className="min-w-0 rounded-[30px] border border-black/10 bg-[#fffdf8] p-7 shadow-[0_8px_0_rgba(23,23,23,.04)] md:p-10">
+                <article className="min-w-0 rounded-[30px] border border-black/10 bg-white p-7 shadow-[0_8px_0_rgba(23,23,23,.04)] md:p-10">
                   {isBlog ? (
                     <Badge variant="outline" className="rounded-full border-[#ffd36a] bg-white px-3 py-1 text-xs font-medium text-[#2479d1]">
                       <Tag className="mr-1.5 size-3" />

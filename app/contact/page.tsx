@@ -23,10 +23,10 @@ export default async function ContactPage() {
   ])
 
   return (
-    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#fffdf8]">
+    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-white">
       <Navbar jobs={navJobs.data} categories={categories} totalJobs={navJobs.total} />
 
-      <main className="w-full bg-[#fffdf8] pt-24">
+      <main className="w-full bg-white pt-24">
         <SiteFrame>
           <Container className="py-14 md:py-20">
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
@@ -46,7 +46,7 @@ export default async function ContactPage() {
                     return (
                       <div
                         key={item.label}
-                        className="flex items-center gap-3 rounded-2xl border border-black/10 bg-[#fffdf8] p-4 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-colors hover:border-[#ffd36a] hover:bg-white"
+                        className="flex items-center gap-3 rounded-2xl border border-black/10 bg-white p-4 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-colors hover:border-[#3f95e8]/50"
                       >
                         <div className="grid size-11 place-items-center rounded-xl bg-[#dceeff] text-[#2479d1]">
                           <Icon className="size-5" />

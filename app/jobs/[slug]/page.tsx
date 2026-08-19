@@ -48,9 +48,9 @@ export default async function JobDetailPage({
   if (!job || (job.status && job.status !== "published")) notFound()
 
   return (
-    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#fffdf8]">
+    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-white">
       <Navbar jobs={navbarData.jobs} categories={navbarData.categories} totalJobs={navbarData.totalJobs} />
-      <main className="min-h-screen w-full max-w-screen overflow-x-hidden bg-[#fffdf8] pt-24 pb-16">
+      <main className="min-h-screen w-full max-w-screen overflow-x-hidden bg-white pt-24 pb-16">
         <SiteFrame>
           <SiteContent>
           <div className="mx-auto grid w-full max-w-[1400px] min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">

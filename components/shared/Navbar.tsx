@@ -302,7 +302,7 @@ function FlatPanel({ items, title }: { items: CountItem[]; title: string }) {
         <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Kombinasi Populer</p>
         <div className="flex flex-wrap gap-2 px-3">
           {quickLinks.map((link) => (
-            <Link key={link} href={`/jobs?q=${encodeURIComponent(link)}`} className="rounded-lg border border-black/10 bg-white px-3 py-1 text-xs text-slate-600 transition-colors hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#2479d1]">
+            <Link key={link} href={`/jobs?q=${encodeURIComponent(link)}`} className="rounded-lg border border-black/10 bg-white px-3 py-1 text-xs text-slate-600 transition-colors hover:border-[#3f95e8]/50 hover:bg-[#f7f9fb] hover:text-[#2479d1]">
               {link}
             </Link>
           ))}
@@ -355,7 +355,7 @@ function JobsMegaMenu({
                 if (activeFacet !== facet.id) { e.preventDefault(); setActiveFacet(facet.id) }
               }}
               className={cn(
-                  "mb-[-1px] inline-flex shrink-0 items-center gap-1.5 border-b-2 border-transparent px-3 py-3 text-[13px] text-slate-500 transition-colors hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#2479d1]",
+                  "mb-[-1px] inline-flex shrink-0 items-center gap-1.5 border-b-2 border-transparent px-3 py-3 text-[13px] text-slate-500 transition-colors hover:border-[#3f95e8] hover:bg-[#f7f9fb] hover:text-[#2479d1]",
                 activeFacet === facet.id && "border-[#2479d1] bg-[#f2f7fb] text-[#2479d1]",
               )}
             >
@@ -393,7 +393,7 @@ function JobsMegaMenu({
                 <Link
                   key={link}
                   href={`/jobs?q=${encodeURIComponent(`${activeCategory.label} ${link}`)}`}
-                  className="rounded-lg border border-black/10 bg-white px-3 py-1 text-xs text-slate-600 transition-colors hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#2479d1]"
+                className="rounded-lg border border-black/10 bg-white px-3 py-1 text-xs text-slate-600 transition-colors hover:border-[#3f95e8]/50 hover:bg-[#f7f9fb] hover:text-[#2479d1]"
                 >
                   {link}
                 </Link>
@@ -470,7 +470,7 @@ function CompaniesMegaMenu({
               <Link
                 key={company}
                 href={activeType.href}
-                className="flex items-center gap-2.5 rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-slate-700 transition-colors hover:border-[#ffd36a] hover:bg-[#f7f9fb] hover:text-[#2479d1]"
+                className="flex items-center gap-2.5 rounded-lg border border-black/10 bg-white px-3 py-2 text-sm text-slate-700 transition-colors hover:border-[#3f95e8]/50 hover:bg-[#f7f9fb] hover:text-[#2479d1]"
               >
                 <span className="grid size-7 shrink-0 place-items-center rounded-lg border border-[#3f95e8]/25 bg-[#f2f7fb] text-xs font-semibold text-[#2479d1]">
                   {company.charAt(0)}
@@ -623,8 +623,8 @@ export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
   const contactActive = pathname.startsWith("/contact")
 
   return (
-    <header className={cn("fixed inset-x-0 top-0 z-50 w-full border-b border-black/10", isHome ? "bg-[#fffdf8]/95 backdrop-blur-md" : "bg-white/95 backdrop-blur-sm")}>
-      <SiteFrame className={cn(isHome && "bg-[#fffdf8]")}>
+    <header className="fixed inset-x-0 top-0 z-50 w-full border-b border-black/10 bg-white/95 backdrop-blur-md">
+      <SiteFrame>
         <SiteContent className="flex h-24 items-center justify-between">
           <Logo />
           <DesktopNav menuData={menuData} />

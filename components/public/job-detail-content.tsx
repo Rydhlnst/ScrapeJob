@@ -54,7 +54,7 @@ function ListSection({ title, items, icon: Icon }: { title: string; items: strin
   return (
     <section className="space-y-3">
       <h2 className="text-xl font-extrabold tracking-[-.03em] text-[#171717]">{title}</h2>
-      <div className="rounded-2xl border border-black/10 border-l-4 border-l-[#ffd36a] bg-white p-4">
+      <div className="rounded-2xl border border-black/10 border-l-4 border-l-[#3f95e8] bg-white p-4">
         <ul className="space-y-2">
           {items.map((item, index) => (
             <li key={index} className="flex items-start gap-2.5 text-sm leading-6 text-slate-600">
