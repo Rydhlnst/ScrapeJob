@@ -45,7 +45,7 @@ export function BenefitsSection({ content, copy, visualCopy, jobs = [] }: { cont
             <div className="absolute bottom-7 left-5 w-[46%] -rotate-6 rounded-2xl border border-black/10 bg-white p-4 shadow-[0_10px_0_rgba(23,23,23,.08)] sm:bottom-10 sm:left-8">
               <p className="text-xs font-extrabold text-[#171717]">{copy.savedTitle}</p><p className="mt-1 text-[11px] leading-4 text-slate-500">{copy.savedDescription}</p>
             </div>
-            <div className="absolute right-4 top-8 rounded-xl bg-[#1c0d0d] px-4 py-3 text-xs font-bold text-white shadow-lg sm:right-8">{copy.sourceLabel}</div>
+            <div className="absolute right-4 top-8 rounded-xl bg-[#f2a23a] px-4 py-3 text-xs font-bold text-[#171717] shadow-lg sm:right-8">{copy.sourceLabel}</div>
           </Reveal>
         </div>
       </Container>

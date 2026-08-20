@@ -25,9 +25,11 @@ export function HeroSection({
   companies: LandingCompanyItem[]
   jobs?: Job[]
 }) {
+  const boardJobs = jobs.length ? jobs : [undefined, undefined, undefined]
+
   return (
     <section className="w-full overflow-hidden bg-white pt-0">
-      <div className="mx-auto grid w-full max-w-[1400px] overflow-hidden border-y border-black/10 bg-white lg:grid-cols-[.94fr_1.06fr] lg:border-x">
+      <div className="mx-auto grid w-full max-w-[1400px] overflow-hidden border-y border-black/10 bg-white lg:grid-cols-[.94fr_1.06fr]">
         <Reveal className="flex min-w-0 flex-col justify-center px-6 py-14 sm:px-12 lg:px-16 lg:py-20">
           <LandingEyebrow>{copy.eyebrow}</LandingEyebrow>
           <h1 className="mt-6 max-w-xl text-5xl font-extrabold leading-[.96] tracking-[-.075em] text-[#171717] sm:text-6xl lg:text-7xl">
@@ -39,7 +41,7 @@ export function HeroSection({
 
           <Link
             href={content.primaryCta.href}
-            className="group mt-8 flex w-full max-w-md items-center gap-3 rounded-2xl border border-black/10 bg-white p-2 shadow-[0_7px_0_rgba(23,23,23,.05)] transition-all hover:-translate-y-0.5 hover:border-[#ffd36a] hover:shadow-[0_10px_24px_rgba(63,149,232,.14)]"
+            className="group mt-8 flex w-full max-w-md items-center gap-3 rounded-2xl border border-black/10 bg-white p-2 shadow-[0_7px_0_rgba(23,23,23,.05)] transition-all hover:-translate-y-0.5 hover:border-[#f2a23a] hover:shadow-[0_10px_24px_rgba(63,149,232,.14)]"
           >
             <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-[#eaf5ff] text-[#2479d1]"><Search className="size-5" /></span>
             <span className="min-w-0 flex-1 text-left text-sm text-slate-400">{copy.searchPlaceholder}</span>
@@ -49,12 +51,12 @@ export function HeroSection({
           <div className="mt-10 flex items-center gap-4">
             <div className="rounded-2xl border border-black/10 bg-white px-5 py-4 text-center shadow-[0_5px_0_rgba(23,23,23,.04)]">
               <strong className="block text-3xl font-extrabold tracking-[-.07em] text-[#171717]">{totalJobs.toLocaleString("id-ID")}+</strong>
-              <span className="mt-1 block text-[10px] font-bold uppercase tracking-[.14em] text-[#9a6700]">{copy.statLabel}</span>
+              <span className="mt-1 block text-[10px] font-bold uppercase tracking-[.14em] text-[#9a5a00]">{copy.statLabel}</span>
             </div>
             <div>
               <p className="text-lg font-extrabold tracking-[-.04em] text-[#171717]">{copy.statTitle}</p>
               <p className="mt-1 max-w-[230px] text-sm leading-5 text-slate-500">{totalCategories}+ {copy.statDescription}</p>
-              <Link href={content.secondaryCta.href} className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-[#2479d1] underline decoration-[#ffd36a] decoration-2 underline-offset-4 hover:text-[#171717]">{content.secondaryCta.label}<ArrowRight className="size-4" /></Link>
+              <Link href={content.secondaryCta.href} className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-[#2479d1] underline decoration-[#f2a23a] decoration-2 underline-offset-4 hover:text-[#171717]">{content.secondaryCta.label}<ArrowRight className="size-4" /></Link>
             </div>
           </div>
         </Reveal>
@@ -72,8 +74,8 @@ export function HeroSection({
               </div>
               <Link href="/jobs" className="text-[10px] font-bold text-[#2479d1] transition-colors hover:text-[#171717]">{visualCopy.boardLinkLabel}</Link>
             </div>
-            <div className="mt-4 space-y-3">
-              {jobs.slice(0, 4).map((job, index) => <JobPreviewCard key={job.id} job={job} index={index} compact copy={visualCopy} />)}
+            <div className="mt-4 max-h-[320px] space-y-3 overflow-y-auto pr-1 sm:max-h-[405px]">
+              {boardJobs.map((job, index) => <JobPreviewCard key={`${job?.id ?? "preview"}-${index}`} job={job} index={index} compact copy={visualCopy} />)}
             </div>
           </div>
           <Float className="pointer-events-none absolute -bottom-3 right-[3%] hidden w-[38%] drop-shadow-[0_12px_0_rgba(23,23,23,.12)] md:block"><PeopleArtwork className="w-full" /></Float>

@@ -26,7 +26,7 @@ export function JobSummaryCard({ job }: { job: Job }) {
               className="size-14 shrink-0 rounded-2xl bg-white object-cover ring-1 ring-slate-100"
             />
           ) : (
-            <div className="grid size-14 shrink-0 place-items-center rounded-2xl border border-[#ffd36a] bg-white text-lg font-semibold text-[#2479d1]">
+            <div className="grid size-14 shrink-0 place-items-center rounded-2xl border border-[#f2a23a] bg-white text-lg font-semibold text-[#2479d1]">
               {initials(companyName)}
             </div>
           )}
@@ -77,7 +77,7 @@ export function JobSummaryCard({ job }: { job: Job }) {
           </div>
         )}
 
-          <div className="rounded-2xl border border-black/10 border-l-4 border-l-[#ffd36a] bg-white p-3 text-xs text-muted-foreground">
+          <div className="rounded-2xl border border-black/10 bg-white p-3 text-xs text-muted-foreground">
           Pastikan membaca informasi dari sumber resmi sebelum melamar.
         </div>
       </CardContent>

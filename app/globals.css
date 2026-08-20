@@ -76,13 +76,13 @@
 
     --brand-blue: #2563eb;
     --brand-sky: #0ea5e9;
-    --brand-yellow: #facc15;
+    --brand-yellow: #f2a23a;
     --brand-ink: #172554;
     --brand-shell: #f8fafc;
     --brand-shell-strong: #f1f5f9;
     --jobkan-blue: #3f95e8;
     --jobkan-blue-dark: #2479d1;
-    --jobkan-yellow: #ffd36a;
+    --jobkan-yellow: #f2a23a;
     --jobkan-ink: #171717;
 
     --surface: 210 20% 98%;
@@ -278,7 +278,6 @@
   }
 
   .rich-text blockquote, .ProseMirror blockquote {
-    border-left: 3px solid var(--brand-blue);
     background: #f8fafc;
     padding: 0.75rem 1.25rem;
     margin: 1.5rem 0;
@@ -327,8 +326,7 @@
 
   .job-detail-copy h2,
   .job-detail-copy h3 {
-    border-left: 4px solid var(--jobkan-blue);
-    padding-left: 0.75rem;
+    padding-bottom: 0.25rem;
   }
 
   .job-detail-copy ul,

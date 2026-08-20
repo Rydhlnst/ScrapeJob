@@ -38,7 +38,7 @@ export function AuthShell({
         </Card>
       </section>
 
-      <aside className="hidden border-l border-[#d8e4f6] bg-[#eef5ff] lg:block">
+      <aside className="hidden bg-[#eef5ff] lg:block">
         <div className="flex h-full items-center justify-center p-12">
           <div className="w-full max-w-lg space-y-5">
             <Card className="rounded-xl border-[#d8e4f6] bg-white p-5 shadow-[var(--shadow-sm)]">

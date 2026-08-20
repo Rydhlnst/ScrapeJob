@@ -32,7 +32,7 @@ export default async function ContactPage() {
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <section className="space-y-8">
                 <div>
-                  <p className="inline-flex rounded-full border border-[#ffd36a] bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-[#2479d1]">Hubungi Kami</p>
+                  <p className="inline-flex rounded-full border border-[#f2a23a] bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-[#2479d1]">Hubungi Kami</p>
                   <h1 className="jobkan-section-title mt-4 max-w-xl text-4xl font-extrabold tracking-[-0.06em] text-[#171717] md:text-6xl">
                     Ada pertanyaan tentang Lowonganku?
                   </h1>

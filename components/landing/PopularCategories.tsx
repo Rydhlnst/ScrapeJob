@@ -41,7 +41,7 @@ export function PopularCategories({ categories, content }: { categories: Categor
               <Link
                 key={cat.id}
                 href={`/jobs?category=${cat.slug}`}
-                className="group flex items-center gap-4 rounded-2xl border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#ffd36a] hover:shadow-[0_10px_24px_rgba(63,149,232,.14)]"
+                className="group flex items-center gap-4 rounded-2xl border border-black/10 bg-white p-5 shadow-[0_4px_0_rgba(23,23,23,.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#f2a23a] hover:shadow-[0_10px_24px_rgba(63,149,232,.14)]"
               >
                 <div
                   className={`grid size-12 shrink-0 place-items-center rounded-xl ${color.bg} ${color.fg} border ${color.border}`}

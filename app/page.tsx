@@ -39,6 +39,7 @@ export default async function HomePage() {
     listCategories().catch(() => mockCategories),
   ])
   const homepageJobs = jobsRes.data.slice(0, content.featuredJobs.rules.limit)
+  const heroJobs = navJobsRes.data.length ? navJobsRes.data : homepageJobs
   const sourcesCount = new Set(homepageJobs.map((job) => job.sourceName)).size
 
   return (
@@ -54,7 +55,7 @@ export default async function HomePage() {
           copy={content.sections.hero}
           visualCopy={content.sections.visuals}
           companies={content.trustedCompanies.items}
-          jobs={homepageJobs.slice(0, 3)}
+          jobs={heroJobs}
         />
 
         {/* 2. Feature showcase */}

@@ -44,7 +44,7 @@ export function HowItWorks({ content }: { content: LandingSectionCopy["how"] }) 
                 <div className={`absolute -top-7 left-1/2 grid size-14 -translate-x-1/2 place-items-center rounded-full border-4 border-[#f6f9fc] ${design.color}`}><Icon className="size-6" /></div>
                 <h3 className="text-xl font-extrabold tracking-[-.04em] text-[#171717]">{step.title}</h3>
                 <p className="mt-4 text-sm leading-6 text-slate-500">{step.description}</p>
-                <Link href="/jobs" className="mt-7 inline-flex items-center gap-1 text-sm font-bold text-[#2479d1] underline decoration-[#ffd36a] decoration-2 underline-offset-4 hover:text-[#171717]">{step.linkLabel} <ArrowUpRight className="size-4" /></Link>
+                <Link href="/jobs" className="mt-7 inline-flex items-center gap-1 text-sm font-bold text-[#2479d1] underline decoration-[#f2a23a] decoration-2 underline-offset-4 hover:text-[#171717]">{step.linkLabel} <ArrowUpRight className="size-4" /></Link>
                 </article>
               </Reveal>
             )

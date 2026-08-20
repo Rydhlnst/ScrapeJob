@@ -54,7 +54,7 @@ function ListSection({ title, items, icon: Icon }: { title: string; items: strin
   return (
     <section className="space-y-3">
       <h2 className="text-xl font-extrabold tracking-[-.03em] text-[#171717]">{title}</h2>
-      <div className="rounded-2xl border border-black/10 border-l-4 border-l-[#3f95e8] bg-white p-4">
+      <div className="rounded-2xl border border-black/10 bg-white p-4">
         <ul className="space-y-2">
           {items.map((item, index) => (
             <li key={index} className="flex items-start gap-2.5 text-sm leading-6 text-slate-600">
@@ -92,7 +92,7 @@ function CompanyLogo({
   }
 
   return (
-    <div className="grid size-16 shrink-0 place-items-center rounded-2xl border border-[#ffd36a] bg-white text-lg font-semibold text-[#2479d1]">
+    <div className="grid size-16 shrink-0 place-items-center rounded-2xl border border-[#f2a23a] bg-white text-lg font-semibold text-[#2479d1]">
       {initials(companyName)}
     </div>
   )
@@ -106,7 +106,7 @@ export function JobDetailContent({ job }: { job: Job }) {
     <Card className="min-w-0 rounded-[30px] border border-black/10 bg-white p-7 shadow-[0_8px_0_rgba(23,23,23,.04)] md:p-9">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <div className="inline-flex w-fit rounded-full border border-[#ffd36a] bg-white px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-[#2479d1] uppercase">
+          <div className="inline-flex w-fit rounded-full border border-[#f2a23a] bg-white px-3 py-1.5 text-xs font-semibold tracking-[0.14em] text-[#2479d1] uppercase">
             Detail lowongan
           </div>
 
@@ -129,7 +129,7 @@ export function JobDetailContent({ job }: { job: Job }) {
                 {job.category}
               </Badge>
             ) : null}
-            <Badge variant="outline" className="rounded-full border-[#ffd36a] bg-white text-[#171717]">
+            <Badge variant="outline" className="rounded-full border-[#f2a23a] bg-white text-[#171717]">
               {job.salaryText || "Gaji tidak disebutkan"}
             </Badge>
             <Badge variant="outline" className="rounded-full border-black/10 bg-white text-slate-700">

@@ -134,7 +134,7 @@ export default async function PublicPage({
 
                 <article className="min-w-0 rounded-[30px] border border-black/10 bg-white p-7 shadow-[0_8px_0_rgba(23,23,23,.04)] md:p-10">
                   {isBlog ? (
-                    <Badge variant="outline" className="rounded-full border-[#ffd36a] bg-white px-3 py-1 text-xs font-medium text-[#2479d1]">
+                    <Badge variant="outline" className="rounded-full border-[#f2a23a] bg-white px-3 py-1 text-xs font-medium text-[#2479d1]">
                       <Tag className="mr-1.5 size-3" />
                       Artikel
                     </Badge>
@@ -160,7 +160,7 @@ export default async function PublicPage({
                   </div>
 
                   {isBlog && page.summary ? (
-                    <div className="mt-6 rounded-2xl border border-black/10 border-l-4 border-l-[#ffd36a] bg-white px-5 py-4 text-sm leading-7 text-slate-600">
+                    <div className="mt-6 rounded-2xl border border-black/10 bg-white px-5 py-4 text-sm leading-7 text-slate-600">
                       {page.summary}
                     </div>
                   ) : null}

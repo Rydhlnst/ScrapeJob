@@ -298,7 +298,7 @@ function FlatPanel({ items, title }: { items: CountItem[]; title: string }) {
           {items.map((item) => <CountLink key={item.href} item={item} />)}
         </div>
       </div>
-      <div className="border-l border-slate-100 p-5">
+      <div className="p-5">
         <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Kombinasi Populer</p>
         <div className="flex flex-wrap gap-2 px-3">
           {quickLinks.map((link) => (
@@ -378,7 +378,7 @@ function JobsMegaMenu({
               ))}
             </div>
           </div>
-          <div className="border-l border-slate-100 p-5">
+          <div className="p-5">
             <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">
               Peran di {activeCategory.label}
             </p>
@@ -386,7 +386,7 @@ function JobsMegaMenu({
               {activeCategory.roles.map((role) => <CountLink key={role.href} item={role} />)}
             </div>
           </div>
-          <div className="border-l border-slate-100 p-5">
+          <div className="p-5">
             <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">Filter Cepat</p>
             <div className="flex flex-wrap gap-2 px-3">
               {quickLinks.slice(0, 4).map((link) => (
@@ -463,7 +463,7 @@ function CompaniesMegaMenu({
             ))}
           </div>
         </div>
-        <div className="border-l border-slate-100 p-5">
+        <div className="p-5">
           <p className="px-3 pb-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400">{activeType.label}</p>
           <div className="grid grid-cols-2 gap-2">
             {activeType.companies.map((company) => (
@@ -634,7 +634,7 @@ export function Navbar({ jobs, categories, totalJobs }: NavbarData = {}) {
             </Button>
             <Button
               asChild
-              className={cn("h-9 rounded-full px-5 text-[13px] font-semibold transition-colors", isHome ? "bg-[#1c0d0d] text-white hover:bg-[#342020]" : "bg-[#1f5f9f] text-white hover:bg-[#2479d1]")}
+              className="h-9 rounded-full bg-[#1f5f9f] px-5 text-[13px] font-semibold text-white transition-colors hover:bg-[#2479d1]"
             >
               <Link href="/contact">Hubungi Kami</Link>
             </Button>

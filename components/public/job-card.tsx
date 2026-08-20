@@ -38,7 +38,7 @@ function CompanyLogo({
   }
 
   return (
-    <div className={`grid ${size} ${radius} shrink-0 place-items-center border border-[#ffd36a] bg-white text-sm font-semibold text-[#2479d1]`}>
+    <div className={`grid ${size} ${radius} shrink-0 place-items-center border border-[#f2a23a] bg-white text-sm font-semibold text-[#2479d1]`}>
       {fallback}
     </div>
   )

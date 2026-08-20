@@ -16,7 +16,7 @@ export function OrbitDoodle({
   className?: string
   color?: "blue" | "yellow"
 }) {
-  const fill = color === "blue" ? "#3f95e8" : "#ffd36a"
+  const fill = color === "blue" ? "#3f95e8" : "#f2a23a"
 
   return (
     <svg aria-hidden className={className} viewBox="0 0 160 120" fill="none">
@@ -39,14 +39,14 @@ export function JobPreviewCard({ job, index = 0, compact = false, copy }: { job?
   const title = job?.title ?? ["Product Designer", "Backend Developer", "Digital Marketing"][index % 3]
   const company = job?.companyName ?? ["Karya Studio", "Nusantara Tech", "Grow Indonesia"][index % 3]
   const location = job?.location ?? "Jakarta, Indonesia"
-  const hues = ["border border-[#3f95e8]/30 bg-white text-[#2479d1]", "border border-[#ffd36a] bg-white text-[#9a6700]", "border border-black/10 bg-white text-slate-600"]
+  const hues = ["border border-[#3f95e8]/30 bg-white text-[#2479d1]", "border border-[#f2a23a] bg-white text-[#9a5a00]", "border border-black/10 bg-white text-slate-600"]
   const href = job?.slug ? `/jobs/${job.slug}` : "/jobs"
 
   return (
     <Link
       href={href}
       aria-label={`Buka detail lowongan ${title}`}
-      className={`group block rounded-2xl border border-black/10 bg-white ${compact ? "px-4 py-3" : "px-5 py-4"} shadow-[0_5px_0_rgba(23,23,23,.06)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#ffd36a] hover:shadow-[0_9px_0_rgba(23,23,23,.1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3f95e8]`}
+      className={`group block rounded-2xl border border-black/10 bg-white ${compact ? "px-4 py-3" : "px-5 py-4"} shadow-[0_5px_0_rgba(23,23,23,.06)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#f2a23a] hover:shadow-[0_9px_0_rgba(23,23,23,.1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3f95e8]`}
     >
       <div className="flex items-center gap-3">
         <div className={`grid size-9 shrink-0 place-items-center rounded-full text-xs font-extrabold ${hues[index % hues.length]}`}>
@@ -69,23 +69,23 @@ export function JobPreviewCard({ job, index = 0, compact = false, copy }: { job?
 }
 
 export function JobBoardArtwork({ jobs = [], copy }: { jobs?: Job[]; copy?: LandingSectionCopy["visuals"] }) {
+  const boardJobs = jobs.length ? jobs : [undefined, undefined, undefined]
+
   return (
     <div className="relative mx-auto h-[390px] w-full max-w-[1080px] sm:h-[500px]">
       <div className="absolute inset-x-10 bottom-2 top-10 overflow-hidden rounded-[30px] border border-white/30 bg-[#3f95e8] shadow-[0_20px_0_rgba(23,23,23,.08)]">
         <div className="absolute left-7 top-7 text-sm font-extrabold text-white">Lowonganku — jobs for you</div>
-        <div className="absolute inset-x-7 bottom-6 top-20 space-y-3">
-          <JobPreviewCard job={jobs[0]} index={0} compact copy={copy} />
-          <JobPreviewCard job={jobs[1]} index={1} compact copy={copy} />
-          <JobPreviewCard job={jobs[2]} index={2} compact copy={copy} />
+        <div className="absolute inset-x-7 bottom-6 top-20 space-y-3 overflow-y-auto pr-1">
+          {boardJobs.map((job, index) => <JobPreviewCard key={`${job?.id ?? "preview"}-${index}`} job={job} index={index} compact copy={copy} />)}
         </div>
       </div>
       <div className="absolute bottom-0 left-0 w-[43%] rotate-[-9deg] rounded-[28px] border border-black/10 bg-white p-5 shadow-[0_16px_0_rgba(23,23,23,.08)]">
         <p className="text-xs font-extrabold text-[#171717]">{copy?.sideTitle ?? "Start with the right role"}</p>
         <p className="mt-2 text-[11px] leading-4 text-slate-500">{copy?.sideDescription ?? "Search thousands of verified openings in one simple place."}</p>
-        <div className="mt-4 rounded-full bg-[#1c0d0d] px-3 py-2 text-center text-[10px] font-bold text-white">{copy?.sideActionLabel ?? "Explore jobs"}</div>
+        <div className="mt-4 rounded-full bg-[#1f5f9f] px-3 py-2 text-center text-[10px] font-bold text-white">{copy?.sideActionLabel ?? "Explore jobs"}</div>
       </div>
       <div className="absolute bottom-1 left-1/2 w-[40%] -translate-x-1/2 rounded-[28px] border border-black/10 bg-white p-5 shadow-[0_16px_0_rgba(23,23,23,.08)]">
-        <div className="rounded-2xl bg-[#fff0c6] p-3 text-xs font-extrabold text-[#171717]">{copy?.quizTitle ?? "What kind of work suits you?"}</div>
+        <div className="rounded-2xl bg-[#fff0d6] p-3 text-xs font-extrabold text-[#171717]">{copy?.quizTitle ?? "What kind of work suits you?"}</div>
         <div className="mt-3 space-y-2">
           <div className="h-7 rounded-full bg-[#edf7ff]" />
           <div className="h-7 rounded-full bg-[#edf7ff]" />
@@ -104,7 +104,7 @@ export function PeopleArtwork({ className }: { className?: string }) {
   return (
     <svg aria-hidden viewBox="0 0 310 390" fill="none" className={className}>
       <ellipse cx="154" cy="374" rx="136" ry="14" fill="rgba(23,23,23,.14)" />
-      <path d="M49 363c5-89 31-144 75-144 44 0 69 55 74 144H49Z" fill="#ffd36a" stroke="#171717" strokeWidth="4" />
+      <path d="M49 363c5-89 31-144 75-144 44 0 69 55 74 144H49Z" fill="#f2a23a" stroke="#171717" strokeWidth="4" />
       <circle cx="124" cy="165" r="50" fill="#d28a63" stroke="#171717" strokeWidth="4" />
       <path d="M78 169c-9-75 33-101 72-80 27 15 35 46 22 84-8-31-26-55-50-57-20-2-35 14-44 53Z" fill="#171717" />
       <path d="M90 164c13 12 49 13 69 0" stroke="#171717" strokeWidth="3" strokeLinecap="round" />

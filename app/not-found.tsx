@@ -19,7 +19,7 @@ export default async function NotFound() {
             <div className="mx-auto max-w-[920px] text-center">
               <div className="rounded-[32px] bg-[#1f5f9f] p-1.5 shadow-[0_10px_0_rgba(23,23,23,.08)]">
                 <div className="overflow-hidden rounded-[27px] bg-white p-8 md:p-14">
-                <div className="mx-auto grid size-16 place-items-center rounded-full border border-[#ffd36a] bg-white text-[#2479d1]">
+                <div className="mx-auto grid size-16 place-items-center rounded-full border border-[#f2a23a] bg-white text-[#2479d1]">
                   <FileQuestion className="size-8" />
                 </div>
                 

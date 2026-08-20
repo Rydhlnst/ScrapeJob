@@ -20,8 +20,8 @@ export function Footer({ content }: { content?: LandingSectionCopy["footer"] }) 
       <div className="pointer-events-none absolute -bottom-48 right-[18%] size-[410px] -rotate-45 border-[82px] border-white/10" />
       <SiteContent className="relative py-16 lg:py-20">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-[#ffd36a]">{footer.eyebrow}</p>
-          <Link href="/jobs" className="group mt-3 inline-flex items-center gap-3 border-b border-white/55 pb-3 text-4xl font-extrabold tracking-[-.065em] text-white transition-colors hover:text-[#ffd36a] sm:text-5xl">{footer.title} <ArrowRight className="size-9 transition-transform group-hover:translate-x-1" /></Link>
+          <p className="text-sm font-semibold text-[#f2a23a]">{footer.eyebrow}</p>
+          <Link href="/jobs" className="group mt-3 inline-flex items-center gap-3 border-b border-white/55 pb-3 text-4xl font-extrabold tracking-[-.065em] text-white transition-colors hover:text-[#f2a23a] sm:text-5xl">{footer.title} <ArrowRight className="size-9 transition-transform group-hover:translate-x-1" /></Link>
         </div>
 
         <div className="mt-16 grid gap-12 border-t border-white/20 pt-12 md:grid-cols-[1.35fr_repeat(3,1fr)]">
@@ -33,7 +33,7 @@ export function Footer({ content }: { content?: LandingSectionCopy["footer"] }) 
             <div key={column.title}>
               <h2 className="text-sm font-extrabold text-white">{column.title}</h2>
               <ul className="mt-4 space-y-3">
-                {column.links.map((link) => <li key={link.label}><Link href={link.href} className="text-sm text-white/65 transition-colors hover:text-[#ffd36a]">{link.label}</Link></li>)}
+                {column.links.map((link) => <li key={link.label}><Link href={link.href} className="text-sm text-white/65 transition-colors hover:text-[#f2a23a]">{link.label}</Link></li>)}
               </ul>
             </div>
           ))}
