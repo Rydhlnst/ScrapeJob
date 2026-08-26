@@ -49,19 +49,19 @@ export function JobPreviewCard({ job, index = 0, compact = false, copy }: { job?
       className={`group block rounded-2xl border border-black/10 bg-white ${compact ? "px-4 py-3" : "px-5 py-4"} shadow-[0_5px_0_rgba(23,23,23,.06)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#f2a23a] hover:shadow-[0_9px_0_rgba(23,23,23,.1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3f95e8]`}
     >
       <div className="flex items-center gap-3">
-        <div className={`grid size-9 shrink-0 place-items-center rounded-full text-xs font-extrabold ${hues[index % hues.length]}`}>
+        <div className={`grid size-9 shrink-0 place-items-center rounded-full text-xs font-semibold ${hues[index % hues.length]}`}>
           {company.slice(0, 1).toUpperCase()}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-extrabold tracking-[-.02em] text-[#171717] group-hover:text-[#2479d1]">{title}</p>
+          <p className="truncate text-sm font-semibold tracking-[-.02em] text-[#171717] group-hover:text-[#2479d1]">{title}</p>
           <p className="truncate text-xs text-slate-500">{company}</p>
         </div>
-        {!compact ? <span className="rounded-full bg-[#eff8ff] px-2 py-1 text-[10px] font-bold text-[#2479d1]">{copy?.cardStatusLabel ?? "Baru"}</span> : null}
+        {!compact ? <span className="rounded-full bg-[#eff8ff] px-2 py-1 text-[10px] font-medium text-[#2479d1]">{copy?.cardStatusLabel ?? "Baru"}</span> : null}
       </div>
       {!compact ? (
         <div className="mt-3 flex items-center justify-between border-t border-black/5 pt-2.5 text-[11px] text-slate-500">
           <span className="inline-flex items-center gap-1"><MapPin className="size-3" />{location}</span>
-          <span className="font-bold text-[#171717]">{copy?.cardDetailLabel ?? "Lihat detail"}</span>
+          <span className="font-medium text-[#171717]">{copy?.cardDetailLabel ?? "Lihat detail"}</span>
         </div>
       ) : null}
     </Link>
@@ -74,25 +74,25 @@ export function JobBoardArtwork({ jobs = [], copy }: { jobs?: Job[]; copy?: Land
   return (
     <div className="relative mx-auto h-[390px] w-full max-w-[1080px] sm:h-[500px]">
       <div className="absolute inset-x-10 bottom-2 top-10 overflow-hidden rounded-[30px] border border-white/30 bg-[#3f95e8] shadow-[0_20px_0_rgba(23,23,23,.08)]">
-        <div className="absolute left-7 top-7 text-sm font-extrabold text-white">Lowonganku — jobs for you</div>
+        <div className="absolute left-7 top-7 text-sm font-semibold text-white">Lowonganku — jobs for you</div>
         <div className="absolute inset-x-7 bottom-6 top-20 space-y-3 overflow-y-auto pr-1">
           {boardJobs.map((job, index) => <JobPreviewCard key={`${job?.id ?? "preview"}-${index}`} job={job} index={index} compact copy={copy} />)}
         </div>
       </div>
       <div className="absolute bottom-0 left-0 w-[43%] rotate-[-9deg] rounded-[28px] border border-black/10 bg-white p-5 shadow-[0_16px_0_rgba(23,23,23,.08)]">
-        <p className="text-xs font-extrabold text-[#171717]">{copy?.sideTitle ?? "Start with the right role"}</p>
+        <p className="text-xs font-semibold text-[#171717]">{copy?.sideTitle ?? "Start with the right role"}</p>
         <p className="mt-2 text-[11px] leading-4 text-slate-500">{copy?.sideDescription ?? "Search thousands of verified openings in one simple place."}</p>
-        <div className="mt-4 rounded-full bg-[#1f5f9f] px-3 py-2 text-center text-[10px] font-bold text-white">{copy?.sideActionLabel ?? "Explore jobs"}</div>
+        <div className="mt-4 rounded-full bg-[#1f5f9f] px-3 py-2 text-center text-[10px] font-medium text-white">{copy?.sideActionLabel ?? "Explore jobs"}</div>
       </div>
       <div className="absolute bottom-1 left-1/2 w-[40%] -translate-x-1/2 rounded-[28px] border border-black/10 bg-white p-5 shadow-[0_16px_0_rgba(23,23,23,.08)]">
-        <div className="rounded-2xl bg-[#fff0d6] p-3 text-xs font-extrabold text-[#171717]">{copy?.quizTitle ?? "What kind of work suits you?"}</div>
+        <div className="rounded-2xl bg-[#fff0d6] p-3 text-xs font-semibold text-[#171717]">{copy?.quizTitle ?? "What kind of work suits you?"}</div>
         <div className="mt-3 space-y-2">
           <div className="h-7 rounded-full bg-[#edf7ff]" />
           <div className="h-7 rounded-full bg-[#edf7ff]" />
         </div>
       </div>
       <div className="absolute bottom-0 right-0 w-[43%] rotate-[8deg] rounded-[28px] border border-black/10 bg-white p-5 shadow-[0_16px_0_rgba(23,23,23,.08)]">
-        <div className="rounded-2xl bg-[#3f95e8] p-3 text-xs font-extrabold text-white">{copy?.freshTitle ?? "Fresh roles, every day."}</div>
+        <div className="rounded-2xl bg-[#3f95e8] p-3 text-xs font-semibold text-white">{copy?.freshTitle ?? "Fresh roles, every day."}</div>
         <div className="mt-3"><JobPreviewCard job={jobs[0]} index={0} compact copy={copy} /></div>
       </div>
       <BriefcaseBusiness aria-hidden className="absolute -right-3 top-3 size-10 rotate-12 text-[#171717]" strokeWidth={1.5} />

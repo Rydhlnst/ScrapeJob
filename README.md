@@ -269,6 +269,7 @@ Perilaku scheduler:
 - membaca `SCRAPER_ACTIVE_SOURCES`
 - dispatch queue job per source aktif
 - memakai `withoutOverlapping` agar run lama tidak tumpang tindih
+- saat stack di-rebuild, service `migrate` menjalankan semua seeder (termasuk job sources) lalu dispatch scrape awal satu kali
 
 Untuk server Linux tradisional, cukup jalankan cron Laravel standar:
 
@@ -288,16 +289,17 @@ Urutan paling aman untuk local development:
 
 1. Nyalakan database
 2. Nyalakan Redis
-3. Jalankan backend Laravel
-4. Jalankan queue worker dan scheduler
-5. Jalankan frontend Next.js
-6. Jalankan scraper jika ingin ingest data baru
+3. Jalankan service initializer/migration
+4. Jalankan backend Laravel
+5. Jalankan queue worker dan scheduler
+6. Jalankan frontend Next.js
 
 ## Menjalankan dengan Docker Compose
 
 Workflow Docker sekarang mencakup:
 
 - `frontend`
+- `migrate` (migrations, seeders, initial scrape dispatch)
 - `backend`
 - `queue`
 - `scheduler`
@@ -415,7 +417,7 @@ docker compose --env-file .env.production -f docker-compose.production.yml --pro
 
 ### 5) Jalankan migration secara manual
 
-Migration bukan bagian dari startup container production. Jalankan ini setelah stack sehat:
+Migration, semua seeder, dan scrape awal dijalankan otomatis oleh service `migrate` saat stack dibuat ulang. Untuk menjalankan ulang secara manual:
 
 ```bash
 docker compose --env-file .env.production -f docker-compose.production.yml run --rm backend php artisan migrate --force
@@ -425,6 +427,12 @@ Kalau butuh seed awal di environment baru:
 
 ```bash
 docker compose --env-file .env.production -f docker-compose.production.yml run --rm backend php artisan db:seed --force
+```
+
+Untuk memicu scrape manual setelah worker aktif:
+
+```bash
+docker compose --env-file .env.production -f docker-compose.production.yml run --rm backend php artisan jobs:scrape --queue
 ```
 
 ### 6) Verifikasi setelah deploy
@@ -503,6 +511,7 @@ Beberapa hal yang perlu diketahui sebelum deployment:
 - workflow Docker lokal dan production sekarang dipisah
 - build frontend Docker sekarang menerima env publik saat build time
 - backend production sekarang berjalan di Apache dan fail fast jika env wajib belum diisi
+- service `migrate` menjalankan semua seeder dan dispatch scrape awal pada setiap rebuild stack
 - scheduler scraping default sekarang setiap 8 jam dan bisa diubah lewat env
 - konfigurasi database manual dan Docker memang dibedakan: Docker default ke PostgreSQL, local manual bebas disesuaikan
 - README backend masih bawaan Laravel, jadi dokumentasi operasional memang sebaiknya dipusatkan di root README ini

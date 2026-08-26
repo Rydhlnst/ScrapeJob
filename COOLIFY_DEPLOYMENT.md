@@ -33,13 +33,14 @@ Copy the entire contents of **`.env.coolify`** from the repo root into Coolify's
 The file is final for both domains — secrets (`APP_KEY`, `POSTGRES_PASSWORD`,
 `SCRAPER_INTERNAL_API_TOKEN`, `ADMIN_PASSWORD`) are already generated.
 
-> Keep `RUN_MIGRATIONS=true` for the first deploy — it auto-runs
-> `migrate` + role & admin seeding. After the first successful deploy,
-> set it to `false` and redeploy.
+> The one-shot `migrate` service now runs migrations, all seeders (including
+> job sources), and dispatches the initial scrape on every full rebuild.
+> Set `SCRAPER_RUN_ON_STARTUP=false` only if the initial scrape should be skipped.
 
 ## 4. Deploy
 
-Click **Deploy** dan tunggu semua 6 service healthy.
+Click **Deploy** and wait for the six long-running services to become healthy.
+The `migrate` service must finish successfully first.
 
 Build pertama butuh waktu (PHP extensions + Playwright/Chromium). Build berikutnya pakai cache.
 
@@ -72,7 +73,7 @@ Harus diisi **setelah** database jalan, bukan sebelum.
 |---|---|
 | Backend unhealthy | Check `APP_KEY` and `POSTGRES_PASSWORD` are set (entrypoint exits if missing) |
 | Frontend can't reach API | `NEXT_PUBLIC_API_BASE_URL` must be `https://scrapejob.beres.io` (also a build arg — rebuild after changing) |
-| Migrations didn't run | Set `RUN_MIGRATIONS=true`, redeploy, then set back to `false` |
+| Migrations or sources didn't initialize | Check the `migrate` service logs; it must finish successfully before `backend`, `queue`, and `scheduler` start |
 | 502 after deploy | Wait for healthchecks (60s start period), then check service logs |
 
 ---

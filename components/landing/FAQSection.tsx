@@ -65,7 +65,7 @@ export function FAQSection({ content }: { content: LandingSectionCopy["faq"] }) 
               <Sparkles className="size-3.5" />
               {content.eyebrow}
             </div>
-            <h2 className="jobkan-section-title mt-5 max-w-xl text-4xl font-extrabold leading-[1.08] tracking-[-0.05em] text-[#171717] md:text-6xl">
+            <h2 className="jobkan-section-title mt-5 max-w-xl text-4xl font-semibold leading-[1.08] tracking-[-0.05em] text-[#171717] md:text-6xl">
               {content.title}
             </h2>
             <p className="mt-5 max-w-lg text-base leading-[1.8] text-slate-500">

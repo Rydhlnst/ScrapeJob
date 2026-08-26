@@ -58,26 +58,26 @@ export default async function HomePage() {
           jobs={heroJobs}
         />
 
-        {/* 2. Feature showcase */}
-        <BenefitsSection content={content.benefits} copy={content.sections.features} visualCopy={content.sections.visuals} jobs={homepageJobs} />
-
-        {/* 3. Blue career discovery callout */}
-        <CTASection content={content.cta} copy={content.sections.cta} visualCopy={content.sections.visuals} jobs={homepageJobs} />
-
-        {/* 4. Benefits */}
-        <HowItWorks content={content.sections.how} />
-
-        {/* 5. Browse by category */}
-        <PopularCategories categories={categories} content={content.sections.categories} />
-
-        {/* 6. Featured live openings */}
+        {/* 2. Featured live openings */}
         <JobListingSection jobs={homepageJobs} content={content.featuredJobs} copy={content.sections.featured} />
 
-        {/* 7. Testimonials */}
+        {/* 3. Browse by category */}
+        <PopularCategories categories={categories} content={content.sections.categories} />
+
+        {/* 4. Feature showcase */}
+        <BenefitsSection content={content.benefits} copy={content.sections.features} visualCopy={content.sections.visuals} jobs={homepageJobs} />
+
+        {/* 5. How it works */}
+        <HowItWorks content={content.sections.how} />
+
+        {/* 6. Testimonials */}
         <TestimonialsSection content={content.sections.testimonials} />
 
-        {/* 8. FAQ */}
+        {/* 7. FAQ */}
         <FAQSection content={content.sections.faq} />
+
+        {/* 8. Blue career discovery callout */}
+        <CTASection content={content.cta} copy={content.sections.cta} visualCopy={content.sections.visuals} jobs={homepageJobs} />
       </main>
       <Footer content={content.sections.footer} />
     </div>

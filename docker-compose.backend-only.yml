@@ -42,6 +42,7 @@ x-backend-env: &backend-env
   MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-hello@example.com}
   MAIL_FROM_NAME: ${MAIL_FROM_NAME:-Job Loker API}
   SCRAPER_ACTIVE_SOURCES: ${SCRAPER_ACTIVE_SOURCES:-glints,jobstreet}
+  SCRAPER_RUN_ON_STARTUP: ${SCRAPER_RUN_ON_STARTUP:-true}
   SCRAPER_SCHEDULE_ENABLED: ${SCRAPER_SCHEDULE_ENABLED:-true}
   SCRAPER_SCHEDULE_CRON: ${SCRAPER_SCHEDULE_CRON:-0 */8 * * *}
   SCRAPER_SCHEDULE_TIMEZONE: ${SCRAPER_SCHEDULE_TIMEZONE:-Asia/Jakarta}
@@ -58,10 +59,28 @@ x-backend-env: &backend-env
   WAIT_FOR_DB: "true"
   ENABLE_LARAVEL_CACHE_WARMUP: "true"
   RUN_MIGRATIONS: "false"
+  ADMIN_EMAIL: ${ADMIN_EMAIL:?ADMIN_EMAIL is required}
+  ADMIN_NAME: ${ADMIN_NAME:-Super Admin}
+  ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD is required}
   AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-true}
   AI_CLEANUP_URL: ${AI_CLEANUP_URL:?AI_CLEANUP_URL is required (point to Vercel API endpoint)}
 
 services:
+  migrate:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      <<: *backend-env
+      ENABLE_LARAVEL_CACHE_WARMUP: "false"
+    command: ["/var/www/html/docker/start-migrate.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: "no"
+
   backend:
     build:
       context: .
@@ -75,6 +94,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://127.0.0.1/api/healthz"]
@@ -97,6 +118,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       backend:
         condition: service_healthy
     restart: unless-stopped
@@ -113,6 +136,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       backend:
         condition: service_healthy
     restart: unless-stopped

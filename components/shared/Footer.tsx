@@ -21,17 +21,17 @@ export function Footer({ content }: { content?: LandingSectionCopy["footer"] }) 
       <SiteContent className="relative py-16 lg:py-20">
         <div className="max-w-2xl">
           <p className="text-sm font-semibold text-[#f2a23a]">{footer.eyebrow}</p>
-          <Link href="/jobs" className="group mt-3 inline-flex items-center gap-3 border-b border-white/55 pb-3 text-4xl font-extrabold tracking-[-.065em] text-white transition-colors hover:text-[#f2a23a] sm:text-5xl">{footer.title} <ArrowRight className="size-9 transition-transform group-hover:translate-x-1" /></Link>
+          <Link href="/jobs" className="group mt-3 inline-flex items-center gap-3 border-b border-white/55 pb-3 text-4xl font-semibold tracking-[-.065em] text-white transition-colors hover:text-[#f2a23a] sm:text-5xl">{footer.title} <ArrowRight className="size-9 transition-transform group-hover:translate-x-1" /></Link>
         </div>
 
         <div className="mt-16 grid gap-12 border-t border-white/20 pt-12 md:grid-cols-[1.35fr_repeat(3,1fr)]">
           <div>
-            <Link href="/" className="flex items-center gap-2.5"><Image src="/logo.png" alt="Lowonganku" width={34} height={34} className="size-8 object-contain brightness-0 invert" /><span className="font-extrabold tracking-[-.04em] text-white">Lowonganku</span></Link>
+            <Link href="/" className="flex items-center gap-2.5"><Image src="/logo.png" alt="Lowonganku" width={34} height={34} className="size-8 object-contain brightness-0 invert" /><span className="font-semibold tracking-[-.04em] text-white">Lowonganku</span></Link>
             <p className="mt-5 max-w-xs text-sm leading-6 text-white/70">{footer.description}</p>
           </div>
           {footer.columns.map((column) => (
             <div key={column.title}>
-              <h2 className="text-sm font-extrabold text-white">{column.title}</h2>
+              <h2 className="text-sm font-semibold text-white">{column.title}</h2>
               <ul className="mt-4 space-y-3">
                 {column.links.map((link) => <li key={link.label}><Link href={link.href} className="text-sm text-white/65 transition-colors hover:text-[#f2a23a]">{link.label}</Link></li>)}
               </ul>

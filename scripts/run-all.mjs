@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 import { dirname, resolve } from "node:path";
 
 const rootDir = resolve(import.meta.dirname, "..");
-const composeArgs = ["compose", "up", "--build", "frontend", "backend", "queue", "scheduler", "db", "redis"];
+const composeArgs = ["compose", "up", "--build", "migrate", "frontend", "backend", "queue", "scheduler", "db", "redis"];
 const maxAttempts = 3;
 const retryDelayMs = 5000;
 const transientErrorPatterns = [

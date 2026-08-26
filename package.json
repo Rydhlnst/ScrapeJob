@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "check-types": "tsc -p tsconfig.json --noEmit",
-    "docker:up": "docker compose up --build frontend backend queue scheduler db redis",
+    "docker:up": "docker compose up --build migrate frontend backend queue scheduler db redis",
     "docker:down": "docker compose down",
     "docker:scraper": "docker compose --profile scraper run --rm scraper",
     "docker:prod:config": "docker compose --env-file .env.production -f docker-compose.production.yml config",

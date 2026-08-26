@@ -15,7 +15,7 @@ export function JobListingSection({ jobs, content, copy }: { jobs: Job[]; conten
       <Container>
         <div className="mx-auto max-w-3xl text-center">
           <LandingEyebrow>{copy.eyebrow}</LandingEyebrow>
-          <h2 className="jobkan-section-title mt-5 text-4xl font-extrabold leading-[1.08] tracking-[-.055em] text-[#171717] md:text-6xl">{content.title}</h2>
+          <h2 className="jobkan-section-title mt-5 text-4xl font-semibold leading-[1.08] tracking-[-.055em] text-[#171717] md:text-6xl">{content.title}</h2>
           <p className="mt-5 text-slate-500">{content.description}</p>
         </div>
         {jobs.length ? (
@@ -24,7 +24,7 @@ export function JobListingSection({ jobs, content, copy }: { jobs: Job[]; conten
           </div>
         ) : <p className="mt-12 text-center text-sm text-slate-500">{content.emptyState}</p>}
         <div className="mt-10 text-center">
-          <Button asChild className="h-11 rounded-xl bg-[#3f95e8] px-6 font-bold text-white shadow-[0_4px_0_rgba(23,23,23,.13)] hover:bg-[#2479d1]"><Link href="/jobs">{copy.buttonLabel}<ArrowRight className="ml-2 size-4" /></Link></Button>
+          <Button asChild className="h-11 rounded-xl bg-[#3f95e8] px-6 font-semibold text-white shadow-[0_4px_0_rgba(23,23,23,.13)] hover:bg-[#2479d1]"><Link href="/jobs">{copy.buttonLabel}<ArrowRight className="ml-2 size-4" /></Link></Button>
         </div>
       </Container>
     </section>

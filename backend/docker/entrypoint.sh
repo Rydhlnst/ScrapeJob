@@ -91,8 +91,9 @@ wait_for_database
 
 if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
   php artisan migrate --force
-  php artisan db:seed --class=RolePermissionSeeder --force
-  php artisan db:seed --class=AdminUserSeeder --force
+  # DatabaseSeeder is idempotent and also provisions the job sources and
+  # other master data required by the scraper.
+  php artisan db:seed --force
 fi
 
 # Ensure storage symbolic link exists (only run as root to avoid permission errors in worker/scheduler)

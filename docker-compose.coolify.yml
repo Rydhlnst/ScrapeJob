@@ -27,6 +27,7 @@ x-laravel-env: &laravel-env
   SCRAPER_SCHEDULE_CRON: ${SCRAPER_SCHEDULE_CRON:-0 */8 * * *}
   SCRAPER_SCHEDULE_TIMEZONE: ${SCRAPER_SCHEDULE_TIMEZONE:-Asia/Jakarta}
   SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN}
+  SCRAPER_RUN_ON_STARTUP: ${SCRAPER_RUN_ON_STARTUP:-true}
   SCRAPER_PYTHON_MODE: local
   SCRAPER_PYTHON_BIN: python3
   WAIT_FOR_DB: "true"
@@ -34,8 +35,28 @@ x-laravel-env: &laravel-env
   AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
   LOG_CHANNEL: ${LOG_CHANNEL:-stack}
   LOG_LEVEL: ${LOG_LEVEL:-warning}
+  ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@beres.io}
+  ADMIN_NAME: "${ADMIN_NAME:-Super Admin}"
+  ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
 
 services:
+  migrate:
+    image: scrapejob-backend:coolify
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      <<: *laravel-env
+      RUN_MIGRATIONS: "false"
+      ENABLE_LARAVEL_CACHE_WARMUP: "false"
+    command: ["/var/www/html/docker/start-migrate.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: "no"
+
   frontend:
     build:
       context: .
@@ -72,7 +93,7 @@ services:
       dockerfile: backend/Dockerfile
     environment:
       <<: *laravel-env
-      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-false}
+      RUN_MIGRATIONS: "false"
       ENABLE_LARAVEL_CACHE_WARMUP: "true"
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@beres.io}
       ADMIN_NAME: "${ADMIN_NAME:-Super Admin}"
@@ -82,6 +103,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://127.0.0.1/api/healthz"]
@@ -103,6 +126,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       backend:
         condition: service_healthy
     restart: unless-stopped
@@ -118,6 +143,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       backend:
         condition: service_healthy
     restart: unless-stopped

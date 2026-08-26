@@ -18,7 +18,7 @@ export function PopularCategories({ categories, content }: { categories: Categor
               <Sparkles className="size-3.5" />
               {content.eyebrow}
             </div>
-            <h2 className="jobkan-section-title mt-5 text-4xl font-extrabold leading-[1.05] tracking-[-0.06em] text-[#171717] md:text-6xl">
+            <h2 className="jobkan-section-title mt-5 text-4xl font-semibold leading-[1.05] tracking-[-0.06em] text-[#171717] md:text-6xl">
               {content.title}
             </h2>
             <p className="mt-3 text-sm leading-[1.8] text-slate-500">
@@ -46,7 +46,7 @@ export function PopularCategories({ categories, content }: { categories: Categor
                 <div
                   className={`grid size-12 shrink-0 place-items-center rounded-xl ${color.bg} ${color.fg} border ${color.border}`}
                 >
-                  <span className="text-base font-bold">
+                  <span className="text-base font-semibold">
                     {cat.name.slice(0, 1).toUpperCase()}
                   </span>
                 </div>
@@ -62,7 +62,7 @@ export function PopularCategories({ categories, content }: { categories: Categor
             )
           })}
         </div>
-        <div className="mt-10 text-center"><Link href="/jobs" className="inline-flex items-center gap-2 rounded-xl bg-[#3f95e8] px-6 py-3 text-sm font-extrabold text-white shadow-[0_4px_0_rgba(23,23,23,.13)] transition-all hover:-translate-y-0.5 hover:bg-[#2479d1]">{content.buttonLabel} <ArrowRight className="size-4" /></Link></div>
+        <div className="mt-10 text-center"><Link href="/jobs" className="inline-flex items-center gap-2 rounded-xl bg-[#3f95e8] px-6 py-3 text-sm font-semibold text-white shadow-[0_4px_0_rgba(23,23,23,.13)] transition-all hover:-translate-y-0.5 hover:bg-[#2479d1]">{content.buttonLabel} <ArrowRight className="size-4" /></Link></div>
       </Container>
     </section>
   )
