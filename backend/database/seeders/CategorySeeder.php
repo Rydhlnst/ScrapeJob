@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Website;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -10,6 +11,7 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
+        $websiteId = Website::query()->where('domain', 'lowonganku.com')->value('id');
         $categories = [
             'IT & Software',
             'Marketing',
@@ -23,7 +25,7 @@ class CategorySeeder extends Seeder
 
         foreach ($categories as $name) {
             Category::query()->updateOrCreate(
-                ['slug' => Str::slug($name)],
+                ['website_id' => $websiteId, 'slug' => Str::slug($name)],
                 ['name' => $name, 'description' => null]
             );
         }

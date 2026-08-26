@@ -7,6 +7,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Job extends Model
 {
@@ -83,6 +84,19 @@ class Job extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::created(function (Job $job): void {
+            Website::query()->where('is_active', true)->each(function (Website $website) use ($job): void {
+                $status = $job->status === 'published' ? 'published' : ($job->status === 'draft' ? 'draft' : 'unused');
+                WebsiteJob::query()->firstOrCreate(
+                    ['website_id' => $website->id, 'job_id' => $job->id],
+                    ['status' => $status, 'published_at' => $status === 'published' ? ($job->published_at ?? now()) : null],
+                );
+            });
+        });
+    }
+
     public function sluggable(): array
     {
         return [
@@ -95,6 +109,11 @@ class Job extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function websiteJobs(): HasMany
+    {
+        return $this->hasMany(WebsiteJob::class);
     }
 
     public function scopeUnnotified($query)

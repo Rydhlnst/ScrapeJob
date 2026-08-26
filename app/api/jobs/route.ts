@@ -8,7 +8,10 @@ function backendUrl(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const response = await fetch(backendUrl(request), {
-      headers: { Accept: "application/json" },
+      headers: {
+        Accept: "application/json",
+        "X-Website-Domain": request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? "",
+      },
       cache: "no-store",
     })
 

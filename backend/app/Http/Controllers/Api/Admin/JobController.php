@@ -7,6 +7,8 @@ use App\Http\Requests\Admin\StoreJobRequest;
 use App\Http\Requests\Admin\UpdateJobRequest;
 use App\Http\Resources\JobResource;
 use App\Models\Job;
+use App\Models\WebsiteJob;
+use App\Services\WebsiteContext;
 use App\Services\Jobs\JobDeduplicationService;
 use App\Services\Jobs\JobHashService;
 use App\Services\Jobs\JobNormalizationService;
@@ -24,10 +26,12 @@ class JobController extends Controller
         private readonly JobNormalizationService $normalizationService,
         private readonly JobPublishingService $publishingService,
         private readonly JobDeduplicationService $deduplicationService,
+        private readonly WebsiteContext $websiteContext,
     ) {}
 
     public function index(Request $request)
     {
+        $website = $this->websiteContext->resolve($request);
         $perPage = min(max((int) $request->query('perPage', 15), 1), 100);
 
         $jobs = Job::query()
@@ -81,6 +85,12 @@ class JobController extends Controller
                 'updated_at',
             ])
             ->with('category')
+            ->where(function ($query) use ($website) {
+                $query->whereHas('websiteJobs', fn ($relation) => $relation->where('website_id', $website->id));
+                if ($website->domain === 'lowonganku.com') {
+                    $query->orWhereDoesntHave('websiteJobs');
+                }
+            })
             ->when($request->filled('keyword'), function ($query) use ($request) {
                 $keyword = mb_strtolower(trim($request->string('keyword')->value()));
                 $like = '%'.$keyword.'%';
@@ -201,10 +211,15 @@ class JobController extends Controller
         return ApiResponse::success(null, 'Job deleted successfully');
     }
 
-    public function publish(Job $job)
+    public function publish(Job $job, Request $request)
     {
         try {
             $job = $this->publishingService->publish($job);
+            $website = $this->websiteContext->resolve($request);
+            WebsiteJob::query()->updateOrCreate(
+                ['website_id' => $website->id, 'job_id' => $job->id],
+                ['status' => 'published', 'published_at' => now(), 'expired_at' => null],
+            );
         } catch (InvalidArgumentException $exception) {
             return ApiResponse::error($exception->getMessage(), 422);
         }
@@ -212,9 +227,17 @@ class JobController extends Controller
         return ApiResponse::success(new JobResource($job->load('category')), 'Job published successfully');
     }
 
-    public function unpublish(Job $job)
+    public function unpublish(Job $job, Request $request)
     {
         $job = $this->publishingService->unpublish($job);
+        $website = $this->websiteContext->resolve($request);
+        WebsiteJob::query()->updateOrCreate(
+            ['website_id' => $website->id, 'job_id' => $job->id],
+            ['status' => 'draft', 'published_at' => null],
+        );
+        if ($job->websiteJobs()->where('status', 'published')->exists()) {
+            $job->update(['status' => 'published', 'published_at' => now()]);
+        }
 
         return ApiResponse::success(new JobResource($job->load('category')), 'Job unpublished successfully');
     }

@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\Admin\AdminScrapedJobController;
 use App\Http\Controllers\Api\Admin\SettingsController;
 use App\Http\Controllers\Api\Admin\ScrapeRunController;
 use App\Http\Controllers\Api\Admin\UserManagementController;
+use App\Http\Controllers\Api\Admin\WebsiteController;
+use App\Http\Controllers\Api\Admin\WebsiteJobController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
 use App\Http\Controllers\Api\Public\ContactMessageController;
@@ -32,6 +34,7 @@ Route::get('/healthz', static fn () => response()->json([
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:auth-login');
     Route::post('/user/register', [AuthController::class, 'registerUser'])->middleware('throttle:auth-login');
+    Route::post('/admin/register', [AuthController::class, 'registerAdmin'])->middleware('throttle:auth-login');
     Route::post('/user/login', [AuthController::class, 'loginUser'])->middleware('throttle:auth-login');
     Route::post('/admin/login', [AuthController::class, 'loginAdmin'])->middleware('throttle:auth-login');
 
@@ -111,9 +114,14 @@ Route::prefix('admin')
         Route::post('/scraped-jobs/bulk-reject', [AdminScrapedJobController::class, 'bulkReject'])->middleware('permission:edit jobs');
         Route::post('/scraped-jobs/bulk-publish', [AdminScrapedJobController::class, 'bulkPublish'])->middleware('permission:publish jobs');
         Route::get('/scraped-jobs/{scrapedJob}', [AdminScrapedJobController::class, 'show'])->middleware('permission:view jobs');
+        Route::get('/scraped-jobs/{scrapedJob}/websites', [WebsiteJobController::class, 'assignments'])->middleware('permission:view jobs');
+        Route::put('/scraped-jobs/{scrapedJob}/websites', [WebsiteJobController::class, 'sync'])->middleware('permission:edit jobs');
         Route::patch('/scraped-jobs/{scrapedJob}', [AdminScrapedJobController::class, 'update'])->middleware('permission:edit jobs');
         Route::patch('/scraped-jobs/{scrapedJob}/approve', [AdminScrapedJobController::class, 'approve'])->middleware('permission:edit jobs');
         Route::patch('/scraped-jobs/{scrapedJob}/reject', [AdminScrapedJobController::class, 'reject'])->middleware('permission:edit jobs');
         Route::post('/scraped-jobs/{scrapedJob}/publish', [AdminScrapedJobController::class, 'publish'])->middleware('permission:publish jobs');
         Route::post('/scraped-jobs/{scrapedJob}/clean-ai', [AdminScrapedJobController::class, 'cleanAi'])->middleware('permission:edit jobs');
+
+        Route::apiResource('/websites', WebsiteController::class)->middleware('permission:manage settings');
+        Route::patch('/website-jobs/{websiteJob}/status', [WebsiteJobController::class, 'updateStatus'])->middleware('permission:publish jobs');
     });

@@ -5,15 +5,16 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\LandingPageContent;
 use App\Support\ApiResponse;
+use App\Services\WebsiteContext;
 use Illuminate\Http\Request;
 
 class LandingPageContentController extends Controller
 {
     private const CONTENT_KEY = 'landing_page';
 
-    public function show()
+    public function show(Request $request, WebsiteContext $websiteContext)
     {
-        return ApiResponse::success($this->serialize($this->resolveContent()), 'Landing page content retrieved successfully');
+        return ApiResponse::success($this->serialize($this->resolveContent($websiteContext->resolve($request)->id)), 'Landing page content retrieved successfully');
     }
 
     public function update(Request $request)
@@ -22,7 +23,7 @@ class LandingPageContentController extends Controller
             'draftPayload' => ['required', 'array'],
         ]);
 
-        $content = $this->resolveContent();
+        $content = $this->resolveContent(app(WebsiteContext::class)->resolve($request)->id);
         $content->fill([
             'draft_payload' => $payload['draftPayload'],
             'updated_by' => $request->user()?->id,
@@ -33,7 +34,7 @@ class LandingPageContentController extends Controller
 
     public function publish(Request $request)
     {
-        $content = $this->resolveContent();
+        $content = $this->resolveContent(app(WebsiteContext::class)->resolve($request)->id);
 
         if (! $content->hasDraft()) {
             return ApiResponse::error('No draft content available to publish.', 422);
@@ -50,10 +51,10 @@ class LandingPageContentController extends Controller
         return ApiResponse::success($this->serialize($content->fresh()), 'Landing page content published successfully');
     }
 
-    private function resolveContent(): LandingPageContent
+    private function resolveContent(string $websiteId): LandingPageContent
     {
         return LandingPageContent::query()->firstOrCreate(
-            ['key' => self::CONTENT_KEY],
+            ['website_id' => $websiteId, 'key' => self::CONTENT_KEY],
             ['draft_payload' => null, 'published_payload' => null],
         );
     }

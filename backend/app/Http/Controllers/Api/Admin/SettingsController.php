@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Setting;
 use App\Support\ApiResponse;
+use App\Services\WebsiteContext;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -22,9 +23,10 @@ class SettingsController extends Controller
         'scraper_active_sources'=> 'string',
     ];
 
-    public function index()
+    public function index(Request $request, WebsiteContext $websiteContext)
     {
-        $rows = Setting::whereIn('key', array_keys(self::KEYS))->get()->keyBy('key');
+        $websiteId = $websiteContext->resolve($request)->id;
+        $rows = Setting::where('website_id', $websiteId)->whereIn('key', array_keys(self::KEYS))->get()->keyBy('key');
 
         $data = [];
         foreach (self::KEYS as $key => $type) {
@@ -45,8 +47,9 @@ class SettingsController extends Controller
         return ApiResponse::success($data, 'Settings retrieved');
     }
 
-    public function update(Request $request)
+    public function update(Request $request, WebsiteContext $websiteContext)
     {
+        $websiteId = $websiteContext->resolve($request)->id;
         $payload = $request->validate([
             'settings'          => 'required|array',
             'settings.*.key'    => 'required|string',
@@ -68,14 +71,14 @@ class SettingsController extends Controller
                 continue;
             }
 
-            $old = Setting::where('key', $key)->value('value');
+            $old = Setting::where('website_id', $websiteId)->where('key', $key)->value('value');
             $before[$key] = $type === 'secret' ? '[redacted]' : $old;
 
             if ($value === null || $value === '') {
-                Setting::where('key', $key)->delete();
+                Setting::where('website_id', $websiteId)->where('key', $key)->delete();
                 $after[$key] = null;
             } else {
-                Setting::set($key, $value, $type);
+                Setting::set($key, $value, $type, $websiteId);
                 $after[$key] = $type === 'secret' ? '[redacted]' : $value;
             }
         }

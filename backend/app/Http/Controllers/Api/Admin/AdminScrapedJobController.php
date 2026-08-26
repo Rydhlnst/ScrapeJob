@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\JobResource;
 use App\Http\Resources\ScrapedJobResource;
 use App\Models\ScrapedJob;
+use App\Models\WebsiteJob;
+use App\Services\WebsiteContext;
 use App\Jobs\CleanScrapedJobWithAI;
 use App\Services\Jobs\JobNormalizationService;
 use App\Services\Jobs\ScrapedJobPublishingService;
@@ -20,6 +22,7 @@ class AdminScrapedJobController extends Controller
     public function __construct(
         private readonly ScrapedJobPublishingService $publishingService,
         private readonly JobNormalizationService $normalizer,
+        private readonly WebsiteContext $websiteContext,
     ) {}
 
     public function index(Request $request)
@@ -27,6 +30,7 @@ class AdminScrapedJobController extends Controller
         $perPage = min(max((int) $request->query('perPage', 15), 1), 100);
 
         $rows = ScrapedJob::query()
+            ->with('job.websiteJobs.website')
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
             ->when($request->filled('source'), fn ($query) => $query->where('source', $request->string('source')))
             ->when($request->filled('keyword'), function ($query) use ($request) {
@@ -47,7 +51,7 @@ class AdminScrapedJobController extends Controller
 
     public function show(ScrapedJob $scrapedJob)
     {
-        return ApiResponse::success(new ScrapedJobResource($scrapedJob), 'Scraped job retrieved successfully');
+        return ApiResponse::success(new ScrapedJobResource($scrapedJob->load('job.websiteJobs.website')), 'Scraped job retrieved successfully');
     }
 
     public function update(Request $request, ScrapedJob $scrapedJob)
@@ -89,7 +93,7 @@ class AdminScrapedJobController extends Controller
         return ApiResponse::success(new ScrapedJobResource($scrapedJob->refresh()), 'Scraped job rejected successfully');
     }
 
-    public function publish(ScrapedJob $scrapedJob)
+    public function publish(ScrapedJob $scrapedJob, Request $request)
     {
         if ($scrapedJob->status !== 'approved') {
             return ApiResponse::error('Only approved scraped jobs can be published.', 422);
@@ -102,6 +106,13 @@ class AdminScrapedJobController extends Controller
 
         $job = $scrapedJob->refresh()->job ?? null;
         $job ??= \App\Models\Job::query()->where('scraped_job_id', $scrapedJob->id)->first();
+        if ($job) {
+            $website = $this->websiteContext->resolve($request);
+            WebsiteJob::query()->updateOrCreate(
+                ['website_id' => $website->id, 'job_id' => $job->id],
+                ['status' => 'published', 'published_at' => now(), 'expired_at' => null],
+            );
+        }
 
         return ApiResponse::success(new JobResource($job?->refresh()), 'Scraped job published successfully');
     }

@@ -1,11 +1,6 @@
 .git
 .gitignore
 .next
-!.next/
-!.next/standalone/
-!.next/standalone/**
-!.next/static/
-!.next/static/**
 .vercel
 .turbo
 .pnpm-store

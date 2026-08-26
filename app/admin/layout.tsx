@@ -3,6 +3,7 @@ import { AdminSidebar } from "@/components/admin/admin-sidebar"
 import { AdminAuthGuard } from "@/components/admin/admin-auth-guard"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { AdminWebsiteSelector } from "@/components/admin/admin-website-selector"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,6 +19,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <span className="text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
                     Admin Panel
                   </span>
+                  <div className="ml-auto">
+                    <AdminWebsiteSelector />
+                  </div>
                 </header>
                 <main className="flex-1 overflow-y-auto bg-zinc-50 p-3 md:p-4">
                   {children}

@@ -11,6 +11,7 @@ class LandingPageContent extends Model
     use UsesUuid;
 
     protected $fillable = [
+        'website_id',
         'key',
         'draft_payload',
         'published_payload',
@@ -18,6 +19,11 @@ class LandingPageContent extends Model
         'published_by',
         'published_at',
     ];
+
+    public function website(): BelongsTo
+    {
+        return $this->belongsTo(Website::class);
+    }
 
     protected function casts(): array
     {

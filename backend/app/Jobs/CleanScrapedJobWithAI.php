@@ -136,7 +136,7 @@ class CleanScrapedJobWithAI implements ShouldQueue
                 }
 
                 Log::error("AI cleanup API returned error status {$response->status()} for job ID: {$this->scrapedJob->id}. Body: {$response->body()}");
-                throw new \RuntimeException('AI Cleanup: '.$errorMsg);
+                throw new \RuntimeException('AI Cleanup API returned error status: '.$response->status());
             }
 
             if (! is_array($responseData) || ! isset($responseData['success']) || ! $responseData['success'] || ! isset($responseData['data'])) {

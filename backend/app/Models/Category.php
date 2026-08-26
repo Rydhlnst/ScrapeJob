@@ -12,10 +12,16 @@ class Category extends Model
     use HasFactory, UsesUuid;
 
     protected $fillable = [
+        'website_id',
         'name',
         'slug',
         'description',
     ];
+
+    public function website(): BelongsTo
+    {
+        return $this->belongsTo(Website::class);
+    }
 
     public function jobs(): HasMany
     {

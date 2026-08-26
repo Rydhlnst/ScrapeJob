@@ -5,17 +5,19 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Support\ApiResponse;
+use App\Services\WebsiteContext;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class PageController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, WebsiteContext $websiteContext)
     {
         $perPage = min(max((int) $request->query('perPage', 20), 1), 100);
 
         $pages = Page::query()
+            ->where('website_id', $websiteContext->resolve($request)->id)
             ->when($request->filled('keyword'), function ($query) use ($request) {
                 $keyword = $request->string('keyword')->value();
 
@@ -42,11 +44,12 @@ class PageController extends Controller
         );
     }
 
-    public function store(Request $request)
+    public function store(Request $request, WebsiteContext $websiteContext)
     {
+        $websiteId = $websiteContext->resolve($request)->id;
         $payload = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', 'alpha_dash', Rule::unique('pages', 'slug')],
+            'slug' => ['nullable', 'string', 'max:255', 'alpha_dash'],
             'status' => ['nullable', Rule::in(['draft', 'published'])],
             'summary' => ['nullable', 'string', 'max:500'],
             'content' => ['nullable', 'string', 'max:200000'],
@@ -54,9 +57,11 @@ class PageController extends Controller
             'seoDescription' => ['nullable', 'string', 'max:500'],
         ]);
 
+        $slug = $payload['slug'] ?: Str::slug($payload['title']);
         $page = Page::query()->create([
+            'website_id' => $websiteId,
             'title' => $payload['title'],
-            'slug' => $payload['slug'] ?: Str::slug($payload['title']),
+            'slug' => $this->makeUniqueSlug($slug, $websiteId),
             'status' => $payload['status'] ?? 'draft',
             'summary' => $payload['summary'] ?? null,
             'content' => $payload['content'] ?? null,
@@ -68,16 +73,18 @@ class PageController extends Controller
         return ApiResponse::success($this->serialize($page), 'Page created successfully', 201);
     }
 
-    public function show(Page $page)
+    public function show(Page $page, Request $request, WebsiteContext $websiteContext)
     {
+        abort_unless($page->website_id === $websiteContext->resolve($request)->id, 404);
         return ApiResponse::success($this->serialize($page), 'Page retrieved successfully');
     }
 
-    public function update(Request $request, Page $page)
+    public function update(Request $request, Page $page, WebsiteContext $websiteContext)
     {
+        abort_unless($page->website_id === $websiteContext->resolve($request)->id, 404);
         $payload = $request->validate([
             'title' => ['sometimes', 'required', 'string', 'max:255'],
-            'slug' => ['sometimes', 'required', 'string', 'max:255', 'alpha_dash', Rule::unique('pages', 'slug')->ignore($page->id)],
+            'slug' => ['sometimes', 'required', 'string', 'max:255', 'alpha_dash'],
             'status' => ['sometimes', Rule::in(['draft', 'published'])],
             'summary' => ['nullable', 'string', 'max:500'],
             'content' => ['nullable', 'string', 'max:200000'],
@@ -89,7 +96,7 @@ class PageController extends Controller
 
         $page->update([
             'title' => $payload['title'] ?? $page->title,
-            'slug' => $payload['slug'] ?? $page->slug,
+            'slug' => isset($payload['slug']) ? $this->makeUniqueSlug($payload['slug'], $page->website_id, $page->id) : $page->slug,
             'status' => $nextStatus,
             'summary' => array_key_exists('summary', $payload) ? $payload['summary'] : $page->summary,
             'content' => array_key_exists('content', $payload) ? $payload['content'] : $page->content,
@@ -101,15 +108,17 @@ class PageController extends Controller
         return ApiResponse::success($this->serialize($page->refresh()), 'Page updated successfully');
     }
 
-    public function destroy(Page $page)
+    public function destroy(Page $page, Request $request, WebsiteContext $websiteContext)
     {
+        abort_unless($page->website_id === $websiteContext->resolve($request)->id, 404);
         $page->delete();
 
         return ApiResponse::success(null, 'Page deleted successfully');
     }
 
-    public function publish(Page $page)
+    public function publish(Page $page, Request $request, WebsiteContext $websiteContext)
     {
+        abort_unless($page->website_id === $websiteContext->resolve($request)->id, 404);
         $page->update([
             'status' => 'published',
             'published_at' => now(),
@@ -133,5 +142,16 @@ class PageController extends Controller
             'createdAt' => optional($page->created_at)?->toIso8601String(),
             'updatedAt' => optional($page->updated_at)?->toIso8601String(),
         ];
+    }
+
+    private function makeUniqueSlug(string $base, string $websiteId, ?string $exceptId = null): string
+    {
+        $slug = Str::slug($base) ?: 'page';
+        $candidate = $slug;
+        $counter = 1;
+        while (Page::query()->where('website_id', $websiteId)->where('slug', $candidate)->when($exceptId, fn ($query) => $query->where('id', '!=', $exceptId))->exists()) {
+            $candidate = $slug.'-'.$counter++;
+        }
+        return $candidate;
     }
 }

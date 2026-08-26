@@ -30,6 +30,23 @@ class ScrapedJobResource extends JsonResource
             'raw' => $this->raw_json,
             'createdAt' => optional($this->created_at)->toIso8601String(),
             'updatedAt' => optional($this->updated_at)->toIso8601String(),
+            'assignments' => $this->whenLoaded('job', function (): array {
+                $job = $this->job;
+                if (! $job || ! $job->relationLoaded('websiteJobs')) {
+                    return [];
+                }
+
+                return $job->websiteJobs->map(fn ($assignment) => [
+                    'id' => $assignment->id,
+                    'websiteId' => $assignment->website_id,
+                    'status' => $assignment->status,
+                    'website' => $assignment->relationLoaded('website') ? [
+                        'id' => $assignment->website->id,
+                        'name' => $assignment->website->name,
+                        'domain' => $assignment->website->domain,
+                    ] : null,
+                ])->values()->all();
+            }),
         ];
     }
 }

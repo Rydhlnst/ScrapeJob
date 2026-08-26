@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Page;
+use App\Models\Website;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -10,6 +11,7 @@ class PageSeeder extends Seeder
 {
     public function run(): void
     {
+        $websiteId = Website::query()->where('domain', 'lowonganku.com')->value('id');
         $pages = [
             ['title' => 'Tentang Lowonganku', 'status' => 'published', 'summary' => 'Kenali visi & misi platform Lowonganku dalam menghubungkan talenta dengan perusahaan.'],
             ['title' => 'Kebijakan Privasi', 'status' => 'published', 'summary' => 'Bagaimana kami memproses & melindungi data personal pengguna.'],
@@ -86,7 +88,7 @@ class PageSeeder extends Seeder
         foreach ($pages as $item) {
             $slug = Str::slug($item['title']);
             Page::query()->updateOrCreate(
-                ['slug' => $slug],
+                ['website_id' => $websiteId, 'slug' => $slug],
                 [
                     'title' => $item['title'],
                     'status' => $item['status'],

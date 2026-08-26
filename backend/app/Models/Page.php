@@ -11,6 +11,7 @@ class Page extends Model
     use Sluggable, UsesUuid;
 
     protected $fillable = [
+        'website_id',
         'title',
         'slug',
         'status',
@@ -20,6 +21,11 @@ class Page extends Model
         'seo_description',
         'published_at',
     ];
+
+    public function website(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Website::class);
+    }
 
     protected function casts(): array
     {

@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\JobResource;
 use App\Models\Job;
 use App\Support\ApiResponse;
+use App\Services\WebsiteContext;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class JobController extends Controller
 {
+    public function __construct(private readonly WebsiteContext $websiteContext) {}
+
     private function applyOrdering(Builder $query, Request $request): void
     {
         $sort = $request->string('sort')->value();
@@ -65,6 +68,7 @@ class JobController extends Controller
 
     public function index(Request $request)
     {
+        $website = $this->websiteContext->resolve($request);
         $perPage = min(max((int) ($request->query('limit', $request->query('perPage', 15))), 1), 100);
 
         $jobs = Job::query()
@@ -85,8 +89,14 @@ class JobController extends Controller
                 'created_at',
             ])
             ->with('category')
-            ->where('status', 'published')
+            ->whereIn('status', ['draft', 'published'])
             ->where('is_active', true)
+            ->where(function (Builder $query) use ($website): void {
+                $query->whereHas('websiteJobs', fn (Builder $relation) => $relation->where('website_id', $website->id)->where('status', 'published'));
+                if ($website->domain === 'lowonganku.com') {
+                    $query->orWhereDoesntHave('websiteJobs');
+                }
+            })
             ->when($request->filled('keyword'), function ($query) use ($request) {
                 $keyword = mb_strtolower(trim($request->string('keyword')->value()));
                 $like = '%'.$keyword.'%';
@@ -135,8 +145,9 @@ class JobController extends Controller
         return ApiResponse::paginated($jobs, JobResource::collection($jobs)->resolve(), 'Jobs retrieved successfully');
     }
 
-    public function show(string $identifier)
+    public function show(string $identifier, Request $request)
     {
+        $website = $this->websiteContext->resolve($request);
         $job = Job::query()
             ->select([
                 'id',
@@ -154,8 +165,14 @@ class JobController extends Controller
                 'created_at',
             ])
             ->with('category')
-            ->where('status', 'published')
+            ->whereIn('status', ['draft', 'published'])
             ->where('is_active', true)
+            ->where(function (Builder $query) use ($website): void {
+                $query->whereHas('websiteJobs', fn (Builder $relation) => $relation->where('website_id', $website->id)->where('status', 'published'));
+                if ($website->domain === 'lowonganku.com') {
+                    $query->orWhereDoesntHave('websiteJobs');
+                }
+            })
             ->where(function (Builder $query) use ($identifier): void {
                 $query->where('slug', $identifier);
 
@@ -168,9 +185,16 @@ class JobController extends Controller
         return ApiResponse::success(new JobResource($job), 'Job retrieved successfully');
     }
 
-    public function stats()
+    public function stats(Request $request)
     {
-        $base = Job::query()->where('status', 'published')->where('is_active', true);
+        $website = $this->websiteContext->resolve($request);
+        $base = Job::query()->whereIn('status', ['draft', 'published'])->where('is_active', true)
+            ->where(function (Builder $query) use ($website): void {
+                $query->whereHas('websiteJobs', fn (Builder $relation) => $relation->where('website_id', $website->id)->where('status', 'published'));
+                if ($website->domain === 'lowonganku.com') {
+                    $query->orWhereDoesntHave('websiteJobs');
+                }
+            });
 
         $totalBySource = (clone $base)
             ->selectRaw('source_name, COUNT(*) as total')

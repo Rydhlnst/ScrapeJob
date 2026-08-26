@@ -1,3 +1,5 @@
+import type { WebsiteJobAssignment } from "@/types/website"
+
 export type Job = {
   id: string
   slug: string
@@ -38,4 +40,5 @@ export type ScrapedJob = {
   status: ScrapedJobStatus
   draftStatus?: "drafted_raw" | "drafted_ai"
   failReason?: string | null
+  assignments?: WebsiteJobAssignment[]
 }

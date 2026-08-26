@@ -3,12 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\LandingPageContent;
+use App\Models\Website;
 use Illuminate\Database\Seeder;
 
 class LandingPageContentSeeder extends Seeder
 {
     public function run(): void
     {
+        $websiteId = Website::query()->where('domain', 'lowonganku.com')->value('id');
         $payload = [
             'hero' => [
                 'title' => 'Temukan Lowongan Terbaik dari Perusahaan Terpercaya',
@@ -62,7 +64,7 @@ class LandingPageContentSeeder extends Seeder
         ];
 
         LandingPageContent::query()->updateOrCreate(
-            ['key' => 'landing_page'],
+            ['website_id' => $websiteId, 'key' => 'landing_page'],
             [
                 'draft_payload' => $payload,
                 'published_payload' => $payload,

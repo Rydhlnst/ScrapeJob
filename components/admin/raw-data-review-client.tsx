@@ -48,6 +48,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { ScrapedJobWebsiteAssignment } from "@/components/admin/scraped-job-website-assignment"
 
 function cleanJobTitle(value: string) {
   return value.replace(/^job\s*card\s*title\s*:\s*/i, "").trim()
@@ -203,6 +204,7 @@ function DraftReviewSheet({
             </SheetHeader>
 
             <div className="flex-1 space-y-5 p-4">
+              <ScrapedJobWebsiteAssignment scrapedJobId={job.id} />
               <div className="space-y-1.5">
                 <FieldLabel>Title</FieldLabel>
                 <Input value={title} onChange={(e) => setTitle(e.target.value)} className="rounded-lg" aria-invalid={Boolean(fieldErrors.title)} />
@@ -722,6 +724,5 @@ export function RawDataReviewClient() {
     </section>
   )
 }
-
 
 

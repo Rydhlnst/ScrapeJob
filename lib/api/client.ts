@@ -50,7 +50,10 @@ export async function fetchJson<T>(
       ? `Bearer ${clientToken}`
       : SERVER_BEARER_TOKEN
         ? `Bearer ${SERVER_BEARER_TOKEN}`
-        : undefined)
+      : undefined)
+
+  const websiteId = typeof window !== "undefined" ? window.localStorage.getItem("admin_active_website_id") : null
+  const websiteDomain = typeof window !== "undefined" ? window.location.hostname : process.env.NEXT_PUBLIC_SITE_DOMAIN
 
   const res = await fetch(url, {
     ...init,
@@ -58,6 +61,8 @@ export async function fetchJson<T>(
     headers: {
       "Content-Type": "application/json",
       ...(authHeader ? { Authorization: authHeader } : {}),
+      ...(websiteId ? { "X-Website-Id": websiteId } : {}),
+      ...(websiteDomain ? { "X-Website-Domain": websiteDomain } : {}),
       ...(init?.headers ?? {}),
     },
     cache: "no-store",

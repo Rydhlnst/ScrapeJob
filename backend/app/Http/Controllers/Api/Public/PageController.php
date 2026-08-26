@@ -5,16 +5,19 @@ namespace App\Http\Controllers\Api\Public;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use App\Support\ApiResponse;
+use App\Services\WebsiteContext;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, WebsiteContext $websiteContext)
     {
+        $website = $websiteContext->resolve($request);
         $perPage = (int) $request->integer('per_page', 12);
         $perPage = max(1, min($perPage, 50));
 
         $pages = Page::query()
+            ->where('website_id', $website->id)
             ->where('status', 'published')
             ->orderByDesc('published_at')
             ->orderByDesc('updated_at')
@@ -37,9 +40,10 @@ class PageController extends Controller
         ]);
     }
 
-    public function show(string $slug)
+    public function show(string $slug, Request $request, WebsiteContext $websiteContext)
     {
         $page = Page::query()
+            ->where('website_id', $websiteContext->resolve($request)->id)
             ->where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();

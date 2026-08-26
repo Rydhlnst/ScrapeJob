@@ -6,11 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    protected $fillable = ['key', 'value', 'type'];
+    protected $fillable = ['website_id', 'key', 'value', 'type'];
 
-    public static function get(string $key, mixed $default = null): mixed
+    public function scopeForWebsite($query, ?string $websiteId)
     {
-        $setting = static::where('key', $key)->first();
+        return $query->where('website_id', $websiteId);
+    }
+
+    public static function get(string $key, mixed $default = null, ?string $websiteId = null): mixed
+    {
+        $setting = static::where('key', $key)->when($websiteId, fn ($query) => $query->where('website_id', $websiteId), fn ($query) => $query->whereNull('website_id'))->first();
         if (! $setting) return $default;
 
         return match ($setting->type) {
@@ -20,7 +25,7 @@ class Setting extends Model
         };
     }
 
-    public static function set(string $key, mixed $value, string $type = 'string'): void
+    public static function set(string $key, mixed $value, string $type = 'string', ?string $websiteId = null): void
     {
         $stored = match ($type) {
             'boolean' => $value ? '1' : '0',
@@ -28,6 +33,6 @@ class Setting extends Model
             default   => (string) $value,
         };
 
-        static::updateOrCreate(['key' => $key], ['value' => $stored, 'type' => $type]);
+        static::updateOrCreate(['website_id' => $websiteId, 'key' => $key], ['value' => $stored, 'type' => $type]);
     }
 }
