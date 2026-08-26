@@ -3,8 +3,11 @@
 namespace Tests\Feature\Api;
 
 use App\Jobs\ScrapeJobsJob;
+use App\Models\JobSource;
 use App\Models\ScrapeLog;
 use App\Models\ScrapeRun;
+use App\Services\Scraping\ScrapeExecutionService;
+use App\Services\Scraping\ScraperManager;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
@@ -28,6 +31,27 @@ class PublicScraperApiTest extends TestCase
         Queue::assertPushed(ScrapeJobsJob::class, function (ScrapeJobsJob $job): bool {
             return $job->source === 'glints';
         });
+    }
+
+    public function test_ok_all_source_queue_job_fans_out_to_one_job_per_active_source(): void
+    {
+        Queue::fake();
+
+        foreach (['glints', 'jobstreet', 'kalibrr'] as $sourceName) {
+            JobSource::query()->create([
+                'name' => $sourceName,
+                'base_url' => 'https://example.com',
+                'listing_url' => 'https://example.com/jobs',
+                'is_active' => true,
+                'scraping_allowed' => true,
+            ]);
+        }
+
+        $job = new ScrapeJobsJob();
+        $job->handle(app(ScrapeExecutionService::class), app(ScraperManager::class));
+
+        Queue::assertPushed(ScrapeJobsJob::class, 3);
+        Queue::assertPushed(ScrapeJobsJob::class, fn (ScrapeJobsJob $queued): bool => $queued->source !== null);
     }
 
     public function test_err_public_scraper_trigger_rejects_unknown_source(): void

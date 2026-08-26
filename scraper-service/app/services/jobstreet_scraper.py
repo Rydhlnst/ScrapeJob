@@ -6,7 +6,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, List, Optional
-from urllib.parse import quote_plus, urljoin
+from urllib.parse import quote_plus, urljoin, urlsplit, urlunsplit
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from bs4 import BeautifulSoup
@@ -62,6 +62,7 @@ class JobstreetScraper:
 
     def scrape(self) -> List[Dict]:
         all_jobs: List[Dict] = []
+        seen_urls: set[str] = set()
 
         with sync_playwright() as pw:
             browser = self._create_browser(pw)
@@ -72,6 +73,7 @@ class JobstreetScraper:
                         browser=browser,
                         role_keyword=role_keyword,
                         role_slug=role_slug,
+                        seen_urls=seen_urls,
                     )
                     all_jobs.extend(role_jobs)
             finally:
@@ -89,6 +91,7 @@ class JobstreetScraper:
         browser: Browser,
         role_keyword: str,
         role_slug: str,
+        seen_urls: set[str],
     ) -> List[Dict]:
         jobs: List[Dict] = []
 
@@ -117,6 +120,10 @@ class JobstreetScraper:
                 break
 
             for card in cards:
+                if card.source_url in seen_urls:
+                    continue
+                seen_urls.add(card.source_url)
+
                 detail = self._scrape_detail_page(browser=browser, source_url=card.source_url)
                 posted_date = parse_posted_date(card.posted_text, self.settings.timezone_name)
 
@@ -176,16 +183,17 @@ class JobstreetScraper:
         html: Optional[str] = None
         from app.utils.http_helper import get_random_user_agent
         page_obj: Page = browser.new_page(user_agent=get_random_user_agent())
+        listing_timeout_ms = max(10, min(self.settings.page_timeout_seconds, 20)) * 1000
         try:
             for candidate_url in candidate_urls:
                 try:
-                    page_obj.goto(candidate_url, wait_until="domcontentloaded", timeout=self.settings.page_timeout_seconds * 1000)
+                    page_obj.goto(candidate_url, wait_until="domcontentloaded", timeout=listing_timeout_ms)
                     page_obj.wait_for_timeout(1500)
                     page_obj.evaluate("window.scrollTo(0, document.body.scrollHeight)")
                     page_obj.wait_for_timeout(1000)
                     page_obj.wait_for_selector(
                         "a[href*='/job/']",
-                        timeout=self.settings.page_timeout_seconds * 1000,
+                        timeout=listing_timeout_ms,
                     )
                     html = page_obj.content()
                     break
@@ -237,7 +245,7 @@ class JobstreetScraper:
             if not href:
                 continue
 
-            source_url = urljoin(self.BASE_URL, href)
+            source_url = self._canonical_job_url(urljoin(self.BASE_URL, href))
 
             title_node = (
                 node.select_one("[data-automation='jobTitle']")
@@ -286,7 +294,7 @@ class JobstreetScraper:
             href = (link_node.get("href") or "").strip()
             if not href:
                 continue
-            source_url = urljoin(self.BASE_URL, href)
+            source_url = self._canonical_job_url(urljoin(self.BASE_URL, href))
             if source_url in seen_urls:
                 continue
             seen_urls.add(source_url)
@@ -356,10 +364,19 @@ class JobstreetScraper:
 
         from app.utils.http_helper import get_random_user_agent
         page_obj: Page = browser.new_page(user_agent=get_random_user_agent())
+        detail_timeout_ms = max(10, min(self.settings.detail_timeout_seconds, 15)) * 1000
         try:
-            page_obj.goto(source_url, wait_until="domcontentloaded", timeout=self.settings.detail_timeout_seconds * 1000)
             try:
-                page_obj.wait_for_selector("body", timeout=self.settings.detail_timeout_seconds * 1000)
+                page_obj.goto(source_url, wait_until="domcontentloaded", timeout=detail_timeout_ms)
+            except PlaywrightTimeout:
+                self.logger.warning("Timeout loading detail page: %s", source_url)
+                return detail
+            except Exception as exc:  # noqa: BLE001
+                self.logger.warning("Detail navigation failed for %s: %s", source_url, exc)
+                return detail
+
+            try:
+                page_obj.wait_for_selector("body", timeout=detail_timeout_ms)
             except PlaywrightTimeout:
                 self.logger.warning("Timeout detail page: %s", source_url)
                 return detail
@@ -402,6 +419,14 @@ class JobstreetScraper:
     # ------------------------------------------------------------------ #
     # Helpers
     # ------------------------------------------------------------------ #
+
+    def _canonical_job_url(self, job_url: str) -> str:
+        parsed = urlsplit(job_url)
+        path = parsed.path
+        if path.startswith("/id/job/"):
+            path = path[3:]
+
+        return urlunsplit((parsed.scheme, parsed.netloc, path, "", ""))
 
     def _extract_employment_type(self, soup: BeautifulSoup) -> Optional[str]:
         labels = soup.select("[data-automation='job-detail-work-type'], span, li")
