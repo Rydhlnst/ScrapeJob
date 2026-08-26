@@ -22,7 +22,7 @@ x-laravel-env: &laravel-env
   SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS:-scrape.beres.io}
   CACHE_STORE: ${CACHE_STORE:-database}
   QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
-      SCRAPER_ACTIVE_SOURCES: ${SCRAPER_ACTIVE_SOURCES:-glints,jobstreet,jobstreetexpress,kalibrr,lokerid}
+  SCRAPER_ACTIVE_SOURCES: ${SCRAPER_ACTIVE_SOURCES:-glints,jobstreet,jobstreetexpress,kalibrr,lokerid}
   SCRAPER_SCHEDULE_ENABLED: "true"
   SCRAPER_SCHEDULE_CRON: ${SCRAPER_SCHEDULE_CRON:-0 */8 * * *}
   SCRAPER_SCHEDULE_TIMEZONE: ${SCRAPER_SCHEDULE_TIMEZONE:-Asia/Jakarta}
