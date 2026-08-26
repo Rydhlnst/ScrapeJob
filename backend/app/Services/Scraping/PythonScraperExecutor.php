@@ -12,7 +12,8 @@ class PythonScraperExecutor
      *   source:string,
      *   scraped_at:?string,
      *   total:int,
-     *   jobs:array<int, array<string, mixed>>
+     *   jobs:array<int, array<string, mixed>>,
+     *   error:?string
      * }
      */
     public function run(JobSource $source, ?string $keyword = null, ?string $location = null): array
@@ -37,6 +38,7 @@ class PythonScraperExecutor
             'scraped_at' => isset($payload['scraped_at']) ? (string) $payload['scraped_at'] : null,
             'total' => (int) ($payload['total'] ?? 0),
             'jobs' => array_values(array_filter((array) ($payload['jobs'] ?? []), static fn ($item): bool => is_array($item))),
+            'error' => isset($payload['error']) ? (string) $payload['error'] : null,
         ];
     }
 

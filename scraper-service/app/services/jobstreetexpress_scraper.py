@@ -13,18 +13,22 @@ from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
+from app.utils.logger import get_logger
 
 
 class JobstreetExpressScraper:
-    BASE_URL = "https://id.jobstreetexpress.com"
+    # JobStreet Express has migrated to Jora Indonesia. The old hostname
+    # redirects through an anti-bot layer before reaching the same listings.
+    BASE_URL = "https://id.jora.com"
     LIST_URLS = [
-        "https://id.jobstreetexpress.com/lowongan-Full-time",
-        "https://id.jobstreetexpress.com/lowongan-Daily-worker",
-        "https://id.jobstreetexpress.com/lowongan-Part-time?sp=trending_job_type",
+        "https://id.jora.com/lowongan-Full-time",
+        "https://id.jora.com/lowongan-Daily-worker",
+        "https://id.jora.com/lowongan-Part-time?sp=trending_job_type",
     ]
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
+        self.logger = get_logger("jobstreetexpress_scraper")
         self._http = requests.Session()
         from app.utils.http_helper import get_random_user_agent
         self._http.headers.update({
@@ -50,7 +54,8 @@ class JobstreetExpressScraper:
             try:
                 response = self._http.get(list_url, timeout=max(self.settings.page_timeout_seconds, 20))
                 response.raise_for_status()
-            except Exception:
+            except Exception as exc:  # noqa: BLE001
+                self.logger.warning("Listing request failed for %s: %s", list_url, exc)
                 continue
 
             soup = BeautifulSoup(response.text, "html.parser")

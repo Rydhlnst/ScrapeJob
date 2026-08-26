@@ -61,8 +61,8 @@ return [
             'list_url' => 'https://www.jobstreet.co.id/id/jobs',
         ],
         'jobstreetexpress' => [
-            'base_url' => 'https://id.jobstreetexpress.com',
-            'list_url' => 'https://id.jobstreetexpress.com/lowongan-Full-time',
+            'base_url' => 'https://id.jora.com',
+            'list_url' => 'https://id.jora.com/lowongan-Full-time',
         ],
         'kalibrr' => [
             'base_url' => 'https://www.kalibrr.com',

@@ -16,6 +16,7 @@ from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
+from app.utils.logger import get_logger
 
 
 class LokerIdScraper:
@@ -23,6 +24,7 @@ class LokerIdScraper:
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
+        self.logger = get_logger("lokerid_scraper")
         self._http = requests.Session()
         from app.utils.http_helper import get_random_user_agent
         self._http.headers.update({
@@ -53,6 +55,10 @@ class LokerIdScraper:
             f"{self.BASE_URL}/cari-lowongan-kerja?q={query}",
             f"{self.BASE_URL}/cari-lowongan-kerja?search={query}",
             f"{self.BASE_URL}/cari-lowongan-kerja?keyword={query}",
+            # Search pages can be challenged while the public latest-jobs
+            # page remains available. Use it as a safe, non-authenticated
+            # fallback so the source can still provide public listings.
+            f"{self.BASE_URL}/",
         ]
 
         soup = None
@@ -71,7 +77,8 @@ class LokerIdScraper:
                 if soup is None:
                     soup = candidate_soup
                     url = candidate
-            except Exception:
+            except Exception as exc:  # noqa: BLE001
+                self.logger.warning("Listing request failed for %s: %s", candidate, exc)
                 continue
 
         if soup is None:

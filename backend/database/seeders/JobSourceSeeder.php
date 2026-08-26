@@ -28,11 +28,11 @@ class JobSourceSeeder extends Seeder
             ],
             [
                 'name' => 'jobstreetexpress',
-                'base_url' => 'https://id.jobstreetexpress.com',
-                'listing_url' => 'https://id.jobstreetexpress.com/lowongan-Full-time',
+                'base_url' => 'https://id.jora.com',
+                'listing_url' => 'https://id.jora.com/lowongan-Full-time',
                 'is_active' => true,
                 'scraping_allowed' => true,
-                'notes' => 'Built-in Jobstreet Express scraper',
+                'notes' => 'Built-in Jora scraper (formerly JobStreet Express)',
             ],
             [
                 'name' => 'kalibrr',

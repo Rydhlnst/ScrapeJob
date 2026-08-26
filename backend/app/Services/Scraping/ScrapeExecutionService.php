@@ -67,7 +67,8 @@ class ScrapeExecutionService
             );
 
             $errors = (int) ($ingested['error_count'] ?? 0);
-            $status = $errors > 0 ? 'partial' : 'success';
+            $scraperError = trim((string) ($result['error'] ?? ''));
+            $status = $errors > 0 || $scraperError !== '' ? 'partial' : 'success';
 
             $run->update([
                 'status' => $status,
@@ -79,6 +80,9 @@ class ScrapeExecutionService
                 'failed_count' => $errors,
                 'error_count' => $errors,
                 'skipped_count' => (int) ($ingested['duplicate_count'] ?? 0),
+                'error_message' => $scraperError !== ''
+                    ? Str::limit($scraperError, 65535, '')
+                    : null,
                 'sample_payloads' => array_slice((array) ($result['jobs'] ?? []), 0, 3),
             ]);
 

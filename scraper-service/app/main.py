@@ -33,8 +33,9 @@ def build_payload(
     start_date: str | None,
     scraped_at: str,
     jobs: List[Dict[str, Any]],
+    error: str | None = None,
 ) -> Dict[str, Any]:
-    return {
+    payload = {
         "source": source,
         "scraped_at": scraped_at,
         "total": len(jobs),
@@ -49,6 +50,9 @@ def build_payload(
             },
         },
     }
+    if error:
+        payload["error"] = error
+    return payload
 
 
 def select_scraper(source: str, settings):
@@ -78,6 +82,13 @@ def main() -> int:
     scraper = select_scraper(settings.source, settings)
     raw_jobs = scraper.scrape()
     jobs = deduplicate_jobs(raw_jobs)
+    scrape_error = None
+    if not jobs:
+        scrape_error = (
+            "No jobs extracted. The source may have returned an empty page, "
+            "blocked automated requests, or changed its HTML structure."
+        )
+        logger.error("%s source=%s", scrape_error, settings.source)
 
     payload = build_payload(
         source=settings.source,
@@ -88,6 +99,7 @@ def main() -> int:
         start_date=settings.start_date,
         scraped_at=scraped_at,
         jobs=jobs,
+        error=scrape_error,
     )
 
     if settings.save_json:
