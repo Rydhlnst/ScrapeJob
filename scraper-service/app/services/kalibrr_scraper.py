@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import random
 import time
 from datetime import datetime
@@ -15,14 +16,16 @@ from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
+from app.utils.logger import get_logger
 
 
 class KalibrrScraper:
     BASE_URL = "https://www.kalibrr.com"
-    LIST_URL = "https://www.kalibrr.com/job-board/te"
+    LIST_URL = "https://www.kalibrr.com/home/te"
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
+        self.logger = get_logger("kalibrr_scraper")
         self._http = requests.Session()
         from app.utils.http_helper import get_random_user_agent
         self._http.headers.update({
@@ -53,6 +56,7 @@ class KalibrrScraper:
             self.LIST_URL,
             f"{self.LIST_URL}?text={query}",
             f"{self.LIST_URL}?keyword={query}",
+            "https://www.kalibrr.com/job-board/te",
             f"{self.BASE_URL}/job-board/te/{query}",
         ]
 
@@ -63,26 +67,40 @@ class KalibrrScraper:
                 response = self._http.get(candidate_url, timeout=max(self.settings.page_timeout_seconds, 20))
                 response.raise_for_status()
                 parsed = BeautifulSoup(response.text, "html.parser")
-                if parsed.select("a.kalibrr-job-list-card") or parsed.select("a[href*='/c/']"):
+                if (
+                    parsed.select("a.kalibrr-job-list-card")
+                    or parsed.select("a[href*='/c/']")
+                    or parsed.select("a[href*='/job/']")
+                    or parsed.select("a[href*='/jobs/']")
+                ):
                     soup = parsed
                     active_url = candidate_url
                     break
                 if soup is None:
                     soup = parsed
                     active_url = candidate_url
-            except Exception:
+            except requests.RequestException as exc:
+                self.logger.warning("Listing request failed for %s: %s", candidate_url, exc)
                 continue
 
         if soup is None:
             return []
 
-        cards = soup.select("a.kalibrr-job-list-card") or soup.select("a[href*='/c/']")
+        cards = (
+            soup.select("a.kalibrr-job-list-card")
+            or soup.select("a[href*='/c/']")
+            or soup.select("a[href*='/job/']")
+            or soup.select("a[href*='/jobs/']")
+        )
+        self.logger.info("Listing fetched from %s: cards=%s", active_url, len(cards))
 
         results: List[Dict] = []
         seen: set[str] = set()
         for card in cards:
             href = (card.get("href") or "").strip()
             if not href:
+                continue
+            if not re.search(r"/c/[^/]+/jobs/\d+(?:/|$)", href):
                 continue
             link = href if href.startswith("http") else f"{self.BASE_URL}{href}"
             if link in seen:
@@ -93,7 +111,7 @@ class KalibrrScraper:
             company_node = card.select_one("h4") or card.select_one("[class*='company']")
             location_node = card.select_one("[class*='location']")
 
-            title = clean_text(title_node.get_text(" ", strip=True)) if title_node else ""
+            title = clean_text(title_node.get_text(" ", strip=True)) if title_node else clean_text(card.get_text(" ", strip=True))
             company = clean_text(company_node.get_text(" ", strip=True)) if company_node else "Kalibrr"
             location = clean_text(location_node.get_text(" ", strip=True)) if location_node else None
 
@@ -141,7 +159,8 @@ class KalibrrScraper:
         try:
             response = self._http.get(job_url, timeout=max(self.settings.detail_timeout_seconds, 20))
             response.raise_for_status()
-        except Exception:
+        except requests.RequestException as exc:
+            self.logger.warning("Detail request failed for %s: %s", job_url, exc)
             return detail
 
         soup = BeautifulSoup(response.text, "html.parser")

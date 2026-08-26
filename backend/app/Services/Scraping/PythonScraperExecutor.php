@@ -100,6 +100,16 @@ class PythonScraperExecutor
 
         if ($keyword !== null && trim($keyword) !== '') {
             $env['ROLES'] = trim($keyword);
+        } else {
+            $configuredRoles = match (strtolower($source->name)) {
+                'glints' => config('scraper.glints.keywords', []),
+                'jobstreet' => config('scraper.jobstreet.keywords', []),
+                default => [],
+            };
+
+            if (is_array($configuredRoles) && $configuredRoles !== []) {
+                $env['ROLES'] = implode(',', array_map('strval', $configuredRoles));
+            }
         }
 
         if ($location !== null && trim($location) !== '') {

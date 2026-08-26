@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Dict, List, Optional
-from urllib.parse import urljoin
+from urllib.parse import quote_plus, urljoin, urlsplit, urlunsplit
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import json
@@ -50,62 +50,84 @@ class JobstreetExpressScraper:
         jobs: List[Dict] = []
         seen: set[str] = set()
 
-        for list_url in self.LIST_URLS:
-            try:
-                response = self._http.get(list_url, timeout=max(self.settings.page_timeout_seconds, 20))
-                response.raise_for_status()
-            except Exception as exc:  # noqa: BLE001
-                self.logger.warning("Listing request failed for %s: %s", list_url, exc)
-                continue
+        for role in self.settings.roles:
+            role_slug = quote_plus(role.strip().lower()).replace("+", "-")
+            list_urls = [
+                f"{self.BASE_URL}/lowongan-{role_slug}-di-Indonesia",
+                *self.LIST_URLS,
+            ]
 
-            soup = BeautifulSoup(response.text, "html.parser")
-            cards = soup.select("a[data-automation='job-card-title']") or soup.select("a[href*='/job/']")
-
-            for card in cards:
-                href = (card.get("href") or "").strip()
-                if not href:
-                    continue
-
-                link = urljoin(self.BASE_URL, href)
-                if link in seen:
-                    continue
-                seen.add(link)
-
-                title = clean_text(card.get_text(" ", strip=True))
-                if not title:
-                    continue
-
-                wrapper = card.find_parent("article") or card.find_parent("div")
-                company = self._extract_company(wrapper) or "Jobstreet Express"
-                location = self._extract_location(wrapper)
-                detail = self._extract_detail_fields(link)
-                company = detail.get("company") or company
-                location = detail.get("location") or location
-                employment_type = detail.get("employment_type") or self._derive_type_from_url(list_url)
-
-                jobs.append(
-                    normalize_job_payload(
-                        source=self.settings.source,
-                        scraped_at_iso=scraped_at,
-                        role_keyword=",".join(self.settings.roles),
-                        source_url=link,
-                        title=detail.get("title") or title,
-                        company=company,
-                        location=location,
-                        salary=detail.get("salary"),
-                        employment_type=employment_type,
-                        description=detail.get("description"),
-                        description_summary=None,
-                        posted_date=detail.get("posted_date"),
-                        raw={
-                            "source": "jobstreetexpress",
-                            "query_url": list_url,
-                            "detail_fetched": bool(detail.get("description") or detail.get("company") or detail.get("location")),
-                        },
-                    )
-                )
+            for list_url in list_urls:
+                self.logger.info("Scrape Jora listing role=%s url=%s", role, list_url)
+                self._scrape_listing(list_url, scraped_at, jobs, seen)
 
         return jobs
+
+    def _scrape_listing(
+        self,
+        list_url: str,
+        scraped_at: str,
+        jobs: List[Dict],
+        seen: set[str],
+    ) -> None:
+        try:
+            response = self._http.get(list_url, timeout=max(self.settings.page_timeout_seconds, 20))
+            response.raise_for_status()
+        except requests.RequestException as exc:
+            self.logger.warning("Listing request failed for %s: %s", list_url, exc)
+            return
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        cards = soup.select("a[data-automation='job-card-title']") or soup.select("a[href*='/job/']")
+        self.logger.info("Listing fetched from %s: cards=%s", list_url, len(cards))
+
+        for card in cards:
+            href = (card.get("href") or "").strip()
+            if not href:
+                continue
+
+            link = self._canonical_job_url(urljoin(self.BASE_URL, href))
+            if link in seen:
+                continue
+            seen.add(link)
+
+            title = clean_text(card.get_text(" ", strip=True))
+            if not title:
+                continue
+
+            wrapper = card.find_parent("article") or card.find_parent("div")
+            company = self._extract_company(wrapper) or "Jobstreet Express"
+            location = self._extract_location(wrapper)
+            detail = self._extract_detail_fields(link)
+            company = detail.get("company") or company
+            location = detail.get("location") or location
+            employment_type = detail.get("employment_type") or self._derive_type_from_url(list_url)
+
+            jobs.append(
+                normalize_job_payload(
+                    source=self.settings.source,
+                    scraped_at_iso=scraped_at,
+                    role_keyword=",".join(self.settings.roles),
+                    source_url=link,
+                    title=detail.get("title") or title,
+                    company=company,
+                    location=location,
+                    salary=detail.get("salary"),
+                    employment_type=employment_type,
+                    description=detail.get("description"),
+                    description_summary=None,
+                    posted_date=detail.get("posted_date"),
+                    raw={
+                        "source": "jobstreetexpress",
+                        "query_url": list_url,
+                        "detail_fetched": bool(detail.get("description") or detail.get("company") or detail.get("location")),
+                    },
+                )
+            )
+
+    def _canonical_job_url(self, job_url: str) -> str:
+        parsed = urlsplit(job_url)
+        return urlunsplit((parsed.scheme, parsed.netloc, parsed.path, "", ""))
 
     def _extract_company(self, wrapper) -> Optional[str]:
         if wrapper is None:
@@ -164,7 +186,8 @@ class JobstreetExpressScraper:
         try:
             response = self._http.get(job_url, timeout=max(self.settings.detail_timeout_seconds, 20))
             response.raise_for_status()
-        except Exception:
+        except requests.RequestException as exc:
+            self.logger.warning("Detail request failed for %s: %s", job_url, exc)
             return detail
 
         soup = BeautifulSoup(response.text, "html.parser")

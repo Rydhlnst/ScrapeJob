@@ -14,14 +14,20 @@ from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
+from app.utils.logger import get_logger
 
 
 class GlintsScraper:
     BASE_URL = "https://glints.com"
     LIST_URL = "https://glints.com/id/opportunities/jobs/explore"
+    LIST_URLS = (
+        LIST_URL,
+        "https://glints.com/id/opportunities/jobs/explore?country=ID&locationName=All%20Cities%2FProvinces",
+    )
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
+        self.logger = get_logger("glints_scraper")
         self._http = requests.Session()
         from app.utils.http_helper import get_random_user_agent
         self._http.headers.update({
@@ -40,14 +46,35 @@ class GlintsScraper:
         except ZoneInfoNotFoundError:
             scraped_at = datetime.utcnow().isoformat(timespec="seconds") + "Z"
 
-        try:
-            response = self._http.get(self.LIST_URL, timeout=max(self.settings.page_timeout_seconds, 20))
-            response.raise_for_status()
-        except Exception:
+        response = None
+        active_url = self.LIST_URL
+        for candidate_url in self.LIST_URLS:
+            try:
+                candidate_response = self._http.get(
+                    candidate_url,
+                    timeout=max(self.settings.page_timeout_seconds, 20),
+                )
+                candidate_response.raise_for_status()
+                response = candidate_response
+                active_url = candidate_url
+                break
+            except requests.RequestException as exc:
+                self.logger.warning("Listing request failed for %s: %s", candidate_url, exc)
+
+        if response is None:
             return []
 
         soup = BeautifulSoup(response.text, "html.parser")
         links = soup.select("a[href*='/id/opportunities/jobs/']")
+        if not links:
+            links = soup.select("a[href*='/opportunities/jobs/']")
+        self.logger.info(
+            "Listing fetched from %s: status=%s bytes=%s links=%s",
+            active_url,
+            response.status_code,
+            len(response.text),
+            len(links),
+        )
 
         jobs: List[Dict] = []
         seen: set[str] = set()
@@ -105,7 +132,8 @@ class GlintsScraper:
         try:
             response = self._http.get(job_url, timeout=max(self.settings.detail_timeout_seconds, 20))
             response.raise_for_status()
-        except Exception:
+        except requests.RequestException as exc:
+            self.logger.warning("Detail request failed for %s: %s", job_url, exc)
             return detail
 
         soup = BeautifulSoup(response.text, "html.parser")

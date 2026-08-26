@@ -69,7 +69,9 @@ class LokerIdScraper:
                 response.raise_for_status()
                 candidate_soup = BeautifulSoup(response.text, "html.parser")
                 # Stop at first page that has likely job links.
-                if candidate_soup.select("a[href*='/lowongan-kerja/'], h3.entry-title a, h2.entry-title a"):
+                if candidate_soup.select(
+                    "a[href*='/lowongan-kerja/'], h3.entry-title a, h2.entry-title a, a[href$='.html']"
+                ):
                     soup = candidate_soup
                     url = candidate
                     break

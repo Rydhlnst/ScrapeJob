@@ -13,15 +13,15 @@ class JobSourceSeeder extends Seeder
             [
                 'name' => 'glints',
                 'base_url' => 'https://glints.com',
-                'listing_url' => 'https://glints.com/id/en/opportunities/jobs',
+                'listing_url' => 'https://glints.com/id/opportunities/jobs/explore',
                 'is_active' => true,
                 'scraping_allowed' => true,
                 'notes' => 'Built-in Glints scraper',
             ],
             [
                 'name' => 'jobstreet',
-                'base_url' => 'https://www.jobstreet.co.id',
-                'listing_url' => 'https://www.jobstreet.co.id/id/jobs',
+                'base_url' => 'https://id.jobstreet.com',
+                'listing_url' => 'https://id.jobstreet.com/id/jobs',
                 'is_active' => true,
                 'scraping_allowed' => true,
                 'notes' => 'Built-in Jobstreet scraper',
@@ -37,7 +37,7 @@ class JobSourceSeeder extends Seeder
             [
                 'name' => 'kalibrr',
                 'base_url' => 'https://www.kalibrr.com',
-                'listing_url' => 'https://www.kalibrr.com/job-board/te',
+                'listing_url' => 'https://www.kalibrr.com/home/te',
                 'is_active' => true,
                 'scraping_allowed' => true,
                 'notes' => 'Built-in Kalibrr scraper',
@@ -45,7 +45,7 @@ class JobSourceSeeder extends Seeder
             [
                 'name' => 'lokerid',
                 'base_url' => 'https://www.loker.id',
-                'listing_url' => 'https://www.loker.id/cari-lowongan-kerja',
+                'listing_url' => 'https://www.loker.id/',
                 'is_active' => true,
                 'scraping_allowed' => true,
                 'notes' => 'Built-in Loker.id scraper',

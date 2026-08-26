@@ -32,7 +32,13 @@ return [
         'without_overlapping_minutes' => (int) env('SCRAPER_SCHEDULE_WITHOUT_OVERLAPPING_MINUTES', 60),
     ],
 
-    'active_sources' => $parseCsv(env('SCRAPER_ACTIVE_SOURCES'), ['glints', 'jobstreet']),
+    'active_sources' => $parseCsv(env('SCRAPER_ACTIVE_SOURCES'), [
+        'glints',
+        'jobstreet',
+        'jobstreetexpress',
+        'kalibrr',
+        'lokerid',
+    ]),
 
     'notification' => [
         'emails' => $parseCsv(env('SCRAPER_NOTIFY_EMAILS')),
@@ -54,11 +60,11 @@ return [
     'builtin_sources' => [
         'glints' => [
             'base_url' => 'https://glints.com',
-            'list_url' => 'https://glints.com/id/en/opportunities/jobs',
+            'list_url' => 'https://glints.com/id/opportunities/jobs/explore',
         ],
         'jobstreet' => [
-            'base_url' => 'https://www.jobstreet.co.id',
-            'list_url' => 'https://www.jobstreet.co.id/id/jobs',
+            'base_url' => 'https://id.jobstreet.com',
+            'list_url' => 'https://id.jobstreet.com/id/jobs',
         ],
         'jobstreetexpress' => [
             'base_url' => 'https://id.jora.com',
@@ -66,11 +72,11 @@ return [
         ],
         'kalibrr' => [
             'base_url' => 'https://www.kalibrr.com',
-            'list_url' => 'https://www.kalibrr.com/job-board/te',
+            'list_url' => 'https://www.kalibrr.com/home/te',
         ],
         'lokerid' => [
             'base_url' => 'https://www.loker.id',
-            'list_url' => 'https://www.loker.id/cari-lowongan-kerja',
+            'list_url' => 'https://www.loker.id/',
         ],
         'example_json' => [
             'type' => 'json',
