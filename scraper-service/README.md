@@ -16,6 +16,10 @@ cp .env.example .env
 python app/main.py
 ```
 
+When native HTTP and browser extraction return no jobs, the scraper can use
+Firecrawl as a final fallback. Set `FIRECRAWL_API_KEY` in the runtime secret
+store; leave it empty to disable the fallback.
+
 ## Output
 
 - Main output: `output/jobs.json`

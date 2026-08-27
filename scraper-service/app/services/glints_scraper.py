@@ -15,6 +15,7 @@ from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
+from app.utils.firecrawl_client import FirecrawlClient
 from app.utils.logger import get_logger
 
 
@@ -29,6 +30,7 @@ class GlintsScraper:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
         self.logger = get_logger("glints_scraper")
+        self._firecrawl = FirecrawlClient(settings, self.logger)
         self._http = requests.Session()
         from app.utils.http_helper import get_random_user_agent
         self._http.headers.update({
@@ -74,6 +76,20 @@ class GlintsScraper:
                 browser = self._create_browser(playwright)
                 for candidate_url in self.LIST_URLS:
                     rendered_html = self._render_page(browser, candidate_url, self.settings.page_timeout_seconds)
+                    if not rendered_html:
+                        continue
+                    candidate_soup = BeautifulSoup(rendered_html, "html.parser")
+                    candidate_links = self._listing_links(candidate_soup)
+                    if candidate_links:
+                        soup = candidate_soup
+                        links = candidate_links
+                        active_url = candidate_url
+                        break
+
+            if not links:
+                self.logger.info("Falling back to Firecrawl for Glints listing")
+                for candidate_url in self.LIST_URLS:
+                    rendered_html = self._firecrawl.scrape_html(candidate_url)
                     if not rendered_html:
                         continue
                     candidate_soup = BeautifulSoup(rendered_html, "html.parser")
@@ -188,6 +204,7 @@ class GlintsScraper:
             "posted_date": None,
         }
 
+        rendered_html = None
         if browser is not None:
             rendered_html = self._render_page(
                 browser,
@@ -195,8 +212,8 @@ class GlintsScraper:
                 self.settings.detail_timeout_seconds,
                 detail=True,
             )
-            if not rendered_html:
-                return detail
+
+        if rendered_html:
             soup = BeautifulSoup(rendered_html, "html.parser")
         else:
             try:
@@ -204,8 +221,12 @@ class GlintsScraper:
                 response.raise_for_status()
             except requests.RequestException as exc:
                 self.logger.warning("Detail request failed for %s: %s", job_url, exc)
-                return detail
-            soup = BeautifulSoup(response.text, "html.parser")
+                firecrawl_html = self._firecrawl.scrape_html(job_url)
+                if not firecrawl_html:
+                    return detail
+                soup = BeautifulSoup(firecrawl_html, "html.parser")
+            else:
+                soup = BeautifulSoup(response.text, "html.parser")
         title_node = soup.select_one("h1")
         company_node = (
             soup.select_one("a[href*='/companies/']")

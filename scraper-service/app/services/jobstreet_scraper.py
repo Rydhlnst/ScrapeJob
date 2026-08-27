@@ -17,6 +17,7 @@ from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
+from app.utils.firecrawl_client import FirecrawlClient
 from app.utils.logger import get_logger
 
 
@@ -38,6 +39,7 @@ class JobstreetScraper:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
         self.logger = get_logger("jobstreet_scraper")
+        self._firecrawl = FirecrawlClient(settings, self.logger)
         try:
             self.scraped_at_iso = datetime.now(ZoneInfo(settings.timezone_name)).isoformat(timespec="seconds")
         except ZoneInfoNotFoundError:
@@ -231,6 +233,15 @@ class JobstreetScraper:
             except Exception as exc:  # noqa: BLE001
                 self.logger.warning("Requests fallback failed for %s: %s", candidate_url, exc)
 
+        for candidate_url in candidate_urls:
+            firecrawl_html = self._firecrawl.scrape_html(candidate_url)
+            if not firecrawl_html:
+                continue
+            firecrawl_cards = self._extract_cards_from_html(firecrawl_html, page=page, role_slug=role_slug)
+            if firecrawl_cards:
+                self.logger.info("Recovered %s cards via Firecrawl fallback for %s", len(firecrawl_cards), candidate_url)
+                return firecrawl_cards
+
         return []
 
     def _extract_cards_from_html(self, html: str, *, page: int, role_slug: str) -> List[ListingCard]:
@@ -373,18 +384,25 @@ class JobstreetScraper:
                 page_obj.goto(source_url, wait_until="domcontentloaded", timeout=detail_timeout_ms)
             except PlaywrightTimeout:
                 self.logger.warning("Timeout loading detail page: %s", source_url)
-                return detail
+                html = self._firecrawl.scrape_html(source_url)
+                if not html:
+                    return detail
             except Exception as exc:  # noqa: BLE001
                 self.logger.warning("Detail navigation failed for %s: %s", source_url, exc)
-                return detail
+                html = self._firecrawl.scrape_html(source_url)
+                if not html:
+                    return detail
 
             try:
                 page_obj.wait_for_selector("body", timeout=detail_timeout_ms)
             except PlaywrightTimeout:
                 self.logger.warning("Timeout detail page: %s", source_url)
-                return detail
+                html = self._firecrawl.scrape_html(source_url)
+                if not html:
+                    return detail
 
-            html = page_obj.content()
+            if not html:
+                html = page_obj.content()
         finally:
             page_obj.close()
 

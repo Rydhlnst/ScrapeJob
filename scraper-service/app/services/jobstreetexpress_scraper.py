@@ -14,6 +14,7 @@ from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
+from app.utils.firecrawl_client import FirecrawlClient
 from app.utils.logger import get_logger
 
 
@@ -30,6 +31,7 @@ class JobstreetExpressScraper:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
         self.logger = get_logger("jobstreetexpress_scraper")
+        self._firecrawl = FirecrawlClient(settings, self.logger)
         self._http = requests.Session()
         from app.utils.http_helper import get_random_user_agent
         self._http.headers.update({
@@ -91,6 +93,11 @@ class JobstreetExpressScraper:
             self.logger.info("Falling back to browser-rendered Jora listing for %s", list_url)
             rendered_html = self._render_page(browser, list_url)
             soup = BeautifulSoup(rendered_html, "html.parser") if rendered_html else None
+
+        if not soup or not (soup.select("a[data-automation='job-card-title']") or soup.select("a[href*='/job/']")):
+            self.logger.info("Falling back to Firecrawl for Jora listing %s", list_url)
+            rendered_html = self._firecrawl.scrape_html(list_url)
+            soup = BeautifulSoup(rendered_html, "html.parser") if rendered_html else soup
 
         if soup is None:
             return
@@ -230,10 +237,11 @@ class JobstreetExpressScraper:
             "posted_date": None,
         }
 
+        rendered_html = None
         if browser is not None:
             rendered_html = self._render_page(browser, job_url, detail=True)
-            if not rendered_html:
-                return detail
+
+        if rendered_html:
             soup = BeautifulSoup(rendered_html, "html.parser")
         else:
             try:
@@ -241,8 +249,12 @@ class JobstreetExpressScraper:
                 response.raise_for_status()
             except requests.RequestException as exc:
                 self.logger.warning("Detail request failed for %s: %s", job_url, exc)
-                return detail
-            soup = BeautifulSoup(response.text, "html.parser")
+                firecrawl_html = self._firecrawl.scrape_html(job_url)
+                if not firecrawl_html:
+                    return detail
+                soup = BeautifulSoup(firecrawl_html, "html.parser")
+            else:
+                soup = BeautifulSoup(response.text, "html.parser")
 
         detail["title"] = self._pick_text(soup, ["h1", "[data-automation='job-detail-title']"])
         detail["location"] = self._pick_text(
