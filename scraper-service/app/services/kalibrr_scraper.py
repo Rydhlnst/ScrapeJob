@@ -29,7 +29,8 @@ class KalibrrScraper:
         self.logger = get_logger("kalibrr_scraper")
         self._firecrawl = FirecrawlClient(settings, self.logger)
         self._http = requests.Session()
-        from app.utils.http_helper import get_random_user_agent
+        from app.utils.http_helper import configure_retry_session, get_random_user_agent
+        configure_retry_session(self._http, self.settings.http_retries)
         self._http.headers.update({
             "User-Agent": get_random_user_agent(),
             "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",

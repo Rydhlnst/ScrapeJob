@@ -35,15 +35,17 @@ export function ScrapeRunsClient() {
   const [isRefreshing, setIsRefreshing] = React.useState(false)
   const [keyword, setKeyword] = React.useState("")
   const [location, setLocation] = React.useState("")
+  const [statusFilter, setStatusFilter] = React.useState<ScrapeRun["status"] | "all">("all")
+  const [logStatusFilter, setLogStatusFilter] = React.useState<ScrapeLog["status"] | "all">("all")
 
   const loadRuns = React.useCallback(async () => {
     setIsRefreshing(true)
     try {
-      const runData = await listScrapeRuns()
+      const runData = await listScrapeRuns(statusFilter)
       setRunItems(runData)
-      if (!selectedRunId && runData[0]?.id) {
-        setSelectedRunId(runData[0].id)
-      }
+      setSelectedRunId((current) =>
+        current && runData.some((run) => run.id === current) ? current : runData[0]?.id ?? null,
+      )
     } catch (err) {
       console.error("[scrape-runs] failed to list runs", err)
       const message = err instanceof Error ? err.message : "Gagal memuat data scrape runs."
@@ -51,7 +53,7 @@ export function ScrapeRunsClient() {
     } finally {
       setIsRefreshing(false)
     }
-  }, [selectedRunId])
+  }, [statusFilter])
 
   React.useEffect(() => {
     let alive = true
@@ -86,7 +88,7 @@ export function ScrapeRunsClient() {
       setLoading(true)
       setLogsError(null)
       try {
-        const data = await listScrapeLogs(selectedRunId)
+        const data = await listScrapeLogs(selectedRunId, logStatusFilter)
         if (alive) setLogs(data)
       } catch (err) {
         if (!alive) return
@@ -101,7 +103,7 @@ export function ScrapeRunsClient() {
     return () => {
       alive = false
     }
-  }, [selectedRunId])
+  }, [selectedRunId, logStatusFilter])
 
   return (
     <div className="space-y-6">
@@ -169,8 +171,12 @@ export function ScrapeRunsClient() {
                 normalizedKeyword,
                 normalizedLocation,
               )
-              setRunItems((prev) => [newRun, ...prev])
-              setSelectedRunId(newRun.id)
+              if (statusFilter === "all" || newRun.status === statusFilter) {
+                setRunItems((prev) => [newRun, ...prev])
+                setSelectedRunId(newRun.id)
+              } else {
+                void loadRuns()
+              }
               toast.success("Scraping dimulai di background.", { id: toastId })
             } catch (error) {
               const message =
@@ -194,7 +200,22 @@ export function ScrapeRunsClient() {
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <div className="text-sm font-semibold text-slate-900">Scrape Runs</div>
+          <div className="flex items-center gap-3">
+            <div className="text-sm font-semibold text-slate-900">Scrape Runs</div>
+            <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}>
+              <SelectTrigger className="h-8 w-[150px]">
+                <SelectValue placeholder="Filter status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All statuses</SelectItem>
+                <SelectItem value="success">Success</SelectItem>
+                <SelectItem value="failed">Failed</SelectItem>
+                <SelectItem value="partial">Partial</SelectItem>
+                <SelectItem value="running">Running</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <Button
             variant="outline"
             size="sm"
@@ -215,7 +236,21 @@ export function ScrapeRunsClient() {
       </div>
 
       <div className="space-y-3">
-        <div className="text-sm font-semibold text-slate-900">Scrape Logs</div>
+        <div className="flex items-center gap-3">
+          <div className="text-sm font-semibold text-slate-900">Scrape Logs</div>
+          <Select value={logStatusFilter} onValueChange={(value) => setLogStatusFilter(value as typeof logStatusFilter)}>
+            <SelectTrigger className="h-8 w-[150px]">
+              <SelectValue placeholder="Filter status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All statuses</SelectItem>
+              <SelectItem value="success">Success</SelectItem>
+              <SelectItem value="failed">Failed</SelectItem>
+              <SelectItem value="duplicate">Duplicate</SelectItem>
+              <SelectItem value="skipped">Skipped</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         {loading ? (
           <LoadingState rows={6} />
         ) : logsError ? (

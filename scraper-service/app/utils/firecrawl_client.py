@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Optional
 
 import requests
+import time
 from bs4 import BeautifulSoup
 
 from app.config import Settings
@@ -34,28 +35,48 @@ class FirecrawlClient:
             "blockAds": True,
             "proxy": "auto",
         }
-        try:
-            response = requests.post(
-                endpoint,
-                headers={
-                    "Authorization": f"Bearer {self.settings.firecrawl_api_key}",
-                    "Content-Type": "application/json",
-                },
-                json=payload,
-                timeout=self.settings.firecrawl_timeout_seconds,
-            )
-            response.raise_for_status()
-            body: Any = response.json()
-            data = body.get("data", body) if isinstance(body, dict) else {}
-            html = None
-            if isinstance(data, dict):
-                html = data.get("html") or data.get("rawHtml")
-            if isinstance(html, str) and html.strip():
-                self.logger.info("Firecrawl fallback fetched url=%s bytes=%s", url, len(html))
-                return html
-            self.logger.warning("Firecrawl returned no HTML for %s", url)
-        except (requests.RequestException, ValueError) as exc:
-            self.logger.warning("Firecrawl fallback failed for %s: %s", url, exc)
+        attempts = max(1, self.settings.http_retries + 1)
+        for attempt in range(1, attempts + 1):
+            try:
+                response = requests.post(
+                    endpoint,
+                    headers={
+                        "Authorization": f"Bearer {self.settings.firecrawl_api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    json=payload,
+                    timeout=self.settings.firecrawl_timeout_seconds,
+                )
+                if response.status_code not in {429, 500, 502, 503, 504}:
+                    response.raise_for_status()
+                    body: Any = response.json()
+                    data = body.get("data", body) if isinstance(body, dict) else {}
+                    html = None
+                    if isinstance(data, dict):
+                        html = data.get("html") or data.get("rawHtml")
+                    if isinstance(html, str) and html.strip():
+                        self.logger.info("Firecrawl fallback fetched url=%s bytes=%s", url, len(html))
+                        return html
+                    self.logger.warning("Firecrawl returned no HTML for %s", url)
+                    break
+                self.logger.warning(
+                    "Firecrawl transient status=%s attempt=%s/%s url=%s",
+                    response.status_code,
+                    attempt,
+                    attempts,
+                    url,
+                )
+            except (requests.RequestException, ValueError) as exc:
+                self.logger.warning(
+                    "Firecrawl fallback failed attempt=%s/%s for %s: %s",
+                    attempt,
+                    attempts,
+                    url,
+                    exc,
+                )
+
+            if attempt < attempts:
+                time.sleep(min(2 ** (attempt - 1), 8))
 
         return None
 

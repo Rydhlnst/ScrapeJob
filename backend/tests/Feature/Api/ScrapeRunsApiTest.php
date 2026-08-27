@@ -5,6 +5,7 @@ namespace Tests\Feature\Api;
 use App\Models\Job;
 use App\Models\JobSource;
 use App\Models\ScrapedJob;
+use App\Models\ScrapeRun;
 use App\Models\User;
 use App\Services\Jobs\JobHashService;
 use App\Services\Scraping\PythonScraperExecutor;
@@ -40,6 +41,49 @@ class ScrapeRunsApiTest extends TestCase
         ]);
 
         $response->assertStatus(422)
+            ->assertJsonPath('success', false);
+    }
+
+    public function test_ok_scrape_runs_can_be_filtered_by_success_or_failed_status(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        ScrapeRun::query()->create([
+            'source_name' => 'glints',
+            'status' => 'success',
+            'finished_at' => now(),
+        ]);
+        ScrapeRun::query()->create([
+            'source_name' => 'jobstreet',
+            'status' => 'failed',
+            'finished_at' => now(),
+            'error_message' => 'upstream unavailable',
+        ]);
+
+        $success = $this->actingAs($admin, 'sanctum')
+            ->getJson('/api/admin/scrape-runs?status=success');
+
+        $success->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.status', 'success');
+
+        $failed = $this->actingAs($admin, 'sanctum')
+            ->getJson('/api/admin/scrape-runs?status=failed');
+
+        $failed->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.status', 'failed');
+    }
+
+    public function test_err_scrape_runs_reject_unknown_status_filter(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $this->actingAs($admin, 'sanctum')
+            ->getJson('/api/admin/scrape-runs?status=unknown')
+            ->assertStatus(422)
             ->assertJsonPath('success', false);
     }
 

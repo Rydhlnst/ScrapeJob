@@ -80,6 +80,8 @@ services:
       REDIS_PORT: 6379
       SCRAPER_PYTHON_MODE: local
       SCRAPER_PYTHON_BIN: python3
+      HTTP_RETRIES: ${HTTP_RETRIES:-3}
+      SCRAPE_ATTEMPTS: ${SCRAPE_ATTEMPTS:-2}
       SCRAPER_SCHEDULE_ENABLED: "true"
       SCRAPER_SCHEDULE_CRON: "0 */8 * * *"
       RUN_MIGRATIONS: "false"
@@ -117,6 +119,8 @@ services:
       QUEUE_WORKERS: ${QUEUE_WORKERS:-3}
       FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY:-}
       FIRECRAWL_API_URL: ${FIRECRAWL_API_URL:-https://api.firecrawl.dev}
+      HTTP_RETRIES: ${HTTP_RETRIES:-3}
+      SCRAPE_ATTEMPTS: ${SCRAPE_ATTEMPTS:-2}
       WAIT_FOR_DB: "true"
     command: ["/var/www/html/docker/start-worker.sh"]
     depends_on:

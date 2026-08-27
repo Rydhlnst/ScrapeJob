@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils"
 
 function StatusBadge({ status }: { status: ScrapeRun["status"] }) {
   const cls =
-    status === "running"
+    status === "pending" || status === "running"
       ? "bg-slate-100 text-slate-700 border-slate-200"
       : status === "success"
         ? "bg-emerald-50 text-emerald-700 border-emerald-200"
@@ -56,7 +56,13 @@ export function ScrapeRunTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {runs.map((r) => {
+          {runs.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={10} className="py-10 text-center text-slate-500">
+                No scrape runs match this status.
+              </TableCell>
+            </TableRow>
+          ) : runs.map((r) => {
             const selected = selectedId === r.id
             return (
               <TableRow

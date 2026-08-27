@@ -19,11 +19,22 @@ return [
 
     'python' => [
         'timeout_seconds' => (int) env('SCRAPER_PYTHON_TIMEOUT_SECONDS', 600),
+        'page_timeout_seconds' => (int) env('PAGE_TIMEOUT_SECONDS', 45),
+        'detail_timeout_seconds' => (int) env('DETAIL_TIMEOUT_SECONDS', 45),
         'bin' => env('SCRAPER_PYTHON_BIN', ''),
         'mode' => env('SCRAPER_PYTHON_MODE', 'local'),
         'docker_bin' => env('SCRAPER_DOCKER_BIN', 'docker'),
         'docker_image' => env('SCRAPER_DOCKER_IMAGE', 'scrapejob-scraper:local'),
         'docker_env_file' => env('SCRAPER_DOCKER_ENV_FILE', base_path('../scraper-service/.env')),
+    ],
+
+    'http_retries' => max(0, min((int) env('HTTP_RETRIES', 3), 5)),
+    'scrape_attempts' => max(1, min((int) env('SCRAPE_ATTEMPTS', 2), 3)),
+    'firecrawl' => [
+        'api_key' => env('FIRECRAWL_API_KEY', ''),
+        'api_url' => env('FIRECRAWL_API_URL', 'https://api.firecrawl.dev'),
+        'timeout_seconds' => (int) env('FIRECRAWL_TIMEOUT_SECONDS', 60),
+        'wait_for_ms' => (int) env('FIRECRAWL_WAIT_FOR_MS', 1000),
     ],
 
     'schedule' => [

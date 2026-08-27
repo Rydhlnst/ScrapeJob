@@ -9,20 +9,27 @@ export type JobSourceOption = {
   isActive: boolean
 }
 
-export async function listScrapeRuns(): Promise<ScrapeRun[]> {
+export async function listScrapeRuns(status: ScrapeRun["status"] | "all" = "all"): Promise<ScrapeRun[]> {
   if (USE_MOCK) {
-    return mockScrapeRuns
+    return status === "all" ? mockScrapeRuns : mockScrapeRuns.filter((run) => run.status === status)
   }
-  const response = await fetchJson<ApiEnvelope<ScrapeRun[]>>("/api/admin/scrape-runs")
+  const query = status === "all" ? "" : `?status=${encodeURIComponent(status)}`
+  const response = await fetchJson<ApiEnvelope<ScrapeRun[]>>(`/api/admin/scrape-runs${query}`)
   return response.data
 }
 
-export async function listScrapeLogs(scrapeRunId: string): Promise<ScrapeLog[]> {
+export async function listScrapeLogs(
+  scrapeRunId: string,
+  status: ScrapeLog["status"] | "all" = "all",
+): Promise<ScrapeLog[]> {
   if (USE_MOCK) {
-    return mockScrapeLogs.filter((l) => l.scrapeRunId === scrapeRunId)
+    return mockScrapeLogs.filter(
+      (log) => log.scrapeRunId === scrapeRunId && (status === "all" || log.status === status),
+    )
   }
+  const query = status === "all" ? "" : `?status=${encodeURIComponent(status)}`
   const response = await fetchJson<ApiEnvelope<ScrapeLog[]>>(
-    `/api/admin/scrape-runs/${encodeURIComponent(scrapeRunId)}/logs`,
+    `/api/admin/scrape-runs/${encodeURIComponent(scrapeRunId)}/logs${query}`,
   )
   return response.data
 }

@@ -45,6 +45,8 @@ class Settings:
     headless: bool
     request_delay_min: float
     request_delay_max: float
+    http_retries: int
+    scrape_attempts: int
     page_timeout_seconds: int
     detail_timeout_seconds: int
     save_json: bool
@@ -82,6 +84,8 @@ def get_settings() -> Settings:
         headless=_parse_bool(os.getenv("HEADLESS"), True),
         request_delay_min=float(os.getenv("REQUEST_DELAY_MIN", "2")),
         request_delay_max=float(os.getenv("REQUEST_DELAY_MAX", "5")),
+        http_retries=max(0, min(_parse_int(os.getenv("HTTP_RETRIES"), 3), 5)),
+        scrape_attempts=max(1, min(_parse_int(os.getenv("SCRAPE_ATTEMPTS"), 2), 3)),
         page_timeout_seconds=_parse_int(os.getenv("PAGE_TIMEOUT_SECONDS"), 45),
         detail_timeout_seconds=_parse_int(os.getenv("DETAIL_TIMEOUT_SECONDS"), 45),
         save_json=_parse_bool(os.getenv("SAVE_JSON"), True),

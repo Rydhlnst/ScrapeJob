@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import random
 import time
@@ -47,7 +48,8 @@ class JobstreetScraper:
             self.scraped_at_iso = datetime.utcnow().isoformat(timespec="seconds") + "Z"
         self._playwright = None
         self._http = requests.Session()
-        from app.utils.http_helper import get_random_user_agent
+        from app.utils.http_helper import configure_retry_session, get_random_user_agent
+        configure_retry_session(self._http, self.settings.http_retries)
         self._http.headers.update({
             "User-Agent": get_random_user_agent(),
             "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
@@ -219,8 +221,7 @@ class JobstreetScraper:
                     continue
 
             if html is None:
-                self.logger.warning("Timeout list page: %s", list_url)
-                return []
+                self.logger.warning("Browser could not load list page; trying HTTP and Firecrawl fallbacks: %s", list_url)
         finally:
             page_obj.close()
 
@@ -283,9 +284,6 @@ class JobstreetScraper:
 
             if not title:
                 continue
-            if not company:
-                continue
-
             location_node = (
                 node.select_one("[data-automation='jobLocation']")
                 or node.select_one("span[data-automation='jobListingLocation']")
@@ -348,9 +346,6 @@ class JobstreetScraper:
                 location = clean_text(location_node.get_text(" ", strip=True)) if location_node else None
                 salary = clean_text(salary_node.get_text(" ", strip=True)) if salary_node else None
                 posted_text = clean_text(posted_node.get_text(" ", strip=True)) if posted_node else None
-
-            if not company:
-                continue
 
             cards.append(
                 ListingCard(
@@ -455,11 +450,68 @@ class JobstreetScraper:
             clean_text(description_node.get_text("\n", strip=True)) if description_node else None
         )
 
+        # JobStreet periodically changes data-automation attributes. JSON-LD is
+        # a stable fallback for the core fields needed to validate a listing.
+        json_ld_detail = self._extract_jobposting_json_ld(soup)
+        detail["title"] = detail["title"] or json_ld_detail.get("title")
+        detail["company"] = detail["company"] or json_ld_detail.get("company")
+        detail["location"] = detail["location"] or json_ld_detail.get("location")
+        detail["salary"] = detail["salary"] or json_ld_detail.get("salary")
+        detail["employment_type"] = detail["employment_type"] or json_ld_detail.get("employment_type")
+        detail["description"] = detail["description"] or json_ld_detail.get("description")
+
         return detail
 
     # ------------------------------------------------------------------ #
     # Helpers
     # ------------------------------------------------------------------ #
+
+    def _extract_jobposting_json_ld(self, soup: BeautifulSoup) -> Dict[str, Optional[str]]:
+        for script in soup.select("script[type='application/ld+json']"):
+            raw = (script.string or script.get_text() or "").strip()
+            if not raw:
+                continue
+            try:
+                payload = json.loads(raw)
+            except (TypeError, ValueError):
+                continue
+
+            objects = payload if isinstance(payload, list) else [payload]
+            for obj in objects:
+                if not isinstance(obj, dict) or obj.get("@type") != "JobPosting":
+                    continue
+
+                organization = obj.get("hiringOrganization")
+                company = organization.get("name") if isinstance(organization, dict) else None
+                location = obj.get("jobLocation")
+                if isinstance(location, list):
+                    location = location[0] if location else None
+                address = location.get("address") if isinstance(location, dict) else None
+                locality = address.get("addressLocality") if isinstance(address, dict) else None
+                salary = obj.get("baseSalary")
+                if isinstance(salary, dict):
+                    salary_value = salary.get("value")
+                    if isinstance(salary_value, dict):
+                        salary_value = salary_value.get("value")
+                    salary = f"{salary_value} {salary.get('currency', '')}" if salary_value else None
+
+                return {
+                    "title": clean_text(str(obj.get("title") or "")) or None,
+                    "company": clean_text(str(company or "")) or None,
+                    "location": clean_text(str(locality or "")) or None,
+                    "salary": clean_text(str(salary or "")) or None,
+                    "employment_type": clean_text(str(obj.get("employmentType") or "")) or None,
+                    "description": clean_text(str(obj.get("description") or "")) or None,
+                }
+
+        return {
+            "title": None,
+            "company": None,
+            "location": None,
+            "salary": None,
+            "employment_type": None,
+            "description": None,
+        }
 
     def _canonical_job_url(self, job_url: str) -> str:
         parsed = urlsplit(job_url)

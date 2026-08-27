@@ -20,6 +20,9 @@ When native HTTP and browser extraction return no jobs, the scraper can use
 Firecrawl as a final fallback. Set `FIRECRAWL_API_KEY` in the runtime secret
 store; leave it empty to disable the fallback.
 
+Transient HTTP failures are retried up to `HTTP_RETRIES` times (default: 3),
+and an empty scrape is retried up to `SCRAPE_ATTEMPTS` times (default: 2).
+
 ## Output
 
 - Main output: `output/jobs.json`

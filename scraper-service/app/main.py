@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
@@ -81,12 +82,35 @@ def main() -> int:
         logger.warning("Timezone %s not found, fallback to UTC", settings.timezone_name)
         scraped_at = datetime.utcnow().isoformat(timespec="seconds") + "Z"
 
-    logger.info("Start scrape source=%s roles=%s max_pages=%s", settings.source, settings.roles, settings.max_pages)
-    scraper = select_scraper(settings.source, settings)
-    raw_jobs = scraper.scrape()
+    logger.info(
+        "Start scrape source=%s roles=%s max_pages=%s attempts=%s",
+        settings.source,
+        settings.roles,
+        settings.max_pages,
+        settings.scrape_attempts,
+    )
+    raw_jobs: List[Dict[str, Any]] = []
+    scraper_error: str | None = None
+    scrape_error: str | None = None
+    for attempt in range(1, settings.scrape_attempts + 1):
+        try:
+            raw_jobs = select_scraper(settings.source, settings).scrape()
+            scraper_error = None
+        except Exception as exc:  # noqa: BLE001
+            scraper_error = f"{type(exc).__name__}: {exc}"
+            logger.exception("Scrape attempt failed attempt=%s/%s", attempt, settings.scrape_attempts)
+
+        if raw_jobs:
+            break
+
+        if attempt < settings.scrape_attempts:
+            logger.warning("No jobs returned; retrying scrape attempt=%s/%s", attempt + 1, settings.scrape_attempts)
+            time.sleep(min(2 ** (attempt - 1), 8))
+
     jobs = deduplicate_jobs(raw_jobs)
-    scrape_error = None
-    if not jobs:
+    if not jobs and scraper_error:
+        scrape_error = f"Scraper failed after {settings.scrape_attempts} attempt(s): {scraper_error}"
+    elif not jobs:
         scrape_error = (
             "No verified live jobs extracted. The source returned no usable job links, "
             "blocked automated requests, or changed its HTML structure."

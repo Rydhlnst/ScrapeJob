@@ -36,7 +36,7 @@ export type Category = {
   totalJobs?: number
 }
 
-export type ScrapeRunStatus = "running" | "success" | "failed" | "partial"
+export type ScrapeRunStatus = "pending" | "running" | "success" | "failed" | "partial"
 
 export type ScrapeRun = {
   id: string

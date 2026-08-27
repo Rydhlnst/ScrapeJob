@@ -21,8 +21,14 @@ class ScrapeRunController extends Controller
     public function index(Request $request)
     {
         $perPage = min(max((int) $request->query('perPage', 15), 1), 100);
+        $status = strtolower(trim((string) $request->query('status', '')));
+        $allowedStatuses = ['pending', 'running', 'success', 'partial', 'failed'];
 
-        $runs = ScrapeRun::query()
+        if ($status !== '' && ! in_array($status, $allowedStatuses, true)) {
+            return ApiResponse::error('Invalid scrape run status.', 422);
+        }
+
+        $query = ScrapeRun::query()
             ->select([
                 'id',
                 'job_source_id',
@@ -42,10 +48,13 @@ class ScrapeRunController extends Controller
                 'created_by',
                 'created_at',
             ])
-            ->with(['jobSource:id,name', 'creator:id,name,email'])
-            ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
+            ->with(['jobSource:id,name', 'creator:id,name,email']);
+
+        if ($status !== '') {
+            $query->where('status', $status);
+        }
+
+        $runs = $query->latest()->paginate($perPage)->withQueryString();
 
         return ApiResponse::paginated($runs, ScrapeRunResource::collection($runs)->resolve(), 'Scrape runs retrieved successfully');
     }
@@ -102,8 +111,14 @@ class ScrapeRunController extends Controller
     {
         $run = ScrapeRun::query()->findOrFail($id);
         $perPage = min(max((int) $request->query('perPage', 25), 1), 100);
+        $status = strtolower(trim((string) $request->query('status', '')));
+        $allowedStatuses = ['success', 'failed', 'duplicate', 'skipped'];
 
-        $logs = $run->scrapeLogs()
+        if ($status !== '' && ! in_array($status, $allowedStatuses, true)) {
+            return ApiResponse::error('Invalid scrape log status.', 422);
+        }
+
+        $query = $run->scrapeLogs()
             ->select([
                 'id',
                 'scrape_run_id',
@@ -113,10 +128,13 @@ class ScrapeRunController extends Controller
                 'message',
                 'payload',
                 'created_at',
-            ])
-            ->latest()
-            ->paginate($perPage)
-            ->withQueryString();
+            ]);
+
+        if ($status !== '') {
+            $query->where('status', $status);
+        }
+
+        $logs = $query->latest()->paginate($perPage)->withQueryString();
 
         return ApiResponse::paginated($logs, ScrapeLogResource::collection($logs)->resolve(), 'Scrape logs retrieved successfully');
     }

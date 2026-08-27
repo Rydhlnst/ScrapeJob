@@ -105,6 +105,14 @@ class PythonScraperExecutor
             'SAVE_JSON' => 'true',
             'PYTHONIOENCODING' => 'utf-8',
             'JSON_OUTPUT_PATH' => base_path('../scraper-service/output/jobs.json'),
+            'HTTP_RETRIES' => (string) config('scraper.http_retries', 3),
+            'SCRAPE_ATTEMPTS' => (string) config('scraper.scrape_attempts', 2),
+            'PAGE_TIMEOUT_SECONDS' => (string) config('scraper.python.page_timeout_seconds', 45),
+            'DETAIL_TIMEOUT_SECONDS' => (string) config('scraper.python.detail_timeout_seconds', 45),
+            'FIRECRAWL_API_KEY' => (string) config('scraper.firecrawl.api_key', ''),
+            'FIRECRAWL_API_URL' => (string) config('scraper.firecrawl.api_url', 'https://api.firecrawl.dev'),
+            'FIRECRAWL_TIMEOUT_SECONDS' => (string) config('scraper.firecrawl.timeout_seconds', 60),
+            'FIRECRAWL_WAIT_FOR_MS' => (string) config('scraper.firecrawl.wait_for_ms', 1000),
         ];
 
         if ($keyword !== null && trim($keyword) !== '') {
