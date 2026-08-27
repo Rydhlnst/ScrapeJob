@@ -64,7 +64,7 @@ class KalibrrScraper:
         active_url = candidate_urls[0]
         for candidate_url in candidate_urls:
             try:
-                response = self._http.get(candidate_url, timeout=max(self.settings.page_timeout_seconds, 20))
+                response = self._http.get(candidate_url, timeout=min(max(self.settings.page_timeout_seconds, 10), 20))
                 response.raise_for_status()
                 parsed = BeautifulSoup(response.text, "html.parser")
                 if (
@@ -157,7 +157,7 @@ class KalibrrScraper:
         }
 
         try:
-            response = self._http.get(job_url, timeout=max(self.settings.detail_timeout_seconds, 20))
+                response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
             response.raise_for_status()
         except requests.RequestException as exc:
             self.logger.warning("Detail request failed for %s: %s", job_url, exc)

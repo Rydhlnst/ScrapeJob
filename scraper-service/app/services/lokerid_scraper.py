@@ -65,7 +65,7 @@ class LokerIdScraper:
         url = candidate_urls[0]
         for candidate in candidate_urls:
             try:
-                response = self._http.get(candidate, timeout=max(self.settings.page_timeout_seconds, 20))
+                response = self._http.get(candidate, timeout=min(max(self.settings.page_timeout_seconds, 10), 20))
                 response.raise_for_status()
                 candidate_soup = BeautifulSoup(response.text, "html.parser")
                 # Stop at first page that has likely job links.
@@ -314,7 +314,7 @@ class LokerIdScraper:
         }
 
         try:
-            response = self._http.get(job_url, timeout=max(self.settings.detail_timeout_seconds, 20))
+            response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
             response.raise_for_status()
         except Exception:
             return detail

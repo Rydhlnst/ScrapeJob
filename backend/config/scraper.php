@@ -17,7 +17,7 @@ return [
     'use_python_executor' => (bool) env('SCRAPER_USE_PYTHON_EXECUTOR', true),
 
     'python' => [
-        'timeout_seconds' => (int) env('SCRAPER_PYTHON_TIMEOUT_SECONDS', 900),
+        'timeout_seconds' => (int) env('SCRAPER_PYTHON_TIMEOUT_SECONDS', 600),
         'bin' => env('SCRAPER_PYTHON_BIN', ''),
         'mode' => env('SCRAPER_PYTHON_MODE', 'local'),
         'docker_bin' => env('SCRAPER_DOCKER_BIN', 'docker'),

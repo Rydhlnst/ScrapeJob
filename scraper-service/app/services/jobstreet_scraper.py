@@ -219,7 +219,10 @@ class JobstreetScraper:
         # Secondary fallback: request-based fetch (closer to your reference script approach)
         for candidate_url in candidate_urls:
             try:
-                response = self._http.get(candidate_url, timeout=self.settings.page_timeout_seconds)
+                response = self._http.get(
+                    candidate_url,
+                    timeout=min(max(self.settings.page_timeout_seconds, 10), 20),
+                )
                 response.raise_for_status()
                 request_cards = self._extract_cards_from_html(response.text, page=page, role_slug=role_slug)
                 if request_cards:
