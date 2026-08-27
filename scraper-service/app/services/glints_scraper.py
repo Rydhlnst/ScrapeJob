@@ -5,6 +5,7 @@ import random
 import time
 from datetime import datetime
 from typing import Dict, List, Optional
+from urllib.parse import quote_plus
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import requests
@@ -12,7 +13,7 @@ from bs4 import BeautifulSoup
 from playwright.sync_api import Browser, TimeoutError as PlaywrightTimeout, sync_playwright
 
 from app.config import Settings
-from app.schemas.job_schema import normalize_job_payload
+from app.schemas.job_schema import is_valid_live_job, matches_role_keyword, normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
 from app.utils.firecrawl_client import FirecrawlClient
@@ -26,6 +27,19 @@ class GlintsScraper:
         LIST_URL,
         "https://glints.com/id/opportunities/jobs/explore?country=ID&locationName=All%20Cities%2FProvinces",
     )
+
+    def _list_urls_for_roles(self) -> tuple[str, ...]:
+        urls = []
+        for role in self.settings.roles:
+            query = quote_plus(role.strip())
+            urls.extend(
+                [
+                    f"{self.LIST_URL}?keyword={query}",
+                    f"{self.LIST_URL}?search={query}",
+                ]
+            )
+        urls.extend(self.LIST_URLS)
+        return tuple(dict.fromkeys(urls))
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -51,7 +65,8 @@ class GlintsScraper:
 
         response = None
         active_url = self.LIST_URL
-        for candidate_url in self.LIST_URLS:
+        list_urls = self._list_urls_for_roles()
+        for candidate_url in list_urls:
             try:
                 candidate_response = self._http.get(
                     candidate_url,
@@ -74,7 +89,7 @@ class GlintsScraper:
                 self.logger.info("Falling back to browser-rendered Glints listing")
                 playwright = sync_playwright().start()
                 browser = self._create_browser(playwright)
-                for candidate_url in self.LIST_URLS:
+                for candidate_url in list_urls:
                     rendered_html = self._render_page(browser, candidate_url, self.settings.page_timeout_seconds)
                     if not rendered_html:
                         continue
@@ -88,7 +103,7 @@ class GlintsScraper:
 
             if not links:
                 self.logger.info("Falling back to Firecrawl for Glints listing")
-                for candidate_url in self.LIST_URLS:
+                for candidate_url in list_urls:
                     rendered_html = self._firecrawl.scrape_html(candidate_url)
                     if not rendered_html:
                         continue
@@ -124,6 +139,22 @@ class GlintsScraper:
                     continue
 
                 detail = self._scrape_detail_page(url, browser=browser)
+                title = detail.get("title") or label
+                company = detail.get("company")
+                if not any(
+                    matches_role_keyword(role, title, detail.get("description"))
+                    for role in self.settings.roles
+                ):
+                    self.logger.info("Skipping Glints listing outside requested roles url=%s", url)
+                    continue
+                if not is_valid_live_job(
+                    source=self.settings.source,
+                    source_url=url,
+                    title=title,
+                    company=company,
+                ):
+                    self.logger.warning("Skipping unverified Glints listing url=%s", url)
+                    continue
 
                 jobs.append(
                     normalize_job_payload(
@@ -131,8 +162,8 @@ class GlintsScraper:
                         scraped_at_iso=scraped_at,
                         role_keyword=",".join(self.settings.roles),
                         source_url=url,
-                        title=detail.get("title") or label,
-                        company=detail.get("company") or "Glints",
+                        title=title,
+                        company=company,
                         location=detail.get("location"),
                         salary=detail.get("salary"),
                         employment_type=detail.get("employment_type"),

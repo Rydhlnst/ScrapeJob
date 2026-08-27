@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from playwright.sync_api import Browser, TimeoutError as PlaywrightTimeout, sync_playwright
 
 from app.config import Settings
-from app.schemas.job_schema import normalize_job_payload
+from app.schemas.job_schema import is_valid_live_job, matches_role_keyword, normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
 from app.utils.firecrawl_client import FirecrawlClient
@@ -65,7 +65,7 @@ class JobstreetExpressScraper:
 
                     for list_url in list_urls:
                         self.logger.info("Scrape Jora listing role=%s url=%s", role, list_url)
-                        self._scrape_listing(list_url, scraped_at, jobs, seen, browser)
+                        self._scrape_listing(list_url, role, scraped_at, jobs, seen, browser)
             finally:
                 browser.close()
 
@@ -74,6 +74,7 @@ class JobstreetExpressScraper:
     def _scrape_listing(
         self,
         list_url: str,
+        role: str,
         scraped_at: str,
         jobs: List[Dict],
         seen: set[str],
@@ -119,13 +120,26 @@ class JobstreetExpressScraper:
             if not title:
                 continue
 
+            if list_url in self.LIST_URLS and not matches_role_keyword(role, title):
+                self.logger.info("Skipping broad Jora listing outside requested role url=%s", link)
+                continue
+
             wrapper = card.find_parent("article") or card.find_parent("div")
-            company = self._extract_company(wrapper) or "Jobstreet Express"
+            company = self._extract_company(wrapper)
             location = self._extract_location(wrapper)
             detail = self._extract_detail_fields(link, browser=browser)
             company = detail.get("company") or company
             location = detail.get("location") or location
             employment_type = detail.get("employment_type") or self._derive_type_from_url(list_url)
+            title = detail.get("title") or title
+            if not is_valid_live_job(
+                source=self.settings.source,
+                source_url=link,
+                title=title,
+                company=company,
+            ):
+                self.logger.warning("Skipping unverified JobStreet Express listing url=%s", link)
+                continue
 
             jobs.append(
                 normalize_job_payload(
@@ -133,7 +147,7 @@ class JobstreetExpressScraper:
                     scraped_at_iso=scraped_at,
                     role_keyword=",".join(self.settings.roles),
                     source_url=link,
-                    title=detail.get("title") or title,
+                    title=title,
                     company=company,
                     location=location,
                     salary=detail.get("salary"),
@@ -391,6 +405,8 @@ class JobstreetExpressScraper:
         }
 
         if lowered in blocked:
+            return None
+        if "begin typing for results" in lowered or lowered.startswith("di mana "):
             return None
         if len(cleaned) <= 2:
             return None

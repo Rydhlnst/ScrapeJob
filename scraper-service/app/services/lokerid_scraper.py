@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 from playwright.sync_api import Browser, TimeoutError as PlaywrightTimeout, sync_playwright
 
 from app.config import Settings
-from app.schemas.job_schema import normalize_job_payload
+from app.schemas.job_schema import is_valid_live_job, matches_role_keyword, normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
 from app.utils.firecrawl_client import FirecrawlClient
@@ -63,10 +63,6 @@ class LokerIdScraper:
             f"{self.BASE_URL}/cari-lowongan-kerja?q={query}",
             f"{self.BASE_URL}/cari-lowongan-kerja?search={query}",
             f"{self.BASE_URL}/cari-lowongan-kerja?keyword={query}",
-            # Search pages can be challenged while the public latest-jobs
-            # page remains available. Use it as a safe, non-authenticated
-            # fallback so the source can still provide public listings.
-            f"{self.BASE_URL}/",
         ]
 
         soup = None
@@ -113,7 +109,7 @@ class LokerIdScraper:
                     url = candidate_url
                     break
 
-        embedded_jobs = self._extract_jobs_from_embedded_state(soup, role, scraped_at, url)
+        embedded_jobs = self._extract_jobs_from_embedded_state(soup, role, scraped_at, url, browser)
         if embedded_jobs:
             return embedded_jobs
 
@@ -146,16 +142,18 @@ class LokerIdScraper:
                     link = str(obj.get("url") or "").strip()
                     if not title or not link:
                         continue
+                    if not matches_role_keyword(role, title, link):
+                        continue
                     if not link.startswith("http"):
                         link = f"{self.BASE_URL}{link}"
                     if link in seen:
                         continue
                     seen.add(link)
 
-                    company_name = "Loker.id"
+                    company_name = None
                     hiring_org = obj.get("hiringOrganization")
                     if isinstance(hiring_org, dict):
-                        company_name = clean_text(str(hiring_org.get("name") or company_name))
+                        company_name = clean_text(str(hiring_org.get("name") or "")) or None
 
                     location = None
                     job_location = obj.get("jobLocation")
@@ -165,6 +163,16 @@ class LokerIdScraper:
                             location = clean_text(str(address.get("addressLocality") or "")) or None
 
                     detail = self._scrape_detail_page(link, browser=browser)
+                    title = detail.get("title") or title
+                    company_name = detail.get("company") or company_name
+                    if not is_valid_live_job(
+                        source=self.settings.source,
+                        source_url=link,
+                        title=title,
+                        company=company_name,
+                    ):
+                        self.logger.warning("Skipping unverified Loker.id listing url=%s", link)
+                        continue
 
                     results.append(
                         normalize_job_payload(
@@ -172,8 +180,8 @@ class LokerIdScraper:
                             scraped_at_iso=scraped_at,
                             role_keyword=role,
                             source_url=link,
-                            title=detail.get("title") or title,
-                            company=detail.get("company") or company_name,
+                            title=title,
+                            company=company_name,
                             location=detail.get("location") or location,
                             salary=detail.get("salary"),
                             employment_type=detail.get("employment_type"),
@@ -205,9 +213,11 @@ class LokerIdScraper:
             title = clean_text(link_node.get_text(" ", strip=True))
             if not title:
                 continue
+            if not matches_role_keyword(role, title, link):
+                continue
 
             card = link_node.find_parent("article") or link_node.find_parent("div")
-            company = "Loker.id"
+            company = None
             location = None
             if card is not None:
                 company_node = card.select_one(".company") or card.select_one("[class*='company']")
@@ -218,6 +228,16 @@ class LokerIdScraper:
                     location = clean_text(location_node.get_text(" ", strip=True))
 
             detail = self._scrape_detail_page(link, browser=browser)
+            title = detail.get("title") or title
+            company = detail.get("company") or company
+            if not is_valid_live_job(
+                source=self.settings.source,
+                source_url=link,
+                title=title,
+                company=company,
+            ):
+                self.logger.warning("Skipping unverified Loker.id listing url=%s", link)
+                continue
 
             results.append(
                 normalize_job_payload(
@@ -225,8 +245,8 @@ class LokerIdScraper:
                     scraped_at_iso=scraped_at,
                     role_keyword=role,
                     source_url=link,
-                    title=detail.get("title") or title,
-                    company=detail.get("company") or company,
+                    title=title,
+                    company=company,
                     location=detail.get("location") or location,
                     salary=detail.get("salary"),
                     employment_type=detail.get("employment_type"),
@@ -250,6 +270,7 @@ class LokerIdScraper:
         role: str,
         scraped_at: str,
         query_url: str,
+        browser: Browser | None = None,
     ) -> List[Dict]:
         for script in soup.find_all("script"):
             text = (script.string or script.get_text() or "").strip()
@@ -274,11 +295,14 @@ class LokerIdScraper:
             for item in candidates:
                 slug = str(item.get("slug") or "").strip()
                 title = clean_text(str(item.get("title") or "").strip())
-                company = clean_text(str(item.get("company_name") or "Loker.id").strip()) or "Loker.id"
+                company = clean_text(str(item.get("company_name") or "").strip()) or None
                 location = clean_text(str(item.get("location") or "").strip()) or None
                 job_type = clean_text(str(item.get("job_type") or "").strip()) or None
                 salary = clean_text(str(item.get("job_salary") or "").strip()) or None
                 if not slug or not title:
+                    continue
+                if not matches_role_keyword(role, title, slug):
+                    self.logger.info("Skipping embedded Loker.id listing outside requested role title=%s", title)
                     continue
 
                 link = f"{self.BASE_URL}/{slug}"
@@ -287,6 +311,16 @@ class LokerIdScraper:
                 seen.add(link)
 
                 detail = self._scrape_detail_page(link, browser=browser)
+                title = detail.get("title") or title
+                company = detail.get("company") or company
+                if not is_valid_live_job(
+                    source=self.settings.source,
+                    source_url=link,
+                    title=title,
+                    company=company,
+                ):
+                    self.logger.warning("Skipping unverified Loker.id embedded listing url=%s", link)
+                    continue
 
                 results.append(
                     normalize_job_payload(
@@ -294,8 +328,8 @@ class LokerIdScraper:
                         scraped_at_iso=scraped_at,
                         role_keyword=role,
                         source_url=link,
-                        title=detail.get("title") or title,
-                        company=detail.get("company") or company,
+                        title=title,
+                        company=company,
                         location=detail.get("location") or location,
                         salary=detail.get("salary") or salary,
                         employment_type=detail.get("employment_type") or job_type,

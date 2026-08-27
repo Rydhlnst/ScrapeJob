@@ -88,7 +88,7 @@ def main() -> int:
     scrape_error = None
     if not jobs:
         scrape_error = (
-            "No jobs extracted. The source may have returned an empty page, "
+            "No verified live jobs extracted. The source returned no usable job links, "
             "blocked automated requests, or changed its HTML structure."
         )
         logger.error("%s source=%s", scrape_error, settings.source)

@@ -13,7 +13,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from app.config import Settings
-from app.schemas.job_schema import normalize_job_payload
+from app.schemas.job_schema import is_valid_live_company, is_valid_live_job, matches_role_keyword, normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
 from app.utils.firecrawl_client import FirecrawlClient
@@ -127,18 +127,45 @@ class KalibrrScraper:
                 continue
             seen.add(link)
 
-            title_node = card.select_one("h3") or card.select_one("[class*='title']")
-            company_node = card.select_one("h4") or card.select_one("[class*='company']")
+            title_node = card.select_one("h2, h3") or card.select_one("[class*='title']")
+            card_container = card.find_parent(
+                "div",
+                class_=lambda classes: classes and "k-group" in classes,
+            )
+            company_node = (
+                card_container.select_one("a[href*='action=Company%20Name']")
+                if card_container
+                else None
+            )
+            company_node = company_node or (
+                card_container.select_one("span a.k-text-subdued")
+                if card_container
+                else None
+            )
             location_node = card.select_one("[class*='location']")
 
             title = clean_text(title_node.get_text(" ", strip=True)) if title_node else clean_text(card.get_text(" ", strip=True))
-            company = clean_text(company_node.get_text(" ", strip=True)) if company_node else "Kalibrr"
+            company = clean_text(company_node.get_text(" ", strip=True)) if company_node else None
             location = clean_text(location_node.get_text(" ", strip=True)) if location_node else None
 
             if not title:
                 continue
 
             detail = self._scrape_detail_page(link)
+            title = detail.get("title") or title
+            detail_company = detail.get("company") if is_valid_live_company(detail.get("company")) else None
+            company = detail_company or company
+            if not matches_role_keyword(role, title, detail.get("description")):
+                self.logger.info("Skipping Kalibrr listing outside requested role url=%s", link)
+                continue
+            if not is_valid_live_job(
+                source=self.settings.source,
+                source_url=link,
+                title=title,
+                company=company,
+            ):
+                self.logger.warning("Skipping unverified Kalibrr listing url=%s", link)
+                continue
 
             results.append(
                 normalize_job_payload(
@@ -146,8 +173,8 @@ class KalibrrScraper:
                     scraped_at_iso=scraped_at,
                     role_keyword=role,
                     source_url=link,
-                    title=detail.get("title") or title,
-                    company=detail.get("company") or company,
+                    title=title,
+                    company=company,
                     location=detail.get("location") or location,
                     salary=detail.get("salary"),
                     employment_type=detail.get("employment_type"),

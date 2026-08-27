@@ -14,7 +14,7 @@ import requests
 from playwright.sync_api import Browser, Page, Playwright, TimeoutError as PlaywrightTimeout, sync_playwright
 
 from app.config import Settings
-from app.schemas.job_schema import normalize_job_payload
+from app.schemas.job_schema import is_valid_live_job, normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
 from app.utils.firecrawl_client import FirecrawlClient
@@ -128,6 +128,16 @@ class JobstreetScraper:
 
                 detail = self._scrape_detail_page(browser=browser, source_url=card.source_url)
                 posted_date = parse_posted_date(card.posted_text, self.settings.timezone_name)
+                title = detail.get("title") or card.title
+                company = detail.get("company") or card.company
+                if not is_valid_live_job(
+                    source=self.settings.source,
+                    source_url=card.source_url,
+                    title=title,
+                    company=company,
+                ):
+                    self.logger.warning("Skipping unverified JobStreet listing url=%s", card.source_url)
+                    continue
 
                 jobs.append(
                     normalize_job_payload(
@@ -135,8 +145,8 @@ class JobstreetScraper:
                         scraped_at_iso=self.scraped_at_iso,
                         role_keyword=role_keyword,
                         source_url=card.source_url,
-                        title=detail.get("title") or card.title,
-                        company=detail.get("company") or card.company,
+                        title=title,
+                        company=company,
                         location=detail.get("location") or card.location,
                         salary=detail.get("salary") or card.salary,
                         employment_type=detail.get("employment_type"),
@@ -274,7 +284,7 @@ class JobstreetScraper:
             if not title:
                 continue
             if not company:
-                company = "Unknown Company"
+                continue
 
             location_node = (
                 node.select_one("[data-automation='jobLocation']")
@@ -340,7 +350,7 @@ class JobstreetScraper:
                 posted_text = clean_text(posted_node.get_text(" ", strip=True)) if posted_node else None
 
             if not company:
-                company = "Unknown Company"
+                continue
 
             cards.append(
                 ListingCard(
@@ -378,6 +388,7 @@ class JobstreetScraper:
 
         from app.utils.http_helper import get_random_user_agent
         page_obj: Page = browser.new_page(user_agent=get_random_user_agent())
+        html: Optional[str] = None
         detail_timeout_ms = max(10, min(self.settings.detail_timeout_seconds, 15)) * 1000
         try:
             try:
@@ -393,18 +404,21 @@ class JobstreetScraper:
                 if not html:
                     return detail
 
-            try:
-                page_obj.wait_for_selector("body", timeout=detail_timeout_ms)
-            except PlaywrightTimeout:
-                self.logger.warning("Timeout detail page: %s", source_url)
-                html = self._firecrawl.scrape_html(source_url)
-                if not html:
-                    return detail
-
-            if not html:
-                html = page_obj.content()
+            if html is None:
+                try:
+                    page_obj.wait_for_selector("body", timeout=detail_timeout_ms)
+                    html = page_obj.content()
+                except PlaywrightTimeout:
+                    self.logger.warning("Timeout detail page: %s", source_url)
+                    html = self._firecrawl.scrape_html(source_url)
+                except Exception as exc:  # noqa: BLE001
+                    self.logger.warning("Detail page content failed for %s: %s", source_url, exc)
+                    html = self._firecrawl.scrape_html(source_url)
         finally:
             page_obj.close()
+
+        if not html:
+            return detail
 
         soup = BeautifulSoup(html, "html.parser")
 
