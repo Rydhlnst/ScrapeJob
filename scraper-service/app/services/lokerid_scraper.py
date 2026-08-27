@@ -11,6 +11,7 @@ import re
 
 import requests
 from bs4 import BeautifulSoup
+from playwright.sync_api import Browser, TimeoutError as PlaywrightTimeout, sync_playwright
 
 from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
@@ -44,12 +45,17 @@ class LokerIdScraper:
             scraped_at = datetime.utcnow().isoformat(timespec="seconds") + "Z"
 
         jobs: List[Dict] = []
-        for role in self.settings.roles:
-            jobs.extend(self._scrape_role(role, scraped_at))
+        with sync_playwright() as playwright:
+            browser = self._create_browser(playwright)
+            try:
+                for role in self.settings.roles:
+                    jobs.extend(self._scrape_role(role, scraped_at, browser))
+            finally:
+                browser.close()
 
         return jobs
 
-    def _scrape_role(self, role: str, scraped_at: str) -> List[Dict]:
+    def _scrape_role(self, role: str, scraped_at: str, browser: Browser | None = None) -> List[Dict]:
         query = quote_plus(role.strip())
         candidate_urls = [
             f"{self.BASE_URL}/cari-lowongan-kerja?q={query}",
@@ -84,7 +90,14 @@ class LokerIdScraper:
                 continue
 
         if soup is None:
-            return []
+            soup = BeautifulSoup("", "html.parser")
+
+        listing_selector = "a[href*='/lowongan-kerja/'], h3.entry-title a, h2.entry-title a, a[href$='.html']"
+        if not soup.select(listing_selector) and browser is not None:
+            self.logger.info("Falling back to browser-rendered Loker.id listing for role=%s", role)
+            rendered_html = self._render_page(browser, candidate_urls[0])
+            if rendered_html:
+                soup = BeautifulSoup(rendered_html, "html.parser")
 
         embedded_jobs = self._extract_jobs_from_embedded_state(soup, role, scraped_at, url)
         if embedded_jobs:
@@ -137,7 +150,7 @@ class LokerIdScraper:
                         if isinstance(address, dict):
                             location = clean_text(str(address.get("addressLocality") or "")) or None
 
-                    detail = self._scrape_detail_page(link)
+                    detail = self._scrape_detail_page(link, browser=browser)
 
                     results.append(
                         normalize_job_payload(
@@ -190,7 +203,7 @@ class LokerIdScraper:
                 if location_node:
                     location = clean_text(location_node.get_text(" ", strip=True))
 
-            detail = self._scrape_detail_page(link)
+            detail = self._scrape_detail_page(link, browser=browser)
 
             results.append(
                 normalize_job_payload(
@@ -259,7 +272,7 @@ class LokerIdScraper:
                     continue
                 seen.add(link)
 
-                detail = self._scrape_detail_page(link)
+                detail = self._scrape_detail_page(link, browser=browser)
 
                 results.append(
                     normalize_job_payload(
@@ -302,7 +315,33 @@ class LokerIdScraper:
                 found.extend(self._find_job_like_objects(value))
         return found
 
-    def _scrape_detail_page(self, job_url: str) -> Dict[str, Optional[str]]:
+    def _create_browser(self, playwright):
+        return playwright.chromium.launch(
+            headless=self.settings.headless,
+            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
+        )
+
+    def _render_page(self, browser: Browser, url: str) -> Optional[str]:
+        from app.utils.http_helper import get_random_user_agent
+        page = browser.new_page(locale="id-ID", user_agent=get_random_user_agent())
+        try:
+            page.goto(
+                url,
+                wait_until="domcontentloaded",
+                timeout=min(max(self.settings.page_timeout_seconds, 10), 20) * 1000,
+            )
+            page.wait_for_timeout(2000)
+            return page.content()
+        except PlaywrightTimeout:
+            self.logger.warning("Browser page timeout for %s", url)
+            return None
+        except Exception as exc:  # noqa: BLE001
+            self.logger.warning("Browser page failed for %s: %s", url, exc)
+            return None
+        finally:
+            page.close()
+
+    def _scrape_detail_page(self, job_url: str, browser: Browser | None = None) -> Dict[str, Optional[str]]:
         detail: Dict[str, Optional[str]] = {
             "title": None,
             "company": None,
@@ -313,13 +352,22 @@ class LokerIdScraper:
             "posted_date": None,
         }
 
+        response = None
         try:
             response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
             response.raise_for_status()
         except Exception:
-            return detail
+            response = None
+            if browser is None:
+                return detail
 
-        soup = BeautifulSoup(response.text, "html.parser")
+        if response is not None:
+            soup = BeautifulSoup(response.text, "html.parser")
+        else:
+            rendered_html = self._render_page(browser, job_url)
+            if not rendered_html:
+                return detail
+            soup = BeautifulSoup(rendered_html, "html.parser")
         detail["title"] = self._pick_text(soup, ["h1", ".entry-title", "[class*='title']"])
         detail["company"] = self._pick_text(soup, [".company", "[class*='company']"])
         detail["location"] = self._pick_text(soup, [".location", "[class*='location']"])

@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import requests
 from bs4 import BeautifulSoup
+from playwright.sync_api import Browser, TimeoutError as PlaywrightTimeout, sync_playwright
 
 from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
@@ -61,64 +62,111 @@ class GlintsScraper:
             except requests.RequestException as exc:
                 self.logger.warning("Listing request failed for %s: %s", candidate_url, exc)
 
-        if response is None:
-            return []
+        browser = None
+        playwright = None
+        try:
+            soup = BeautifulSoup(response.text, "html.parser") if response is not None else None
+            links = self._listing_links(soup)
 
-        soup = BeautifulSoup(response.text, "html.parser")
-        links = soup.select("a[href*='/id/opportunities/jobs/']")
-        if not links:
-            links = soup.select("a[href*='/opportunities/jobs/']")
-        self.logger.info(
-            "Listing fetched from %s: status=%s bytes=%s links=%s",
-            active_url,
-            response.status_code,
-            len(response.text),
-            len(links),
+            if not links:
+                self.logger.info("Falling back to browser-rendered Glints listing")
+                playwright = sync_playwright().start()
+                browser = self._create_browser(playwright)
+                for candidate_url in self.LIST_URLS:
+                    rendered_html = self._render_page(browser, candidate_url, self.settings.page_timeout_seconds)
+                    if not rendered_html:
+                        continue
+                    candidate_soup = BeautifulSoup(rendered_html, "html.parser")
+                    candidate_links = self._listing_links(candidate_soup)
+                    if candidate_links:
+                        soup = candidate_soup
+                        links = candidate_links
+                        active_url = candidate_url
+                        break
+
+            self.logger.info(
+                "Listing fetched from %s: status=%s bytes=%s links=%s",
+                active_url,
+                response.status_code if response is not None else "browser",
+                len(response.text) if response is not None and not links else len(str(soup or "")),
+                len(links),
+            )
+
+            jobs: List[Dict] = []
+            seen: set[str] = set()
+            for link in links:
+                href = (link.get("href") or "").strip()
+                if not href:
+                    continue
+                url = href if href.startswith("http") else f"{self.BASE_URL}{href}"
+                if url in seen:
+                    continue
+                seen.add(url)
+
+                label = clean_text(link.get("aria-label", "") or link.get_text(" ", strip=True))
+                if not label:
+                    continue
+
+                detail = self._scrape_detail_page(url, browser=browser)
+
+                jobs.append(
+                    normalize_job_payload(
+                        source=self.settings.source,
+                        scraped_at_iso=scraped_at,
+                        role_keyword=",".join(self.settings.roles),
+                        source_url=url,
+                        title=detail.get("title") or label,
+                        company=detail.get("company") or "Glints",
+                        location=detail.get("location"),
+                        salary=detail.get("salary"),
+                        employment_type=detail.get("employment_type"),
+                        description=detail.get("description"),
+                        description_summary=None,
+                        posted_date=detail.get("posted_date"),
+                        raw={
+                            "source": "glints",
+                            "url": url,
+                            "detail_fetched": bool(detail.get("description") or detail.get("company") or detail.get("location")),
+                        },
+                    )
+                )
+                self._sleep_delay()
+
+            return jobs
+        finally:
+            if browser is not None:
+                browser.close()
+            if playwright is not None:
+                playwright.stop()
+
+    def _listing_links(self, soup: BeautifulSoup | None):
+        if soup is None:
+            return []
+        return soup.select("a[href*='/id/opportunities/jobs/']") or soup.select("a[href*='/opportunities/jobs/']")
+
+    def _create_browser(self, playwright):
+        return playwright.chromium.launch(
+            headless=self.settings.headless,
+            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
         )
 
-        jobs: List[Dict] = []
-        seen: set[str] = set()
-        for link in links:
-            href = (link.get("href") or "").strip()
-            if not href:
-                continue
-            url = href if href.startswith("http") else f"{self.BASE_URL}{href}"
-            if url in seen:
-                continue
-            seen.add(url)
+    def _render_page(self, browser: Browser, url: str, timeout_seconds: int) -> Optional[str]:
+        from app.utils.http_helper import get_random_user_agent
+        page = browser.new_page(locale="id-ID", user_agent=get_random_user_agent())
+        try:
+            page.goto(url, wait_until="domcontentloaded", timeout=min(max(timeout_seconds, 10), 20) * 1000)
+            page.wait_for_timeout(2000)
+            return page.content()
+        except PlaywrightTimeout:
+            self.logger.warning("Browser page timeout for %s", url)
+            return None
+        except Exception as exc:  # noqa: BLE001
+            self.logger.warning("Browser page failed for %s: %s", url, exc)
+            return None
+        finally:
+            page.close()
 
-            label = clean_text(link.get("aria-label", "") or link.get_text(" ", strip=True))
-            if not label:
-                continue
-
-            detail = self._scrape_detail_page(url)
-
-            jobs.append(
-                normalize_job_payload(
-                    source=self.settings.source,
-                    scraped_at_iso=scraped_at,
-                    role_keyword=",".join(self.settings.roles),
-                    source_url=url,
-                    title=detail.get("title") or label,
-                    company=detail.get("company") or "Glints",
-                    location=detail.get("location"),
-                    salary=detail.get("salary"),
-                    employment_type=detail.get("employment_type"),
-                    description=detail.get("description"),
-                    description_summary=None,
-                    posted_date=detail.get("posted_date"),
-                    raw={
-                        "source": "glints",
-                        "url": url,
-                        "detail_fetched": bool(detail.get("description") or detail.get("company") or detail.get("location")),
-                    },
-                )
-            )
-            self._sleep_delay()
-
-        return jobs
-
-    def _scrape_detail_page(self, job_url: str) -> Dict[str, Optional[str]]:
+    def _scrape_detail_page(self, job_url: str, browser: Browser | None = None) -> Dict[str, Optional[str]]:
         detail: Dict[str, Optional[str]] = {
             "title": None,
             "company": None,
@@ -129,14 +177,23 @@ class GlintsScraper:
             "posted_date": None,
         }
 
+        response = None
         try:
             response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
             response.raise_for_status()
         except requests.RequestException as exc:
             self.logger.warning("Detail request failed for %s: %s", job_url, exc)
-            return detail
+            response = None
+            if browser is None:
+                return detail
 
-        soup = BeautifulSoup(response.text, "html.parser")
+        if response is not None:
+            soup = BeautifulSoup(response.text, "html.parser")
+        else:
+            rendered_html = self._render_page(browser, job_url, self.settings.detail_timeout_seconds)
+            if not rendered_html:
+                return detail
+            soup = BeautifulSoup(rendered_html, "html.parser")
         title_node = soup.select_one("h1")
         company_node = (
             soup.select_one("a[href*='/companies/']")
