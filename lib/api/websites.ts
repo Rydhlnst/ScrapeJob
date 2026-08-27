@@ -32,6 +32,22 @@ export async function updateWebsite(id: string, input: Partial<Website>): Promis
   return response.data
 }
 
+export async function addWebsiteDomain(id: string, host: string): Promise<Website> {
+  const response = await fetchJson<ApiEnvelope<Website>>(`/api/admin/websites/${encodeURIComponent(id)}/domains`, {
+    method: "POST",
+    body: JSON.stringify({ host }),
+  })
+  return response.data
+}
+
+export async function removeWebsiteDomain(id: string, host: string): Promise<Website> {
+  const response = await fetchJson<ApiEnvelope<Website>>(
+    `/api/admin/websites/${encodeURIComponent(id)}/domains/${encodeURIComponent(host)}`,
+    { method: "DELETE" },
+  )
+  return response.data
+}
+
 export async function getScrapedJobAssignments(id: string): Promise<WebsiteJobAssignment[]> {
   const response = await fetchJson<ApiEnvelope<{ assignments: WebsiteJobAssignment[] }>>(
     `/api/admin/scraped-jobs/${encodeURIComponent(id)}/websites`,

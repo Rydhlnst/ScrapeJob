@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             JobSourceSeeder::class,
             LandingPageContentSeeder::class,
+            WebsiteDomainSeeder::class,
         ]);
 
         if (! app()->isProduction()) {

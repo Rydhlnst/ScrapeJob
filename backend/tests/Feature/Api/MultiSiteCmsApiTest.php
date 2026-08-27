@@ -211,4 +211,34 @@ class MultiSiteCmsApiTest extends TestCase
             'status' => 'unused',
         ]);
     }
+
+    public function test_admin_can_register_and_remove_a_website_alias_without_changing_the_primary_domain(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $website = Website::query()->where('domain', 'lowonganku.com')->firstOrFail();
+
+        $this->actingAs($admin, 'sanctum')
+            ->postJson('/api/admin/websites/'.$website->id.'/domains', ['host' => 'staging.lowonganku.test'])
+            ->assertCreated()
+            ->assertJsonPath('data.domain', 'lowonganku.com')
+            ->assertJsonFragment(['host' => 'staging.lowonganku.test']);
+
+        $this->getJson('/api/site-config', ['X-Website-Domain' => 'staging.lowonganku.test'])
+            ->assertOk()
+            ->assertJsonPath('data.website.domain', 'lowonganku.com');
+        $this->getJson('/api/site-config', ['X-Website-Domain' => 'www.staging.lowonganku.test'])
+            ->assertOk()
+            ->assertJsonPath('data.website.domain', 'lowonganku.com');
+
+        $this->actingAs($admin, 'sanctum')
+            ->deleteJson('/api/admin/websites/'.$website->id.'/domains/staging.lowonganku.test')
+            ->assertOk()
+            ->assertJsonPath('data.domain', 'lowonganku.com');
+
+        $this->getJson('/api/site-config', ['X-Website-Domain' => 'staging.lowonganku.test'])
+            ->assertNotFound();
+        $this->getJson('/api/site-config', ['X-Website-Domain' => 'www.staging.lowonganku.test'])
+            ->assertNotFound();
+    }
 }

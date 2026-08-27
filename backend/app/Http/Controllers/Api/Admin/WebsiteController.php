@@ -93,6 +93,50 @@ class WebsiteController extends Controller
         return ApiResponse::success(null, 'Website deleted successfully');
     }
 
+    public function addDomain(Request $request, Website $website)
+    {
+        $payload = $request->validate([
+            'host' => ['required', 'string', 'max:191'],
+        ]);
+        $host = WebsiteContext::normalizeDomain($payload['host']);
+
+        if ($host === '' || $host === $website->domain) {
+            return ApiResponse::error('The host must be a non-primary alias.', 422);
+        }
+        if ($this->domainsConflict($host, $website->id)) {
+            return ApiResponse::error('That domain is already registered.', 422);
+        }
+
+        foreach (array_unique([$host, ...(!str_starts_with($host, 'www.') ? ['www.'.$host] : [])]) as $aliasHost) {
+            WebsiteDomain::query()->create([
+                'website_id' => $website->id,
+                'host' => $aliasHost,
+                'is_primary' => false,
+                'is_active' => true,
+            ]);
+        }
+
+        return ApiResponse::success(new WebsiteResource($website->refresh()->load('domains')), 'Website alias added successfully', 201);
+    }
+
+    public function removeDomain(Website $website, string $host)
+    {
+        $normalizedHost = WebsiteContext::normalizeDomain($host);
+        $hosts = [$normalizedHost];
+        if (!str_starts_with($normalizedHost, 'www.')) {
+            $hosts[] = 'www.'.$normalizedHost;
+        }
+        $domain = $website->domains()->where('host', $normalizedHost)->where('is_primary', false)->first();
+
+        if (!$domain) {
+            return ApiResponse::error('Website alias not found.', 404);
+        }
+
+        $website->domains()->whereIn('host', $hosts)->where('is_primary', false)->delete();
+
+        return ApiResponse::success(new WebsiteResource($website->refresh()->load('domains')), 'Website alias removed successfully');
+    }
+
     private function syncDomains(Website $website, string $primaryHost): void
     {
         $hosts = [$primaryHost];

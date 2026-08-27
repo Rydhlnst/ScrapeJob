@@ -128,5 +128,7 @@ Route::prefix('admin')
         Route::post('/scraped-jobs/{scrapedJob}/clean-ai', [AdminScrapedJobController::class, 'cleanAi'])->middleware('permission:edit jobs');
 
         Route::apiResource('/websites', WebsiteController::class)->middleware('permission:manage settings');
+        Route::post('/websites/{website}/domains', [WebsiteController::class, 'addDomain'])->middleware('permission:manage settings');
+        Route::delete('/websites/{website}/domains/{host}', [WebsiteController::class, 'removeDomain'])->middleware('permission:manage settings');
         Route::patch('/website-jobs/{websiteJob}/status', [WebsiteJobController::class, 'updateStatus'])->middleware('permission:publish jobs');
     });

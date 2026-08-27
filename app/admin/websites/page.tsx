@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Globe2, Plus, Power, RefreshCw } from "lucide-react"
+import { Globe2, Plus, Power, RefreshCw, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
 import { AdminHeader } from "@/components/admin/admin-header"
@@ -9,7 +9,7 @@ import { AdminShell } from "@/components/admin/admin-shell"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { listWebsites, createWebsite, updateWebsite } from "@/lib/api/websites"
+import { addWebsiteDomain, listWebsites, createWebsite, removeWebsiteDomain, updateWebsite } from "@/lib/api/websites"
 import type { Website } from "@/types/website"
 
 export default function WebsitesPage() {
@@ -18,6 +18,8 @@ export default function WebsitesPage() {
   const [saving, setSaving] = React.useState(false)
   const [name, setName] = React.useState("")
   const [domain, setDomain] = React.useState("")
+  const [aliasInputs, setAliasInputs] = React.useState<Record<string, string>>({})
+  const [aliasSaving, setAliasSaving] = React.useState<string | null>(null)
 
   async function load() {
     setLoading(true)
@@ -41,6 +43,24 @@ export default function WebsitesPage() {
     catch (error) { toast.error(error instanceof Error ? error.message : "Failed to update website.") }
   }
 
+  async function addAlias(website: Website) {
+    const host = aliasInputs[website.id]?.trim()
+    if (!host) return toast.error("Alias domain is required.")
+    setAliasSaving(website.id)
+    try {
+      await addWebsiteDomain(website.id, host)
+      setAliasInputs((current) => ({ ...current, [website.id]: "" }))
+      await load()
+      toast.success("Website alias added.")
+    } catch (error) { toast.error(error instanceof Error ? error.message : "Failed to add alias.") } finally { setAliasSaving(null) }
+  }
+
+  async function removeAlias(website: Website, host: string) {
+    setAliasSaving(`${website.id}:${host}`)
+    try { await removeWebsiteDomain(website.id, host); await load(); toast.success("Website alias removed.") }
+    catch (error) { toast.error(error instanceof Error ? error.message : "Failed to remove alias.") } finally { setAliasSaving(null) }
+  }
+
   return (
     <AdminShell>
       <AdminHeader title="Websites" description="Manage public sites connected to the Central CMS." />
@@ -52,9 +72,15 @@ export default function WebsitesPage() {
           </CardHeader>
           <CardContent className="p-0">
             {loading ? <p className="p-6 text-sm text-zinc-500">Loading websites…</p> : websites.length === 0 ? <p className="p-6 text-sm text-zinc-500">No websites configured.</p> : websites.map((website) => (
-              <div key={website.id} className="flex items-center justify-between gap-4 border-b border-zinc-100 px-5 py-4 last:border-0">
+              <div key={website.id} className="space-y-3 border-b border-zinc-100 px-5 py-4 last:border-0">
+                <div className="flex items-center justify-between gap-4">
                 <div className="flex min-w-0 items-center gap-3"><div className="grid size-9 shrink-0 place-items-center rounded-lg bg-zinc-100"><Globe2 className="size-4 text-zinc-500" /></div><div className="min-w-0"><p className="truncate text-sm font-semibold text-zinc-900">{website.name}</p><p className="truncate text-xs text-zinc-500">{website.domain}</p>{website.domains?.length ? <p className="mt-1 truncate text-[11px] text-zinc-400">Aliases: {website.domains.filter((domain) => !domain.isPrimary).map((domain) => domain.host).join(", ")}</p> : null}</div></div>
                 <Button size="sm" variant="outline" onClick={() => void toggle(website)}><Power className="mr-2 size-3.5" />{website.isActive ? "Disable" : "Enable"}</Button>
+                </div>
+                <div className="space-y-2 pl-12">
+                  {website.domains?.filter((domain) => !domain.isPrimary && domain.isActive).map((alias) => <div key={alias.id} className="flex items-center justify-between gap-2 text-xs text-zinc-500"><span>{alias.host}</span><Button size="sm" variant="ghost" onClick={() => void removeAlias(website, alias.host)} disabled={aliasSaving === `${website.id}:${alias.host}`}><Trash2 className="size-3.5" />Remove</Button></div>)}
+                  <div className="flex gap-2"><Input value={aliasInputs[website.id] ?? ""} onChange={(event) => setAliasInputs((current) => ({ ...current, [website.id]: event.target.value }))} placeholder="staging.example.com" aria-label={`Alias for ${website.name}`} /><Button size="sm" variant="outline" onClick={() => void addAlias(website)} disabled={aliasSaving === website.id}>{aliasSaving === website.id ? "Adding…" : "Add alias"}</Button></div>
+                </div>
               </div>
             ))}
           </CardContent>
