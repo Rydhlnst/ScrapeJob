@@ -4,11 +4,16 @@ namespace App\Services;
 
 use App\Jobs\CleanScrapedJobWithAI;
 use App\Models\ScrapedJob;
+use App\Services\Jobs\ScrapedJobPublishingService;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ScrapedJobImportService
 {
+    public function __construct(
+        private readonly ScrapedJobPublishingService $publishingService,
+    ) {}
+
     public function import(string $source, ?string $scrapedAt, array $jobs): array
     {
         $summary = [
@@ -18,6 +23,7 @@ class ScrapedJobImportService
             'duplicate_count' => 0,
             'error_count' => 0,
             'pending_count' => 0,
+            'draft_count' => 0,
             'published_count' => 0,
         ];
 
@@ -38,9 +44,13 @@ class ScrapedJobImportService
                         ->where('external_id', $externalId)
                         ->first();
                     if ($existingByExternal) {
+                        $wasPending = $existingByExternal->status === 'pending';
                         $existingByExternal->update($this->toScrapedJobPayload($job, $source, $scrapedAtCarbon));
                         if (config('services.ai_cleanup.enabled')) {
                             CleanScrapedJobWithAI::dispatch($existingByExternal)->afterCommit();
+                        }
+                        if ($wasPending) {
+                            $this->maybeCreateDraft($existingByExternal, $summary);
                         }
                         $summary['updated_count']++;
                         $summary['pending_count']++;
@@ -63,6 +73,7 @@ class ScrapedJobImportService
                     if (config('services.ai_cleanup.enabled')) {
                         CleanScrapedJobWithAI::dispatch($scrapedJob)->afterCommit();
                     }
+                    $this->maybeCreateDraft($scrapedJob, $summary);
                     $summary['created_count']++;
                     $summary['pending_count']++;
                 } catch (\Throwable $exception) {
@@ -77,6 +88,22 @@ class ScrapedJobImportService
         }
 
         return $summary;
+    }
+
+    private function maybeCreateDraft(ScrapedJob $scrapedJob, array &$summary): void
+    {
+        if (! (bool) config('scraper.auto_create_drafts', false)) {
+            return;
+        }
+
+        $result = $this->publishingService->moveToDraft($scrapedJob->refresh(), false);
+        if ($result['result'] === 'duplicate') {
+            $summary['duplicate_count']++;
+
+            return;
+        }
+
+        $summary['draft_count']++;
     }
 
     private function normalizeUrl(string $url): string

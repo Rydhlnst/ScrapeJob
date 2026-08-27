@@ -67,7 +67,7 @@ class ScrapedJobPublishingService
         return (bool) \App\Models\Setting::get('auto_publish_jobs', false);
     }
 
-    public function moveToDraft(ScrapedJob $scrapedJob): array
+    public function moveToDraft(ScrapedJob $scrapedJob, bool $allowAutoPublish = true): array
     {
         $payload = $this->toJobPayload($scrapedJob, 'draft');
 
@@ -119,7 +119,7 @@ class ScrapedJobPublishingService
         $job = Job::query()->create($payload + ['notified' => false]);
         $scrapedJob->update(['status' => 'approved']);
 
-        if ($this->shouldAutoPublish()) {
+        if ($allowAutoPublish && $this->shouldAutoPublish()) {
             $this->publish($scrapedJob);
 
             return ['result' => 'auto-published', 'job' => $job->refresh()];

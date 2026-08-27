@@ -15,6 +15,7 @@ $parseCsv = static function (?string $value, array $fallback = []): array {
 
 return [
     'use_python_executor' => (bool) env('SCRAPER_USE_PYTHON_EXECUTOR', true),
+    'auto_create_drafts' => (bool) env('SCRAPER_AUTO_CREATE_DRAFTS', false),
 
     'python' => [
         'timeout_seconds' => (int) env('SCRAPER_PYTHON_TIMEOUT_SECONDS', 600),

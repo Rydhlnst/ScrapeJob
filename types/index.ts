@@ -48,6 +48,7 @@ export type ScrapeRun = {
   duplicateCount: number
   failedCount: number
   skippedCount: number
+  errorMessage?: string | null
 }
 
 export type ScrapeLogStatus = "success" | "failed" | "duplicate" | "skipped"

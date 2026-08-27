@@ -66,7 +66,14 @@ export function ScrapeRunTable({
               >
                 <TableCell className="font-medium text-slate-900">{r.id}</TableCell>
                 <TableCell>{r.sourceName}</TableCell>
-                <TableCell><StatusBadge status={r.status} /></TableCell>
+                <TableCell className="max-w-[320px]">
+                  <StatusBadge status={r.status} />
+                  {r.errorMessage ? (
+                    <div className="mt-1 line-clamp-2 text-xs text-rose-700" title={r.errorMessage}>
+                      {r.errorMessage}
+                    </div>
+                  ) : null}
+                </TableCell>
                 <TableCell className="text-slate-600">{r.startedAt}</TableCell>
                 <TableCell className="text-slate-600">{r.finishedAt ?? "-"}</TableCell>
                 <TableCell>{r.totalFound}</TableCell>
@@ -82,4 +89,3 @@ export function ScrapeRunTable({
     </div>
   )
 }
-

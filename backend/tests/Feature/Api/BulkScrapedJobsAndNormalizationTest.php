@@ -169,4 +169,28 @@ class BulkScrapedJobsAndNormalizationTest extends TestCase
         $this->assertNotNull($scrapedJob);
         $this->assertEquals('https://glints.com/id/opportunities/jobs/explore', $scrapedJob->source_url);
     }
+
+    public function test_auto_create_drafts_moves_imported_scraped_job_to_admin_jobs(): void
+    {
+        config()->set('scraper.auto_create_drafts', true);
+
+        $result = app(ScrapedJobImportService::class)->import('glints', null, [[
+            'external_job_id' => 'job-auto-draft-1',
+            'source_url' => 'https://glints.com/id/opportunities/jobs/auto-draft-1',
+            'title' => 'Backend Developer',
+            'company_name' => 'Glints Co',
+            'location' => 'Jakarta',
+            'description' => 'Build reliable backend services.',
+        ]]);
+
+        $scrapedJob = ScrapedJob::query()->where('external_id', 'job-auto-draft-1')->firstOrFail();
+
+        $this->assertSame(1, $result['draft_count']);
+        $this->assertSame('approved', $scrapedJob->status);
+        $this->assertDatabaseHas('jobs', [
+            'scraped_job_id' => $scrapedJob->id,
+            'status' => 'draft',
+            'title' => 'Backend Developer',
+        ]);
+    }
 }

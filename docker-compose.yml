@@ -44,6 +44,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       WAIT_FOR_DB: "true"
+      SCRAPER_AUTO_CREATE_DRAFTS: "true"
       RUN_MIGRATIONS: "false"
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       ADMIN_NAME: "${ADMIN_NAME:-Super Admin}"
