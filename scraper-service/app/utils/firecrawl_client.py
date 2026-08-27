@@ -45,7 +45,9 @@ class FirecrawlClient:
             response.raise_for_status()
             body: Any = response.json()
             data = body.get("data", body) if isinstance(body, dict) else {}
-            html = data.get("html") or data.get("rawHtml") if isinstance(data, dict) else None
+            html = None
+            if isinstance(data, dict):
+                html = data.get("html") or data.get("rawHtml")
             if isinstance(html, str) and html.strip():
                 self.logger.info("Firecrawl fallback fetched url=%s bytes=%s", url, len(html))
                 return html
