@@ -52,6 +52,9 @@ const copy = {
     readyToPublish: "Ready to publish",
     readyToPublishHint: "Drafted jobs that need a final publishing pass.",
     publishedJobs: "Published jobs",
+    globalMetrics: "Global master metrics",
+    selectedSiteMetrics: "Selected website metrics",
+    sitePublishedJobs: "Published on selected site",
     needsAttention: "Needs attention",
     needsAttentionHint: "Rejected or duplicate jobs that still need operator attention.",
     queueNeedsReviewTitle: "Needs review",
@@ -109,6 +112,9 @@ const copy = {
     readyToPublish: "Siap publish",
     readyToPublishHint: "Lowongan draft yang butuh tahap publish terakhir.",
     publishedJobs: "Lowongan terbit",
+    globalMetrics: "Metrik master global",
+    selectedSiteMetrics: "Metrik website terpilih",
+    sitePublishedJobs: "Terbit di website terpilih",
     needsAttention: "Perlu perhatian",
     needsAttentionHint: "Lowongan reject atau duplikat yang masih perlu perhatian operator.",
     queueNeedsReviewTitle: "Perlu direview",
@@ -269,6 +275,19 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-2">
+        <div className="border border-[var(--brand-shell-strong)] bg-white p-5 shadow-[var(--shadow-sm)]">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{t.globalMetrics}</div>
+          <div className="mt-2 text-sm text-slate-600">Master jobs: <span className="font-semibold text-[var(--brand-ink)]">{summary.statusCounts.total}</span></div>
+          <div className="mt-1 text-sm text-slate-600">Master published: <span className="font-semibold text-[var(--brand-ink)]">{summary.statusCounts.published}</span></div>
+        </div>
+        <div className="border border-[var(--brand-shell-strong)] bg-white p-5 shadow-[var(--shadow-sm)]">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">{t.selectedSiteMetrics}</div>
+          <div className="mt-2 text-sm text-slate-600">{summary.website?.name ?? "Selected website"}: <span className="font-semibold text-[var(--brand-ink)]">{summary.websiteStatusCounts?.total ?? 0}</span> jobs</div>
+          <div className="mt-1 text-sm text-slate-600">{t.sitePublishedJobs}: <span className="font-semibold text-[var(--brand-ink)]">{summary.websiteStatusCounts?.published ?? 0}</span></div>
         </div>
       </section>
 

@@ -11,6 +11,7 @@ class WebsiteContext
     public static function normalizeDomain(?string $domain): string
     {
         $domain = strtolower(trim((string) $domain));
+        $domain = explode(',', $domain, 2)[0];
         $domain = preg_replace('#^https?://#', '', $domain) ?? $domain;
         $domain = explode('/', $domain, 2)[0];
         return explode(':', $domain, 2)[0];
@@ -18,21 +19,31 @@ class WebsiteContext
 
     public function resolve(Request $request): Website
     {
-        $websiteId = $request->header('X-Website-Id') ?: $request->query('website_id');
         $domain = $request->header('X-Website-Domain')
             ?: $request->header('X-Forwarded-Host')
             ?: $request->getHost();
+        $normalizedDomain = self::normalizeDomain($domain);
+        $isAdminRequest = $request->is('api/admin/*');
+        $websiteId = $isAdminRequest
+            ? ($request->header('X-Website-Id') ?: $request->query('website_id'))
+            : null;
 
         $query = Website::query()->where('is_active', true);
         $website = $websiteId
             ? $query->whereKey($websiteId)->first()
-            : $query->where('domain', self::normalizeDomain($domain))->first();
+            : $query->where(function ($websiteQuery) use ($normalizedDomain): void {
+                $websiteQuery
+                    ->where('domain', $normalizedDomain)
+                    ->orWhereHas('domains', function ($domainQuery) use ($normalizedDomain): void {
+                        $domainQuery->where('host', $normalizedDomain)->where('is_active', true);
+                    });
+            })->first();
 
         if ($website) {
             return $website;
         }
 
-        if (in_array(self::normalizeDomain($domain), ['localhost', '127.0.0.1', '::1', 'your-vps-ip'], true)) {
+        if (!$websiteId && in_array($normalizedDomain, ['localhost', '127.0.0.1', '::1', 'your-vps-ip'], true)) {
             return Website::query()->firstOrCreate(
                 ['domain' => 'lowonganku.com'],
                 ['name' => 'Lowonganku.com', 'is_active' => true],

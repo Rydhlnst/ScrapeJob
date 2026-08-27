@@ -28,6 +28,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
+import { useSiteConfig } from "@/components/shared/site-config-provider"
 import { cn } from "@/lib/utils"
 import type { Category as SiteCategory, Job as SiteJob } from "@/types"
 
@@ -261,10 +262,12 @@ function buildNavbarData(data?: NavbarData) {
 }
 
 function Logo() {
+  const config = useSiteConfig()
+  const logo = config.website.logo || "/logo.png"
   return (
-    <Link href="/" className="flex items-center gap-2.5" aria-label="Lowonganku home">
-      <Image src="/logo.png" alt="Lowonganku logo" width={32} height={32} className="size-8 shrink-0 object-contain" />
-      <span className="text-[15px] font-semibold tracking-tight text-[var(--brand-ink)]">Lowonganku</span>
+    <Link href="/" className="flex items-center gap-2.5" aria-label={config.website.name + " home"}>
+      <Image src={logo} alt={config.website.name + " logo"} width={32} height={32} className="size-8 shrink-0 object-contain" />
+      <span className="text-[15px] font-semibold tracking-tight text-[var(--brand-ink)]">{config.website.name}</span>
     </Link>
   )
 }
@@ -565,6 +568,8 @@ function DesktopNav({ menuData }: { menuData: ReturnType<typeof buildNavbarData>
 }
 
 function MobileDrawer({ menuData }: { menuData: ReturnType<typeof buildNavbarData> }) {
+  const config = useSiteConfig()
+  const logo = config.website.logo || "/logo.png"
   const mobileGroups = [
     { title: "Kategori", icon: Layers3, items: menuData.categories },
     { title: "Pendidikan", icon: GraduationCap, items: educationItems },
@@ -585,8 +590,8 @@ function MobileDrawer({ menuData }: { menuData: ReturnType<typeof buildNavbarDat
         <SheetHeader className="border-b border-slate-100 px-5 py-4">
           <SheetTitle className="flex items-center justify-between text-slate-900">
             <span className="flex items-center gap-2 text-sm">
-              <Image src="/logo.png" alt="Lowonganku" width={24} height={24} className="size-6 object-contain" />
-              Lowonganku
+              <Image src={logo} alt={config.website.name} width={24} height={24} className="size-6 object-contain" />
+              {config.website.name}
             </span>
             <X className="size-4 text-slate-400" />
           </SheetTitle>

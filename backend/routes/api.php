@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Admin\ScrapeRunController;
 use App\Http\Controllers\Api\Admin\UserManagementController;
 use App\Http\Controllers\Api\Admin\WebsiteController;
 use App\Http\Controllers\Api\Admin\WebsiteJobController;
+use App\Http\Controllers\Api\Admin\WebsiteJobContentController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Public\CategoryController as PublicCategoryController;
 use App\Http\Controllers\Api\Public\ContactMessageController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\Api\Public\LandingPageContentController as PublicLandin
 use App\Http\Controllers\Api\Public\LocationController as PublicLocationController;
 use App\Http\Controllers\Api\Public\PageController as PublicPageController;
 use App\Http\Controllers\Api\Public\ScraperController as PublicScraperController;
+use App\Http\Controllers\Api\Public\SiteConfigController;
 use App\Http\Controllers\Api\ScrapedJobImportController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +57,7 @@ Route::get('/scraper/logs', [PublicScraperController::class, 'logs'])->middlewar
 Route::get('/categories', [PublicCategoryController::class, 'index']);
 Route::get('/locations', [PublicLocationController::class, 'index']);
 Route::get('/landing-page-content', [PublicLandingPageContentController::class, 'show']);
+Route::get('/site-config', SiteConfigController::class);
 Route::post('/contact', [ContactMessageController::class, 'store'])->middleware('throttle:5,1');
 
 Route::prefix('admin')
@@ -75,6 +78,8 @@ Route::prefix('admin')
         Route::patch('/jobs/{job}/reject', [AdminJobController::class, 'reject'])->middleware('permission:reject jobs');
         Route::patch('/jobs/{job}/mark-duplicate', [AdminJobController::class, 'markDuplicate'])->middleware('permission:edit jobs');
         Route::patch('/jobs/{job}/restore-draft', [AdminJobController::class, 'restoreDraft'])->middleware('permission:edit jobs');
+        Route::get('/jobs/{job}/site-content', [WebsiteJobContentController::class, 'show'])->middleware('permission:view jobs');
+        Route::put('/jobs/{job}/site-content', [WebsiteJobContentController::class, 'update'])->middleware('permission:edit jobs');
 
         Route::apiResource('/categories', AdminCategoryController::class)->middleware('permission:manage categories');
         Route::apiResource('/job-sources', AdminJobSourceController::class)->middleware('permission:manage sources');

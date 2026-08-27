@@ -1,7 +1,7 @@
 import type { Paginated } from "@/types"
 import type { Page } from "@/types/page"
 
-import { ApiEnvelope, fetchJson } from "./client"
+import { ApiEnvelope, fetchJson, type ApiRequestContext } from "./client"
 
 type PageEnvelope = ApiEnvelope<Page>
 
@@ -81,8 +81,8 @@ export async function deleteAdminPage(id: string): Promise<void> {
   })
 }
 
-export async function getPublicPageBySlug(slug: string): Promise<Page | null> {
-  const response = await fetchJson<PageEnvelope>(`/api/pages/${encodeURIComponent(slug)}`)
+export async function getPublicPageBySlug(slug: string, context?: ApiRequestContext): Promise<Page | null> {
+  const response = await fetchJson<PageEnvelope>(`/api/pages/${encodeURIComponent(slug)}`, undefined, context)
   return response.data
 }
 
@@ -95,9 +95,9 @@ export type PublicPageSummary = {
   updatedAt?: string | null
 }
 
-export async function listPublicPages(perPage = 12): Promise<Paginated<PublicPageSummary>> {
+export async function listPublicPages(perPage = 12, context?: ApiRequestContext): Promise<Paginated<PublicPageSummary>> {
   const response = await fetchJson<ApiEnvelope<PublicPageSummary[]>>(
-    `/api/pages?per_page=${perPage}`,
+    `/api/pages?per_page=${perPage}`, undefined, context,
   )
   return {
     data: response.data,

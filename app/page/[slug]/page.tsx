@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ShareButtons } from "@/components/public/blog-share-buttons"
 import { TableOfContents, ArticleSearch, RecentPostsSidebar, UpdateGratisCTA } from "@/components/public/blog-sidebar"
+import { getServerWebsiteContext } from "@/lib/site/server-context"
+import { getPublicSiteConfig } from "@/lib/api/site-config"
 
 export async function generateMetadata({
   params,
@@ -20,8 +22,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
+  const siteContext = await getServerWebsiteContext()
   try {
-    const page = await getPublicPageBySlug(slug)
+    const page = await getPublicPageBySlug(slug, siteContext)
     if (!page) return {}
     return {
       title: page.seoTitle || page.title,
@@ -32,12 +35,12 @@ export async function generateMetadata({
   }
 }
 
-function CTASection() {
+function CTASection({ siteName }: { siteName: string }) {
   return (
     <div className="mt-12 rounded-[26px] bg-[#1f5f9f] p-8 text-center text-white shadow-[0_6px_0_rgba(23,23,23,.08)]">
       <h3 className="text-2xl font-bold">Lowongan terbaru, langsung ke inboxmu</h3>
       <p className="mt-2 text-sm text-white/75">
-        Dapatkan info lowongan terbaru dan tips karier dari Lowonganku.
+        Dapatkan info lowongan terbaru dan tips karier dari {siteName}.
       </p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
         <Button asChild className="rounded-full bg-white text-[#1f5f9f] hover:bg-[#f7f9fb] hover:text-[#2479d1]">
@@ -56,7 +59,7 @@ function CTASection() {
   )
 }
 
-function WhyLowongankuSection() {
+function WhyLowongankuSection({ siteName }: { siteName: string }) {
   const features = [
     { icon: Shield, title: "Data Terverifikasi", description: "Setiap lowongan direview manual." },
     { icon: Clock, title: "Update Harian", description: "Ribuan lowongan baru setiap hari." },
@@ -66,7 +69,7 @@ function WhyLowongankuSection() {
 
   return (
     <div className="mt-12">
-      <h3 className="text-lg font-semibold text-[var(--brand-ink)]">Kenapa memilih Lowonganku</h3>
+      <h3 className="text-lg font-semibold text-[var(--brand-ink)]">Kenapa memilih {siteName}</h3>
       <p className="mt-1 text-sm text-slate-500">Dirancang supaya pencarian kerjamu lebih cepat dan lebih tenang.</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {features.map((feature) => {
@@ -92,11 +95,13 @@ export default async function PublicPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
+  const siteContext = await getServerWebsiteContext()
+  const siteConfig = await getPublicSiteConfig(siteContext)
 
   try {
     const [page, navbarData] = await Promise.all([
-      getPublicPageBySlug(slug),
-      getNavbarData(),
+      getPublicPageBySlug(slug, siteContext),
+      getNavbarData(siteContext),
     ])
 
     if (!page) {
@@ -153,7 +158,7 @@ export default async function PublicPage({
                         </svg>
                       </div>
                       <div>
-                        <div className="text-sm font-medium text-slate-900">Lowonganku</div>
+                        <div className="text-sm font-medium text-slate-900">{siteConfig.website.name}</div>
                         <div className="text-xs text-slate-500">{publishedDate}</div>
                       </div>
                     </div>
@@ -175,8 +180,8 @@ export default async function PublicPage({
                       <div className="mt-8 border-t border-slate-100 pt-6">
                         <ShareButtons title={page.title} slug={slug} />
                       </div>
-                      <WhyLowongankuSection />
-                      <CTASection />
+                      <WhyLowongankuSection siteName={siteConfig.website.name} />
+                      <CTASection siteName={siteConfig.website.name} />
                     </>
                   ) : null}
                 </article>

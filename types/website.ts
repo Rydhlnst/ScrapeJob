@@ -6,6 +6,12 @@ export type Website = {
   theme?: string | null
   logo?: string | null
   settings?: Record<string, unknown> | null
+  domains?: Array<{
+    id: string
+    host: string
+    isPrimary: boolean
+    isActive: boolean
+  }>
 }
 
 export type WebsiteJobStatus = "unused" | "draft" | "published" | "expired" | "nonaktif"

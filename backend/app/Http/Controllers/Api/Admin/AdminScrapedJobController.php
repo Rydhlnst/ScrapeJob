@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\JobResource;
 use App\Http\Resources\ScrapedJobResource;
+use App\Models\Job;
 use App\Models\ScrapedJob;
 use App\Models\WebsiteJob;
 use App\Services\WebsiteContext;
@@ -112,6 +113,7 @@ class AdminScrapedJobController extends Controller
                 ['website_id' => $website->id, 'job_id' => $job->id],
                 ['status' => 'published', 'published_at' => now(), 'expired_at' => null],
             );
+            $job->update(['status' => 'published', 'published_at' => now()]);
         }
 
         return ApiResponse::success(new JobResource($job?->refresh()), 'Scraped job published successfully');
@@ -255,12 +257,21 @@ class AdminScrapedJobController extends Controller
 
         $successCount = 0;
         $duplicateCount = 0;
+        $website = $this->websiteContext->resolve($request);
 
         foreach ($jobs as $scrapedJob) {
             $result = $this->publishingService->publish($scrapedJob);
             if ($result === 'duplicate') {
                 $duplicateCount++;
             } else {
+                $job = Job::query()->where('scraped_job_id', $scrapedJob->id)->first();
+                if ($job) {
+                    WebsiteJob::query()->updateOrCreate(
+                        ['website_id' => $website->id, 'job_id' => $job->id],
+                        ['status' => 'published', 'published_at' => now(), 'expired_at' => null],
+                    );
+                    $job->update(['status' => 'published', 'published_at' => now()]);
+                }
                 $successCount++;
             }
         }

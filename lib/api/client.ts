@@ -15,6 +15,11 @@ export type ApiEnvelope<T> = {
   }
 }
 
+export type ApiRequestContext = {
+  websiteDomain?: string
+  websiteId?: string
+}
+
 const CLIENT_API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ?? ""
 
@@ -34,6 +39,7 @@ export const USE_MOCK =
 export async function fetchJson<T>(
   path: string,
   init?: RequestInit,
+  context?: ApiRequestContext,
 ): Promise<T> {
   const url = API_BASE_URL ? `${API_BASE_URL}${path}` : path
   const clientToken =
@@ -52,19 +58,27 @@ export async function fetchJson<T>(
         ? `Bearer ${SERVER_BEARER_TOKEN}`
       : undefined)
 
-  const websiteId = typeof window !== "undefined" ? window.localStorage.getItem("admin_active_website_id") : null
-  const websiteDomain = typeof window !== "undefined" ? window.location.hostname : process.env.NEXT_PUBLIC_SITE_DOMAIN
+  const isAdminRequest = path.startsWith("/api/admin/")
+  const websiteId = context?.websiteId
+    ?? (isAdminRequest && typeof window !== "undefined"
+      ? window.localStorage.getItem("admin_active_website_id")
+      : null)
+  const websiteDomain = context?.websiteDomain
+    ?? (typeof window !== "undefined" ? window.location.hostname : process.env.NEXT_PUBLIC_SITE_DOMAIN)
+  const requestHeaders = new Headers(init?.headers)
+  requestHeaders.set("Content-Type", "application/json")
+  if (authHeader) requestHeaders.set("Authorization", authHeader)
+  if (websiteDomain) requestHeaders.set("X-Website-Domain", websiteDomain)
+  if (isAdminRequest && websiteId) {
+    requestHeaders.set("X-Website-Id", websiteId)
+  } else {
+    requestHeaders.delete("X-Website-Id")
+  }
 
   const res = await fetch(url, {
     ...init,
     signal: init?.signal ?? AbortSignal.timeout(8_000),
-    headers: {
-      "Content-Type": "application/json",
-      ...(authHeader ? { Authorization: authHeader } : {}),
-      ...(websiteId ? { "X-Website-Id": websiteId } : {}),
-      ...(websiteDomain ? { "X-Website-Domain": websiteDomain } : {}),
-      ...(init?.headers ?? {}),
-    },
+    headers: requestHeaders,
     cache: "no-store",
   })
   if (!res.ok) {

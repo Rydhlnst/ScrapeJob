@@ -1,7 +1,10 @@
+"use client"
+
 import Image from "next/image"
 import { BarChart3, Globe2 } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
+import { useSiteConfig } from "@/components/shared/site-config-provider"
 
 export function AuthShell({
   title,
@@ -12,19 +15,21 @@ export function AuthShell({
   description: string
   children: React.ReactNode
 }) {
+  const config = useSiteConfig()
+  const logo = config.website.logo || "/logo.png"
   return (
     <div className="grid min-h-screen bg-[#f4f8ff] lg:grid-cols-2">
       <section className="flex items-center justify-center px-4 py-10 sm:px-8">
         <Card className="w-full max-w-md rounded-xl border-[#d8e4f6] bg-white p-6 shadow-[var(--shadow-md)] sm:p-8">
           <div className="mb-6 flex items-center gap-2">
             <Image
-              src="/logo.png"
-              alt="Lowonganku logo"
+              src={logo}
+              alt={config.website.name + " logo"}
               width={32}
               height={32}
               className="h-8 w-8 rounded-xl object-cover"
             />
-            <p className="text-sm font-semibold text-foreground">Lowonganku</p>
+            <p className="text-sm font-semibold text-foreground">{config.website.name}</p>
           </div>
           <div className="mb-6">
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">

@@ -6,9 +6,11 @@ import { Navbar } from "@/components/shared/Navbar"
 import { Footer } from "@/components/shared/Footer"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
 import { getNavbarData } from "@/lib/api/navbar"
+import { getServerWebsiteContext } from "@/lib/site/server-context"
 
 export default async function NotFound() {
-  const navbarData = await getNavbarData().catch(() => ({ jobs: [], categories: [], totalJobs: 0 }))
+  const siteContext = await getServerWebsiteContext()
+  const navbarData = await getNavbarData(siteContext).catch(() => ({ jobs: [], categories: [], totalJobs: 0 }))
 
   return (
     <div className="flex min-h-screen w-full max-w-none flex-col overflow-x-hidden bg-white">

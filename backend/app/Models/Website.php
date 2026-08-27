@@ -22,6 +22,11 @@ class Website extends \Illuminate\Database\Eloquent\Model
         return $this->hasMany(WebsiteJob::class);
     }
 
+    public function domains(): HasMany
+    {
+        return $this->hasMany(WebsiteDomain::class);
+    }
+
     public function normalizeDomain(string $domain): string
     {
         $domain = strtolower(trim($domain));

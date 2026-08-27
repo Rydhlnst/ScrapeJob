@@ -1,17 +1,17 @@
-import { ApiEnvelope, fetchJson, USE_MOCK } from "./client"
+import { ApiEnvelope, fetchJson, USE_MOCK, type ApiRequestContext } from "./client"
 import { defaultLandingPageContent } from "@/lib/landing-page-content"
 import type {
   AdminLandingPageContentRecord,
   LandingPageContent,
 } from "@/types/landing-content"
 
-export async function getPublicLandingPageContent(): Promise<LandingPageContent | null> {
+export async function getPublicLandingPageContent(context?: ApiRequestContext): Promise<LandingPageContent | null> {
   if (USE_MOCK) {
     return defaultLandingPageContent
   }
 
   const response = await fetchJson<ApiEnvelope<LandingPageContent | null>>(
-    "/api/landing-page-content",
+    "/api/landing-page-content", undefined, context,
   )
 
   return response.data

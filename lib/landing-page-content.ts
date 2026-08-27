@@ -133,6 +133,11 @@ function cloneContent(content: LandingPageContent): LandingPageContent {
   return JSON.parse(JSON.stringify(content)) as LandingPageContent
 }
 
+export function createDefaultLandingPageContent(siteName: string): LandingPageContent {
+  const serialized = JSON.stringify(defaultLandingPageContent).replaceAll("Lowonganku", siteName)
+  return JSON.parse(serialized) as LandingPageContent
+}
+
 export function normalizeLandingPageContent(
   content: Partial<LandingPageContent> | null | undefined,
 ): LandingPageContent {

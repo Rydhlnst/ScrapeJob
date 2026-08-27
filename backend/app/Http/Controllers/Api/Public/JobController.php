@@ -88,15 +88,15 @@ class JobController extends Controller
                 'published_at',
                 'created_at',
             ])
-            ->with('category')
-            ->whereIn('status', ['draft', 'published'])
+            ->with([
+                'category',
+                'websiteJobs' => fn ($relation) => $relation
+                    ->where('website_id', $website->id)
+                    ->where('status', 'published')
+                    ->with('content.category'),
+            ])
             ->where('is_active', true)
-            ->where(function (Builder $query) use ($website): void {
-                $query->whereHas('websiteJobs', fn (Builder $relation) => $relation->where('website_id', $website->id)->where('status', 'published'));
-                if ($website->domain === 'lowonganku.com') {
-                    $query->orWhereDoesntHave('websiteJobs');
-                }
-            })
+            ->whereHas('websiteJobs', fn (Builder $relation) => $relation->where('website_id', $website->id)->where('status', 'published'))
             ->when($request->filled('keyword'), function ($query) use ($request) {
                 $keyword = mb_strtolower(trim($request->string('keyword')->value()));
                 $like = '%'.$keyword.'%';
@@ -112,7 +112,7 @@ class JobController extends Controller
                 $location = mb_strtolower(trim($request->string('location')->value()));
                 $query->whereRaw('lower(location) LIKE ?', ['%'.$location.'%']);
             })
-            ->when($request->filled('category'), function ($query) use ($request) {
+            ->when($request->filled('category'), function ($query) use ($request, $website) {
                 $category = $request->string('category')->value();
                 $isUuid = Str::isUuid($category);
 
@@ -129,6 +129,19 @@ class JobController extends Controller
                         $categoryQuery
                             ->orWhere('slug', $category)
                             ->orWhere('name', 'like', "%{$category}%");
+                    });
+                    $sub->orWhereHas('websiteJobs', function (Builder $relation) use ($website, $category, $isUuid): void {
+                        $relation
+                            ->where('website_id', $website->id)
+                            ->where('status', 'published')
+                            ->whereHas('content.category', function (Builder $categoryQuery) use ($category, $isUuid): void {
+                                if ($isUuid) {
+                                    $categoryQuery->whereKey($category);
+                                }
+                                $categoryQuery
+                                    ->orWhere('slug', $category)
+                                    ->orWhere('name', 'like', "%{$category}%");
+                            });
                     });
                 });
             })
@@ -164,21 +177,22 @@ class JobController extends Controller
                 'published_at',
                 'created_at',
             ])
-            ->with('category')
-            ->whereIn('status', ['draft', 'published'])
+            ->with([
+                'category',
+                'websiteJobs' => fn ($relation) => $relation
+                    ->where('website_id', $website->id)
+                    ->where('status', 'published')
+                    ->with('content.category'),
+            ])
             ->where('is_active', true)
-            ->where(function (Builder $query) use ($website): void {
-                $query->whereHas('websiteJobs', fn (Builder $relation) => $relation->where('website_id', $website->id)->where('status', 'published'));
-                if ($website->domain === 'lowonganku.com') {
-                    $query->orWhereDoesntHave('websiteJobs');
-                }
-            })
+            ->whereHas('websiteJobs', fn (Builder $relation) => $relation->where('website_id', $website->id)->where('status', 'published'))
             ->where(function (Builder $query) use ($identifier): void {
                 $query->where('slug', $identifier);
 
                 if (Str::isUuid($identifier)) {
                     $query->orWhere('id', $identifier);
                 }
+                $query->orWhereHas('websiteJobs.content', fn (Builder $contentQuery) => $contentQuery->where('slug', $identifier));
             })
             ->firstOrFail();
 
@@ -188,13 +202,8 @@ class JobController extends Controller
     public function stats(Request $request)
     {
         $website = $this->websiteContext->resolve($request);
-        $base = Job::query()->whereIn('status', ['draft', 'published'])->where('is_active', true)
-            ->where(function (Builder $query) use ($website): void {
-                $query->whereHas('websiteJobs', fn (Builder $relation) => $relation->where('website_id', $website->id)->where('status', 'published'));
-                if ($website->domain === 'lowonganku.com') {
-                    $query->orWhereDoesntHave('websiteJobs');
-                }
-            });
+        $base = Job::query()->where('is_active', true)
+            ->whereHas('websiteJobs', fn (Builder $relation) => $relation->where('website_id', $website->id)->where('status', 'published'));
 
         $totalBySource = (clone $base)
             ->selectRaw('source_name, COUNT(*) as total')

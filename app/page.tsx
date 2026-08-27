@@ -12,13 +12,18 @@ import { listJobs } from "@/lib/api/jobs"
 import { listCategories } from "@/lib/api/categories"
 import { getPublicLandingPageContent } from "@/lib/api/landing-page-content"
 import { normalizeLandingPageContent } from "@/lib/landing-page-content"
-import { defaultLandingPageContent } from "@/lib/landing-page-content"
 import { mockJobs } from "@/data/mock-jobs"
 import { mockCategories } from "@/data/mock-categories"
+import { getServerWebsiteContext } from "@/lib/site/server-context"
+import { getPublicSiteConfig } from "@/lib/api/site-config"
+import { createDefaultLandingPageContent } from "@/lib/landing-page-content"
 
 export default async function HomePage() {
+  const siteContext = await getServerWebsiteContext()
+  const siteConfig = await getPublicSiteConfig(siteContext)
   const content = normalizeLandingPageContent(
-    await getPublicLandingPageContent().catch(() => defaultLandingPageContent),
+    (await getPublicLandingPageContent(siteContext).catch(() => null))
+      ?? createDefaultLandingPageContent(siteConfig.website.name),
   )
   const fallbackJobs = {
     data: mockJobs,
@@ -34,9 +39,9 @@ export default async function HomePage() {
       sort: content.featuredJobs.rules.sort,
       category: content.featuredJobs.rules.category ?? undefined,
       source: content.featuredJobs.rules.source ?? undefined,
-    }).catch(() => fallbackJobs),
-    listJobs({ page: 1, perPage: 100, sort: "newest" }).catch(() => fallbackJobs),
-    listCategories().catch(() => mockCategories),
+    }, siteContext).catch(() => fallbackJobs),
+    listJobs({ page: 1, perPage: 100, sort: "newest" }, siteContext).catch(() => fallbackJobs),
+    listCategories(siteContext).catch(() => mockCategories),
   ])
   const homepageJobs = jobsRes.data.slice(0, content.featuredJobs.rules.limit)
   const heroJobs = navJobsRes.data.length ? navJobsRes.data : homepageJobs

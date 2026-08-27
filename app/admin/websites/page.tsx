@@ -53,7 +53,7 @@ export default function WebsitesPage() {
           <CardContent className="p-0">
             {loading ? <p className="p-6 text-sm text-zinc-500">Loading websites…</p> : websites.length === 0 ? <p className="p-6 text-sm text-zinc-500">No websites configured.</p> : websites.map((website) => (
               <div key={website.id} className="flex items-center justify-between gap-4 border-b border-zinc-100 px-5 py-4 last:border-0">
-                <div className="flex min-w-0 items-center gap-3"><div className="grid size-9 shrink-0 place-items-center rounded-lg bg-zinc-100"><Globe2 className="size-4 text-zinc-500" /></div><div className="min-w-0"><p className="truncate text-sm font-semibold text-zinc-900">{website.name}</p><p className="truncate text-xs text-zinc-500">{website.domain}</p></div></div>
+                <div className="flex min-w-0 items-center gap-3"><div className="grid size-9 shrink-0 place-items-center rounded-lg bg-zinc-100"><Globe2 className="size-4 text-zinc-500" /></div><div className="min-w-0"><p className="truncate text-sm font-semibold text-zinc-900">{website.name}</p><p className="truncate text-xs text-zinc-500">{website.domain}</p>{website.domains?.length ? <p className="mt-1 truncate text-[11px] text-zinc-400">Aliases: {website.domains.filter((domain) => !domain.isPrimary).map((domain) => domain.host).join(", ")}</p> : null}</div></div>
                 <Button size="sm" variant="outline" onClick={() => void toggle(website)}><Power className="mr-2 size-3.5" />{website.isActive ? "Disable" : "Enable"}</Button>
               </div>
             ))}

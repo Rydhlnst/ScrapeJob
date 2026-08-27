@@ -9,17 +9,20 @@ import { Navbar } from "@/components/shared/Navbar"
 import { SiteFrame } from "@/components/shared/SiteShell"
 import { listCategories } from "@/lib/api/categories"
 import { listJobs } from "@/lib/api/jobs"
-
-const contactItems = [
-  { label: "Email", value: "hello@lowonganku.id", icon: Mail },
-  { label: "Telepon", value: "+62 812 0000 0000", icon: Phone },
-  { label: "Alamat", value: "Jakarta, Indonesia", icon: MapPin },
-]
+import { getServerWebsiteContext } from "@/lib/site/server-context"
+import { getPublicSiteConfig } from "@/lib/api/site-config"
 
 export default async function ContactPage() {
+  const siteContext = await getServerWebsiteContext()
+  const siteConfig = await getPublicSiteConfig(siteContext)
+  const contactItems = [
+    { label: "Email", value: siteConfig.contact.email ?? "Contact the site owner", icon: Mail },
+    { label: "Telepon", value: "Contact the site owner", icon: Phone },
+    { label: "Alamat", value: "Indonesia", icon: MapPin },
+  ]
   const [navJobs, categories] = await Promise.all([
-    listJobs({ page: 1, perPage: 100, sort: "newest" }).catch(() => ({ data: [], total: 0 })),
-    listCategories().catch(() => []),
+    listJobs({ page: 1, perPage: 100, sort: "newest" }, siteContext).catch(() => ({ data: [], total: 0 })),
+    listCategories(siteContext).catch(() => []),
   ])
 
   return (
@@ -34,7 +37,7 @@ export default async function ContactPage() {
                 <div>
                   <p className="inline-flex rounded-full border border-[#f2a23a] bg-white px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-[#2479d1]">Hubungi Kami</p>
                   <h1 className="jobkan-section-title mt-4 max-w-xl text-4xl font-extrabold tracking-[-0.06em] text-[#171717] md:text-6xl">
-                    Ada pertanyaan tentang Lowonganku?
+                    Ada pertanyaan tentang {siteConfig.website.name}?
                   </h1>
                   <p className="mt-5 max-w-lg text-base leading-8 text-slate-600">
                     Kirim pesan untuk kerja sama, masukan, atau kebutuhan publikasi lowongan. Tim kami akan menindaklanjuti lewat email.

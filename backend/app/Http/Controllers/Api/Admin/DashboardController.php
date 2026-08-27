@@ -7,13 +7,21 @@ use App\Models\Category;
 use App\Models\Job;
 use App\Models\JobSource;
 use App\Models\LandingPageContent;
+use App\Services\WebsiteContext;
 use App\Support\ApiResponse;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request, WebsiteContext $websiteContext)
     {
-        $content = LandingPageContent::query()->where('key', 'landing_page')->first();
+        $website = $websiteContext->resolve($request);
+        $content = LandingPageContent::query()
+            ->where('website_id', $website->id)
+            ->where('key', 'landing_page')
+            ->first();
+        $websiteJobs = Job::query()->whereHas('websiteJobs', fn ($query) => $query
+            ->where('website_id', $website->id));
 
         return ApiResponse::success([
             'statusCounts' => [
@@ -25,8 +33,20 @@ class DashboardController extends Controller
                 'rejected' => Job::query()->where('status', 'rejected')->count(),
                 'duplicate' => Job::query()->where('status', 'duplicate')->count(),
             ],
+            'website' => [
+                'id' => $website->id,
+                'name' => $website->name,
+                'domain' => $website->domain,
+            ],
+            'websiteStatusCounts' => [
+                'total' => (clone $websiteJobs)->count(),
+                'unused' => (clone $websiteJobs)->whereRelation('websiteJobs', 'status', 'unused')->count(),
+                'draft' => (clone $websiteJobs)->whereRelation('websiteJobs', 'status', 'draft')->count(),
+                'published' => (clone $websiteJobs)->whereRelation('websiteJobs', 'status', 'published')->count(),
+                'expired' => (clone $websiteJobs)->whereRelation('websiteJobs', 'status', 'expired')->count(),
+            ],
             'catalog' => [
-                'totalCategories' => Category::query()->count(),
+                'totalCategories' => Category::query()->where('website_id', $website->id)->count(),
                 'totalSources' => JobSource::query()->count(),
             ],
             'priorityQueues' => [

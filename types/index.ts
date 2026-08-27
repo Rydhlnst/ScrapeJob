@@ -15,6 +15,7 @@ export type Job = {
   descriptionDoc?: Record<string, unknown> | null
   rawDescription?: string | null
   sourceUrl: string
+  applyUrl?: string
   sourceName: string
   contentHash?: string
   status: JobStatus
@@ -103,3 +104,5 @@ export type {
   ScrapedJob as PipelineScrapedJob,
   ScrapedJobStatus,
 } from "./job"
+
+export type { SiteConfig } from "./site-config"

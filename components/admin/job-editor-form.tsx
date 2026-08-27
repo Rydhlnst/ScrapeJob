@@ -8,11 +8,14 @@ import { toast } from "sonner"
 import type { AdminJobRecord } from "@/lib/api/admin-jobs"
 import {
   deleteAdminJob,
+  getAdminJobSiteContent,
+  updateAdminJobSiteContent,
   publishAdminJob,
   rejectAdminJob,
   unpublishAdminJob,
   updateAdminJob,
 } from "@/lib/api/admin-jobs"
+import { listAdminCategories } from "@/lib/api/admin-categories"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -163,7 +166,43 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
   const [isSaving, setIsSaving] = React.useState(false)
   const [busyAction, setBusyAction] = React.useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = React.useState<FieldErrors>({})
+  const [siteContentReady, setSiteContentReady] = React.useState(false)
+  const [siteCategoryId, setSiteCategoryId] = React.useState("")
+  const [siteCategories, setSiteCategories] = React.useState<Array<{ id: string; name: string }>>([])
   const initialSourceUrlRef = React.useRef(job.sourceUrl)
+
+  React.useEffect(() => {
+    let active = true
+    Promise.all([getAdminJobSiteContent(job.id), listAdminCategories()])
+      .then(([content, categories]) => {
+        if (!active) return
+        if (content) {
+          setTitle(content.title ?? job.title)
+          setSalaryText(content.salaryText ?? job.salaryText ?? "")
+          setSiteCategoryId(content.categoryId ?? "")
+          if (content.description) {
+            setIntro(ensureHtml(content.description))
+            setParagraph1("")
+            setParagraph2("")
+            setParagraph3("")
+            setExtraParagraphs([])
+            setAdditionalInfo("")
+          }
+          setSeoTitle(content.seoTitle ?? "")
+          setSeoDescription(content.seoDescription ?? "")
+          if (content.applyUrl) setSourceUrl(content.applyUrl)
+        }
+        setSiteCategories(categories)
+        setSiteContentReady(true)
+      })
+      .catch(() => {
+        if (active) setSiteContentReady(true)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [job.id, job.salaryText, job.title])
 
   React.useEffect(() => {
     // Regenerate sourceContent when sourceUrl changes so the "Sumber" block
@@ -255,24 +294,29 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
       // reason we don't dual-write from Next.js (happy-dom's fs.readFileSync
       // of a relative stylesheet asset breaks the webpack server bundle).
       const nextJob = await updateAdminJob(job.id, {
-        title,
         company_name: companyName,
         company_logo_url: companyLogo.trim() || null,
         location,
         job_type: jobType,
-        salary_text: salaryText,
-        description: previewHtml,
         source_name: stripHtml(sourceContent) || job.sourceName,
-        source_url: sourceUrl,
         requirements: splitLines(requirementsText),
         skills: splitLines(skillsText),
         benefits: splitLines(benefitsText),
         unified_payload: nextUnified,
         status: status === "published" ? undefined : "draft",
       })
+      await updateAdminJobSiteContent(job.id, {
+        title,
+        description: previewHtml,
+        salary_text: salaryText || null,
+        apply_url: sourceUrl || null,
+        category_id: siteCategoryId || null,
+        seo_title: seoTitle || null,
+        seo_description: seoDescription || null,
+      })
 
       setStatus(nextJob.status)
-      toast.success("Blog lowongan saved.")
+      toast.success("Website job content saved.")
       void revalidateJob(job.slug)
       return true
     } catch (error) {
@@ -335,6 +379,9 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
       </div>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="md:col-span-2 xl:col-span-3 rounded-lg border border-blue-200 bg-blue-50/50 p-3 text-sm text-blue-900">
+          Website-specific fields below are saved only for the selected website. Master company and source data remain shared.
+        </div>
         <Field label="Judul"><Input value={title} onChange={(event) => setTitle(event.target.value)} aria-invalid={Boolean(fieldErrors.title)} />{errorLine(fieldErrors.title)}</Field>
         <Field label="Company"><Input value={companyName} onChange={(event) => setCompanyName(event.target.value)} aria-invalid={Boolean(fieldErrors.companyName)} />{errorLine(fieldErrors.companyName)}</Field>
         <Field label="Company logo URL">
@@ -356,6 +403,16 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
         </Field>
         <Field label="Lokasi"><Input value={location} onChange={(event) => setLocation(event.target.value)} /></Field>
         <Field label="Kategori Blog"><Input value={categoryLabel} onChange={(event) => setCategoryLabel(event.target.value)} placeholder="Technology / Data / Marketing" /></Field>
+        <Field label="Website category">
+          <select
+            value={siteCategoryId}
+            onChange={(event) => setSiteCategoryId(event.target.value)}
+            className="flex h-10 w-full rounded-xl border border-input bg-background px-3 text-sm"
+          >
+            <option value="">Use master category</option>
+            {siteCategories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+          </select>
+        </Field>
         <Field label="Employment Type"><Input value={jobType} onChange={(event) => setJobType(event.target.value)} placeholder="Full-time" /></Field>
         <Field label="Salary"><Input value={salaryText} onChange={(event) => setSalaryText(event.target.value)} placeholder="Rp 6jt - Rp 10jt" /></Field>
       </section>
@@ -370,7 +427,7 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <Field label="Source URL metadata"><Input value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} aria-invalid={Boolean(fieldErrors.sourceUrl)} placeholder="https://…" />{errorLine(fieldErrors.sourceUrl)}</Field>
+        <Field label="Apply URL (website)"><Input value={sourceUrl} onChange={(event) => setSourceUrl(event.target.value)} aria-invalid={Boolean(fieldErrors.sourceUrl)} placeholder="https://…" />{errorLine(fieldErrors.sourceUrl)}</Field>
         <Field label="SEO title"><Input value={seoTitle} onChange={(event) => setSeoTitle(event.target.value)} /></Field>
         <Field label="SEO description"><Textarea value={seoDescription} onChange={(event) => setSeoDescription(event.target.value)} className="min-h-24" /></Field>
         <Field label="Requirements"><Textarea value={requirementsText} onChange={(event) => setRequirementsText(event.target.value)} className="min-h-24 rounded-xl border-blue-200 bg-blue-50/40 focus-visible:border-blue-400 focus-visible:ring-blue-100" placeholder="Satu baris satu item" /></Field>
@@ -388,8 +445,8 @@ export function JobEditorForm({ job }: { job: AdminJobRecord }) {
       </Accordion>
 
       <div className="flex flex-wrap gap-2">
-        <Button type="button" variant="outline" className="rounded-lg" onClick={saveDraft} disabled={isSaving}>{isSaving ? "Saving..." : "Save draft"}</Button>
-        <Button type="button" className="rounded-lg" onClick={() => runAction("publish")} disabled={busyAction === "publish"}>{busyAction === "publish" ? "Publishing..." : "Publish"}</Button>
+        <Button type="button" variant="outline" className="rounded-lg" onClick={saveDraft} disabled={isSaving || !siteContentReady}>{isSaving ? "Saving..." : "Save draft"}</Button>
+        <Button type="button" className="rounded-lg" onClick={() => runAction("publish")} disabled={busyAction === "publish" || !siteContentReady}>{busyAction === "publish" ? "Publishing..." : "Publish"}</Button>
         <Button type="button" variant="outline" className="rounded-lg" onClick={() => runAction("unpublish")} disabled={busyAction === "unpublish"}>{busyAction === "unpublish" ? "Moving..." : "Back to draft"}</Button>
         <ConfirmButton
           variant="outline"

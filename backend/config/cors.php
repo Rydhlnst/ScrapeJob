@@ -1,5 +1,10 @@
 <?php
 
+$publicSiteOrigins = array_values(array_filter(array_map(
+    static fn (string $origin): string => rtrim(trim($origin), '/'),
+    explode(',', (string) env('PUBLIC_SITE_DOMAINS', '')),
+)));
+
 return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -9,6 +14,7 @@ return [
         'http://localhost:3000',
         'http://127.0.0.1:3001',
         'http://localhost:3001',
+        ...$publicSiteOrigins,
     ]))),
     'allowed_origins_patterns' => [],
     'allowed_headers' => [

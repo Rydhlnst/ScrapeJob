@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { mockJobs } from "@/data/mock-jobs"
 import { mockCategories } from "@/data/mock-categories"
 import type { JobStats } from "@/types"
+import { getServerWebsiteContext } from "@/lib/site/server-context"
 
 export default async function JobsPage({
   searchParams,
@@ -21,6 +22,7 @@ export default async function JobsPage({
   searchParams?: Promise<Record<string, string | string[] | undefined>>
 }) {
   const resolvedSearchParams = (await searchParams) ?? {}
+  const siteContext = await getServerWebsiteContext()
 
   const keyword =
     typeof resolvedSearchParams.keyword === "string"
@@ -83,10 +85,10 @@ export default async function JobsPage({
   }
 
   const [jobs, navJobs, categories, stats] = await Promise.all([
-    listJobs({ ...jobsQuery, page, perPage: 9 }).catch(() => fallbackJobs),
-    listJobs({ page: 1, perPage: 100, sort: "newest" }).catch(() => fallbackJobs),
-    listCategories().catch(() => mockCategories),
-    getJobStats().catch(() => fallbackStats),
+    listJobs({ ...jobsQuery, page, perPage: 9 }, siteContext).catch(() => fallbackJobs),
+    listJobs({ page: 1, perPage: 100, sort: "newest" }, siteContext).catch(() => fallbackJobs),
+    listCategories(siteContext).catch(() => mockCategories),
+    getJobStats(siteContext).catch(() => fallbackStats),
   ])
 
   const sourceOptions = Object.keys(stats.totalBySource).sort((a, b) =>

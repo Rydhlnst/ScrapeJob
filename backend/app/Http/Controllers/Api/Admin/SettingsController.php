@@ -23,10 +23,25 @@ class SettingsController extends Controller
         'scraper_active_sources'=> 'string',
     ];
 
+    private const GLOBAL_KEYS = [
+        'auto_publish_jobs',
+        'ai_cleanup_url',
+        'ai_cleanup_token',
+        'notify_on_scrape',
+        'notify_emails',
+        'scraper_active_sources',
+    ];
+
     public function index(Request $request, WebsiteContext $websiteContext)
     {
         $websiteId = $websiteContext->resolve($request)->id;
-        $rows = Setting::where('website_id', $websiteId)->whereIn('key', array_keys(self::KEYS))->get()->keyBy('key');
+        $rows = Setting::whereIn('key', array_keys(self::KEYS))
+            ->where(function ($query) use ($websiteId): void {
+                $query->whereNull('website_id')->orWhere('website_id', $websiteId);
+            })
+            ->get()
+            ->sortBy(fn (Setting $setting) => $setting->website_id === null ? 0 : 1)
+            ->keyBy('key');
 
         $data = [];
         foreach (self::KEYS as $key => $type) {
@@ -71,14 +86,15 @@ class SettingsController extends Controller
                 continue;
             }
 
-            $old = Setting::where('website_id', $websiteId)->where('key', $key)->value('value');
+            $scopeId = in_array($key, self::GLOBAL_KEYS, true) ? null : $websiteId;
+            $old = Setting::where('website_id', $scopeId)->where('key', $key)->value('value');
             $before[$key] = $type === 'secret' ? '[redacted]' : $old;
 
             if ($value === null || $value === '') {
-                Setting::where('website_id', $websiteId)->where('key', $key)->delete();
+                Setting::where('website_id', $scopeId)->where('key', $key)->delete();
                 $after[$key] = null;
             } else {
-                Setting::set($key, $value, $type, $websiteId);
+                Setting::set($key, $value, $type, $scopeId);
                 $after[$key] = $type === 'secret' ? '[redacted]' : $value;
             }
         }

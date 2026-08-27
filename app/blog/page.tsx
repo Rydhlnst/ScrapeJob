@@ -8,10 +8,15 @@ import { Container } from "@/components/shared/Container"
 import { Footer } from "@/components/shared/Footer"
 import { Navbar } from "@/components/shared/Navbar"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
+import { getServerWebsiteContext } from "@/lib/site/server-context"
+import { getPublicSiteConfig } from "@/lib/api/site-config"
 
-export const metadata: Metadata = {
-  title: "Blog Lowonganku",
-  description: "Panduan, insight karier, dan cerita seputar dunia kerja dari tim Lowonganku.",
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getPublicSiteConfig(await getServerWebsiteContext())
+  return {
+    title: "Blog " + config.website.name,
+    description: "Panduan, insight karier, dan cerita seputar dunia kerja dari tim " + config.website.name + ".",
+  }
 }
 
 function formatDate(value?: string | null) {
@@ -84,15 +89,17 @@ function ArticleCard({ article, featured = false }: { article: PublicPageSummary
 }
 
 export default async function BlogIndexPage() {
+  const siteContext = await getServerWebsiteContext()
+  const siteConfig = await getPublicSiteConfig(siteContext)
   const [articles, navbarData] = await Promise.all([
-    listPublicPages(20).catch(() => ({
+    listPublicPages(20, siteContext).catch(() => ({
       data: [] as PublicPageSummary[],
       page: 1,
       perPage: 0,
       total: 0,
       totalPages: 1,
     })),
-    getNavbarData().catch(() => ({ jobs: [], categories: [], totalJobs: 0 })),
+    getNavbarData(siteContext).catch(() => ({ jobs: [], categories: [], totalJobs: 0 })),
   ])
 
   const [featured, ...rest] = articles.data
@@ -117,7 +124,7 @@ export default async function BlogIndexPage() {
             </div>
 
             <h1 className="jobkan-section-title mt-4 text-4xl font-extrabold leading-[1.05] tracking-[-0.06em] text-[#171717] md:text-6xl">
-              Blog Lowonganku
+              Blog {siteConfig.website.name}
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 md:text-lg">
               Panduan pencarian kerja, insight karier, dan cerita seputar dunia kerja — ditulis untuk membantu langkah berikutnya.

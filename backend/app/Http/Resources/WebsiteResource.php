@@ -17,6 +17,12 @@ class WebsiteResource extends JsonResource
             'theme' => $this->theme,
             'logo' => $this->logo,
             'settings' => $this->settings,
+            'domains' => $this->whenLoaded('domains', fn () => $this->domains->map(fn ($domain) => [
+                'id' => $domain->id,
+                'host' => $domain->host,
+                'isPrimary' => $domain->is_primary,
+                'isActive' => $domain->is_active,
+            ])->values()),
             'createdAt' => optional($this->created_at)->toIso8601String(),
             'updatedAt' => optional($this->updated_at)->toIso8601String(),
         ];

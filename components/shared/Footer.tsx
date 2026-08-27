@@ -1,8 +1,11 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import type { LandingSectionCopy } from "@/types/landing-content"
 import { SiteContent } from "@/components/shared/SiteShell"
+import { useSiteConfig } from "@/components/shared/site-config-provider"
 
 const fallbackContent: LandingSectionCopy["footer"] = {
   eyebrow: "Siap menemukan peluang berikutnya?", title: "Jelajahi lowongan", description: "Explore job opportunities with more clarity, more confidence, and less noise.", columns: [
@@ -13,9 +16,11 @@ const fallbackContent: LandingSectionCopy["footer"] = {
 }
 
 export function Footer({ content }: { content?: LandingSectionCopy["footer"] }) {
+  const config = useSiteConfig()
+  const logo = config.website.logo || "/logo.png"
   const footer = content ?? fallbackContent
   return (
-    <footer className="relative w-full overflow-hidden bg-[#1f5f9f] text-white">
+    <footer className="relative w-full overflow-hidden bg-[var(--brand-blue)] text-white">
       <div className="pointer-events-none absolute -right-20 -top-28 size-[430px] rounded-full border-[62px] border-white/10" />
       <div className="pointer-events-none absolute -bottom-48 right-[18%] size-[410px] -rotate-45 border-[82px] border-white/10" />
       <SiteContent className="relative py-16 lg:py-20">
@@ -26,7 +31,7 @@ export function Footer({ content }: { content?: LandingSectionCopy["footer"] }) 
 
         <div className="mt-16 grid gap-12 border-t border-white/20 pt-12 md:grid-cols-[1.35fr_repeat(3,1fr)]">
           <div>
-            <Link href="/" className="flex items-center gap-2.5"><Image src="/logo.png" alt="Lowonganku" width={34} height={34} className="size-8 object-contain brightness-0 invert" /><span className="font-semibold tracking-[-.04em] text-white">Lowonganku</span></Link>
+            <Link href="/" className="flex items-center gap-2.5"><Image src={logo} alt={config.website.name} width={34} height={34} className="size-8 object-contain brightness-0 invert" /><span className="font-semibold tracking-[-.04em] text-white">{config.website.name}</span></Link>
             <p className="mt-5 max-w-xs text-sm leading-6 text-white/70">{footer.description}</p>
           </div>
           {footer.columns.map((column) => (
@@ -38,7 +43,7 @@ export function Footer({ content }: { content?: LandingSectionCopy["footer"] }) 
             </div>
           ))}
         </div>
-        <div className="mt-12 border-t border-white/20 pt-6 text-xs text-white/55">© {new Date().getFullYear()} Lowonganku. All rights reserved.</div>
+        <div className="mt-12 border-t border-white/20 pt-6 text-xs text-white/55">© {new Date().getFullYear()} {config.website.name}. All rights reserved.</div>
       </SiteContent>
     </footer>
   )

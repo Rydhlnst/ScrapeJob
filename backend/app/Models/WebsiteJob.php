@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\UsesUuid;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class WebsiteJob extends \Illuminate\Database\Eloquent\Model
 {
@@ -26,5 +27,10 @@ class WebsiteJob extends \Illuminate\Database\Eloquent\Model
     public function job(): BelongsTo
     {
         return $this->belongsTo(Job::class);
+    }
+
+    public function content(): HasOne
+    {
+        return $this->hasOne(WebsiteJobContent::class);
     }
 }

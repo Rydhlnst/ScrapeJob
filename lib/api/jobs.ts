@@ -1,6 +1,6 @@
 import type { Job, JobStats, Paginated } from "@/types"
 import type { Job as PublicPipelineJob, ScrapedJob } from "@/types/job"
-import { ApiEnvelope, fetchJson, USE_MOCK } from "./client"
+import { ApiEnvelope, fetchJson, USE_MOCK, type ApiRequestContext } from "./client"
 
 export type JobsQuery = {
   keyword?: string
@@ -36,6 +36,7 @@ type ApiJob = Omit<Job, "category" | "categoryId" | "status" | "updatedAt"> & {
   salaryText?: string | null
   sourceName?: string | null
   sourceUrl?: string | null
+  applyUrl?: string | null
   publishedAt?: string | null
   createdAt?: string | null
   category?: { id?: string; name?: string } | string | null
@@ -61,8 +62,9 @@ function normalizeJob(job: ApiJob, fallbackStatus: Job["status"]): Job {
     salaryText: job.salaryText ?? null,
     description: typeof job.description === "string" ? job.description : "",
     descriptionDoc: job.descriptionDoc ?? null,
-    sourceName: job.sourceName ?? "Lowonganku",
+    sourceName: job.sourceName ?? "Source unavailable",
     sourceUrl: job.sourceUrl ?? "",
+    applyUrl: job.applyUrl ?? job.sourceUrl ?? "",
     publishedAt: job.publishedAt ?? null,
     createdAt: job.createdAt ?? new Date(0).toISOString(),
     status: job.status ?? fallbackStatus,
@@ -103,7 +105,7 @@ function buildFallbackJobFromSlug(slug: string): Job {
     description: "",
     rawDescription: null,
     sourceUrl: "",
-    sourceName: "Lowonganku",
+    sourceName: "Source unavailable",
     status: "published",
     publishedAt: null,
     createdAt: now,
@@ -111,9 +113,9 @@ function buildFallbackJobFromSlug(slug: string): Job {
   }
 }
 
-async function getJobFallbackBySlug(slug: string): Promise<Job> {
+async function getJobFallbackBySlug(slug: string, context?: ApiRequestContext): Promise<Job> {
   try {
-    const jobs = await listJobs({ page: 1, perPage: 200, sort: "newest" })
+    const jobs = await listJobs({ page: 1, perPage: 200, sort: "newest" }, context)
     const matched = jobs.data.find((item) => item.slug === slug)
     if (matched) {
       return {
@@ -129,7 +131,7 @@ async function getJobFallbackBySlug(slug: string): Promise<Job> {
   return buildFallbackJobFromSlug(slug)
 }
 
-export async function listJobs(query: JobsQuery = {}): Promise<Paginated<Job>> {
+export async function listJobs(query: JobsQuery = {}, context?: ApiRequestContext): Promise<Paginated<Job>> {
   if (USE_MOCK) {
     throw new Error("Mock jobs are disabled for this environment.")
   }
@@ -147,7 +149,7 @@ export async function listJobs(query: JobsQuery = {}): Promise<Paginated<Job>> {
   if (query.status) params.set("status", query.status)
 
   const endpoint = query.admin ? "/api/admin/jobs" : "/api/jobs"
-  const response = await fetchJson<ApiEnvelope<ApiJob[]>>(`${endpoint}?${params.toString()}`)
+  const response = await fetchJson<ApiEnvelope<ApiJob[]>>(`${endpoint}?${params.toString()}`, undefined, context)
 
   const normalized = response.data.map((job) =>
     normalizeJob(job, query.admin ? (job.status ?? "draft") : "published"),
@@ -162,24 +164,28 @@ export async function listJobs(query: JobsQuery = {}): Promise<Paginated<Job>> {
   }
 }
 
-export async function getJobBySlug(slug: string): Promise<Job | null> {
+export async function getJobBySlug(slug: string, context?: ApiRequestContext): Promise<Job | null> {
   if (USE_MOCK) {
     throw new Error("Mock jobs are disabled for this environment.")
   }
 
   try {
     const response = await fetchJson<ApiEnvelope<ApiJob>>(
-      `/api/jobs/${encodeURIComponent(slug)}`,
+      `/api/jobs/${encodeURIComponent(slug)}`, undefined, context,
     )
     return normalizeJob(response.data, "published")
   } catch (error) {
     const status = (error as { status?: number } | undefined)?.status
 
-    if (status === 404 || status === 422 || status === 500) {
-      return getJobFallbackBySlug(slug)
+    if (status === 404 || status === 422) {
+      return null
     }
 
-    return getJobFallbackBySlug(slug)
+    if (status === 500) {
+      return getJobFallbackBySlug(slug, context)
+    }
+
+    return getJobFallbackBySlug(slug, context)
   }
 }
 
@@ -271,24 +277,24 @@ function mapJsonToScrapedJobs(raw: ScraperJsonFile): ScrapedJob[] {
   }))
 }
 
-export async function getPublicJobs(): Promise<PublicPipelineJob[]> {
+export async function getPublicJobs(context?: ApiRequestContext): Promise<PublicPipelineJob[]> {
   if (JOB_DATA_MODE === "json") {
     const raw = (await import("@/src/data/jobs.json")).default as ScraperJsonFile
     return mapScrapedJsonToPublicJobs(raw)
   }
 
-  const response = await fetchJson<PipelineEnvelope<PublicPipelineJob[]>>("/api/jobs")
+  const response = await fetchJson<PipelineEnvelope<PublicPipelineJob[]>>("/api/jobs", undefined, context)
   return response.data
 }
 
-export async function getPublicJobDetail(slug: string): Promise<PublicPipelineJob | null> {
+export async function getPublicJobDetail(slug: string, context?: ApiRequestContext): Promise<PublicPipelineJob | null> {
   if (JOB_DATA_MODE === "json") {
-    const jobs = await getPublicJobs()
+    const jobs = await getPublicJobs(context)
     return jobs.find((item) => item.slug === slug || item.id === slug) ?? null
   }
 
   const response = await fetchJson<PipelineEnvelope<PublicPipelineJob>>(
-    `/api/jobs/${encodeURIComponent(slug)}`,
+    `/api/jobs/${encodeURIComponent(slug)}`, undefined, context,
   )
   return response.data
 }
@@ -308,11 +314,11 @@ export async function getAdminScrapedJobs(
   return response.data
 }
 
-export async function getJobStats(): Promise<JobStats> {
+export async function getJobStats(context?: ApiRequestContext): Promise<JobStats> {
   if (USE_MOCK) {
     throw new Error("Mock jobs are disabled for this environment.")
   }
 
-  const response = await fetchJson<ApiEnvelope<JobStatsResponse>>("/api/jobs/stats")
+  const response = await fetchJson<ApiEnvelope<JobStatsResponse>>("/api/jobs/stats", undefined, context)
   return response.data
 }

@@ -84,7 +84,12 @@ class JobController extends Controller
                 'created_at',
                 'updated_at',
             ])
-            ->with('category')
+            ->with([
+                'category',
+                'websiteJobs' => fn ($relation) => $relation
+                    ->where('website_id', $website->id)
+                    ->with('content.category'),
+            ])
             ->where(function ($query) use ($website) {
                 $query->whereHas('websiteJobs', fn ($relation) => $relation->where('website_id', $website->id));
                 if ($website->domain === 'lowonganku.com') {
@@ -163,11 +168,17 @@ class JobController extends Controller
         $payload['source_url_hash'] = $this->jobHashService->makeSourceUrlHash($payload['source_url']);
         $payload['status'] = $payload['status'] ?? 'draft';
 
-        if ($payload['status'] === 'published') {
-            $payload['published_at'] = Carbon::now();
-        }
-
+        $shouldPublish = $payload['status'] === 'published';
+        $payload['status'] = $shouldPublish ? 'draft' : $payload['status'];
         $job = Job::query()->create($payload);
+        if ($shouldPublish) {
+            $website = $this->websiteContext->resolve($request);
+            WebsiteJob::query()->updateOrCreate(
+                ['website_id' => $website->id, 'job_id' => $job->id],
+                ['status' => 'published', 'published_at' => now(), 'expired_at' => null],
+            );
+            $job->update(['status' => 'published', 'published_at' => Carbon::now()]);
+        }
 
         return ApiResponse::success(new JobResource($job->load('category')), 'Job created successfully', 201);
     }

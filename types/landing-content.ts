@@ -306,6 +306,18 @@ export type AdminDashboardActivityItem = {
 }
 
 export type AdminDashboardSummary = {
+  website?: {
+    id: string
+    name: string
+    domain: string
+  }
+  websiteStatusCounts?: {
+    total: number
+    unused: number
+    draft: number
+    published: number
+    expired: number
+  }
   statusCounts: {
     total: number
     raw: number

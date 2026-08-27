@@ -88,7 +88,9 @@ class Job extends Model
     {
         static::created(function (Job $job): void {
             Website::query()->where('is_active', true)->each(function (Website $website) use ($job): void {
-                $status = $job->status === 'published' ? 'published' : ($job->status === 'draft' ? 'draft' : 'unused');
+                $status = $website->domain === 'lowonganku.com' && $job->status === 'published'
+                    ? 'published'
+                    : 'unused';
                 WebsiteJob::query()->firstOrCreate(
                     ['website_id' => $website->id, 'job_id' => $job->id],
                     ['status' => $status, 'published_at' => $status === 'published' ? ($job->published_at ?? now()) : null],

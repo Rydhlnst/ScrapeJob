@@ -15,7 +15,18 @@ class CategoryController extends Controller
         $website = $websiteContext->resolve(request());
         $categories = Category::query()
             ->where('website_id', $website->id)
-            ->withCount(['jobs' => fn ($query) => $query->whereIn('status', ['draft', 'published'])->whereHas('websiteJobs', fn ($q) => $q->where('website_id', $website->id)->where('status', 'published'))])
+            ->withCount(['jobs' => function ($query) use ($website): void {
+                $query
+                    ->whereIn('status', ['draft', 'published'])
+                    ->whereHas('websiteJobs', fn ($q) => $q->where('website_id', $website->id)->where('status', 'published'))
+                    ->where(function ($categoryQuery) use ($website): void {
+                        $categoryQuery
+                            ->whereColumn('jobs.category_id', 'categories.id')
+                            ->orWhereHas('websiteJobs.content', fn ($contentQuery) => $contentQuery
+                                ->where('website_id', $website->id)
+                                ->whereColumn('category_id', 'categories.id'));
+                    });
+            }])
             ->orderBy('name')
             ->get();
 

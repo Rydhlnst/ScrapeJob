@@ -53,7 +53,11 @@ class ScrapedJobPublishingService
             return 'duplicate';
         }
 
-        Job::query()->create($payload + ['notified' => false]);
+        Job::query()->create(array_merge($payload, [
+            'status' => 'draft',
+            'published_at' => null,
+            'notified' => false,
+        ]));
         $scrapedJob->update(['status' => 'published']);
 
         return 'created';
