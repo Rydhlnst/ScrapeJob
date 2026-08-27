@@ -5,8 +5,8 @@ x-laravel-env: &laravel-env
   APP_ENV: production
   APP_KEY: ${APP_KEY}
   APP_DEBUG: "false"
-  APP_URL: ${APP_URL:-https://scrapejob.beres.io}
-  FRONTEND_URL: ${FRONTEND_URL:-https://scrape.beres.io}
+  APP_URL: https://${SERVICE_FQDN_BACKEND:?SERVICE_FQDN_BACKEND is required}
+  FRONTEND_URL: https://${SERVICE_FQDN_FRONTEND:?SERVICE_FQDN_FRONTEND is required}
   DB_CONNECTION: pgsql
   DB_HOST: db
   DB_PORT: 5432
@@ -68,13 +68,13 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-https://scrapejob.beres.io}
+        NEXT_PUBLIC_API_BASE_URL: https://${SERVICE_FQDN_BACKEND:?SERVICE_FQDN_BACKEND is required}
         NEXT_PUBLIC_USE_MOCK: ${NEXT_PUBLIC_USE_MOCK:-false}
     environment:
-      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-https://scrapejob.beres.io}
+      NEXT_PUBLIC_API_BASE_URL: https://${SERVICE_FQDN_BACKEND:?SERVICE_FQDN_BACKEND is required}
       INTERNAL_API_BASE_URL: ${INTERNAL_API_BASE_URL:-http://backend}
       NEXT_PUBLIC_USE_MOCK: ${NEXT_PUBLIC_USE_MOCK:-false}
-      CMS_ADMIN_DOMAIN: ${CMS_ADMIN_DOMAIN:?CMS_ADMIN_DOMAIN is required}
+      CMS_ADMIN_DOMAIN: ${SERVICE_FQDN_FRONTEND:?SERVICE_FQDN_FRONTEND is required}
       API_BEARER_TOKEN: ${API_BEARER_TOKEN:-}
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
       SCRAPER_INTERNAL_API_TOKEN: ${SCRAPER_INTERNAL_API_TOKEN:-}
