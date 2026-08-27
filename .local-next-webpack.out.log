@@ -19,3 +19,5 @@
 ○ Compiling /jobs ...
  GET /jobs 200 in 7.1s (next.js: 3.3s, application-code: 3.9s)
  GET /jobs 200 in 3.6s (next.js: 5ms, application-code: 3.6s)
+  Reload env: .env.local
+[?25h

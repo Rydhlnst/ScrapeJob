@@ -20,10 +20,14 @@ export function middleware(req: NextRequest) {
   const hostname = forwardedHostname && forwardedHostname !== req.nextUrl.hostname.toLowerCase()
     ? forwardedHostname
     : requestHostname || forwardedHostname || req.nextUrl.hostname.toLowerCase()
-  const adminDomain = (process.env.CMS_ADMIN_DOMAIN ?? "lowonganku.com").toLowerCase()
+  const adminDomain = normalizeHostname(process.env.CMS_ADMIN_DOMAIN ?? null)
   const isLocal = ["localhost", "127.0.0.1", "::1"].includes(hostname)
 
-  if (!isLocal && hostname !== adminDomain && hostname !== "www." + adminDomain) {
+  if (!adminDomain && process.env.NODE_ENV === "production" && !isLocal) {
+    return new NextResponse("CMS_ADMIN_DOMAIN is not configured.", { status: 500 })
+  }
+
+  if (adminDomain && !isLocal && hostname !== adminDomain && hostname !== "www." + adminDomain) {
     const url = req.nextUrl.clone()
     url.protocol = req.nextUrl.protocol
     url.hostname = adminDomain
