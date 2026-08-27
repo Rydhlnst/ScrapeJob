@@ -321,16 +321,21 @@ class LokerIdScraper:
             args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
         )
 
-    def _render_page(self, browser: Browser, url: str) -> Optional[str]:
+    def _render_page(self, browser: Browser, url: str, *, detail: bool = False) -> Optional[str]:
         from app.utils.http_helper import get_random_user_agent
         page = browser.new_page(locale="id-ID", user_agent=get_random_user_agent())
         try:
             page.goto(
                 url,
-                wait_until="domcontentloaded",
-                timeout=min(max(self.settings.page_timeout_seconds, 10), 20) * 1000,
+                wait_until="commit" if detail else "domcontentloaded",
+                timeout=(
+                    min(max(self.settings.detail_timeout_seconds, 3), 8)
+                    if detail
+                    else min(max(self.settings.page_timeout_seconds, 10), 20)
+                )
+                * 1000,
             )
-            page.wait_for_timeout(2000)
+            page.wait_for_timeout(500 if detail else 2000)
             return page.content()
         except PlaywrightTimeout:
             self.logger.warning("Browser page timeout for %s", url)
@@ -352,22 +357,18 @@ class LokerIdScraper:
             "posted_date": None,
         }
 
-        response = None
-        try:
-            response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
-            response.raise_for_status()
-        except Exception:
-            response = None
-            if browser is None:
-                return detail
-
-        if response is not None:
-            soup = BeautifulSoup(response.text, "html.parser")
-        else:
-            rendered_html = self._render_page(browser, job_url)
+        if browser is not None:
+            rendered_html = self._render_page(browser, job_url, detail=True)
             if not rendered_html:
                 return detail
             soup = BeautifulSoup(rendered_html, "html.parser")
+        else:
+            try:
+                response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
+                response.raise_for_status()
+            except Exception:
+                return detail
+            soup = BeautifulSoup(response.text, "html.parser")
         detail["title"] = self._pick_text(soup, ["h1", ".entry-title", "[class*='title']"])
         detail["company"] = self._pick_text(soup, [".company", "[class*='company']"])
         detail["location"] = self._pick_text(soup, [".location", "[class*='location']"])

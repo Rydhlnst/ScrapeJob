@@ -150,12 +150,23 @@ class GlintsScraper:
             args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
         )
 
-    def _render_page(self, browser: Browser, url: str, timeout_seconds: int) -> Optional[str]:
+    def _render_page(
+        self,
+        browser: Browser,
+        url: str,
+        timeout_seconds: int,
+        *,
+        detail: bool = False,
+    ) -> Optional[str]:
         from app.utils.http_helper import get_random_user_agent
         page = browser.new_page(locale="id-ID", user_agent=get_random_user_agent())
         try:
-            page.goto(url, wait_until="domcontentloaded", timeout=min(max(timeout_seconds, 10), 20) * 1000)
-            page.wait_for_timeout(2000)
+            if detail:
+                page.goto(url, wait_until="commit", timeout=min(max(timeout_seconds, 3), 8) * 1000)
+                page.wait_for_timeout(500)
+            else:
+                page.goto(url, wait_until="domcontentloaded", timeout=min(max(timeout_seconds, 10), 20) * 1000)
+                page.wait_for_timeout(2000)
             return page.content()
         except PlaywrightTimeout:
             self.logger.warning("Browser page timeout for %s", url)
@@ -177,23 +188,24 @@ class GlintsScraper:
             "posted_date": None,
         }
 
-        response = None
-        try:
-            response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
-            response.raise_for_status()
-        except requests.RequestException as exc:
-            self.logger.warning("Detail request failed for %s: %s", job_url, exc)
-            response = None
-            if browser is None:
-                return detail
-
-        if response is not None:
-            soup = BeautifulSoup(response.text, "html.parser")
-        else:
-            rendered_html = self._render_page(browser, job_url, self.settings.detail_timeout_seconds)
+        if browser is not None:
+            rendered_html = self._render_page(
+                browser,
+                job_url,
+                self.settings.detail_timeout_seconds,
+                detail=True,
+            )
             if not rendered_html:
                 return detail
             soup = BeautifulSoup(rendered_html, "html.parser")
+        else:
+            try:
+                response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
+                response.raise_for_status()
+            except requests.RequestException as exc:
+                self.logger.warning("Detail request failed for %s: %s", job_url, exc)
+                return detail
+            soup = BeautifulSoup(response.text, "html.parser")
         title_node = soup.select_one("h1")
         company_node = (
             soup.select_one("a[href*='/companies/']")

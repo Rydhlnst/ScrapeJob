@@ -71,7 +71,7 @@ RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framewor
  && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/scraper-service/output
 
 RUN chmod +x /var/www/html/docker/entrypoint.sh
-RUN chmod +x /var/www/html/docker/start-migrate.sh /var/www/html/docker/start-worker.sh /var/www/html/docker/start-scheduler.sh
+RUN chmod +x /var/www/html/docker/start-migrate.sh /var/www/html/docker/start-worker.sh /var/www/html/docker/start-ai-worker.sh /var/www/html/docker/start-scheduler.sh
 
 ENTRYPOINT ["/var/www/html/docker/entrypoint.sh"]
 EXPOSE 80

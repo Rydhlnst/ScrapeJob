@@ -1,4 +1,4 @@
-# Shared Laravel environment for backend / queue / scheduler.
+# Shared Laravel environment for backend / workers / scheduler.
 # Single source of truth — edit here once, applies to all three services.
 x-laravel-env: &laravel-env
   APP_NAME: ${APP_NAME:-Job Loker API}
@@ -32,6 +32,8 @@ x-laravel-env: &laravel-env
   SCRAPER_RUN_ON_STARTUP: ${SCRAPER_RUN_ON_STARTUP:-true}
   SCRAPER_PYTHON_MODE: local
   SCRAPER_PYTHON_BIN: python3
+  REQUEST_DELAY_MIN: ${REQUEST_DELAY_MIN:-0.5}
+  REQUEST_DELAY_MAX: ${REQUEST_DELAY_MAX:-1}
   WAIT_FOR_DB: "true"
   AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-false}
   AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
@@ -121,8 +123,28 @@ services:
     environment:
       <<: *laravel-env
       QUEUE_TRIES: ${QUEUE_TRIES:-3}
-      QUEUE_TIMEOUT: ${QUEUE_TIMEOUT:-900}
+      QUEUE_TIMEOUT: ${QUEUE_TIMEOUT:-720}
+      QUEUE_WORKERS: ${QUEUE_WORKERS:-3}
     command: ["/var/www/html/docker/start-worker.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ai-worker:
+    image: scrapejob-backend:coolify
+    user: www-data
+    environment:
+      <<: *laravel-env
+      AI_QUEUE_TRIES: ${AI_QUEUE_TRIES:-3}
+      AI_QUEUE_TIMEOUT: ${AI_QUEUE_TIMEOUT:-120}
+    command: ["/var/www/html/docker/start-ai-worker.sh"]
     depends_on:
       db:
         condition: service_healthy

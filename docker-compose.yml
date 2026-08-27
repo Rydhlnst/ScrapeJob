@@ -111,8 +111,37 @@ services:
       REDIS_PORT: 6379
       SCRAPER_PYTHON_MODE: local
       SCRAPER_PYTHON_BIN: python3
+      QUEUE_WORKERS: ${QUEUE_WORKERS:-3}
       WAIT_FOR_DB: "true"
     command: ["/var/www/html/docker/start-worker.sh"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  ai-worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file:
+      - ./backend/.env.docker
+    environment:
+      APP_URL: http://backend
+      FRONTEND_URL: http://frontend:3000
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: job_platform
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      WAIT_FOR_DB: "true"
+      AI_QUEUE_TIMEOUT: ${AI_QUEUE_TIMEOUT:-120}
+    command: ["/var/www/html/docker/start-ai-worker.sh"]
     depends_on:
       migrate:
         condition: service_completed_successfully
