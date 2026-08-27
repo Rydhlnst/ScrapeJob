@@ -3,13 +3,15 @@ from __future__ import annotations
 from typing import Any, Optional
 
 import requests
+from bs4 import BeautifulSoup
 
 from app.config import Settings
+from app.utils.cleaner import clean_text
 from app.utils.logger import get_logger
 
 
 class FirecrawlClient:
-    """Small REST client used only after the native scraper fallbacks fail."""
+    """Small REST client used when native HTML is unavailable or unusable."""
 
     def __init__(self, settings: Settings, logger=None) -> None:
         self.settings = settings
@@ -56,3 +58,38 @@ class FirecrawlClient:
             self.logger.warning("Firecrawl fallback failed for %s: %s", url, exc)
 
         return None
+
+    def should_retry_html(self, html: str) -> bool:
+        """Return True when native HTML is not trustworthy for extraction."""
+        if not self.enabled:
+            return False
+
+        soup = BeautifulSoup(html, "html.parser")
+        body_text = clean_text(soup.get_text(" ", strip=True)).lower()
+        blocked_markers = (
+            "access denied",
+            "captcha",
+            "cloudflare",
+            "enable javascript",
+            "just a moment",
+            "robot check",
+            "verify you are human",
+        )
+        if any(marker in body_text for marker in blocked_markers):
+            return True
+
+        heading = soup.select_one("h1")
+        if heading is None:
+            return True
+
+        heading_text = clean_text(heading.get_text(" ", strip=True)).lower()
+        blocked_headings = {
+            "404",
+            "error 404",
+            "access denied",
+            "just a moment",
+            "page not found",
+            "robot check",
+            "verify you are human",
+        }
+        return heading_text in blocked_headings

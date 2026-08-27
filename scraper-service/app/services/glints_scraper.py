@@ -236,6 +236,7 @@ class GlintsScraper:
         }
 
         rendered_html = None
+        native_html = None
         if browser is not None:
             rendered_html = self._render_page(
                 browser,
@@ -245,6 +246,7 @@ class GlintsScraper:
             )
 
         if rendered_html:
+            native_html = rendered_html
             soup = BeautifulSoup(rendered_html, "html.parser")
         else:
             try:
@@ -257,7 +259,14 @@ class GlintsScraper:
                     return detail
                 soup = BeautifulSoup(firecrawl_html, "html.parser")
             else:
+                native_html = response.text
                 soup = BeautifulSoup(response.text, "html.parser")
+
+        if native_html and self._firecrawl.should_retry_html(native_html):
+            firecrawl_html = self._firecrawl.scrape_html(job_url)
+            if firecrawl_html:
+                soup = BeautifulSoup(firecrawl_html, "html.parser")
+
         title_node = soup.select_one("h1")
         company_node = (
             soup.select_one("a[href*='/companies/']")

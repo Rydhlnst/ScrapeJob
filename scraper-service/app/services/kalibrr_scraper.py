@@ -203,6 +203,7 @@ class KalibrrScraper:
             "posted_date": None,
         }
 
+        native_html = None
         try:
             response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
             response.raise_for_status()
@@ -213,7 +214,12 @@ class KalibrrScraper:
                 return detail
             soup = BeautifulSoup(firecrawl_html, "html.parser")
         else:
+            native_html = response.text
             soup = BeautifulSoup(response.text, "html.parser")
+        if native_html and self._firecrawl.should_retry_html(native_html):
+            firecrawl_html = self._firecrawl.scrape_html(job_url)
+            if firecrawl_html:
+                soup = BeautifulSoup(firecrawl_html, "html.parser")
         detail["title"] = self._pick_text(soup, ["h1", "[class*='title']"])
         detail["company"] = self._pick_text(soup, ["[class*='company']", "a[href*='/company/']"])
         detail["location"] = self._pick_text(soup, ["[class*='location']", "[data-testid*='location']"])

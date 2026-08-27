@@ -389,6 +389,7 @@ class JobstreetScraper:
         from app.utils.http_helper import get_random_user_agent
         page_obj: Page = browser.new_page(user_agent=get_random_user_agent())
         html: Optional[str] = None
+        native_html: Optional[str] = None
         detail_timeout_ms = max(10, min(self.settings.detail_timeout_seconds, 15)) * 1000
         try:
             try:
@@ -408,6 +409,7 @@ class JobstreetScraper:
                 try:
                     page_obj.wait_for_selector("body", timeout=detail_timeout_ms)
                     html = page_obj.content()
+                    native_html = html
                 except PlaywrightTimeout:
                     self.logger.warning("Timeout detail page: %s", source_url)
                     html = self._firecrawl.scrape_html(source_url)
@@ -421,6 +423,10 @@ class JobstreetScraper:
             return detail
 
         soup = BeautifulSoup(html, "html.parser")
+        if native_html and self._firecrawl.should_retry_html(native_html):
+            firecrawl_html = self._firecrawl.scrape_html(source_url)
+            if firecrawl_html:
+                soup = BeautifulSoup(firecrawl_html, "html.parser")
 
         title_node = soup.select_one("h1[data-automation='job-detail-title']") or soup.select_one("h1")
         company_node = (
