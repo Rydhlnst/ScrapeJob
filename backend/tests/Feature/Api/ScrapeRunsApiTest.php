@@ -9,6 +9,7 @@ use App\Models\ScrapeRun;
 use App\Models\User;
 use App\Services\Jobs\JobHashService;
 use App\Services\Scraping\PythonScraperExecutor;
+use App\Services\Scraping\ScrapeExecutionService;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -126,6 +127,32 @@ class ScrapeRunsApiTest extends TestCase
             'status' => 'success',
             'mapped_count' => 0,
         ]);
+    }
+
+    public function test_err_scraper_runtime_error_is_classified_as_failed(): void
+    {
+        $source = JobSource::query()->create([
+            'name' => 'example jobs',
+            'base_url' => 'https://example.com',
+            'listing_url' => 'https://example.com/jobs',
+            'is_active' => true,
+            'scraping_allowed' => true,
+        ]);
+
+        $executor = $this->createMock(PythonScraperExecutor::class);
+        $executor->method('run')->willReturn([
+            'source' => 'example jobs',
+            'scraped_at' => now()->toIso8601String(),
+            'total' => 0,
+            'jobs' => [],
+            'error' => 'TypeError: scraper failed at app/services/example.py:12',
+        ]);
+        $this->app->instance(PythonScraperExecutor::class, $executor);
+
+        $run = app(ScrapeExecutionService::class)->runSingle($source);
+
+        $this->assertSame('failed', $run->status);
+        $this->assertStringContainsString('TypeError', (string) $run->error_message);
     }
 
     public function test_ok_scrape_run_stores_imported_jobs_as_pending_for_admin_review(): void

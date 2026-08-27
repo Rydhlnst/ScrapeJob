@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sys
 import time
+import traceback
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
@@ -97,8 +98,22 @@ def main() -> int:
             raw_jobs = select_scraper(settings.source, settings).scrape()
             scraper_error = None
         except Exception as exc:  # noqa: BLE001
-            scraper_error = f"{type(exc).__name__}: {exc}"
+            frame = next(
+                (
+                    line.strip()
+                    for line in reversed(traceback.format_exc().splitlines())
+                    if line.strip().startswith("File ")
+                ),
+                None,
+            )
+            location = f" ({frame})" if frame else ""
+            scraper_error = f"{type(exc).__name__}: {exc}{location}"
             logger.exception("Scrape attempt failed attempt=%s/%s", attempt, settings.scrape_attempts)
+
+            # Retrying a deterministic programming/data-shape error cannot
+            # recover it and only obscures the original failure.
+            if isinstance(exc, (TypeError, AttributeError, KeyError)):
+                break
 
         if raw_jobs:
             break

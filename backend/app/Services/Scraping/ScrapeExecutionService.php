@@ -68,7 +68,9 @@ class ScrapeExecutionService
 
             $errors = (int) ($ingested['error_count'] ?? 0);
             $scraperError = trim((string) ($result['error'] ?? ''));
-            $status = $errors > 0 || $scraperError !== '' ? 'partial' : 'success';
+            $status = $scraperError !== '' && (int) ($ingested['received'] ?? 0) === 0
+                ? 'failed'
+                : ($errors > 0 || $scraperError !== '' ? 'partial' : 'success');
 
             $run->update([
                 'status' => $status,
