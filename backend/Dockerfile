@@ -55,6 +55,8 @@ COPY scraper-service/requirements.txt /tmp/requirements.txt
 RUN pip3 install --break-system-packages --no-cache-dir -r /tmp/requirements.txt \
  && python3 -m playwright install --with-deps chromium
 
+RUN python3 -c "import bs4, playwright, requests; print('Scraper runtime dependencies OK')"
+
 COPY backend/ ./
 COPY scraper-service/ /var/www/scraper-service/
 

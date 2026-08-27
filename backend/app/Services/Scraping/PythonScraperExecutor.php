@@ -3,6 +3,7 @@
 namespace App\Services\Scraping;
 
 use App\Models\JobSource;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
 
 class PythonScraperExecutor
@@ -24,7 +25,14 @@ class PythonScraperExecutor
         $process->run();
 
         if (! $process->isSuccessful()) {
-            throw new \RuntimeException(trim($process->getErrorOutput()) ?: 'Python scraper process failed.');
+            $errorOutput = trim($process->getErrorOutput());
+            Log::error('Python scraper process failed', [
+                'source' => $source->name,
+                'exit_code' => $process->getExitCode(),
+                'error' => $errorOutput,
+            ]);
+
+            throw new \RuntimeException($this->summarizeProcessError($errorOutput));
         }
 
         $payload = json_decode($process->getOutput(), true);
@@ -132,5 +140,26 @@ class PythonScraperExecutor
         }
 
         return 'python';
+    }
+
+    private function summarizeProcessError(string $errorOutput): string
+    {
+        if ($errorOutput === '') {
+            return 'Python scraper process failed without an error message.';
+        }
+
+        $lines = array_values(array_filter(
+            preg_split('/\\R/', $errorOutput) ?: [],
+            static fn (string $line): bool => trim($line) !== '',
+        ));
+
+        foreach (array_reverse($lines) as $line) {
+            $line = trim($line);
+            if (preg_match('/(?:Error|Exception)(?:\\s*:\\s*|$)/i', $line) === 1) {
+                return 'Python scraper failed: '.substr($line, 0, 1000);
+            }
+        }
+
+        return 'Python scraper failed: '.substr((string) end($lines), 0, 1000);
     }
 }
