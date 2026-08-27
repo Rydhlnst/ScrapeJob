@@ -40,8 +40,10 @@ export function AdminWebsiteSelector() {
         value={activeId}
         disabled={loading || websites.length === 0}
         onChange={(event) => {
-          setActiveId(event.target.value)
-          setActiveWebsiteId(event.target.value)
+          const nextId = event.target.value
+          setActiveId(nextId)
+          setActiveWebsiteId(nextId)
+          window.location.reload()
         }}
         className="h-7 min-w-[150px] border-0 bg-transparent px-1 py-0 text-xs font-semibold text-zinc-800 shadow-none focus:ring-0"
       >

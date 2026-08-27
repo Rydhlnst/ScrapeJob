@@ -60,6 +60,8 @@ RUN python3 -c "import bs4, playwright, requests; print('Scraper runtime depende
 COPY backend/ ./
 COPY scraper-service/ /var/www/scraper-service/
 
+RUN python3 -m compileall -q /var/www/scraper-service/app
+
 RUN composer dump-autoload --optimize --no-dev
 
 RUN rm -f bootstrap/cache/*.php

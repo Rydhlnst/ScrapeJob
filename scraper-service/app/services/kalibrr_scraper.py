@@ -157,7 +157,7 @@ class KalibrrScraper:
         }
 
         try:
-                response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
+            response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
             response.raise_for_status()
         except requests.RequestException as exc:
             self.logger.warning("Detail request failed for %s: %s", job_url, exc)
