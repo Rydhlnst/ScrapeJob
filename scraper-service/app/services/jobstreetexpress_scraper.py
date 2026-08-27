@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import json
 import requests
 from bs4 import BeautifulSoup
+from playwright.sync_api import Browser, TimeoutError as PlaywrightTimeout, sync_playwright
 
 from app.config import Settings
 from app.schemas.job_schema import normalize_job_payload
@@ -50,16 +51,21 @@ class JobstreetExpressScraper:
         jobs: List[Dict] = []
         seen: set[str] = set()
 
-        for role in self.settings.roles:
-            role_slug = quote_plus(role.strip().lower()).replace("+", "-")
-            list_urls = [
-                f"{self.BASE_URL}/lowongan-{role_slug}-di-Indonesia",
-                *self.LIST_URLS,
-            ]
+        with sync_playwright() as playwright:
+            browser = self._create_browser(playwright)
+            try:
+                for role in self.settings.roles:
+                    role_slug = quote_plus(role.strip().lower()).replace("+", "-")
+                    list_urls = [
+                        f"{self.BASE_URL}/lowongan-{role_slug}-di-Indonesia",
+                        *self.LIST_URLS,
+                    ]
 
-            for list_url in list_urls:
-                self.logger.info("Scrape Jora listing role=%s url=%s", role, list_url)
-                self._scrape_listing(list_url, scraped_at, jobs, seen)
+                    for list_url in list_urls:
+                        self.logger.info("Scrape Jora listing role=%s url=%s", role, list_url)
+                        self._scrape_listing(list_url, scraped_at, jobs, seen, browser)
+            finally:
+                browser.close()
 
         return jobs
 
@@ -69,15 +75,26 @@ class JobstreetExpressScraper:
         scraped_at: str,
         jobs: List[Dict],
         seen: set[str],
+        browser: Browser,
     ) -> None:
+        soup = None
         try:
             response = self._http.get(list_url, timeout=min(max(self.settings.page_timeout_seconds, 10), 20))
             response.raise_for_status()
+            soup = BeautifulSoup(response.text, "html.parser")
         except requests.RequestException as exc:
             self.logger.warning("Listing request failed for %s: %s", list_url, exc)
+
+        cards = soup.select("a[data-automation='job-card-title']") if soup else []
+        cards = cards or (soup.select("a[href*='/job/']") if soup else [])
+        if not cards:
+            self.logger.info("Falling back to browser-rendered Jora listing for %s", list_url)
+            rendered_html = self._render_page(browser, list_url)
+            soup = BeautifulSoup(rendered_html, "html.parser") if rendered_html else None
+
+        if soup is None:
             return
 
-        soup = BeautifulSoup(response.text, "html.parser")
         cards = soup.select("a[data-automation='job-card-title']") or soup.select("a[href*='/job/']")
         self.logger.info("Listing fetched from %s: cards=%s", list_url, len(cards))
 
@@ -98,7 +115,7 @@ class JobstreetExpressScraper:
             wrapper = card.find_parent("article") or card.find_parent("div")
             company = self._extract_company(wrapper) or "Jobstreet Express"
             location = self._extract_location(wrapper)
-            detail = self._extract_detail_fields(link)
+            detail = self._extract_detail_fields(link, browser=browser)
             company = detail.get("company") or company
             location = detail.get("location") or location
             employment_type = detail.get("employment_type") or self._derive_type_from_url(list_url)
@@ -172,7 +189,37 @@ class JobstreetExpressScraper:
             return "Full Time"
         return None
 
-    def _extract_detail_fields(self, job_url: str) -> Dict[str, Optional[str]]:
+    def _create_browser(self, playwright):
+        return playwright.chromium.launch(
+            headless=self.settings.headless,
+            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
+        )
+
+    def _render_page(self, browser: Browser, url: str, *, detail: bool = False) -> Optional[str]:
+        from app.utils.http_helper import get_random_user_agent
+        page = browser.new_page(locale="id-ID", user_agent=get_random_user_agent())
+        try:
+            page.goto(
+                url,
+                wait_until="commit" if detail else "domcontentloaded",
+                timeout=(min(max(self.settings.detail_timeout_seconds, 3), 8) if detail else min(max(self.settings.page_timeout_seconds, 10), 20)) * 1000,
+            )
+            page.wait_for_timeout(500 if detail else 2000)
+            return page.content()
+        except PlaywrightTimeout:
+            self.logger.warning("Browser page timeout for %s", url)
+            return None
+        except Exception as exc:  # noqa: BLE001
+            self.logger.warning("Browser page failed for %s: %s", url, exc)
+            return None
+        finally:
+            page.close()
+
+    def _extract_detail_fields(
+        self,
+        job_url: str,
+        browser: Browser | None = None,
+    ) -> Dict[str, Optional[str]]:
         detail: Dict[str, Optional[str]] = {
             "title": None,
             "location": None,
@@ -183,14 +230,19 @@ class JobstreetExpressScraper:
             "posted_date": None,
         }
 
-        try:
-            response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
-            response.raise_for_status()
-        except requests.RequestException as exc:
-            self.logger.warning("Detail request failed for %s: %s", job_url, exc)
-            return detail
-
-        soup = BeautifulSoup(response.text, "html.parser")
+        if browser is not None:
+            rendered_html = self._render_page(browser, job_url, detail=True)
+            if not rendered_html:
+                return detail
+            soup = BeautifulSoup(rendered_html, "html.parser")
+        else:
+            try:
+                response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
+                response.raise_for_status()
+            except requests.RequestException as exc:
+                self.logger.warning("Detail request failed for %s: %s", job_url, exc)
+                return detail
+            soup = BeautifulSoup(response.text, "html.parser")
 
         detail["title"] = self._pick_text(soup, ["h1", "[data-automation='job-detail-title']"])
         detail["location"] = self._pick_text(
