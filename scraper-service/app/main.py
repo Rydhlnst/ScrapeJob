@@ -70,6 +70,9 @@ def select_scraper(source: str, settings):
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+
     settings = get_settings()
     logger = get_logger("scraper_main", log_file=settings.json_output_path.parent / "logs" / "scraper.log")
     try:

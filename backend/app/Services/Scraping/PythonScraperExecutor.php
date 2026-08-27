@@ -103,6 +103,7 @@ class PythonScraperExecutor
             'SOURCE' => strtolower($source->name),
             'SEND_TO_LARAVEL' => 'false',
             'SAVE_JSON' => 'true',
+            'PYTHONIOENCODING' => 'utf-8',
             'JSON_OUTPUT_PATH' => base_path('../scraper-service/output/jobs.json'),
         ];
 
