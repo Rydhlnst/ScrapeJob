@@ -1,3 +1,5 @@
+import type { Metadata } from "next"
+
 import { CTASection } from "@/components/landing/CTASection"
 import { HeroSection } from "@/components/landing/HeroSection"
 import { Footer } from "@/components/shared/Footer"
@@ -17,6 +19,14 @@ import { mockCategories } from "@/data/mock-categories"
 import { getServerWebsiteContext } from "@/lib/site/server-context"
 import { getPublicSiteConfig } from "@/lib/api/site-config"
 import { createDefaultLandingPageContent } from "@/lib/landing-page-content"
+
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getPublicSiteConfig(await getServerWebsiteContext())
+  return {
+    title: config.metadata.title || config.website.name,
+    description: config.metadata.description || config.tagline,
+  }
+}
 
 export default async function HomePage() {
   const siteContext = await getServerWebsiteContext()

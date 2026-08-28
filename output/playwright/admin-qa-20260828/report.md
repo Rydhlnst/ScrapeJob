@@ -50,6 +50,14 @@ Core staging checks PASS after deployment commit `bfecfe0`: the dashboard API re
 - Existing history contains jobstreet `NoneType ... len()` errors, older Python `IndentationError` failures, and “No verified live jobs extracted” results for some sources.
 - No new scraper run was triggered.
 
+### Current live source snapshot
+
+- `glints`: active/allowed; latest visible run succeeded with 14/14 successful items.
+- `jobstreetexpress`: active/allowed; latest visible run succeeded with 3/3 successful items.
+- `jobstreet`: active/allowed; latest visible runs failed with `NoneType ... len()`.
+- `lokerid`: active/allowed; latest visible runs failed because no verified live jobs were extracted.
+- `kalibrr`: active/allowed; latest visible runs failed because no verified live jobs were extracted.
+
 ## Rerun evidence
 
 - Desktop dashboard: `/admin/dashboard` rendered with `GET /api/admin/dashboard => 200`.

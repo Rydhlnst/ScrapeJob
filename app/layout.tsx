@@ -1,9 +1,10 @@
 import type { Metadata } from "next"
-import type { ReactNode } from "react"
+import { Suspense, type ReactNode } from "react"
 import { Plus_Jakarta_Sans } from "next/font/google"
 
 import { Toaster } from "@/components/ui/sonner"
 import { SiteConfigProvider } from "@/components/shared/site-config-provider"
+import { PageTitleManager } from "@/components/shared/page-title-manager"
 import { getPublicSiteConfig } from "@/lib/api/site-config"
 import { getServerWebsiteContext } from "@/lib/site/server-context"
 
@@ -37,7 +38,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <body
         className={`${plusJakartaSans.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
-        <SiteConfigProvider config={config}>{children}</SiteConfigProvider>
+        <SiteConfigProvider config={config}>
+          <Suspense fallback={null}>
+            <PageTitleManager />
+          </Suspense>
+          {children}
+        </SiteConfigProvider>
         <Toaster richColors />
       </body>
     </html>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
 
 import { listCategories } from "@/lib/api/categories"
@@ -15,6 +16,15 @@ import { mockJobs } from "@/data/mock-jobs"
 import { mockCategories } from "@/data/mock-categories"
 import type { JobStats } from "@/types"
 import { getServerWebsiteContext } from "@/lib/site/server-context"
+import { getPublicSiteConfig } from "@/lib/api/site-config"
+
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getPublicSiteConfig(await getServerWebsiteContext())
+  return {
+    title: `Jobs | ${config.website.name}`,
+    description: `Browse current job openings from ${config.website.name}.`,
+  }
+}
 
 export default async function JobsPage({
   searchParams,

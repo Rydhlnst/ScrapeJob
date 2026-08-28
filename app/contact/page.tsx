@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Mail, MapPin, Phone } from "lucide-react"
 
 import { ContactForm } from "@/components/public/contact-form"
@@ -11,6 +12,14 @@ import { listCategories } from "@/lib/api/categories"
 import { listJobs } from "@/lib/api/jobs"
 import { getServerWebsiteContext } from "@/lib/site/server-context"
 import { getPublicSiteConfig } from "@/lib/api/site-config"
+
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getPublicSiteConfig(await getServerWebsiteContext())
+  return {
+    title: `Contact | ${config.website.name}`,
+    description: `Contact the ${config.website.name} team.`,
+  }
+}
 
 export default async function ContactPage() {
   const siteContext = await getServerWebsiteContext()
