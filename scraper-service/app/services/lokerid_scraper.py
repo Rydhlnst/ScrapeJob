@@ -61,8 +61,8 @@ class LokerIdScraper:
     def _scrape_role(self, role: str, scraped_at: str, browser: Browser | None = None) -> List[Dict]:
         query = quote_plus(role.strip())
         candidate_urls = [
-            f"{self.BASE_URL}/cari-lowongan-kerja?q={query}",
             f"{self.BASE_URL}/cari-lowongan-kerja?search={query}",
+            f"{self.BASE_URL}/cari-lowongan-kerja?q={query}",
             f"{self.BASE_URL}/cari-lowongan-kerja?keyword={query}",
         ]
 
@@ -73,10 +73,7 @@ class LokerIdScraper:
                 response = self._http.get(candidate, timeout=min(max(self.settings.page_timeout_seconds, 10), 20))
                 response.raise_for_status()
                 candidate_soup = BeautifulSoup(response.text, "html.parser")
-                # Stop at first page that has likely job links.
-                if candidate_soup.select(
-                    "a[href*='/lowongan-kerja/'], h3.entry-title a, h2.entry-title a, a[href$='.html']"
-                ):
+                if self._has_matching_listing(candidate_soup, role):
                     soup = candidate_soup
                     url = candidate
                     break
@@ -91,21 +88,20 @@ class LokerIdScraper:
         if soup is None:
             soup = BeautifulSoup("", "html.parser")
 
-        listing_selector = "a[href*='/lowongan-kerja/'], h3.entry-title a, h2.entry-title a, a[href$='.html']"
-        if not soup.select(listing_selector) and browser is not None:
+        if not self._has_matching_listing(soup, role) and browser is not None:
             self.logger.info("Falling back to browser-rendered Loker.id listing for role=%s", role)
             rendered_html = self._render_page(browser, candidate_urls[0])
             if rendered_html:
                 soup = BeautifulSoup(rendered_html, "html.parser")
 
-        if not soup.select(listing_selector):
+        if not self._has_matching_listing(soup, role):
             self.logger.info("Falling back to Firecrawl for Loker.id listing role=%s", role)
             for candidate_url in candidate_urls:
                 rendered_html = self._firecrawl.scrape_html(candidate_url)
                 if not rendered_html:
                     continue
                 candidate_soup = BeautifulSoup(rendered_html, "html.parser")
-                if candidate_soup.select(listing_selector):
+                if self._has_matching_listing(candidate_soup, role):
                     soup = candidate_soup
                     url = candidate_url
                     break
@@ -221,7 +217,11 @@ class LokerIdScraper:
             company = None
             location = None
             if card is not None:
-                company_node = card.select_one(".company") or card.select_one("[class*='company']")
+                company_node = (
+                    card.select_one("span.text-secondary-500")
+                    or card.select_one(".company")
+                    or card.select_one("[class*='company']")
+                )
                 location_node = card.select_one(".location") or card.select_one("[class*='location']")
                 if company_node:
                     company = clean_text(company_node.get_text(" ", strip=True))
@@ -264,6 +264,17 @@ class LokerIdScraper:
             self._sleep_delay()
 
         return results
+
+    @staticmethod
+    def _has_matching_listing(soup: BeautifulSoup, role: str) -> bool:
+        for link_node in soup.select(
+            "h3.entry-title a, h2.entry-title a, a[href*='/lowongan-kerja/'], a[href*='/job/'], a[href$='.html']"
+        ):
+            title = clean_text(link_node.get_text(" ", strip=True))
+            href = (link_node.get("href") or "").strip()
+            if title and matches_role_keyword(role, title, href):
+                return True
+        return False
 
     def _extract_jobs_from_embedded_state(
         self,

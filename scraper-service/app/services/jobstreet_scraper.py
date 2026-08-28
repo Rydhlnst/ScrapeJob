@@ -255,7 +255,10 @@ class JobstreetScraper:
 
         return []
 
-    def _extract_cards_from_html(self, html: str, *, page: int, role_slug: str) -> List[ListingCard]:
+    def _extract_cards_from_html(self, html: Optional[str], *, page: int, role_slug: str) -> List[ListingCard]:
+        if not html or not html.strip():
+            return []
+
         soup = BeautifulSoup(html, "html.parser")
         card_nodes = (
             soup.select("article[data-automation='normalJob']")

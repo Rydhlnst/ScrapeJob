@@ -112,3 +112,73 @@ Core staging checks PASS after deployment commit `bfecfe0`: the dashboard API re
 1. Replace hardcoded `lowonganku.com` text in the job editor with the active website configuration.
 2. Remove duplicate Tiptap `link` and `underline` extensions.
 3. Re-run controlled publication-isolation tests with dedicated test data before enabling another public domain.
+
+## Live Playwright QA rerun — 28 August 2026
+
+Target: `https://scrape.beres.io` using the configured staging hostname. This rerun was read-only except for login/logout and reversible website-selector changes. No scraper was started and no existing records were edited or deleted.
+
+### Progress score
+
+- Strict feature pass rate: **93.3% (28/30 checks passed)**.
+- Partial: Landing CMS route loads and Hero fields can be edited, but only the Hero section was exposed in the live UI during this run; the expected broader section set was not visible.
+- Failed: `https://www.scrape.beres.io` cannot be tested at application level because the alias returns `ERR_SSL_VERSION_OR_CIPHER_MISMATCH`.
+- This is a tested-feature score, not a claim that all scraper sources are healthy.
+
+### Feature matrix
+
+| Area | Result | Evidence |
+|---|---|---|
+| Admin redirect and login | PASS | `/admin` redirected once to `/admin/login`; login reached `/admin/dashboard`. |
+| Logout and session protection | PASS | Logout returned to `/admin/login`; authenticated dashboard APIs returned `200` after login. |
+| Dashboard global metrics | PASS | Master metrics rendered; `/api/admin/dashboard` returned `200`. |
+| Dashboard selected-site metrics | PASS | Lowonganku.com and DaftarKerja.id metrics changed with the selector. |
+| Website switching | PASS | Selector changed site context and persisted through the admin session. |
+| Public isolation from admin selection | PASS | After selecting DaftarKerja.id in admin, public `scrape.beres.io` still rendered Lowonganku.com. |
+| Jobs list | PASS | Draft list loaded with 50 items and job links. |
+| Jobs search | PASS | Keyword search reduced rows to matching Data Analyst jobs. |
+| Job editor | PASS | Existing draft opened with website-specific fields, category, article blocks, and save/publish controls. |
+| Job preview | PASS | Existing draft preview rendered with `Job Preview | Lowonganku.com`. |
+| Raw-data review | PASS | Queue and status view loaded without an API error. |
+| Scrape-run list | PASS | Runs and log table loaded from `/api/admin/scrape-runs` with `200`. |
+| Success filter | PASS | Only Success rows appeared after selecting the filter. |
+| Failed filter | PASS | Failed rows appeared with source error messages. |
+| Pages | PASS | Page list and create-page form loaded; no production page was created. |
+| Categories | PASS | Website-scoped category list loaded. |
+| Locations | PASS | Location list and CRUD controls loaded. |
+| Job sources | PASS | Five configured sources loaded with active/allowed state. |
+| Website registry and aliases | PASS | `scrape.beres.io` and `www.scrape.beres.io` are registered under Lowonganku.com. |
+| General settings | PASS | Branding and behavior fields loaded for the selected website. |
+| Users and roles | PASS | User list loaded. |
+| API settings | PASS | AI configuration and API-key area loaded; no secret values were recorded. |
+| Notifications | PASS | Trigger and recipient settings loaded. |
+| Audit log | PASS | Audit entries and previous reversible QA activity loaded. |
+| Public home | PASS | Lowonganku branding, landing content, categories, and jobs rendered. |
+| Public jobs list | PASS | Jobs, filters, and job links rendered. |
+| Public job detail | PASS | Description, metadata, source, and SEO title rendered. |
+| Public blog/contact/user login | PASS | Routes loaded with dynamic titles and expected content. |
+| Mobile dashboard | PASS | 390x844 rendered without horizontal overflow; sidebar drawer opened. |
+| Dynamic tab names | PASS | Route titles include the current site name, e.g. `Dashboard | Lowonganku.com`, `Jobs | Lowonganku.com`, and `Contact | Lowonganku.com`. |
+| `www` public alias | FAIL | TLS handshake failed before the application loaded. |
+| Landing CMS section coverage | PARTIAL | Hero editor loaded; broader landing sections were not exposed in the live UI. |
+
+### Current scraper-source health
+
+The latest visible completed run for each configured source was healthy for **2/5 sources (40%)**:
+
+- Healthy: `glints`, `jobstreetexpress`.
+- Failing: `jobstreet` (`NoneType ... len()`), `lokerid` (no verified live jobs), `kalibrr` (no verified live jobs).
+
+No new scraper run was triggered during QA, so this is based on existing production history.
+
+### New evidence
+
+- `live-rerun-dashboard.png`
+- `live-rerun-home.png`
+- `live-rerun-mobile.png`
+- `live-www-tls-failure.png`
+
+### Recommended next actions
+
+1. Fix the `www.scrape.beres.io` certificate/domain attachment in Coolify, then rerun the alias check.
+2. Expose and verify all intended Landing CMS sections beyond Hero.
+3. Fix the three failing scraper source handlers before treating scraper operations as production-ready.

@@ -56,11 +56,10 @@ class KalibrrScraper:
     def _scrape_role(self, role: str, scraped_at: str) -> List[Dict]:
         query = quote_plus(role.strip())
         candidate_urls = [
-            self.LIST_URL,
             f"{self.LIST_URL}?text={query}",
             f"{self.LIST_URL}?keyword={query}",
-            "https://www.kalibrr.com/job-board/te",
-            f"{self.BASE_URL}/job-board/te/{query}",
+            f"{self.BASE_URL}/home/te?search={query}",
+            self.LIST_URL,
         ]
 
         soup: Optional[BeautifulSoup] = None
@@ -70,16 +69,12 @@ class KalibrrScraper:
                 response = self._http.get(candidate_url, timeout=min(max(self.settings.page_timeout_seconds, 10), 20))
                 response.raise_for_status()
                 parsed = BeautifulSoup(response.text, "html.parser")
-                if (
-                    parsed.select("a.kalibrr-job-list-card")
-                    or parsed.select("a[href*='/c/']")
-                    or parsed.select("a[href*='/job/']")
-                    or parsed.select("a[href*='/jobs/']")
-                ):
+                candidate_cards = self._listing_cards(parsed)
+                if candidate_cards and self._has_matching_listing(candidate_cards, role):
                     soup = parsed
                     active_url = candidate_url
                     break
-                if soup is None:
+                if soup is None and candidate_cards:
                     soup = parsed
                     active_url = candidate_url
             except requests.RequestException as exc:
@@ -87,28 +82,18 @@ class KalibrrScraper:
                 continue
 
         if soup is None:
-            return []
+            soup = BeautifulSoup("", "html.parser")
 
-        cards = (
-            soup.select("a.kalibrr-job-list-card")
-            or soup.select("a[href*='/c/']")
-            or soup.select("a[href*='/job/']")
-            or soup.select("a[href*='/jobs/']")
-        )
-        if not cards:
+        cards = self._listing_cards(soup)
+        if not cards or not self._has_matching_listing(cards, role):
             self.logger.info("Falling back to Firecrawl for Kalibrr listing")
             for candidate_url in candidate_urls:
                 rendered_html = self._firecrawl.scrape_html(candidate_url)
                 if not rendered_html:
                     continue
                 candidate_soup = BeautifulSoup(rendered_html, "html.parser")
-                candidate_cards = (
-                    candidate_soup.select("a.kalibrr-job-list-card")
-                    or candidate_soup.select("a[href*='/c/']")
-                    or candidate_soup.select("a[href*='/job/']")
-                    or candidate_soup.select("a[href*='/jobs/']")
-                )
-                if candidate_cards:
+                candidate_cards = self._listing_cards(candidate_soup)
+                if candidate_cards and self._has_matching_listing(candidate_cards, role):
                     soup = candidate_soup
                     cards = candidate_cards
                     active_url = candidate_url
@@ -121,7 +106,7 @@ class KalibrrScraper:
             href = (card.get("href") or "").strip()
             if not href:
                 continue
-            if not re.search(r"/c/[^/]+/jobs/\d+(?:/|$)", href):
+            if not self._is_job_href(href):
                 continue
             link = href if href.startswith("http") else f"{self.BASE_URL}{href}"
             if link in seen:
@@ -133,7 +118,7 @@ class KalibrrScraper:
                 "div",
                 class_=lambda classes: classes and "k-group" in classes,
             )
-            company_node = (
+            company_node = card.select_one("[data-testid*='company'], [class*='company']") or (
                 card_container.select_one("a[href*='action=Company%20Name']")
                 if card_container
                 else None
@@ -192,6 +177,29 @@ class KalibrrScraper:
             self._sleep_delay()
 
         return results
+
+    @staticmethod
+    def _is_job_href(href: str) -> bool:
+        return bool(
+            re.search(r"/c/[^/]+/jobs/[^/?#]+(?:/|$)", href)
+            or re.search(r"/jobs/[^/?#]+(?:/|$)", href)
+        )
+
+    def _listing_cards(self, soup: BeautifulSoup):
+        candidates = soup.select(
+            "a.kalibrr-job-list-card, a[href*='/c/'][href*='/jobs/'], a[href*='/jobs/']"
+        )
+        return [card for card in candidates if self._is_job_href((card.get("href") or "").strip())]
+
+    @staticmethod
+    def _has_matching_listing(cards, role: str) -> bool:
+        for card in cards:
+            href = (card.get("href") or "").strip()
+            title_node = card.select_one("h2, h3") or card.select_one("[class*='title']")
+            title = clean_text(title_node.get_text(" ", strip=True)) if title_node else clean_text(card.get_text(" ", strip=True))
+            if title and matches_role_keyword(role, title, href):
+                return True
+        return False
 
     def _scrape_detail_page(self, job_url: str) -> Dict[str, Optional[str]]:
         detail: Dict[str, Optional[str]] = {

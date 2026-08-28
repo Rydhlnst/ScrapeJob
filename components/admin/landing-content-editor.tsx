@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react"
 import { useMemo, useState } from "react"
+import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 
@@ -16,6 +17,7 @@ import {
   saveAdminLandingPageDraft,
 } from "@/lib/api/landing-page-content"
 import { resolveAdminLandingEditorContent } from "@/lib/landing-page-content"
+import { cn } from "@/lib/utils"
 import { landingPageContentSchema, landingPageSectionsSchema } from "@/types/landing-content"
 import type {
   AdminLandingPageContentRecord,
@@ -117,7 +119,7 @@ export function LandingContentEditor({ initialRecord }: { initialRecord: AdminLa
       <AdminSectionHeader
         eyebrow="Landing CMS"
         title="Edit landing page sections"
-        description="Ikuti struktur child menu Landing Page dari sidebar, lalu edit section lewat nav list di samping."
+        description="Choose a landing-page section, edit its content, then save the draft or publish it when ready."
         actions={
           <>
             <div className="flex items-center gap-2">
@@ -129,6 +131,33 @@ export function LandingContentEditor({ initialRecord }: { initialRecord: AdminLa
           </>
         }
       />
+
+      <nav aria-label="Landing CMS sections" className="overflow-x-auto border border-[var(--brand-shell-strong)] bg-white p-2 shadow-[var(--shadow-sm)]">
+        <div className="flex min-w-max gap-2">
+          {sections.map((section) => {
+            const isActive = activeTab === section.value
+
+            return (
+              <Link
+                key={section.value}
+                href={`/admin/content?tab=${section.value}`}
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "min-w-40 border px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)]",
+                  isActive
+                    ? "border-[var(--brand-blue)] bg-[var(--brand-blue)] text-white"
+                    : "border-[var(--brand-shell-strong)] bg-white text-[var(--brand-ink)] hover:border-[var(--brand-blue)] hover:bg-[var(--brand-shell)]",
+                )}
+              >
+                <span className="block text-sm font-semibold">{section.label}</span>
+                <span className={cn("mt-1 block text-xs leading-5", isActive ? "text-white/80" : "text-slate-500")}>
+                  {section.description}
+                </span>
+              </Link>
+            )
+          })}
+        </div>
+      </nav>
 
       <div className="min-w-0 space-y-4">
           {activeTab === "hero" ? (<AdminEditorSectionCard title="Hero" description="Main headline, supporting copy, primary actions, and quick links."><div className="grid gap-4"><Field label="Title"><Textarea value={draft.hero.title} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, title: event.target.value } }))} /></Field><Field label="Description"><Textarea value={draft.hero.description} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, description: event.target.value } }))} /></Field></div><div className="grid gap-4"><Field label="Primary CTA Label"><Input value={draft.hero.primaryCta.label} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, primaryCta: { ...current.hero.primaryCta, label: event.target.value } } }))} /></Field><Field label="Primary CTA Link"><Input value={draft.hero.primaryCta.href} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, primaryCta: { ...current.hero.primaryCta, href: event.target.value } } }))} /></Field><Field label="Secondary CTA Label"><Input value={draft.hero.secondaryCta.label} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, secondaryCta: { ...current.hero.secondaryCta, label: event.target.value } } }))} /></Field><Field label="Secondary CTA Link"><Input value={draft.hero.secondaryCta.href} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, secondaryCta: { ...current.hero.secondaryCta, href: event.target.value } } }))} /></Field></div><div className="grid gap-4">{draft.hero.quickLinks.map((link, index) => (<div key={`${link.label}-${index}`} className="grid gap-4"><Field label={`Quick Link ${index + 1} Label`}><Input value={link.label} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, quickLinks: setLinkValue(current.hero.quickLinks, index, "label", event.target.value) } }))} /></Field><Field label={`Quick Link ${index + 1} Link`}><Input value={link.href} onChange={(event) => setDraft((current) => ({ ...current, hero: { ...current.hero, quickLinks: setLinkValue(current.hero.quickLinks, index, "href", event.target.value) } }))} /></Field></div>))}</div></AdminEditorSectionCard>) : null}

@@ -53,7 +53,10 @@ def is_valid_live_job(
         "glints": "/opportunities/jobs/" in path,
         "jobstreet": "/job/" in path,
         "jobstreetexpress": "/job/" in path,
-        "kalibrr": bool(re.search(r"/c/[^/]+/jobs/\d+", path)),
+        "kalibrr": bool(
+            re.search(r"/c/[^/]+/jobs/[^/?#]+", path)
+            or re.search(r"/jobs/[^/?#]+", path)
+        ),
         "lokerid": bool(
             path not in {"", "/"}
             and not path.startswith("/cari-lowongan-kerja")
