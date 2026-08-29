@@ -11,12 +11,12 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import requests
 from bs4 import BeautifulSoup
+from playwright.sync_api import Browser, TimeoutError as PlaywrightTimeout, sync_playwright
 
 from app.config import Settings
 from app.schemas.job_schema import is_valid_live_company, is_valid_live_job, matches_role_keyword, normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
-from app.utils.firecrawl_client import FirecrawlClient
 from app.utils.logger import get_logger
 
 
@@ -27,7 +27,6 @@ class KalibrrScraper:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
         self.logger = get_logger("kalibrr_scraper")
-        self._firecrawl = FirecrawlClient(settings, self.logger)
         self._http = requests.Session()
         from app.utils.http_helper import configure_retry_session, get_random_user_agent
         configure_retry_session(self._http, self.settings.http_retries)
@@ -48,12 +47,31 @@ class KalibrrScraper:
             scraped_at = datetime.utcnow().isoformat(timespec="seconds") + "Z"
 
         jobs: List[Dict] = []
-        for role in self.settings.roles:
-            jobs.extend(self._scrape_role(role, scraped_at))
+        browser: Browser | None = None
+        playwright = None
+        try:
+            playwright = sync_playwright().start()
+            browser = self._create_browser(playwright)
+        except Exception as exc:  # noqa: BLE001
+            self.logger.warning("Browser startup failed; continuing with HTTP only: %s", exc)
+
+        try:
+            for role in self.settings.roles:
+                jobs.extend(self._scrape_role(role, scraped_at, browser))
+        finally:
+            if browser is not None:
+                browser.close()
+            if playwright is not None:
+                playwright.stop()
 
         return jobs
 
-    def _scrape_role(self, role: str, scraped_at: str) -> List[Dict]:
+    def _scrape_role(
+        self,
+        role: str,
+        scraped_at: str,
+        browser: Browser | None = None,
+    ) -> List[Dict]:
         query = quote_plus(role.strip())
         candidate_urls = [
             f"{self.LIST_URL}?text={query}",
@@ -86,9 +104,10 @@ class KalibrrScraper:
 
         cards = self._listing_cards(soup)
         if not cards or not self._has_matching_listing(cards, role):
-            self.logger.info("Falling back to Firecrawl for Kalibrr listing")
+            self.logger.info("Falling back to browser-rendered Kalibrr listing")
+        if (not cards or not self._has_matching_listing(cards, role)) and browser is not None:
             for candidate_url in candidate_urls:
-                rendered_html = self._firecrawl.scrape_html(candidate_url)
+                rendered_html = self._render_page(browser, candidate_url)
                 if not rendered_html:
                     continue
                 candidate_soup = BeautifulSoup(rendered_html, "html.parser")
@@ -136,8 +155,11 @@ class KalibrrScraper:
 
             if not title:
                 continue
+            if not matches_role_keyword(role, title, href):
+                self.logger.info("Skipping Kalibrr card outside requested role url=%s", link)
+                continue
 
-            detail = self._scrape_detail_page(link)
+            detail = self._scrape_detail_page(link, browser=browser)
             title = detail.get("title") or title
             detail_company = detail.get("company") if is_valid_live_company(detail.get("company")) else None
             company = detail_company or company
@@ -201,7 +223,43 @@ class KalibrrScraper:
                 return True
         return False
 
-    def _scrape_detail_page(self, job_url: str) -> Dict[str, Optional[str]]:
+    def _create_browser(self, playwright):
+        return playwright.chromium.launch(
+            headless=self.settings.headless,
+            args=["--no-sandbox", "--disable-dev-shm-usage", "--disable-blink-features=AutomationControlled"],
+        )
+
+    def _render_page(self, browser: Browser, url: str, *, detail: bool = False) -> Optional[str]:
+        from app.utils.http_helper import get_random_user_agent
+
+        page = browser.new_page(locale="id-ID", user_agent=get_random_user_agent())
+        try:
+            timeout_seconds = (
+                min(max(self.settings.detail_timeout_seconds, 3), 8)
+                if detail
+                else min(max(self.settings.page_timeout_seconds, 10), 20)
+            )
+            page.goto(
+                url,
+                wait_until="commit" if detail else "domcontentloaded",
+                timeout=timeout_seconds * 1000,
+            )
+            page.wait_for_timeout(500 if detail else 2000)
+            return page.content()
+        except PlaywrightTimeout:
+            self.logger.warning("Browser page timeout for %s", url)
+            return None
+        except Exception as exc:  # noqa: BLE001
+            self.logger.warning("Browser page failed for %s: %s", url, exc)
+            return None
+        finally:
+            page.close()
+
+    def _scrape_detail_page(
+        self,
+        job_url: str,
+        browser: Browser | None = None,
+    ) -> Dict[str, Optional[str]]:
         detail: Dict[str, Optional[str]] = {
             "title": None,
             "company": None,
@@ -212,23 +270,17 @@ class KalibrrScraper:
             "posted_date": None,
         }
 
-        native_html = None
-        try:
-            response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
-            response.raise_for_status()
-        except requests.RequestException as exc:
-            self.logger.warning("Detail request failed for %s: %s", job_url, exc)
-            firecrawl_html = self._firecrawl.scrape_html(job_url)
-            if not firecrawl_html:
-                return detail
-            soup = BeautifulSoup(firecrawl_html, "html.parser")
+        rendered_html = self._render_page(browser, job_url, detail=True) if browser is not None else None
+        if rendered_html:
+            soup = BeautifulSoup(rendered_html, "html.parser")
         else:
-            native_html = response.text
+            try:
+                response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
+                response.raise_for_status()
+            except requests.RequestException as exc:
+                self.logger.warning("Detail request failed for %s: %s", job_url, exc)
+                return detail
             soup = BeautifulSoup(response.text, "html.parser")
-        if native_html and self._firecrawl.should_retry_html(native_html):
-            firecrawl_html = self._firecrawl.scrape_html(job_url)
-            if firecrawl_html:
-                soup = BeautifulSoup(firecrawl_html, "html.parser")
         detail["title"] = self._pick_text(soup, ["h1", "[class*='title']"])
         detail["company"] = self._pick_text(soup, ["[class*='company']", "a[href*='/company/']"])
         detail["location"] = self._pick_text(soup, ["[class*='location']", "[data-testid*='location']"])

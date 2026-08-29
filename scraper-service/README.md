@@ -16,9 +16,8 @@ cp .env.example .env
 python app/main.py
 ```
 
-When native HTTP and browser extraction return no jobs, the scraper can use
-Firecrawl as a final fallback. Set `FIRECRAWL_API_KEY` in the runtime secret
-store; leave it empty to disable the fallback.
+The scraper uses direct HTTP requests with retry handling and Playwright for
+JavaScript-rendered pages. No third-party scraping API is required.
 
 Transient HTTP failures are retried up to `HTTP_RETRIES` times (default: 3),
 and an empty scrape is retried up to `SCRAPE_ATTEMPTS` times (default: 2).

@@ -117,8 +117,6 @@ services:
       SCRAPER_PYTHON_MODE: local
       SCRAPER_PYTHON_BIN: python3
       QUEUE_WORKERS: ${QUEUE_WORKERS:-3}
-      FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY:-}
-      FIRECRAWL_API_URL: ${FIRECRAWL_API_URL:-https://api.firecrawl.dev}
       HTTP_RETRIES: ${HTTP_RETRIES:-3}
       SCRAPE_ATTEMPTS: ${SCRAPE_ATTEMPTS:-2}
       WAIT_FOR_DB: "true"

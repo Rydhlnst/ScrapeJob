@@ -30,12 +30,6 @@ return [
 
     'http_retries' => max(0, min((int) env('HTTP_RETRIES', 3), 5)),
     'scrape_attempts' => max(1, min((int) env('SCRAPE_ATTEMPTS', 2), 3)),
-    'firecrawl' => [
-        'api_key' => env('FIRECRAWL_API_KEY', ''),
-        'api_url' => env('FIRECRAWL_API_URL', 'https://api.firecrawl.dev'),
-        'timeout_seconds' => (int) env('FIRECRAWL_TIMEOUT_SECONDS', 60),
-        'wait_for_ms' => (int) env('FIRECRAWL_WAIT_FOR_MS', 1000),
-    ],
 
     'schedule' => [
         'enabled' => (bool) env('SCRAPER_SCHEDULE_ENABLED', true),

@@ -1,7 +1,9 @@
 import unittest
+from dataclasses import fields
 
 from bs4 import BeautifulSoup
 
+from app.config import Settings
 from app.schemas.job_schema import is_valid_live_job
 from app.services.jobstreet_scraper import JobstreetScraper
 from app.services.kalibrr_scraper import KalibrrScraper
@@ -9,6 +11,9 @@ from app.services.lokerid_scraper import LokerIdScraper
 
 
 class ScraperRegressionTests(unittest.TestCase):
+    def test_scraper_settings_have_no_third_party_scrape_api(self) -> None:
+        self.assertFalse(any(field.name.startswith("firecrawl_") for field in fields(Settings)))
+
     def test_jobstreet_empty_browser_html_uses_fallback_path(self) -> None:
         scraper = object.__new__(JobstreetScraper)
 
@@ -44,6 +49,7 @@ class ScraperRegressionTests(unittest.TestCase):
         self.assertTrue(scraper._is_job_href(job_href))
         self.assertFalse(scraper._is_job_href(company_href))
         self.assertTrue(scraper._has_matching_listing(scraper._listing_cards(soup), "Data Analyst"))
+        self.assertFalse(scraper._has_matching_listing(scraper._listing_cards(soup), "Backend Engineer"))
         self.assertTrue(
             is_valid_live_job(
                 source="kalibrr",

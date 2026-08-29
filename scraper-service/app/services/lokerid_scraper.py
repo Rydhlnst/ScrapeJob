@@ -17,7 +17,6 @@ from app.config import Settings
 from app.schemas.job_schema import is_valid_live_job, matches_role_keyword, normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
-from app.utils.firecrawl_client import FirecrawlClient
 from app.utils.logger import get_logger
 
 
@@ -27,7 +26,6 @@ class LokerIdScraper:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
         self.logger = get_logger("lokerid_scraper")
-        self._firecrawl = FirecrawlClient(settings, self.logger)
         self._http = requests.Session()
         from app.utils.http_helper import configure_retry_session, get_random_user_agent
         configure_retry_session(self._http, self.settings.http_retries)
@@ -90,14 +88,8 @@ class LokerIdScraper:
 
         if not self._has_matching_listing(soup, role) and browser is not None:
             self.logger.info("Falling back to browser-rendered Loker.id listing for role=%s", role)
-            rendered_html = self._render_page(browser, candidate_urls[0])
-            if rendered_html:
-                soup = BeautifulSoup(rendered_html, "html.parser")
-
-        if not self._has_matching_listing(soup, role):
-            self.logger.info("Falling back to Firecrawl for Loker.id listing role=%s", role)
             for candidate_url in candidate_urls:
-                rendered_html = self._firecrawl.scrape_html(candidate_url)
+                rendered_html = self._render_page(browser, candidate_url)
                 if not rendered_html:
                     continue
                 candidate_soup = BeautifulSoup(rendered_html, "html.parser")
@@ -418,29 +410,19 @@ class LokerIdScraper:
         }
 
         rendered_html = None
-        native_html = None
         if browser is not None:
             rendered_html = self._render_page(browser, job_url, detail=True)
 
         if rendered_html:
-            native_html = rendered_html
             soup = BeautifulSoup(rendered_html, "html.parser")
         else:
             try:
                 response = self._http.get(job_url, timeout=min(max(self.settings.detail_timeout_seconds, 10), 15))
                 response.raise_for_status()
             except Exception:
-                firecrawl_html = self._firecrawl.scrape_html(job_url)
-                if not firecrawl_html:
-                    return detail
-                soup = BeautifulSoup(firecrawl_html, "html.parser")
+                return detail
             else:
-                native_html = response.text
                 soup = BeautifulSoup(response.text, "html.parser")
-        if native_html and self._firecrawl.should_retry_html(native_html):
-            firecrawl_html = self._firecrawl.scrape_html(job_url)
-            if firecrawl_html:
-                soup = BeautifulSoup(firecrawl_html, "html.parser")
         detail["title"] = self._pick_text(soup, ["h1", ".entry-title", "[class*='title']"])
         detail["company"] = self._pick_text(soup, [".company", "[class*='company']"])
         detail["location"] = self._pick_text(soup, [".location", "[class*='location']"])

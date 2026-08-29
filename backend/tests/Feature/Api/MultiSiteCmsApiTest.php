@@ -212,6 +212,56 @@ class MultiSiteCmsApiTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_update_branding_for_one_website(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $website = Website::query()->where('domain', 'daftarkerja.id')->firstOrFail();
+
+        $this->actingAs($admin, 'sanctum')
+            ->putJson('/api/admin/websites/'.$website->id, [
+                'logo' => 'https://cdn.example.test/daftarkerja-logo.svg',
+                'settings' => [
+                    'primaryColor' => '#123456',
+                    'accentColor' => '#abcdef',
+                    'inkColor' => '#102030',
+                    'backgroundColor' => '#fefefe',
+                ],
+            ])
+            ->assertOk()
+            ->assertJsonPath('data.logo', 'https://cdn.example.test/daftarkerja-logo.svg')
+            ->assertJsonPath('data.settings.primaryColor', '#123456');
+
+        $this->getJson('/api/site-config', ['X-Website-Domain' => 'daftarkerja.id'])
+            ->assertOk()
+            ->assertJsonPath('data.website.logo', 'https://cdn.example.test/daftarkerja-logo.svg')
+            ->assertJsonPath('data.branding.primaryColor', '#123456')
+            ->assertJsonPath('data.branding.accentColor', '#abcdef')
+            ->assertJsonPath('data.branding.inkColor', '#102030')
+            ->assertJsonPath('data.branding.backgroundColor', '#fefefe');
+
+        $this->assertDatabaseHas('websites', [
+            'id' => $website->id,
+            'logo' => 'https://cdn.example.test/daftarkerja-logo.svg',
+        ]);
+        $this->assertDatabaseMissing('websites', [
+            'domain' => 'lowonganku.com',
+            'logo' => 'https://cdn.example.test/daftarkerja-logo.svg',
+        ]);
+    }
+
+    public function test_admin_cannot_save_an_unsafe_website_logo_url(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+        $website = Website::query()->where('domain', 'daftarkerja.id')->firstOrFail();
+
+        $this->actingAs($admin, 'sanctum')
+            ->putJson('/api/admin/websites/'.$website->id, ['logo' => 'javascript:alert(1)'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('logo');
+    }
+
     public function test_admin_can_register_and_remove_a_website_alias_without_changing_the_primary_domain(): void
     {
         $admin = User::factory()->create();

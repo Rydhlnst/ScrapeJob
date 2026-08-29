@@ -27,8 +27,12 @@ class WebsiteController extends Controller
             'domain' => ['required', 'string', 'max:191'],
             'is_active' => ['sometimes', 'boolean'],
             'theme' => ['nullable', 'string', 'max:191'],
-            'logo' => ['nullable', 'string', 'max:2048'],
+            'logo' => $this->logoRules(),
             'settings' => ['nullable', 'array'],
+            'settings.primaryColor' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'settings.accentColor' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'settings.inkColor' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'settings.backgroundColor' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ]);
         $payload['domain'] = WebsiteContext::normalizeDomain($payload['domain']);
         if ($this->domainsConflict($payload['domain'])) {
@@ -64,8 +68,12 @@ class WebsiteController extends Controller
             'domain' => ['sometimes', 'required', 'string', 'max:191'],
             'is_active' => ['sometimes', 'boolean'],
             'theme' => ['nullable', 'string', 'max:191'],
-            'logo' => ['nullable', 'string', 'max:2048'],
+            'logo' => $this->logoRules(),
             'settings' => ['nullable', 'array'],
+            'settings.primaryColor' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'settings.accentColor' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'settings.inkColor' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'settings.backgroundColor' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ]);
         if (array_key_exists('domain', $payload)) {
             $payload['domain'] = WebsiteContext::normalizeDomain($payload['domain']);
@@ -159,6 +167,32 @@ class WebsiteController extends Controller
                 ['website_id' => $website->id, 'is_primary' => false, 'is_active' => true],
             );
         }
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    private function logoRules(): array
+    {
+        return [
+            'nullable',
+            'string',
+            'max:2048',
+            function (string $attribute, mixed $value, \Closure $fail): void {
+                if ($value === null || trim((string) $value) === '') {
+                    return;
+                }
+
+                $logo = trim((string) $value);
+                $isAppRelativePath = str_starts_with($logo, '/') && !str_starts_with($logo, '//');
+                $scheme = parse_url($logo, PHP_URL_SCHEME);
+                $isHttpUrl = in_array($scheme, ['http', 'https'], true) && filter_var($logo, FILTER_VALIDATE_URL) !== false;
+
+                if (!$isAppRelativePath && !$isHttpUrl) {
+                    $fail('The logo must be an HTTP(S) image URL or an app-relative path.');
+                }
+            },
+        ];
     }
 
     private function domainsConflict(string $primaryHost, ?string $exceptWebsiteId = null): bool

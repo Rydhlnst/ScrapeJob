@@ -57,10 +57,6 @@ class Settings:
     laravel_internal_api_token: str
     timezone_name: str
     proxy: Optional[str]
-    firecrawl_api_key: str
-    firecrawl_api_url: str
-    firecrawl_timeout_seconds: int
-    firecrawl_wait_for_ms: int
 
     @property
     def laravel_import_url(self) -> str:
@@ -96,8 +92,4 @@ def get_settings() -> Settings:
         laravel_internal_api_token=os.getenv("LARAVEL_INTERNAL_API_TOKEN", "").strip(),
         timezone_name=os.getenv("SCRAPER_TIMEZONE", "Asia/Jakarta").strip(),
         proxy=(os.getenv("SCRAPER_PROXY") or "").strip() or None,
-        firecrawl_api_key=os.getenv("FIRECRAWL_API_KEY", "").strip(),
-        firecrawl_api_url=os.getenv("FIRECRAWL_API_URL", "https://api.firecrawl.dev").strip(),
-        firecrawl_timeout_seconds=_parse_int(os.getenv("FIRECRAWL_TIMEOUT_SECONDS"), 60),
-        firecrawl_wait_for_ms=_parse_int(os.getenv("FIRECRAWL_WAIT_FOR_MS"), 1000),
     )

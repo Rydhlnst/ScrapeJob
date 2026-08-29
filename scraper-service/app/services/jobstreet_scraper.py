@@ -18,7 +18,6 @@ from app.config import Settings
 from app.schemas.job_schema import is_valid_live_job, normalize_job_payload
 from app.utils.cleaner import clean_text
 from app.utils.date_parser import parse_posted_date
-from app.utils.firecrawl_client import FirecrawlClient
 from app.utils.logger import get_logger
 
 
@@ -40,7 +39,6 @@ class JobstreetScraper:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
         self.logger = get_logger("jobstreet_scraper")
-        self._firecrawl = FirecrawlClient(settings, self.logger)
         try:
             self.scraped_at_iso = datetime.now(ZoneInfo(settings.timezone_name)).isoformat(timespec="seconds")
         except ZoneInfoNotFoundError:
@@ -221,7 +219,7 @@ class JobstreetScraper:
                     continue
 
             if html is None:
-                self.logger.warning("Browser could not load list page; trying HTTP and Firecrawl fallbacks: %s", list_url)
+                self.logger.warning("Browser could not load list page; trying HTTP fallback: %s", list_url)
         finally:
             page_obj.close()
 
@@ -243,15 +241,6 @@ class JobstreetScraper:
                     return request_cards
             except Exception as exc:  # noqa: BLE001
                 self.logger.warning("Requests fallback failed for %s: %s", candidate_url, exc)
-
-        for candidate_url in candidate_urls:
-            firecrawl_html = self._firecrawl.scrape_html(candidate_url)
-            if not firecrawl_html:
-                continue
-            firecrawl_cards = self._extract_cards_from_html(firecrawl_html, page=page, role_slug=role_slug)
-            if firecrawl_cards:
-                self.logger.info("Recovered %s cards via Firecrawl fallback for %s", len(firecrawl_cards), candidate_url)
-                return firecrawl_cards
 
         return []
 
@@ -387,33 +376,27 @@ class JobstreetScraper:
         from app.utils.http_helper import get_random_user_agent
         page_obj: Page = browser.new_page(user_agent=get_random_user_agent())
         html: Optional[str] = None
-        native_html: Optional[str] = None
         detail_timeout_ms = max(10, min(self.settings.detail_timeout_seconds, 15)) * 1000
         try:
             try:
                 page_obj.goto(source_url, wait_until="domcontentloaded", timeout=detail_timeout_ms)
             except PlaywrightTimeout:
                 self.logger.warning("Timeout loading detail page: %s", source_url)
-                html = self._firecrawl.scrape_html(source_url)
-                if not html:
-                    return detail
+                html = self._request_html(source_url)
             except Exception as exc:  # noqa: BLE001
                 self.logger.warning("Detail navigation failed for %s: %s", source_url, exc)
-                html = self._firecrawl.scrape_html(source_url)
-                if not html:
-                    return detail
+                html = self._request_html(source_url)
 
             if html is None:
                 try:
                     page_obj.wait_for_selector("body", timeout=detail_timeout_ms)
                     html = page_obj.content()
-                    native_html = html
                 except PlaywrightTimeout:
                     self.logger.warning("Timeout detail page: %s", source_url)
-                    html = self._firecrawl.scrape_html(source_url)
+                    html = self._request_html(source_url)
                 except Exception as exc:  # noqa: BLE001
                     self.logger.warning("Detail page content failed for %s: %s", source_url, exc)
-                    html = self._firecrawl.scrape_html(source_url)
+                    html = self._request_html(source_url)
         finally:
             page_obj.close()
 
@@ -421,10 +404,6 @@ class JobstreetScraper:
             return detail
 
         soup = BeautifulSoup(html, "html.parser")
-        if native_html and self._firecrawl.should_retry_html(native_html):
-            firecrawl_html = self._firecrawl.scrape_html(source_url)
-            if firecrawl_html:
-                soup = BeautifulSoup(firecrawl_html, "html.parser")
 
         title_node = soup.select_one("h1[data-automation='job-detail-title']") or soup.select_one("h1")
         company_node = (
@@ -464,6 +443,18 @@ class JobstreetScraper:
         detail["description"] = detail["description"] or json_ld_detail.get("description")
 
         return detail
+
+    def _request_html(self, url: str) -> Optional[str]:
+        try:
+            response = self._http.get(
+                url,
+                timeout=min(max(self.settings.detail_timeout_seconds, 10), 15),
+            )
+            response.raise_for_status()
+            return response.text
+        except requests.RequestException as exc:
+            self.logger.warning("HTTP detail fallback failed for %s: %s", url, exc)
+            return None
 
     # ------------------------------------------------------------------ #
     # Helpers

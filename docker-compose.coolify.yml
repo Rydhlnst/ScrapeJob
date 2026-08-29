@@ -38,8 +38,6 @@ x-laravel-env: &laravel-env
   REQUEST_DELAY_MAX: ${REQUEST_DELAY_MAX:-1}
   HTTP_RETRIES: ${HTTP_RETRIES:-3}
   SCRAPE_ATTEMPTS: ${SCRAPE_ATTEMPTS:-2}
-  FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY:-}
-  FIRECRAWL_API_URL: ${FIRECRAWL_API_URL:-https://api.firecrawl.dev}
   WAIT_FOR_DB: "true"
   AI_CLEANUP_ENABLED: ${AI_CLEANUP_ENABLED:-false}
   AI_CLEANUP_URL: ${AI_CLEANUP_URL:-http://frontend:3000/api/internal/clean-job}
