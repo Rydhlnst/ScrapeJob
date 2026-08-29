@@ -12,8 +12,6 @@ import { Footer } from "@/components/shared/Footer"
 import { Navbar } from "@/components/shared/Navbar"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
 import { Badge } from "@/components/ui/badge"
-import { mockJobs } from "@/data/mock-jobs"
-import { mockCategories } from "@/data/mock-categories"
 import type { JobStats } from "@/types"
 import { getServerWebsiteContext } from "@/lib/site/server-context"
 import { getPublicSiteConfig } from "@/lib/api/site-config"
@@ -79,25 +77,25 @@ export default async function JobsPage({
   }
 
   const fallbackJobs = {
-    data: mockJobs,
+    data: [],
     page: 1,
-    perPage: mockJobs.length,
-    total: mockJobs.length,
-    totalPages: 1,
+    perPage: 0,
+    total: 0,
+    totalPages: 0,
   }
   const fallbackStats: JobStats = {
-    totalActive: mockJobs.length,
-    totalBySource: { "Source Website": mockJobs.length },
+    totalActive: 0,
+    totalBySource: {},
     totalByCategory: {},
     totalByJobType: {},
-    newToday: mockJobs.length,
+    newToday: 0,
     remoteJobs: 0,
   }
 
   const [jobs, navJobs, categories, stats] = await Promise.all([
     listJobs({ ...jobsQuery, page, perPage: 9 }, siteContext).catch(() => fallbackJobs),
     listJobs({ page: 1, perPage: 100, sort: "newest" }, siteContext).catch(() => fallbackJobs),
-    listCategories(siteContext).catch(() => mockCategories),
+    listCategories(siteContext).catch(() => []),
     getJobStats(siteContext).catch(() => fallbackStats),
   ])
 

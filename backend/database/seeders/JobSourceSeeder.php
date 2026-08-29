@@ -43,12 +43,12 @@ class JobSourceSeeder extends Seeder
                 'notes' => 'Built-in Kalibrr scraper',
             ],
             [
-                'name' => 'lokerid',
-                'base_url' => 'https://www.loker.id',
-                'listing_url' => 'https://www.loker.id/',
+                'name' => 'karir',
+                'base_url' => 'https://karir.com',
+                'listing_url' => 'https://karir.com/search-lowongan',
                 'is_active' => true,
                 'scraping_allowed' => true,
-                'notes' => 'Built-in Loker.id scraper',
+                'notes' => 'Built-in Karir.com scraper',
             ],
         ];
 

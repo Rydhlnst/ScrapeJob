@@ -14,8 +14,6 @@ import { listJobs } from "@/lib/api/jobs"
 import { listCategories } from "@/lib/api/categories"
 import { getPublicLandingPageContent } from "@/lib/api/landing-page-content"
 import { normalizeLandingPageContent } from "@/lib/landing-page-content"
-import { mockJobs } from "@/data/mock-jobs"
-import { mockCategories } from "@/data/mock-categories"
 import { getServerWebsiteContext } from "@/lib/site/server-context"
 import { getPublicSiteConfig } from "@/lib/api/site-config"
 import { createDefaultLandingPageContent } from "@/lib/landing-page-content"
@@ -36,10 +34,10 @@ export default async function HomePage() {
       ?? createDefaultLandingPageContent(siteConfig.website.name),
   )
   const fallbackJobs = {
-    data: mockJobs,
+    data: [],
     page: 1,
-    perPage: mockJobs.length,
-    total: mockJobs.length,
+    perPage: 0,
+    total: 0,
     totalPages: 1,
   }
   const [jobsRes, navJobsRes, categories] = await Promise.all([
@@ -51,7 +49,7 @@ export default async function HomePage() {
       source: content.featuredJobs.rules.source ?? undefined,
     }, siteContext).catch(() => fallbackJobs),
     listJobs({ page: 1, perPage: 100, sort: "newest" }, siteContext).catch(() => fallbackJobs),
-    listCategories(siteContext).catch(() => mockCategories),
+    listCategories(siteContext).catch(() => []),
   ])
   const homepageJobs = jobsRes.data.slice(0, content.featuredJobs.rules.limit)
   const heroJobs = navJobsRes.data.length ? navJobsRes.data : homepageJobs

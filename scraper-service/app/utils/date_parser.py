@@ -28,17 +28,24 @@ def parse_posted_date(text: str | None, timezone_name: str = "Asia/Jakarta") -> 
     raw = text.strip().lower()
     now = datetime.now(ZoneInfo(timezone_name))
 
-    if "kemarin" in raw:
+    if "kemarin" in raw or "yesterday" in raw:
         return (now - timedelta(days=1)).date().isoformat()
-    if "hari yang lalu" in raw:
-        match = re.search(r"(\d+)\s*hari", raw)
-        if match:
-            days = int(match.group(1))
-            return (now - timedelta(days=days)).date().isoformat()
-    if "jam yang lalu" in raw:
+    if "hari ini" in raw or "today" in raw or "just now" in raw:
         return now.date().isoformat()
-    if "menit yang lalu" in raw:
+
+    relative_match = re.search(
+        r"(\d+)\s*(?:hari|day|days|d)\s*(?:yang lalu|ago)?",
+        raw,
+    )
+    if relative_match:
+        return (now - timedelta(days=int(relative_match.group(1)))).date().isoformat()
+
+    if re.search(r"(?:jam|hour|hours|h|menit|minute|minutes|min)\s*(?:yang lalu|ago)?", raw):
         return now.date().isoformat()
+
+    week_match = re.search(r"(\d+)\s*(?:minggu|week|weeks|w)\s*(?:yang lalu|ago)?", raw)
+    if week_match:
+        return (now - timedelta(weeks=int(week_match.group(1)))).date().isoformat()
 
     date_match = re.search(r"(\d{1,2})\s+([a-z]+)\s+(\d{4})", raw)
     if date_match:
@@ -55,3 +62,34 @@ def parse_posted_date(text: str | None, timezone_name: str = "Asia/Jakarta") -> 
         return iso_match.group(0)
 
     return None
+
+
+def is_date_allowed(
+    posted_date: str | None,
+    *,
+    max_days_ago: int | None,
+    start_date: str | None,
+    timezone_name: str = "Asia/Jakarta",
+) -> bool:
+    """Apply inclusive date filters to a normalized posted date."""
+    if not posted_date:
+        return True
+
+    try:
+        posted = datetime.fromisoformat(posted_date[:10]).date()
+    except ValueError:
+        return True
+
+    now = datetime.now(ZoneInfo(timezone_name)).date()
+    lower_bound = None
+    if max_days_ago is not None:
+        lower_bound = now - timedelta(days=max(0, max_days_ago))
+
+    if start_date:
+        try:
+            requested_start = datetime.fromisoformat(start_date[:10]).date()
+            lower_bound = max(lower_bound, requested_start) if lower_bound else requested_start
+        except ValueError:
+            pass
+
+    return lower_bound is None or posted >= lower_bound

@@ -92,7 +92,7 @@ class ScraperManager
      */
     public function availableSources(): array
     {
-        $builtin = ['glints', 'jobstreet', 'jobstreetexpress', 'kalibrr', 'lokerid'];
+        $builtin = ['glints', 'jobstreet', 'jobstreetexpress', 'kalibrr', 'karir'];
         $configSources = array_keys((array) config('scraper.builtin_sources', []));
         $databaseSources = JobSource::query()->pluck('name')->map(static fn (string $name): string => strtolower($name))->all();
 

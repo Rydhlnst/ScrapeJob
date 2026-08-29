@@ -19,9 +19,10 @@ from app.services.glints_scraper import GlintsScraper
 from app.services.jobstreet_scraper import JobstreetScraper
 from app.services.jobstreetexpress_scraper import JobstreetExpressScraper
 from app.services.kalibrr_scraper import KalibrrScraper
-from app.services.lokerid_scraper import LokerIdScraper
+from app.services.karir_scraper import KarirScraper
 from app.services.json_exporter import save_json
 from app.utils.deduplicate import deduplicate_jobs
+from app.utils.date_parser import is_date_allowed
 from app.utils.logger import get_logger
 
 
@@ -66,8 +67,8 @@ def select_scraper(source: str, settings):
         return GlintsScraper(settings)
     if source == "kalibrr":
         return KalibrrScraper(settings)
-    if source in {"lokerid", "loker.id"}:
-        return LokerIdScraper(settings)
+    if source == "karir":
+        return KarirScraper(settings)
     raise ValueError(f"Unsupported source: {source}")
 
 
@@ -123,6 +124,23 @@ def main() -> int:
             time.sleep(min(2 ** (attempt - 1), 8))
 
     jobs = deduplicate_jobs(raw_jobs)
+    before_date_filter = len(jobs)
+    jobs = [
+        job for job in jobs
+        if is_date_allowed(
+            job.get("posted_at"),
+            max_days_ago=settings.max_days_ago,
+            start_date=settings.start_date,
+            timezone_name=settings.timezone_name,
+        )
+    ]
+    if before_date_filter != len(jobs):
+        logger.info(
+            "Date filter removed jobs source=%s removed=%s remaining=%s",
+            settings.source,
+            before_date_filter - len(jobs),
+            len(jobs),
+        )
     if not jobs and scraper_error:
         scrape_error = f"Scraper failed after {settings.scrape_attempts} attempt(s): {scraper_error}"
     elif not jobs:

@@ -8,7 +8,6 @@ import { JobSummaryCard } from "@/components/public/job-summary-card"
 import { Footer } from "@/components/shared/Footer"
 import { Navbar } from "@/components/shared/Navbar"
 import { SiteContent, SiteFrame } from "@/components/shared/SiteShell"
-import { mockJobs } from "@/data/mock-jobs"
 import { getServerWebsiteContext } from "@/lib/site/server-context"
 import { getPublicSiteConfig } from "@/lib/api/site-config"
 
@@ -47,8 +46,8 @@ export default async function JobDetailPage({
   const { slug } = await params
   const siteContext = await getServerWebsiteContext()
   const [job, navbarData] = await Promise.all([
-    getJobBySlug(slug, siteContext).catch(() => mockJobs.find((item) => item.slug === slug) ?? mockJobs[0]),
-    getNavbarData(siteContext).catch(() => ({ jobs: mockJobs, categories: [], totalJobs: mockJobs.length })),
+    getJobBySlug(slug, siteContext).catch(() => null),
+    getNavbarData(siteContext).catch(() => ({ jobs: [], categories: [], totalJobs: 0 })),
   ])
   if (!job || (job.status && job.status !== "published")) notFound()
 

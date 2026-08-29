@@ -13,7 +13,7 @@ _LIVE_SOURCE_HOSTS = {
     "jobstreet": {"id.jobstreet.com"},
     "jobstreetexpress": {"id.jora.com", "jobstreetexpress.com"},
     "kalibrr": {"kalibrr.com"},
-    "lokerid": {"loker.id"},
+    "karir": {"karir.com"},
 }
 
 _PLACEHOLDER_COMPANIES = {
@@ -22,7 +22,9 @@ _PLACEHOLDER_COMPANIES = {
     "glints",
     "jobstreet express",
     "kalibrr",
-    "loker.id",
+    "karir.com",
+    "perusahaan dirahasiakan",
+    "confidential",
 }
 
 _BLOCKED_TITLES = {
@@ -57,10 +59,7 @@ def is_valid_live_job(
             re.search(r"/c/[^/]+/jobs/[^/?#]+", path)
             or re.search(r"/jobs/[^/?#]+", path)
         ),
-        "lokerid": bool(
-            path not in {"", "/"}
-            and not path.startswith("/cari-lowongan-kerja")
-        ),
+        "karir": bool(re.fullmatch(r"/opportunities/\d+/?", path)),
     }.get(source_name, False)
 
     return bool(

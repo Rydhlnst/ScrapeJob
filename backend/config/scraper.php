@@ -43,7 +43,7 @@ return [
         'jobstreet',
         'jobstreetexpress',
         'kalibrr',
-        'lokerid',
+        'karir',
     ]),
 
     'notification' => [
@@ -62,7 +62,6 @@ return [
         'keywords' => $parseCsv(env('JOBSTREET_KEYWORDS'), ['software', 'developer', 'engineer']),
     ],
 
-    // Built-in examples for extension
     'builtin_sources' => [
         'glints' => [
             'base_url' => 'https://glints.com',
@@ -80,54 +79,9 @@ return [
             'base_url' => 'https://www.kalibrr.com',
             'list_url' => 'https://www.kalibrr.com/home/te',
         ],
-        'lokerid' => [
-            'base_url' => 'https://www.loker.id',
-            'list_url' => 'https://www.loker.id/',
-        ],
-        'example_json' => [
-            'type' => 'json',
-            'api_url' => 'https://example.com/api/jobs',
-            'api_params' => ['page' => 1],
-            'json_map' => [
-                'list' => 'data',
-                'id' => 'id',
-                'title' => 'title',
-                'company' => 'company',
-                'location' => 'location',
-                'job_type' => 'job_type',
-                'apply_url' => 'url',
-                'posted_at' => 'published_at',
-            ],
-        ],
-        'example_html' => [
-            'type' => 'html',
-            'list_url' => 'https://example.com/jobs',
-            'selectors' => [
-                'container' => '.job-card',
-                'title' => '.job-title',
-                'company' => '.company-name',
-                'location' => '.location',
-                'job_type' => '.employment-type',
-                'apply_url' => 'a@href',
-                'posted_at' => 'time@datetime',
-            ],
-        ],
-        'example_spa' => [
-            'type' => 'headless',
-            'target_url' => 'https://example.com/careers',
-            'extract' => [
-                'waitForSelector' => '.job-list',
-                'scrollToBottom' => true,
-                'jobs' => [
-                    'container' => '.job-card',
-                    'title' => '.job-title',
-                    'company' => '.company-name',
-                    'location' => '.location',
-                    'job_type' => '.job-type',
-                    'url' => 'a@href',
-                    'date' => 'time@datetime',
-                ],
-            ],
+        'karir' => [
+            'base_url' => 'https://karir.com',
+            'list_url' => 'https://karir.com/search-lowongan',
         ],
     ],
 ];

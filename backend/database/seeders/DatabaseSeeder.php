@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
 
         if (! app()->isProduction()) {
             $this->call([
-                JobSeeder::class,
                 PageSeeder::class,
             ]);
         }
