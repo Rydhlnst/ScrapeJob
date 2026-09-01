@@ -47,9 +47,11 @@ class ScrapedJobImportService
                         $wasPending = $existingByExternal->status === 'pending';
                         $existingByExternal->update($this->toScrapedJobPayload($job, $source, $scrapedAtCarbon));
                         if (config('services.ai_cleanup.enabled')) {
-                            CleanScrapedJobWithAI::dispatch($existingByExternal)->afterCommit();
-                        }
-                        if ($wasPending) {
+                            CleanScrapedJobWithAI::dispatch(
+                                $existingByExternal,
+                                $wasPending && (bool) config('scraper.auto_create_drafts', false),
+                            )->afterCommit();
+                        } elseif ($wasPending) {
                             $this->maybeCreateDraft($existingByExternal, $summary);
                         }
                         $summary['updated_count']++;
@@ -71,9 +73,13 @@ class ScrapedJobImportService
 
                     $scrapedJob = ScrapedJob::query()->create($this->toScrapedJobPayload($job, $source, $scrapedAtCarbon));
                     if (config('services.ai_cleanup.enabled')) {
-                        CleanScrapedJobWithAI::dispatch($scrapedJob)->afterCommit();
+                        CleanScrapedJobWithAI::dispatch(
+                            $scrapedJob,
+                            (bool) config('scraper.auto_create_drafts', false),
+                        )->afterCommit();
+                    } else {
+                        $this->maybeCreateDraft($scrapedJob, $summary);
                     }
-                    $this->maybeCreateDraft($scrapedJob, $summary);
                     $summary['created_count']++;
                     $summary['pending_count']++;
                 } catch (\Throwable $exception) {

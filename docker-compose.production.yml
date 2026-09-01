@@ -23,6 +23,7 @@ x-backend-env: &backend-env
   SESSION_PATH: ${SESSION_PATH:-/}
   SESSION_DOMAIN: ${SESSION_DOMAIN:-}
   SANCTUM_STATEFUL_DOMAINS: ${SANCTUM_STATEFUL_DOMAINS:?SANCTUM_STATEFUL_DOMAINS is required}
+  PUBLIC_SITE_DOMAINS: ${PUBLIC_SITE_DOMAINS:-}
   DB_CONNECTION: ${DB_CONNECTION:-pgsql}
   DB_HOST: ${DB_HOST:-db}
   DB_PORT: ${DB_PORT:-5432}
@@ -109,7 +110,7 @@ services:
       OLLAMA_API_KEY: ${OLLAMA_API_KEY:-}
       OLLAMA_MODEL: ${OLLAMA_MODEL:-}
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "127.0.0.1:${FRONTEND_PORT:-3100}:3000"
     depends_on:
       backend:
         condition: service_healthy
@@ -128,7 +129,7 @@ services:
     environment:
       <<: *backend-env
     ports:
-      - "${BACKEND_PORT:-8000}:80"
+      - "127.0.0.1:${BACKEND_PORT:-8100}:80"
     depends_on:
       db:
         condition: service_healthy
@@ -161,6 +162,26 @@ services:
       migrate:
         condition: service_completed_successfully
       backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ai-worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      <<: *backend-env
+      AI_QUEUE_TRIES: ${AI_QUEUE_TRIES:-3}
+      AI_QUEUE_TIMEOUT: ${AI_QUEUE_TIMEOUT:-120}
+    command: ["/var/www/html/docker/start-ai-worker.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+      frontend:
         condition: service_healthy
     restart: unless-stopped
 

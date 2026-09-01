@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\ScrapedJob;
 use App\Services\Jobs\JobNormalizationService;
+use App\Services\Jobs\ScrapedJobPublishingService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -36,7 +37,8 @@ class CleanScrapedJobWithAI implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        public readonly ScrapedJob $scrapedJob
+        public readonly ScrapedJob $scrapedJob,
+        public readonly bool $autoCreateDraft = false,
     ) {
         $this->queue = 'ai-cleanup';
     }
@@ -54,7 +56,7 @@ class CleanScrapedJobWithAI implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle(ScrapedJobPublishingService $publishingService): void
     {
         // Skip early if this job is part of a batch that was cancelled while
         // it was still queued (e.g. admin aborted bulk-clean-ai).
@@ -165,6 +167,10 @@ class CleanScrapedJobWithAI implements ShouldQueue
                 'draft_status' => 'drafted_ai',
                 'fail_reason' => null,
             ]);
+
+            if ($this->autoCreateDraft && (bool) config('scraper.auto_create_drafts', false)) {
+                $publishingService->moveToDraft($this->scrapedJob->refresh(), false);
+            }
 
             Log::info("Successfully cleaned scraped job ID: {$this->scrapedJob->id} using AI.");
 
