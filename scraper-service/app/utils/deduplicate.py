@@ -9,7 +9,7 @@ def deduplicate_jobs(jobs: List[Dict]) -> List[Dict]:
     deduped: List[Dict] = []
 
     for job in jobs:
-        external_id = str(job.get("external_id", "")).strip()
+        external_id = str(job.get("external_job_id", "")).strip()
         source_url = str(job.get("source_url", "")).strip().lower()
 
         if external_id and external_id in seen_external:
